@@ -118,39 +118,42 @@ public class Tregmine extends JavaPlugin
         this.server = getServer();
 
         FileConfiguration config = getConfig();
-
-        String anarchyName = config.getString("world.name");
-        if (anarchyName == null) {
-            anarchyName = "anarchy";
-        }
-
-        WorldCreator hierarchyWorld = new WorldCreator(anarchyName);
-        hierarchyWorld.environment(World.Environment.NORMAL);
-        rulelessWorld = hierarchyWorld.createWorld();
-        
-        // Minecraft Portals should handle these
-        WorldCreator hierarchyWorldNether = new WorldCreator(anarchyName + "_nether");
-        hierarchyWorldNether.environment(World.Environment.NETHER);
-        rulelessWorldNether = hierarchyWorldNether.createWorld();
-        WorldCreator hierarchyWorldEnd = new WorldCreator(anarchyName + "_the_end");
-        hierarchyWorldEnd.environment(World.Environment.THE_END);
-        rulelessWorldEnd = hierarchyWorldEnd.createWorld();
         
         List<?> configWorlds = getConfig().getList("worlds.names");
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
         for(String worldName : worlds){
+        	if(worldName.contains("the_end") || worldName.contains("nether")){
+        		//Do nothing
+        	}else{
         	WorldCreator addWorld = new WorldCreator(worldName);
         	addWorld.environment(World.Environment.NORMAL);
         	addWorld.generateStructures(false);
         	addWorld.type(WorldType.FLAT);
         	addWorld.createWorld();
+        	}
         }
-
-        WorldCreator gameWorld = new WorldCreator("game");
-        gameWorld.environment(World.Environment.NORMAL);
-        gameWorld.generateStructures(false);
-        gameWorld.type(WorldType.FLAT);
-        gameWorld.createWorld();
+        for(String worldName : worlds){
+        	if(!worldName.contains("the_end")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.THE_END);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
+        for(String worldName : worlds){
+        	if(!worldName.contains("nether")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NETHER);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
 
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
