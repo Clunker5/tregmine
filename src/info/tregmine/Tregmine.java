@@ -120,6 +120,7 @@ public class Tregmine extends JavaPlugin
         FileConfiguration config = getConfig();
         
         List<?> configWorlds = getConfig().getList("worlds.names");
+        if(configWorlds.size() >= 1){
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
         for(String worldName : worlds){
         	if(worldName.contains("the_end") || worldName.contains("nether")){
@@ -132,6 +133,7 @@ public class Tregmine extends JavaPlugin
         	addWorld.createWorld();
         	}
         }
+        
         for(String worldName : worlds){
         	if(!worldName.contains("the_end")){
         		//Do nothing
@@ -153,6 +155,10 @@ public class Tregmine extends JavaPlugin
         	addWorld.type(WorldType.FLAT);
         	addWorld.createWorld();
         	}
+        }
+        LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
+        }else{
+        	LOGGER.info("Loaded 0 extra world(s).");
         }
 
         try (IContext ctx = contextFactory.createContext()) {
