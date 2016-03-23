@@ -121,7 +121,7 @@ public class ChatListener implements Listener
             throw new RuntimeException(e);
         }
 
-        event.setCancelled(true);
+        //event.setCancelled(true);
 
         WebServer server = plugin.getWebServer();
         server.executeChatAction(new WebServer.ChatMessage(sender, channel, event.getMessage()));
