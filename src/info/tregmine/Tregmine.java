@@ -166,7 +166,8 @@ public class Tregmine extends JavaPlugin
             IMiscDAO miscDAO = ctx.getMiscDAO();
             this.insults = miscDAO.loadInsults();
             this.quitMessages = miscDAO.loadQuitMessages();
-
+            if(insults.size() == 0){insults.add(0, "NO DEATH MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO");}
+            if(quitMessages.size() == 0){quitMessages.add(0, "NO QUIT MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO.");}
             LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -317,6 +318,7 @@ public class Tregmine extends JavaPlugin
         getCommand("summon").setExecutor(new SummonCommand(this));
         getCommand("support").setExecutor(new SupportCommand(this));
         getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("staffnews").setExecutor(new StaffNewsCommand(this));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("tool").setExecutor(new ToolSpawnCommand(this));
