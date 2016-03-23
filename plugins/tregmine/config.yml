@@ -15,14 +15,8 @@ support:
 #anarchy, anarchy_nether, anarchy_the_end -- You have been warned.
 worlds:
   names:
-    - vanilla
-    - treton.old
-    - treton
-    - skyland
-    - elva
-    - einhome
-    - ChildsPlay
-    - alpha
-    - citadel
+    - secondary_world
+    - secondary_world_nether
+    - secondary_world_the_end
 #Rank Chat Colors
 #Coming soon :-)
