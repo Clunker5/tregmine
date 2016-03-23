@@ -232,11 +232,6 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event)
     {
-		if (	event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getBlock().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
         event.setCancelled(true);
     }
 
