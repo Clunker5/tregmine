@@ -266,7 +266,7 @@ CREATE TABLE `player` (
   `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_swedish_ci DEFAULT 'unverified',
   `player_flags` int(10) UNSIGNED DEFAULT NULL,
   `player_keywords` text COLLATE utf8_swedish_ci NOT NULL,
-  `player_ignore` text COLLATE utf8_swedish_ci NOT NULL,
+  `player_ignore` text COLLATE utf8_swedish_ci DEFAULT NULL,
   `player_uuid` char(43) COLLATE utf8_swedish_ci NOT NULL,
   `player_inventory` varchar(255) COLLATE utf8_swedish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -483,6 +483,19 @@ CREATE TABLE `stats_blocks` (
   `blockid` double NOT NULL,
   `world` varchar(16) NOT NULL DEFAULT 'world'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staffnews`
+--
+
+CREATE TABLE `staffnews` (
+  `id` int(10) NOT NULL,
+  `username` varchar(64) NOT NULL,
+  `text` text NOT NULL,
+  `timestamp` int(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1099,3 +1112,10 @@ ALTER TABLE `zone_rect`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- I didn't feel like making it look pretty.
+ALTER TABLE `staffnews`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `staffnews`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
