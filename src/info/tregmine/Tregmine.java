@@ -120,7 +120,7 @@ public class Tregmine extends JavaPlugin
         FileConfiguration config = getConfig();
         
         List<?> configWorlds = getConfig().getList("worlds.names");
-        if(configWorlds.size() >= 1){
+        if(!configWorlds.isEmpty()){
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
         for(String worldName : worlds){
         	if(worldName.contains("the_end") || worldName.contains("nether")){
