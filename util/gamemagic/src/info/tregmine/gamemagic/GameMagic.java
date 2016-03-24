@@ -184,11 +184,6 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
-		if (	event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getBlockClicked().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
         if (event.getBucket() == Material.LAVA_BUCKET) {
             event.setCancelled(true);
         }
@@ -221,11 +216,6 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event)
     {
-		if (	event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName()) ||
-				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessEnd().getName()) ||
-				event.getLocation().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessNether().getName())) {
-			return;
-		}
         event.setCancelled(true);
     }
 
@@ -266,19 +256,7 @@ public class GameMagic extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerMove(PlayerMoveBlockEvent event)
     {
-        if (!event.getTo().getWorld().getName().equalsIgnoreCase(tregmine.getRulelessWorld().getName())) {
-            return;
-        }
-        double distance = MathUtil.calcDistance2d(event.getTo().getWorld().getSpawnLocation(), event.getTo());
-        TregminePlayer player = event.getPlayer();
-
-        if (distance > 5000 && distance < 5050) { // If hitting the border
-            movePlayerBack(player, event.getFrom(), event.getTo());
-        } else if (distance >= 5050) { // If massively past the point, teleport them to spawn
-            event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
-        } else {
-            return;
-        }
+//Deprecated.
     }
 
 	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)
