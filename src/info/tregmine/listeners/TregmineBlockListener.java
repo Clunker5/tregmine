@@ -52,6 +52,11 @@ public class TregmineBlockListener implements Listener
             }
         }
     }
+    
+    @EventHandler
+    public void onBlockBurn(BlockBurnEvent event){
+    	event.setCancelled(true);
+    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event)
