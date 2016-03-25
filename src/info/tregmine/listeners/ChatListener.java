@@ -83,7 +83,11 @@ public class ChatListener implements Listener
                 }
                 if (text.contains("#6")) {
 
-                        text = text.replaceAll("#6", ChatColor.GOLD + "");
+                    text = text.replaceAll("#6", ChatColor.GOLD + "");
+                }
+                if (text.contains("#6")) {
+
+                    text = text.replaceAll("#6", ChatColor.GOLD + "");
                 }
                 
 
