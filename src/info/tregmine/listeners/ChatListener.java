@@ -42,7 +42,7 @@ public class ChatListener implements Listener
 
                 ChatColor txtColor = ChatColor.WHITE;
                 if (sender.getRank() == Rank.JUNIOR_ADMIN || sender.getRank() == Rank.SENIOR_ADMIN){
-                	txtColor = ChatColor.DARK_GRAY;
+                	txtColor = ChatColor.GRAY;
                 }else if(sender.getRank() != Rank.JUNIOR_ADMIN && sender.getRank() != Rank.SENIOR_ADMIN){
                 	if (sender.equals(to)) {
                     txtColor = ChatColor.GRAY;
