@@ -112,15 +112,15 @@ public class ZonePlayerListener implements Listener
             }
             type = "zone";
         }
-        int zf = player.getTargetZoneId();
-        if (zf != 0 && zf != zone.getId()) {
-            player.sendMessage("The full extent of the lot must be in the same zone.");
-            return;
+        player.setZoneBlock1(block);
+        event.getPlayer().sendMessage(
+                "First block set of new " + type + ".");
+        if (zone != null) {
+            player.setTargetZoneId(zone.getId());
         }
-
-        player.setZoneBlock2(block);
-        player.sendMessage("Second block set of new " + type + ".");
-    	}
+        else {
+            player.setTargetZoneId(0);
+        }}
     }
     @EventHandler
     public void onBlockDamage(BlockDamageEvent event){
@@ -161,14 +161,17 @@ public class ZonePlayerListener implements Listener
             }
             type = "zone";
         }
-        int zf = player.getTargetZoneId();
-        if (zf != 0 && zf != zone.getId()) {
-            player.sendMessage("The full extent of the lot must be in the same zone.");
-            return;
-        }
 
-        player.setZoneBlock2(block);
-        player.sendMessage("Second block set of new " + type + ".");
+        
+        player.setZoneBlock1(block);
+        event.getPlayer().sendMessage(
+                "First block set of new " + type + ".");
+        if (zone != null) {
+            player.setTargetZoneId(zone.getId());
+        }
+        else {
+            player.setTargetZoneId(0);
+        }
     	}
     }
     @EventHandler
@@ -244,17 +247,15 @@ public class ZonePlayerListener implements Listener
             } catch (Exception e) {
                 count = 0;
             }
+            int zf = player.getTargetZoneId();
+            if (zf != 0 && zf != zone.getId()) {
+                player.sendMessage("The full extent of the lot must be in the same zone.");
+                return;
+            }
 
-                player.setZoneBlock1(block);
-                player.setZoneBlock2(null);
-                event.getPlayer().sendMessage(
-                        "First block set of new " + type + ".");
-                if (zone != null) {
-                    player.setTargetZoneId(zone.getId());
-                }
-                else {
-                    player.setTargetZoneId(0);
-                }
+            player.setZoneBlock2(block);
+            player.sendMessage("Second block set of new " + type + ".");
+
         }
     }
 
