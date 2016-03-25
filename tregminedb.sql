@@ -1161,3 +1161,16 @@ INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
 ('SILK_TOUCH', 'Silk Touch'),
 ('THORNS', 'Thorns'),
 ('WATER_WORKER', 'Aqua Affinity');
+
+CREATE TABLE bank_transaction (
+    transaction_id INT UNSIGNED AUTO_INCREMENT,
+    account_id INT UNSIGNED NOT NULL,
+    player_id INT UNSIGNED NOT NULL,
+    transaction_type ENUM ('deposit', 'withdrawal') NOT NULL,
+    transaction_amount INT UNSIGNED NOT NULL,
+    transaction_timestamp INT UNSIGNED NOT NULL,
+    PRIMARY KEY (transaction_id),
+    INDEX idx_account (account_id, transaction_timestamp),
+    INDEX idx_player (player_id, transaction_timestamp)
+) ENGINE=InnoDB;
+ALTER TABLE bank_account DROP INDEX idx_accountnum;
