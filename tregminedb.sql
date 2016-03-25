@@ -1137,3 +1137,27 @@ ALTER TABLE `staffnews`
 
 ALTER TABLE `staffnews`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  
+INSERT INTO `enchantment` (`enchantment_name`, `enchantment_title`) VALUES
+('ARROW_DAMAGE', 'Power'),
+('ARROW_FIRE', 'Flame'),
+('ARROW_INFINITE', 'Infinity'),
+('ARROW_KNOCKBACK', 'Punch'),
+('DAMAGE_ALL', 'Sharpness'),
+('DAMAGE_ARTHROPODS', 'Bane of Arthropods'),
+('DAMAGE_UNDEAD', 'Smite'),
+('DIG_SPEED', 'Efficiency'),
+('DURABILITY', 'Unbreaking'),
+('FIRE_ASPECT', 'Fire Aspect'),
+('KNOCKBACK', 'Knockback'),
+('LOOT_BONUS_BLOCKS', 'Fortune'),
+('LOOT_BONUS_MOBS', 'Looting'),
+('OXYGEN', 'Respiration'),
+('PROTECTION_ENVIRONMENTAL', 'Protection'),
+('PROTECTION_EXPLOSIONS', 'Blast Protection'),
+('PROTECTION_FIRE', 'Fire Protection'),
+('PROTECTION_PROJECTILE', 'Projectile Protection'),
+('PROTECTION_FALL', 'Feather Falling'),
+('SILK_TOUCH', 'Silk Touch'),
+('THORNS', 'Thorns'),
+('WATER_WORKER', 'Aqua Affinity');
