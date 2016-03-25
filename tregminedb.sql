@@ -1174,3 +1174,6 @@ CREATE TABLE bank_transaction (
     INDEX idx_player (player_id, transaction_timestamp)
 ) ENGINE=InnoDB;
 ALTER TABLE bank_account DROP INDEX idx_accountnum;
+
+INSERT INTO `motd` (`motd_timestamp`, `motd_message`) VALUES
+(unix_timestamp(), 'Welcome to Tregmine 2! :)');
