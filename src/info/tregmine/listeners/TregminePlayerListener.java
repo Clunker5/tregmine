@@ -230,8 +230,6 @@ public class TregminePlayerListener implements Listener
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-        player.sendMessage(ChatColor.GOLD + "Welcome to Tregmine 2! There are ONE change(s)");
-        player.sendMessage(ChatColor.GOLD + "Keywords have been removed. Please don't try to use them.");
         Rank rank = player.getRank();
         if(player.getIsStaff()){
         	List<StaffNews> news = null;
