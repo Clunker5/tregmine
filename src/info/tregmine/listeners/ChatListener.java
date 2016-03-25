@@ -57,6 +57,35 @@ public class ChatListener implements Listener
                                                online.getChatName() + txtColor);
                     }
                 }
+                if (text.contains("#0")) {
+
+                    text = text.replaceAll("#0", ChatColor.BLACK + "");
+                }
+                if (text.contains("#1")) {
+
+                    text = text.replaceAll("#1", ChatColor.DARK_BLUE + "");
+                }
+                if (text.contains("#2")) {
+
+                    text = text.replaceAll("#2", ChatColor.DARK_GREEN + "");
+                }
+                if (text.contains("#3")) {
+
+                    text = text.replaceAll("#3", ChatColor.DARK_AQUA + "");
+                }
+                if (text.contains("#4")) {
+
+                    text = text.replaceAll("#4", ChatColor.DARK_RED + "");
+                }
+                if (text.contains("#5")) {
+
+                    text = text.replaceAll("#5", ChatColor.DARK_PURPLE + "");
+                }
+                if (text.contains("#6")) {
+
+                        text = text.replaceAll("#6", ChatColor.GOLD + "");
+                }
+                
 
                 List<String> player_keywords = playerDAO.getKeywords(to);
 
