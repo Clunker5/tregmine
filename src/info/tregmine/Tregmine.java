@@ -59,6 +59,7 @@ public class Tregmine extends JavaPlugin
     private World rulelessWorldEnd;
 
     private LookupService cl = null;
+    private Tregmine plugin;
 
     @Override
     public void onLoad()
@@ -116,7 +117,7 @@ public class Tregmine extends JavaPlugin
     public void onEnable()
     {
         this.server = getServer();
-
+        plugin = this;
         FileConfiguration config = getConfig();
         
         List<?> configWorlds = getConfig().getList("worlds.names");
