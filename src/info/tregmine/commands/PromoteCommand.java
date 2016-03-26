@@ -12,6 +12,9 @@ import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.Flags;
 import info.tregmine.commands.NotifyCommand;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IPlayerDAO;
 
 
 public class PromoteCommand extends AbstractCommand{
@@ -35,22 +38,31 @@ public class PromoteCommand extends AbstractCommand{
 		String possibleuser = args[0];
 		String newrank = args[1];
 		Rank rank = null;
+		String sayrank = "";
 		if(newrank.equalsIgnoreCase("settler")){
 			rank = Rank.SETTLER;
+			sayrank = "Settler";
 		}else if(newrank.equalsIgnoreCase("resident")){
 			rank = Rank.RESIDENT;
+			sayrank = "Resident";
 		}else if(newrank.equalsIgnoreCase("donator")){
 			rank = Rank.DONATOR;
+			sayrank = "Donator";
 		}else if(newrank.equalsIgnoreCase("guardian")){
 			rank = Rank.GUARDIAN;
+			sayrank = "Guardian";
 		}else if(newrank.equalsIgnoreCase("builder")){
 			rank = Rank.BUILDER;
+			sayrank = "Builder";
 		}else if(newrank.equalsIgnoreCase("coder")){
 			rank = Rank.CODER;
+			sayrank = "Coder";
 		}else if(newrank.equalsIgnoreCase("junioradmin") || newrank.equalsIgnoreCase("junior_admin")){
 			rank = Rank.JUNIOR_ADMIN;
+			sayrank = "Junior Admin";
 		}else if(newrank.equalsIgnoreCase("senioradmin") || newrank.equalsIgnoreCase("senior_admin")){
 			rank = Rank.SENIOR_ADMIN;
+			sayrank = "Senior Admin";
 		}else{
 			player.sendMessage(RED + "You have specified an invalid rank. Please try again.");
 			return true;
@@ -67,7 +79,17 @@ public class PromoteCommand extends AbstractCommand{
 			return true;
 		}
 		//Any other errors have now been checked and dealt with. Promote the user.
-		user.setRank(rank);
+		try (IContext ctx = tregmine.createContext()) {
+            user.setRank(rank);
+            user.setMentor(null);
+
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            playerDAO.updatePlayer(user);
+            playerDAO.updatePlayerInfo(user);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+		user.sendMessage(BLUE + "You were promoted to " + newrank + " by " + player.getChatName());
 		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + newrank + "!");
 		return true;
 	}
