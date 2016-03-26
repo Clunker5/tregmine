@@ -8,6 +8,8 @@ import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -372,6 +374,7 @@ public class Tregmine extends JavaPlugin
                 }
             }, 20L, 20L);
     }
+
 
     // run when plugin is disabled
     @Override
