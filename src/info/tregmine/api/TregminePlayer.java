@@ -224,7 +224,12 @@ public class TregminePlayer extends PlayerDelegate
     	}
 //    	sendMessage(ChatColor.RED + "You are not authorized to perform this command.");
     }
-
+    public void invalidArgsMessage(String args, String command){
+    	sendMessage(ChatColor.RED + "Invalid arguments! Use " + args + " for the command " + command + ".");
+    }
+    public void commandDisabledMessage(String command){
+    	sendMessage(ChatColor.RED + "Sorry, but " + command + " has been disabled.");
+    }
     public String getKeyword() { return keyword; }
     public void setKeyword(String v) { this.keyword = v; }
     
