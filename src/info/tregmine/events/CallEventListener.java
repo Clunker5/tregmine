@@ -6,9 +6,13 @@ import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 
+import java.util.logging.Logger;
+
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.event.server.ServerListPingEvent;
 
 public class CallEventListener implements Listener
 {
@@ -18,7 +22,28 @@ public class CallEventListener implements Listener
     {
         this.plugin = instance;
     }
-
+    // Triggers when a player pings the server
+	@EventHandler
+	public void onServerListPing(ServerListPingEvent event){
+		Logger.global.info("A player pinged the server!");
+		String extraText = "";
+		String type = plugin.getConfig().getString("donotevertouch.type");
+		Logger.global.info("Type = " + type);
+		if(type.contains("re")){
+			extraText = ChatColor.GREEN + " Release";
+		}else if(type.contains("be")){
+			extraText = ChatColor.BOLD + " Beta";
+		}else if(type.contains("te")){
+			extraText = ChatColor.BLUE + " Test Release";
+		}else if(type.contains("bl")){
+			extraText = ChatColor.RED + " Bleeding Edge";
+		}else if(type.contains("gm")){
+			extraText = ChatColor.GOLD + " Golden Master";
+		}else{
+			extraText = ChatColor.DARK_RED + "" + ChatColor.BOLD + " YOU DID SOMETHING WRONG.";
+		}
+		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd")));
+	}
     // Triggers when a player changes lot
     @EventHandler
     public void PlayerLotChangeEventListener(PlayerMoveEvent event)
