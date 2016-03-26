@@ -121,7 +121,7 @@ public class Tregmine extends JavaPlugin
         this.server = getServer();
         plugin = this;
         FileConfiguration config = getConfig();
-        
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
         List<?> configWorlds = getConfig().getList("worlds.names");
         if(getConfig().getString("worlds.enabled") == "true"){
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
@@ -336,6 +336,7 @@ public class Tregmine extends JavaPlugin
         getCommand("tool").setExecutor(new ToolSpawnCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
         getCommand("tp").setExecutor(new TeleportCommand(this));
+        getCommand("tps").setExecutor(new TpsCommand(this));
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));

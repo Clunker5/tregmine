@@ -214,6 +214,9 @@ commands:
   tp:
     description: Teleport to a player
     usage: /tp player
+  tps:
+    description: Get the TPS of the server
+    usage: /tps
   tpshield:
     description: Prevent players from teleporting to you (donators only)
     usage: /tpshield
