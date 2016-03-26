@@ -1,5 +1,9 @@
 package info.tregmine.listeners;
 
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RESET;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -196,12 +200,12 @@ public class TregminePlayerListener implements Listener
         if (player.getKeyword() != null) {
             String keyword =
                     player.getKeyword()
-                            + ".mc.tregmine.info:25565".toLowerCase();
+                            + ".mc.rabil.org:25565".toLowerCase();
             Tregmine.LOGGER.warning("host: " + event.getHostname());
             Tregmine.LOGGER.warning("keyword:" + keyword);
 
             if (keyword.equals(event.getHostname().toLowerCase())
-                    || keyword.matches("mc.tregmine.info")) {
+                    || keyword.matches("mc.rabil.org")) {
                 Tregmine.LOGGER.warning(player.getName()
                         + " keyword :: success");
             }
@@ -440,10 +444,8 @@ public class TregminePlayerListener implements Listener
                 int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
                 message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
             }
-            plugin.getServer().broadcastMessage(message);
+            Bukkit.broadcastMessage(message);
         }
-        String suffix = "";
-        Bukkit.broadcastMessage(ChatColor.YELLOW + player.getChatName() + " has left the game " + suffix);
 
         // Look if there are any students being mentored by the exiting player
         if (player.getStudent() != null) {
@@ -494,8 +496,8 @@ public class TregminePlayerListener implements Listener
     public void onPlayerMove(PlayerMoveEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("error loading profile!");
+        if(player.isAfk()){
+        	player.setAfk(false);
         }
     }
 
