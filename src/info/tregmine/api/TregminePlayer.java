@@ -1,6 +1,11 @@
 package info.tregmine.api;
 
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.RESET;
 
 import java.util.*;
 
@@ -224,8 +229,8 @@ public class TregminePlayer extends PlayerDelegate
     	}
 //    	sendMessage(ChatColor.RED + "You are not authorized to perform this command.");
     }
-    public void invalidArgsMessage(String args, String command){
-    	sendMessage(ChatColor.RED + "Invalid arguments! Use " + args + " for the command " + command + ".");
+    public void invalidArgsMessage(String args){
+    	sendMessage(ChatColor.RED + "Invalid arguments! Use " + args);
     }
     public void commandDisabledMessage(String command){
     	sendMessage(ChatColor.RED + "Sorry, but " + command + " has been disabled.");
@@ -831,7 +836,18 @@ public class TregminePlayer extends PlayerDelegate
     	return this.afk;
     }
     public void setAfk(Boolean value){
-    	this.afk = value;
+    	if(value == true){
+    		this.afk = true;
+    		Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + BLUE + " is now afk.");
+			String oldname = getChatName();
+			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
+    	}else if(value == false){
+    		this.afk = false;
+			setTemporaryChatName(getNameColor() + getRealName());
+			Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + GREEN + " is no longer afk.");
+    	}else{
+    		return;
+    	}
     }
 
 }

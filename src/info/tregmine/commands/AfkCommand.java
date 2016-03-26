@@ -32,15 +32,10 @@ public class AfkCommand extends AbstractCommand{
 		if(player.isAfk()){
 			//Player is afk, wake them up
 			player.setAfk(false);
-			player.setTemporaryChatName(player.getNameColor() + player.getRealName());
-			Bukkit.broadcastMessage(ITALIC + player.getChatName() + RESET + GREEN + " is no longer afk.");
+
 		}else{
 			//Player is not afk, make them afk and announce it.
 			player.setAfk(true);
-			Bukkit.broadcastMessage(ITALIC + player.getChatName() + RESET + BLUE + " is now afk.");
-			String oldname = player.getChatName();
-			//This makes /who show that the player is AFK.
-			player.setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
 		}
         return true;
     }
