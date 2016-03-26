@@ -26,6 +26,10 @@ public class ChatListener implements Listener
     {
         TregminePlayer sender = event.getPlayer();
         String channel = sender.getChatChannel();
+        if(event.getMessage().contains("%cancel%")){
+        	event.setCancelled(true);
+        	return;
+        }
 
         try (IContext ctx = plugin.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
