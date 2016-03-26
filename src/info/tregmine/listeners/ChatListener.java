@@ -1,8 +1,13 @@
 package info.tregmine.listeners;
 
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RESET;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.*;
 
@@ -29,6 +34,9 @@ public class ChatListener implements Listener
         if(event.getMessage().contains("%cancel%")){
         	event.setCancelled(true);
         	return;
+        }
+        if(sender.isAfk()){
+        	sender.setAfk(false);
         }
 
         try (IContext ctx = plugin.createContext()) {

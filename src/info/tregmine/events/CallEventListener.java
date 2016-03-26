@@ -6,8 +6,14 @@ import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RESET;
+
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +27,17 @@ public class CallEventListener implements Listener
     public CallEventListener(Tregmine instance)
     {
         this.plugin = instance;
+    }
+    @EventHandler
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event){
+    	if(event.getMessage().equalsIgnoreCase("/afk")){
+    		return;
+    	}else{
+    	TregminePlayer sender = plugin.getPlayer(event.getPlayer().getPlayer());
+    	if(sender.isAfk()){
+    		sender.setAfk(false);
+    	}
+    	}
     }
     // Triggers when a player pings the server
 	@EventHandler
