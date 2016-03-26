@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.ChatState;
 import info.tregmine.api.TregminePlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -32,7 +33,7 @@ public class SkipMentorCommand extends AbstractCommand{
 		}
 		if(args.length != 1){
 			//Player didn't enter two arguments, terminate.
-			player.sendMessage(RED + "You didn't enter the right arguments. '/skipmentor <player>'");
+			player.invalidArgsMessage("/skipmentor <player>");
 			return true;
 		}
 		//The checks have finished, perform the command
@@ -53,14 +54,14 @@ public class SkipMentorCommand extends AbstractCommand{
 		try (IContext ctx = tregmine.createContext()) {
             user.setRank(Rank.SETTLER);
             user.setMentor(null);
-
+            user.setChatState(ChatState.CHAT);
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayer(user);
             playerDAO.updatePlayerInfo(user);
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-		player.sendMessage(GREEN + player.getChatName() + " has skipped mentoring.");
+		Bukkit.broadcastMessage(GREEN + user.getChatName() + " has skipped mentoring.");
 		return true;
 		}else{
 			player.sendMessage(RED + "This player cannot skip mentoring because their rank does not qualify them.");
