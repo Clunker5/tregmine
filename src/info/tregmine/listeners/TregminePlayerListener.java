@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.ITALIC;
 import static org.bukkit.ChatColor.RESET;
 
+import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -227,7 +228,11 @@ public class TregminePlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         event.setJoinMessage(null);
-        
+        String playerIp = event.getPlayer().getAddress().toString();
+        String playerName = event.getPlayer().getName();
+        ListStore loggedPlayers = new ListStore(new File(plugin.getPluginFolder() + File.separator + "logged-players.txt"));
+        loggedPlayers.add(playerName+"::"+playerIp);
+        loggedPlayers.save();
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         
         if (player == null) {
