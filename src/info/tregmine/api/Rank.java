@@ -107,6 +107,12 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canForceOpenChests()
+    {
+        return  this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
 
     public boolean canSetWeather()
     {
@@ -223,6 +229,12 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canBypassWorld()
+    {
+        return this == JUNIOR_ADMIN ||
+                this == SENIOR_ADMIN;
+    }
 
     public boolean canWarn()
     {
@@ -304,6 +316,12 @@ public enum Rank
     }
 
     public boolean canChangeName()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+    
+    public boolean canChangeJackpot()
     {
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
@@ -491,6 +509,12 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
 
+    public boolean canGetChunkInfo()
+    {
+        return this == JUNIOR_ADMIN ||
+               this == SENIOR_ADMIN;
+    }
+
     public int getTeleportTimeout()
     {
         if (this == CODER ||
@@ -582,12 +606,32 @@ public enum Rank
         }
     }
     
+    public double getPickupDistance()
+    {
+        if (this == JUNIOR_ADMIN || this == SENIOR_ADMIN) {
+            return 5;
+        } else if (this == GUARDIAN || this == CODER || this == BUILDER) {
+            return 4;
+        } else if (this == DONATOR) {
+            return 3;
+        } else if (this == RESIDENT) {
+            return 1.5;
+        } else {
+            return 1;
+        }
+    }
+    
     public boolean canEditBanks()
     {
         return (this == JUNIOR_ADMIN ||
                 this == SENIOR_ADMIN
                 /* || this == CODER */ ); //Possibly? :P
                 
+    }
+    
+    public boolean canCheckBlocks()
+    {
+        return (this == JUNIOR_ADMIN || this == SENIOR_ADMIN);
     }
 
     public ChatColor getColor()
@@ -605,4 +649,5 @@ public enum Rank
 
         return null;
     }
+
 }

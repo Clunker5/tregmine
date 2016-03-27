@@ -1,20 +1,16 @@
 package info.tregmine.listeners;
 
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import java.util.Set;
+
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TargetBlock;
 import info.tregmine.Tregmine;
+import info.tregmine.api.*;
+import info.tregmine.api.returns.BooleanStringReturn;
 
 public class CompassListener implements Listener
 {
@@ -30,6 +26,7 @@ public class CompassListener implements Listener
         this.plugin = instance;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerAnimation(PlayerAnimationEvent event)
     {
@@ -44,6 +41,11 @@ public class CompassListener implements Listener
         }
 
         World world = player.getWorld();
+        if (plugin.getRulelessWorld().getName().equalsIgnoreCase(world.getName()) &&
+                !player.getRank().canTeleportBetweenWorlds()) {
+            player.sendMessage(ChatColor.RED + "You can not use a compass in this world!");
+            return;
+        }
 
         if (player.getRank().canUseEnhancedCompass()) {
 
@@ -74,7 +76,7 @@ public class CompassListener implements Listener
                         loc.setPitch(pitch);
                         loc.setYaw(yaw);
                         if (loc.getY() < 255) {
-                            player.teleport(loc);
+                            player.teleportWithHorse(loc);
                         }
                         break;
                     }
@@ -83,7 +85,7 @@ public class CompassListener implements Listener
         }
         else if (player.getRank().canUseCompass()) {
 
-            Block target = player.getDelegate().getTargetBlock(null, 300);
+            Block target = player.getDelegate().getTargetBlock((Set<Material>) null, 300);
 
             Block b1 = world.getBlockAt(new Location(player.getWorld(),
                                                      target.getX(),
@@ -94,6 +96,13 @@ public class CompassListener implements Listener
                                                      target.getX(),
                                                      target.getY() + 2,
                                                      target.getZ()));
+            
+            BooleanStringReturn returnValue = player.canBeHere(target.getLocation());
+            
+            if (!returnValue.getBoolean()) {
+                player.sendMessage(returnValue.getString());
+                return;
+            }
 
             if (mode == CompassMode.OnTop) {
                 int top = world.getHighestBlockYAt(target.getLocation());
@@ -101,7 +110,7 @@ public class CompassListener implements Listener
                                 target.getX() + 0.5, top, target.getZ() + 0.5,
                                 player.getLocation().getYaw(),
                                 player.getLocation().getPitch());
-                player.teleport(loc);
+                player.teleportWithHorse(loc);
             }
             else if (mode == CompassMode.Precision) {
                 if ((b1.getType() == Material.AIR &&
@@ -115,7 +124,7 @@ public class CompassListener implements Listener
                                                 target.getZ() + 0.5,
                                                 player.getLocation().getYaw(),
                                                 player.getLocation().getPitch());
-                    player.teleport(loc);
+                    player.teleportWithHorse(loc);
                 }
                 else {
                     player.sendMessage(ChatColor.RED +

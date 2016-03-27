@@ -125,4 +125,15 @@ public class DBContext implements IContext
     {
         return new DBBankDAO(conn);
     }
+    
+    @Override
+    public IMiscDAO getMiscDAO()
+    {
+        return new DBMiscDAO(conn);
+    }
+
+	@Override
+	public IStaffNewsDAO getNewsByUploader() {
+		return new DBNewsDAO(conn);
+	}
 }

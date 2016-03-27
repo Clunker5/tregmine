@@ -1,22 +1,18 @@
 package info.tregmine.listeners;
 
-import java.util.*;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RESET;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Skull;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import java.io.File;
+import java.util.*;
+import java.util.Map.Entry;
+
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -26,29 +22,14 @@ import org.bukkit.scoreboard.*;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.Badge;
-import info.tregmine.api.PlayerBannedException;
-import info.tregmine.api.PlayerReport;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.*;
 import info.tregmine.api.lore.Created;
-import info.tregmine.api.math.MathUtil;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.commands.MentorCommand;
 import info.tregmine.database.*;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IInventoryDAO;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IMentorLogDAO;
-import info.tregmine.database.IMotdDAO;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.IPlayerReportDAO;
-import info.tregmine.database.IWalletDAO;
+import info.tregmine.events.PlayerMoveBlockEvent;
 import info.tregmine.quadtree.Point;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.ZoneWorld;
-import static info.tregmine.database.IInventoryDAO.InventoryType;
+import info.tregmine.zones.*;
 
 public class TregminePlayerListener implements Listener
 {
@@ -72,42 +53,6 @@ public class TregminePlayerListener implements Listener
             return order * (a.getGuardianRank() - b.getGuardianRank());
         }
     }
-
-    private final static String[] quitMessages =
-            new String[] {
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " deserted from the battlefield with a hearty good bye!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " stole the cookies and ran!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was eaten by a teenage mutant ninja platypus!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " parachuted of the plane and into the unknown!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was eaten by a teenage mutant ninja creeper!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " jumped off the plane with a cobble stone parachute!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " built Rome in one day and now deserves a break!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " will come back soon because Tregmine is awesome!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " leaves the light and enter darkness.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " disconnects from a better life.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " already miss the best friends in the world!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " will build something epic next time.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " is not banned... yet!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " has left our world!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went to browse Tregmine's forums instead!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + "'s" + ChatColor.DARK_GRAY + " CPU was killed by the Rendermen!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " logged out by accident!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found the IRL warp!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " left the game due to IRL chunk error issues!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " left the Matrix. Say hi to Morpheus!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " disconnected? What is this!? Impossibru!",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found a lose cable and ate it.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found the true END of minecraft.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " found love elswhere.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " rage quit the server.",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was not accidently banned by " + ChatColor.DARK_RED + "BlackX",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " got " + ChatColor.WHITE + "TROLLED by " + ChatColor.DARK_RED + "TheScavenger101",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " lost an epic rap battle with " + ChatColor.DARK_RED + "einand",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was bored to death by " + ChatColor.DARK_RED + "knipil",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " went squid fishing with " + ChatColor.DARK_RED + "GeorgeBombadil",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " shouldn't have joined a spelling bee with " + ChatColor.DARK_RED + "mejjad",
-                    ChatColor.DARK_GRAY + "Quit - %s" + ChatColor.DARK_GRAY + " was paralyzed by a gaze from " + ChatColor.DARK_RED + "mksen",
-            };
 
     private Tregmine plugin;
     private Map<Item, TregminePlayer> droppedItems;
@@ -166,7 +111,14 @@ public class TregminePlayerListener implements Listener
         }
 
         TregminePlayer p = plugin.getPlayer(player);
-        p.saveInventory(p.getCurrentInventory());
+        if (p == null) {
+            Tregmine.LOGGER.info(player.getName() + " was not found in player map.");
+            return;
+        }
+
+        if (p.getCurrentInventory() != null) {
+            p.saveInventory(p.getCurrentInventory());
+        }
     }
 
     @EventHandler
@@ -242,19 +194,19 @@ public class TregminePlayerListener implements Listener
         }
 
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
-            player.teleport(this.plugin.getServer().getWorld("world")
+            player.teleportWithHorse(this.plugin.getServer().getWorld("world")
                     .getSpawnLocation());
         }
 
         if (player.getKeyword() != null) {
             String keyword =
                     player.getKeyword()
-                            + ".mc.tregmine.info:25565".toLowerCase();
+                            + ".mc.rabil.org:25565".toLowerCase();
             Tregmine.LOGGER.warning("host: " + event.getHostname());
             Tregmine.LOGGER.warning("keyword:" + keyword);
 
             if (keyword.equals(event.getHostname().toLowerCase())
-                    || keyword.matches("mc.tregmine.info")) {
+                    || keyword.matches("mc.rabil.org")) {
                 Tregmine.LOGGER.warning(player.getName()
                         + " keyword :: success");
             }
@@ -276,20 +228,43 @@ public class TregminePlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         event.setJoinMessage(null);
-
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-
         Rank rank = player.getRank();
+        if(player.getIsStaff()){
+        	List<StaffNews> news = null;
+        	try (IContext ctx = this.plugin.createContext()) {
+                IStaffNewsDAO newsDAO = ctx.getNewsByUploader();
+                news = newsDAO.getStaffNews();
+                
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+        	if(news == null){
+        		player.sendMessage(ChatColor.BLUE + "There's no messages on the staff board at this time.");
+        		
+        	}else{
+        		//There's messages :)
+        		for(StaffNews singleNews : news){
+        			String username = singleNews.getUsername();
+        			String text = singleNews.getText();
+        			long timestamp = singleNews.getDate();
+        			int id = singleNews.getId();
+        			player.sendMessage(ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
+        			player.sendMessage(ChatColor.GOLD + text);
+        		}
+        	}
+        }
 
         // Handle invisibility, if set
         List<TregminePlayer> players = plugin.getOnlinePlayers();
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
             player.sendMessage(ChatColor.YELLOW + "You are now invisible!");
-
+           
             // Hide the new player from all existing players
             for (TregminePlayer current : players) {
                 if (!current.getRank().canVanish()) {
@@ -305,7 +280,14 @@ public class TregminePlayerListener implements Listener
             }
         }
 
-        player.loadInventory("survival", false);
+        World cWorld = player.getWorld();
+        String[] worldNamePortions = cWorld.getName().split("_");
+
+        if (worldNamePortions[0].equalsIgnoreCase("world")) {
+            player.loadInventory("survival", false);
+        } else {
+            player.loadInventory(worldNamePortions[0], false);
+        }
 
         // Hide currently invisible players from the player that just signed on
         for (TregminePlayer current : players) {
@@ -336,7 +318,7 @@ public class TregminePlayerListener implements Listener
 
         // Check if the player is allowed to fly
         if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) ||
-				player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+                player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
             player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
@@ -423,10 +405,10 @@ public class TregminePlayerListener implements Listener
                     "Type /mentor to offer your services!");
             }
         }
-
-        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
-            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
-        }
+// Feature has been removed.
+//        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
+//            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
+//        }
 
         if (rank == Rank.DONATOR &&
                 !player.hasBadge(Badge.PHILANTROPIST)) {
@@ -445,6 +427,11 @@ public class TregminePlayerListener implements Listener
             return;
         }
 
+		if (player.isCombatLogged()) {
+			player.setHealth(0);
+			Tregmine.LOGGER.info(event.getPlayer().getName() + " just combat logged... What a fool!");
+		}
+
         player.saveInventory(player.getCurrentInventory());
         event.setQuitMessage(null);
 
@@ -454,10 +441,10 @@ public class TregminePlayerListener implements Listener
                 message = player.getChatName() + " quit: " + ChatColor.YELLOW + player.getQuitMessage();
             } else {
                 Random rand = new Random();
-                int msgIndex = rand.nextInt(quitMessages.length);
-                message = String.format(quitMessages[msgIndex], player.getChatName());
+                int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
+                message = ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex);
             }
-            plugin.getServer().broadcastMessage(message);
+            Bukkit.broadcastMessage(message);
         }
 
         // Look if there are any students being mentored by the exiting player
@@ -509,8 +496,37 @@ public class TregminePlayerListener implements Listener
     public void onPlayerMove(PlayerMoveEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            event.getPlayer().kickPlayer("error loading profile!");
+        if(player.isAfk()){
+        	player.setAfk(false);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerBlockMove(PlayerMoveBlockEvent event)
+    {
+        TregminePlayer player = event.getPlayer();
+
+//		if (	(player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
+//				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
+//				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) &&
+//				player.isFlying() &&
+//				!player.getRank().canBypassWorld()) {
+//			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
+//			player.setAllowFlight(false);
+//			player.setFlying(false);
+//
+//			for (TregminePlayer p : plugin.getOnlinePlayers()) {
+//				if (p.getRank().canBypassWorld()) {
+//					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " is flying in anarchy! Plugin disabled it for you...");
+//				}
+//			}
+//		}
+
+        // To add player.hasBadge for a flight badge when made
+        if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
+            player.setFlySpeed(0.7f); // To be balanced
+        } else {
+            player.setFlySpeed(0.1f); // 0.1 is default
         }
     }
 
@@ -545,6 +561,8 @@ public class TregminePlayerListener implements Listener
         }
 
         Location loc = player.getLocation();
+       
+        
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Lot lot = world.findLot(new Point(loc.getBlockX(), loc.getBlockZ()));
         if (lot == null) {
@@ -554,6 +572,8 @@ public class TregminePlayerListener implements Listener
         if (!lot.hasFlag(Lot.Flags.FLIGHT_ALLOWED)) {
             event.setCancelled(true);
         }
+
+
     }
 
     @EventHandler
@@ -645,7 +665,7 @@ public class TregminePlayerListener implements Listener
     {
         // Identify all guardians and categorize them based on their current
         // state
-        Player[] players = plugin.getServer().getOnlinePlayers();
+        Collection<?extends Player> players = plugin.getServer().getOnlinePlayers();
         Set<TregminePlayer> guardians = new HashSet<TregminePlayer>();
         List<TregminePlayer> activeGuardians = new ArrayList<TregminePlayer>();
         List<TregminePlayer> inactiveGuardians =
@@ -682,7 +702,7 @@ public class TregminePlayerListener implements Listener
         Collections.sort(inactiveGuardians, new RankComparator(true));
         Collections.sort(queuedGuardians, new RankComparator());
 
-        int idealCount = (int) Math.ceil(Math.sqrt(players.length) / 2);
+        int idealCount = (int) Math.ceil(Math.sqrt(players.size()) / 2);
         // There are not enough guardians active, we need to activate a few more
         if (activeGuardians.size() <= idealCount) {
             // Make a pool of every "willing" guardian currently online

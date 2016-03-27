@@ -59,7 +59,12 @@ public class FillCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(args.length == 0){
+    		player.sendMessage(RED + "Please specify the material");
+    		return true;
+    	}
         if (!player.getRank().canFill()) {
+        	player.nopermsMessage(false, "/fill");
             return true;
         }
 

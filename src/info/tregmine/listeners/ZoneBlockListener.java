@@ -1,20 +1,22 @@
 package info.tregmine.listeners;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-//import org.bukkit.entity.HumanEntity;
-//import org.bukkit.entity.Player;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.*;
+//import org.bukkit.entity.HumanEntity;
+//import org.bukkit.entity.Player;
 
 public class ZoneBlockListener implements Listener
 {
@@ -31,7 +33,39 @@ public class ZoneBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
-        if (player.hasBlockPermission(location, true)) return;
+			if (player.hasBlockPermission(location, true)) return;
+
+        /*if (!player.getRank().canBuild() &&
+                player.getMentor() != null) {
+
+                TregminePlayer mentor = player.getMentor();
+                Location a = player.getLocation();
+                Location b = mentor.getLocation();
+
+                if (Distance.calc2d(a, b) > 50) {
+                    player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
+                            "a 50 block radius of your mentor in order to build.");
+                    mentor.sendMessage(ChatColor.YELLOW + "Your student has to stay " +
+                            "within a 50 block radius of you in order to build.");
+                    event.setCancelled(true);
+                    return;
+                }
+        } else {
+            event.setCancelled(true);
+            return;
+        }*/
+
+        event.setCancelled(true);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 5, 2));
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event)
+    {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+
+        Location location = event.getBlock().getLocation();
+			if (player.hasBlockPermission(location, true)) return;
 
         /*if (!player.getRank().canBuild() &&
                 player.getMentor() != null) {
@@ -56,36 +90,27 @@ public class ZoneBlockListener implements Listener
         event.setCancelled(true);
     }
 
+    // Stops trampling of crops
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event)
+    public void onBlockTrample(PlayerInteractEvent event)
     {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
-        Location location = event.getBlock().getLocation();
-
-        if (player.hasBlockPermission(location, true)) return;
-
-        /*if (!player.getRank().canBuild() &&
-                player.getMentor() != null) {
-
-                TregminePlayer mentor = player.getMentor();
-                Location a = player.getLocation();
-                Location b = mentor.getLocation();
-
-                if (Distance.calc2d(a, b) > 50) {
-                    player.sendMessage(ChatColor.YELLOW + "You have to stay within " +
-                            "a 50 block radius of your mentor in order to build.");
-                    mentor.sendMessage(ChatColor.YELLOW + "Your student has to stay " +
-                            "within a 50 block radius of you in order to build.");
-                    event.setCancelled(true);
-                    return;
-                }
-        } else {
-            event.setCancelled(true);
+        // Check it's a physical event (by moving)
+        if (event.getAction() != Action.PHYSICAL) {
             return;
-        }*/
+        }
 
-        event.setCancelled(true);
+        // Check it's farmland (otherwise it would stop pressure plates and such)
+        if (event.getClickedBlock() == null || !event.getClickedBlock().getType().equals(Material.DIRT)) {
+            return;
+        }
+
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        Location location = event.getClickedBlock().getLocation();
+
+        // Check for block permission
+        if (!player.hasBlockPermission(location, true)) {
+            event.setCancelled(true);
+        }
     }
 
     // Keeps liquids in the zone/lot they were originally placed in.

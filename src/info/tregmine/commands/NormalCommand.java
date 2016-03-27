@@ -1,6 +1,9 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
+
+import java.util.Collection;
+
 import org.bukkit.entity.Player;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -16,6 +19,10 @@ public class NormalCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(true != false){
+    	player.sendMessage(RED + "I disabled this command for bug reasons..");
+    	return true;
+    	}
         if (player.getRank() == Rank.JUNIOR_ADMIN ||
             player.getRank() == Rank.SENIOR_ADMIN) {
             player.setRank(Rank.DONATOR);
@@ -30,7 +37,7 @@ public class NormalCommand extends AbstractCommand
                     + "reconnect!");
         }
         else if (player.getRank() == Rank.GUARDIAN) {
-            Player[] players = tregmine.getServer().getOnlinePlayers();
+            Collection<? extends Player> players = tregmine.getServer().getOnlinePlayers();
             TregminePlayer maxRank = null;
             for (Player srvPlayer : players) {
                 TregminePlayer guardian = tregmine.getPlayer(srvPlayer);

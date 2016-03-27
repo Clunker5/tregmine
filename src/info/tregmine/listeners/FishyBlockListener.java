@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.*;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -47,24 +48,27 @@ public class FishyBlockListener implements Listener
             player.getChatState() != TregminePlayer.ChatState.FISHY_BUY) {
             return;
         }
-
+        String message = event.getMessage();
+        event.setMessage("%cancel%");
+        event.setFormat("");
         event.setCancelled(true);
-
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
-        String text = event.getMessage().trim();
+        String text = message.trim();
         String[] textSplit = text.split(" ");
 
         player.sendMessage(ChatColor.YELLOW + "[FISHY] " +
                 ChatColor.WHITE + "<" +
                 player.getChatName() +
                 ChatColor.WHITE + "> " + text);
+        event.setCancelled(true);
 
         if (player.getChatState() == TregminePlayer.ChatState.FISHY_SETUP) {
 
             FishyBlock newFishyBlock = player.getNewFishyBlock();
             if (newFishyBlock == null) {
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 return;
             }
 
@@ -88,12 +92,10 @@ public class FishyBlockListener implements Listener
 
                     player.setNewFishyBlock(null);
                     player.setChatState(TregminePlayer.ChatState.CHAT);
-
+                    event.setCancelled(true);
                     // Create info sign
                     World world = player.getWorld();
                     updateSign(world, newFishyBlock);
-                    
-                    world.getBlockAt(newFishyBlock.getBlockLocation()).setType(Material.OBSIDIAN);
 
                     try (IContext ctx = plugin.createContext()) {
                         IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
@@ -141,6 +143,7 @@ public class FishyBlockListener implements Listener
                         cost + " tregs.");
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
 
                 updateSign(player.getWorld(), fishyBlock);
@@ -199,7 +202,7 @@ public class FishyBlockListener implements Listener
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setCurrentFishyBlock(null);
-
+                event.setCancelled(true);
                 updateSign(player.getWorld(), fishyBlock);
 
                 try (IContext ctx = plugin.createContext()) {
@@ -217,6 +220,7 @@ public class FishyBlockListener implements Listener
                 player.sendMessage(ChatColor.GREEN +
                     "Quitting without action.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             }
             else {
@@ -331,13 +335,14 @@ public class FishyBlockListener implements Listener
                 player.setCurrentFishyBlock(null);
                 player.setFishyBuyCount(0);
                 player.setChatState(TregminePlayer.ChatState.CHAT);
-
+                event.setCancelled(true);
                 updateSign(player.getWorld(), fishyBlock);
             }
             else if ("quit".equalsIgnoreCase(textSplit[0])) {
                 player.sendMessage(ChatColor.GREEN +
                     "Quitting without buying.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             }
             else {
@@ -441,8 +446,13 @@ public class FishyBlockListener implements Listener
                 MaterialData heldMaterial = heldItem.getData();
 
                 boolean match = false;
+                boolean all = false;
                 if (fishyMaterial.equals(heldMaterial)) {
                     match = true;
+
+                    if (player.isSneaking()) {
+                        all = true;
+                    }
 
                     if (fishyBlock.hasStoredEnchantments()) {
                         EnchantmentStorageMeta storageMeta = getStorageMeta(heldItem);
@@ -468,11 +478,45 @@ public class FishyBlockListener implements Listener
                         return;
                     }
 
-                    fishyBlock.addAvailableInventory(heldItem.getAmount());
-                    player.setItemInHand(null);
+                    int allAmount = 0;
+                    boolean massEnchant = false;
+                    if (all) {
+                        for (ItemStack i : player.getInventory().getContents()) {
+                            boolean allow = true;
+                            if (i == null) {
+                                continue; // Get rid of NPE
+                            }
+                            if (i.getType().getMaxDurability() != 0 && i.getData().getData() != 0) {
+                                continue; // Ignore damaged items
+                            }
+                            if (!fishyMaterial.equals(i.getData())) {
+                                continue; // Ignore items that do not match
+                            }
+                            if (fishyBlock.hasStoredEnchantments()) {
+                                if (massEnchant == false) {
+                                    player.sendMessage(ChatColor.RED +
+                                            "Mass Submition only works with non enchanted items and blocks.");
+                                    massEnchant = true;
+                                }
+                                continue;
+                            }
+                            if (i.getEnchantments().size() > 0) {
+                                continue;
+                            }
+                            if (!allow) {
+                                continue;
+                            }
+                            allAmount += i.getAmount();
+                            player.getInventory().remove(i);
+                        }
+                    } else {
+                        allAmount = heldItem.getAmount();
+                        player.setItemInHand(null);
+                    }
 
+                    fishyBlock.addAvailableInventory(allAmount);
                     player.sendMessage(ChatColor.GREEN + "" +
-                            heldItem.getAmount() + " items added to fishy block.");
+                            allAmount + " items added to fishy block.");
 
                     updateSign(player.getWorld(), fishyBlock);
 
@@ -482,7 +526,7 @@ public class FishyBlockListener implements Listener
                         fishyBlockDAO.insertTransaction(fishyBlock,
                                                         player,
                                                         TransactionType.DEPOSIT,
-                                                        heldItem.getAmount());
+                                                        allAmount);
                     } catch (DAOException e) {
                         throw new RuntimeException(e);
                     }
@@ -696,12 +740,6 @@ public class FishyBlockListener implements Listener
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
         Block block = event.getBlock();
-        if (block.getType() != Material.OBSIDIAN &&
-            block.getType() != Material.WALL_SIGN) {
-
-            return;
-        }
-
         Location loc = block.getLocation();
 
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
@@ -752,52 +790,64 @@ public class FishyBlockListener implements Listener
             if (currentFishyBlock.getId() == fishyBlock.getId()) {
                 player.setCurrentFishyBlock(null);
                 player.setChatState(TregminePlayer.ChatState.CHAT);
+                event.setCancelled(true);
             }
         }
+        event.setCancelled(true);
     }
 
     @SuppressWarnings("deprecation")
-    private void updateSign(World world, FishyBlock fishyBlock)
+    private void updateSign(final World world, final FishyBlock fishyBlock)
     {
-        Location blockLoc = fishyBlock.getBlockLocation();
-        Location signLoc = fishyBlock.getSignLocation();
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        scheduler.runTask(plugin,
+            new Runnable() {
+                @Override
+                public void run() {
+                    Location blockLoc = fishyBlock.getBlockLocation();
+                    Location signLoc = fishyBlock.getSignLocation();
 
-        Block signBlock = world.getBlockAt(signLoc);
-        Block mainBlock = world.getBlockAt(blockLoc);
-        BlockFace facing = mainBlock.getFace(signBlock);
+                    // force obsidian
+                    world.getBlockAt(blockLoc).setType(Material.OBSIDIAN);
 
-        signBlock.setType(Material.WALL_SIGN);
-        switch (facing) {
-            case WEST:
-                signBlock.setData((byte)0x04);
-                break;
-            case EAST:
-                signBlock.setData((byte)0x05);
-                break;
-            case NORTH:
-                signBlock.setData((byte)0x02);
-                break;
-            case SOUTH:
-                signBlock.setData((byte)0x03);
-                break;
-            default:
-                break;
-        }
-        //signBlock.getState().setData(new MaterialData(Material.WALL_SIGN));
+                    Block signBlock = world.getBlockAt(signLoc);
+                    Block mainBlock = world.getBlockAt(blockLoc);
+                    BlockFace facing = mainBlock.getFace(signBlock);
 
-        TregminePlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
-        MaterialData material = fishyBlock.getMaterial();
+                    signBlock.setType(Material.WALL_SIGN);
+                    switch (facing) {
+                        case WEST:
+                            signBlock.setData((byte)0x04);
+                            break;
+                        case EAST:
+                            signBlock.setData((byte)0x05);
+                            break;
+                        case NORTH:
+                            signBlock.setData((byte)0x02);
+                            break;
+                        case SOUTH:
+                            signBlock.setData((byte)0x03);
+                            break;
+                        default:
+                            break;
+                    }
+                    //signBlock.getState().setData(new MaterialData(Material.WALL_SIGN));
 
-        Sign sign = (Sign)signBlock.getState();
-        sign.setLine(0, player.getChatName());
-        if (material.getData() != 0) {
-            sign.setLine(1, material.toString());
-        } else {
-            sign.setLine(1, material.getItemType().toString());
-        }
-        sign.setLine(2, fishyBlock.getCost() + " tregs");
-        sign.setLine(3, fishyBlock.getAvailableInventory() + " available");
-        sign.update();
+                    TregminePlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
+                    MaterialData material = fishyBlock.getMaterial();
+
+                    Sign sign = (Sign)signBlock.getState();
+                    sign.setLine(0, player.getChatName());
+                    if (material.getData() != 0) {
+                        sign.setLine(1, material.toString());
+                    } else {
+                        sign.setLine(1, material.getItemType().toString());
+                    }
+                    sign.setLine(2, fishyBlock.getCost() + " tregs");
+                    sign.setLine(3, fishyBlock.getAvailableInventory() + " available");
+                    sign.update();
+                }
+            });
     }
 
     private int transferToInventory(FishyBlock fishyBlock,
@@ -886,4 +936,5 @@ public class FishyBlockListener implements Listener
 
         return match;
     }
+
 }

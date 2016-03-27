@@ -1,18 +1,15 @@
 package info.tregmine;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,15 +18,13 @@ import com.maxmind.geoip.LookupService;
 import info.tregmine.api.*;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
-import info.tregmine.database.IInventoryDAO.InventoryType;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.events.CallEventListener;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
-import info.tregmine.zones.Lot;
-import info.tregmine.zones.Zone;
-import info.tregmine.zones.ZoneWorld;
+import info.tregmine.zones.*;
+import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  * @author Ein Andersson
@@ -55,10 +50,18 @@ public class Tregmine extends JavaPlugin
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
 
+    private List<String> insults;
+    private List<String> quitMessages;
+
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
 
+    private World rulelessWorld;
+    private World rulelessWorldNether;
+    private World rulelessWorldEnd;
+
     private LookupService cl = null;
+    public Tregmine plugin;
 
     @Override
     public void onLoad()
@@ -90,16 +93,16 @@ public class Tregmine extends JavaPlugin
 
         zones = new HashMap<>();
 
-        Player[] players = getServer().getOnlinePlayers();
-        for (Player player : players) {
+        Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
+        for (Player player01 : players) {
             try {
                 TregminePlayer tp =
-                    addPlayer(player, player.getAddress().getAddress());
+                    addPlayer(player01, player01.getAddress().getAddress());
                 if (tp.getRank() == Rank.TOURIST) {
                     students.offer(tp);
                 }
             } catch (PlayerBannedException e) {
-                player.kickPlayer(e.getMessage());
+                player01.kickPlayer(e.getMessage());
             }
         }
 
@@ -116,8 +119,52 @@ public class Tregmine extends JavaPlugin
     public void onEnable()
     {
         this.server = getServer();
+        plugin = this;
+        pluginStatic = this;
+        FileConfiguration config = getConfig();
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
+        List<?> configWorlds = getConfig().getList("worlds.names");
+        if(getConfig().getString("worlds.enabled") == "true"){
+        String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
+        for(String worldName : worlds){
+        	if(worldName.contains("the_end") || worldName.contains("nether")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NORMAL);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
+        
+        for(String worldName : worlds){
+        	if(!worldName.contains("the_end")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.THE_END);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
+        for(String worldName : worlds){
+        	if(!worldName.contains("nether")){
+        		//Do nothing
+        	}else{
+        	WorldCreator addWorld = new WorldCreator(worldName);
+        	addWorld.environment(World.Environment.NETHER);
+        	addWorld.generateStructures(false);
+        	addWorld.type(WorldType.FLAT);
+        	addWorld.createWorld();
+        	}
+        }
+        LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
+        }else{
+        	LOGGER.info("Loaded 0 extra world(s).");
+        }
 
-        // Load blessed blocks
         try (IContext ctx = contextFactory.createContext()) {
             IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
             this.blessedBlocks = blessedBlockDAO.load(getServer());
@@ -128,6 +175,13 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
+
+            IMiscDAO miscDAO = ctx.getMiscDAO();
+            this.insults = miscDAO.loadInsults();
+            this.quitMessages = miscDAO.loadQuitMessages();
+            if(insults.size() == 0){insults.add(0, "NO DEATH MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO");}
+            if(quitMessages.size() == 0){quitMessages.add(0, "NO QUIT MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO.");}
+            LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -138,7 +192,6 @@ public class Tregmine extends JavaPlugin
 
         // Register all listeners
         PluginManager pluginMgm = server.getPluginManager();
-        pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
         pluginMgm.registerEvents(new BoxFillBlockListener(this), this);
         pluginMgm.registerEvents(new ChatListener(this), this);
@@ -164,6 +217,13 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new LumberListener(this), this);
         pluginMgm.registerEvents(new VeinListener(this), this);
         pluginMgm.registerEvents(new CallEventListener(this), this);
+        pluginMgm.registerEvents(new WorldPortalListener(this), this);
+        pluginMgm.registerEvents(new PortalListener(this), this);
+        pluginMgm.registerEvents(new BankListener(this), this);
+        pluginMgm.registerEvents(new RareDropListener(this), this);
+        pluginMgm.registerEvents(new DamageListener(this), this);
+        pluginMgm.registerEvents(new ChunkListener(this), this);
+        pluginMgm.registerEvents(new MiscListener(this), this);
 
         // Declaration of all commands
         getCommand("admins").setExecutor(
@@ -177,7 +237,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return ChatColor.DARK_RED;
+                    return Rank.JUNIOR_ADMIN.getColor();
                 }
             });
 
@@ -193,12 +253,30 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return ChatColor.DARK_BLUE;
+                    return Rank.GUARDIAN.getColor();
+                }
+            });
+
+        getCommand("coders").setExecutor(
+            new NotifyCommand(this, "coders") {
+                @Override
+                public boolean isTarget(TregminePlayer player)
+                {
+                    return player.getRank() == Rank.CODER ||
+                           player.getRank() == Rank.JUNIOR_ADMIN ||
+                           player.getRank() == Rank.SENIOR_ADMIN;
+                }
+                @Override
+                public ChatColor getColor()
+                {
+                    return Rank.CODER.getColor();
                 }
             });
 
         getCommand("action").setExecutor(new ActionCommand(this));
+        getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
+        getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
@@ -234,41 +312,71 @@ public class Tregmine extends JavaPlugin
         getCommand("nuke").setExecutor(new NukeCommand(this));
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("pos").setExecutor(new PositionCommand(this));
+        getCommand("promote").setExecutor(new PromoteCommand(this));
         getCommand("quitmessage").setExecutor(new QuitMessageCommand(this));
         getCommand("regeneratechunk").setExecutor(new RegenerateChunkCommand(this));
         getCommand("remitems").setExecutor(new RemItemsCommand(this));
         getCommand("repair").setExecutor(new ToolRepairCommand(this));
+        getCommand("reply").setExecutor(new ReplyCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
+        getCommand("rname").setExecutor(new ResetNameCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
         getCommand("sell").setExecutor(new SellCommand(this));
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setbiome").setExecutor(new SetBiomeCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
+        getCommand("skipmentor").setExecutor(new SkipMentorCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
         getCommand("support").setExecutor(new SupportCommand(this));
         getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
+        getCommand("staffnews").setExecutor(new StaffNewsCommand(this));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("tool").setExecutor(new ToolSpawnCommand(this));
         getCommand("town").setExecutor(new ZoneCommand(this, "town"));
         getCommand("tp").setExecutor(new TeleportCommand(this));
+        getCommand("tps").setExecutor(new TpsCommand(this));
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
         getCommand("update").setExecutor(new UpdateCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
+        getCommand("watchchunks").setExecutor(new WatchChunksCommand(this));
         getCommand("warn").setExecutor(new WarnCommand(this));
         getCommand("warp").setExecutor(new WarpCommand(this));
         getCommand("weather").setExecutor(new WeatherCommand(this));
         getCommand("webkick").setExecutor(new WebKickCommand(this));
         getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
+        getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
 
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
+
+        for (TregminePlayer player : getOnlinePlayers()) {
+            player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
+        }
+
+        BukkitScheduler scheduler = getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this,
+            new Runnable() {
+                public void run() {
+                    for (TregminePlayer player : getOnlinePlayers()) {
+                        if (player.getCombatLog() > 0) {
+                            player.setCombatLog(player.getCombatLog() - 1);
+
+                            if (player.getCombatLog() == 0) {
+                                player.sendMessage(ChatColor.GREEN +
+                                    "Combat log has warn off... Safe to log off!");
+                            }
+                        }
+                    }
+                }
+            }, 20L, 20L);
     }
+
 
     // run when plugin is disabled
     @Override
@@ -278,10 +386,6 @@ public class Tregmine extends JavaPlugin
 
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
-            player.sendMessage(ChatColor.AQUA
-                    + "Tregmine successfully unloaded. Version "
-                    + getDescription().getVersion());
-
             player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
@@ -292,6 +396,100 @@ public class Tregmine extends JavaPlugin
         catch (Exception e) {
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
+    }
+    
+    public String parseColors(String rawText){
+    	//Deprecated because I realized ChatColor.translateAlternative exists...
+    	String text = rawText;
+    		if (text.contains("#r") || text.contains("#R")) {
+        		text = text.replaceAll("#R", ChatColor.RESET + "");
+                text = text.replaceAll("#r", ChatColor.RESET + "");
+            }
+        	if (text.contains("#0")) {
+
+                text = text.replaceAll("#0", ChatColor.BLACK + "");
+            }
+            if (text.contains("#1")) {
+
+                text = text.replaceAll("#1", ChatColor.DARK_BLUE + "");
+            }
+            if (text.contains("#2")) {
+
+                text = text.replaceAll("#2", ChatColor.DARK_GREEN + "");
+            }
+            if (text.contains("#3")) {
+
+                text = text.replaceAll("#3", ChatColor.DARK_AQUA + "");
+            }
+            if (text.contains("#4")) {
+
+                text = text.replaceAll("#4", ChatColor.DARK_RED + "");
+            }
+            if (text.contains("#5")) {
+
+                text = text.replaceAll("#5", ChatColor.DARK_PURPLE + "");
+            }
+            if (text.contains("#6")) {
+
+                text = text.replaceAll("#6", ChatColor.GOLD + "");
+            }
+            if (text.contains("#7")) {
+
+                text = text.replaceAll("#7", ChatColor.GRAY + "");
+            }
+            if (text.contains("#8")) {
+
+                text = text.replaceAll("#8", ChatColor.DARK_GRAY + "");
+            }
+            if (text.contains("#9")) {
+
+                text = text.replaceAll("#9", ChatColor.BLUE + "");
+            }
+            if (text.contains("#a") || text.contains("#A")) {
+            	text = text.replaceAll("#A", ChatColor.GREEN + "");
+                text = text.replaceAll("#a", ChatColor.GREEN + "");
+            }
+            if (text.contains("#b") || text.contains("#B")) {
+                text = text.replaceAll("#B", ChatColor.AQUA + "");
+                text = text.replaceAll("#b", ChatColor.AQUA + "");
+            }
+            if (text.contains("#c") || text.contains("#C")) {
+                text = text.replaceAll("#C", ChatColor.RED + "");
+                text = text.replaceAll("#c", ChatColor.RED + "");
+            }
+            if (text.contains("#d") || text.contains("#D")) {
+                text = text.replaceAll("#D", ChatColor.LIGHT_PURPLE + "");
+                text = text.replaceAll("#d", ChatColor.LIGHT_PURPLE + "");
+            }
+            if (text.contains("#e") || text.contains("#E")) {
+                text = text.replaceAll("#E", ChatColor.YELLOW + "");
+                text = text.replaceAll("#e", ChatColor.YELLOW + "");
+            }
+            if (text.contains("#f") || text.contains("#F")) {
+                text = text.replaceAll("#F", ChatColor.WHITE + "");
+                text = text.replaceAll("#f", ChatColor.WHITE + "");
+            }
+            if (text.contains("#k") || text.contains("#K")) {
+                text = text.replaceAll("#K", ChatColor.MAGIC + "");
+                text = text.replaceAll("#k", ChatColor.MAGIC + "");
+            }
+            if (text.contains("#l") || text.contains("#L")) {
+                text = text.replaceAll("#L", ChatColor.BOLD + "");
+                text = text.replaceAll("#l", ChatColor.BOLD + "");
+            }
+            if (text.contains("#m") || text.contains("#M")) {
+                text = text.replaceAll("#M", ChatColor.STRIKETHROUGH + "");
+                text = text.replaceAll("#m", ChatColor.STRIKETHROUGH + "");
+            }
+            if (text.contains("#n") || text.contains("#N")) {
+                text = text.replaceAll("#N", ChatColor.UNDERLINE + "");
+                text = text.replaceAll("#n", ChatColor.UNDERLINE + "");
+            }
+            if (text.contains("#o") || text.contains("#O")) {
+                text = text.replaceAll("#O", ChatColor.ITALIC + "");
+                text = text.replaceAll("#o", ChatColor.ITALIC + "");
+            }
+    	return text;
     }
 
     public WebServer getWebServer()
@@ -334,6 +532,20 @@ public class Tregmine extends JavaPlugin
         return students;
     }
 
+    public List<String> getInsults()
+    {
+        return insults;
+    }
+
+    public List<String> getQuitMessages()
+    {
+        return quitMessages;
+    }
+
+    public World getRulelessWorld() { return rulelessWorld; }
+    public World getRulelessNether() { return rulelessWorldNether; }
+    public World getRulelessEnd() { return rulelessWorldEnd; }
+
     // ============================================================================
     // Player methods
     // ============================================================================
@@ -343,8 +555,11 @@ public class Tregmine extends JavaPlugin
         try {
             addPlayer(player.getDelegate(), player.getAddress().getAddress());
         } catch (PlayerBannedException e) {
-            player.kickPlayer(e.getMessage());
+            player.kickPlayer(plugin, e.getMessage());
         }
+    }
+    public Tregmine getTregmine(){
+    	return plugin;
     }
 
     public List<TregminePlayer> getOnlinePlayers()
@@ -418,9 +633,9 @@ public class Tregmine extends JavaPlugin
             }
 
             int onlinePlayerCount = 0;
-            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
-                onlinePlayerCount = onlinePlayers.length;
+                onlinePlayerCount = onlinePlayers.size();
             }
 
             ILogDAO logDAO = ctx.getLogDAO();
@@ -442,9 +657,9 @@ public class Tregmine extends JavaPlugin
     {
         try (IContext ctx = contextFactory.createContext()) {
             int onlinePlayerCount = 0;
-            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            Collection<?extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
-                onlinePlayerCount = onlinePlayers.length;
+                onlinePlayerCount = onlinePlayers.size();
             }
 
             ILogDAO logDAO = ctx.getLogDAO();
@@ -452,6 +667,7 @@ public class Tregmine extends JavaPlugin
 
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
+            playerDAO.updateBadges(player);
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -574,13 +790,7 @@ public class Tregmine extends JavaPlugin
     {
         return zones.get(zoneId);
     }
-
-    // ============================================================================
-    // Auto Save Alert
-    // ============================================================================
-
-    @EventHandler
-    public void autoSave(WorldSaveEvent event){
-        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
+    public String getPluginFolder(){
+    	return this.getDataFolder().getAbsolutePath();
     }
 }

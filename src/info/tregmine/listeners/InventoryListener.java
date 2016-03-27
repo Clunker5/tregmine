@@ -11,7 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -24,6 +26,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class InventoryListener implements Listener
 {
@@ -39,6 +42,7 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event)
     {
+    	long start = System.currentTimeMillis();
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
@@ -110,11 +114,14 @@ public class InventoryListener implements Listener
         catch (DAOException e) {
             throw new RuntimeException(e);
         }
+        long duration = System.currentTimeMillis() - start;
+        Logger.global.info("Inventory Listener Open: " + duration);
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event)
     {
+    	long start = System.currentTimeMillis();
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
@@ -124,6 +131,8 @@ public class InventoryListener implements Listener
         Inventory inv = event.getInventory();
         InventoryHolder holder = inv.getHolder();
         Location loc = null;
+        long duration2 = System.currentTimeMillis() - start;
+        Logger.global.info("Inventory Listener Close 122-133: " + duration2);
         if (holder instanceof BlockState) {
             BlockState block = (BlockState)holder;
             loc = block.getLocation();
@@ -133,35 +142,33 @@ public class InventoryListener implements Listener
             loc = block.getLocation();
         }
         else {
+        	
             return;
         }
+        long duration3 = System.currentTimeMillis() - start;
+        Logger.global.info("Inventory Listener Close 122-147: " + duration3);
 
         if (!openInventories.containsKey(loc)) {
-            Tregmine.LOGGER.info("Inventory location not found.");
             return;
         }
-
-        Tregmine.LOGGER.info(player.getRealName() + " closed inventory: " +
-                             "x=" + loc.getBlockX() + " " +
-                             "y=" + loc.getBlockY() + " " +
-                             "z=" + loc.getBlockZ());
 
         ItemStack[] oldContents = openInventories.get(loc);
         ItemStack[] currentContents = inv.getContents();
 
         assert oldContents.length == currentContents.length;
-
+        long duration4 = System.currentTimeMillis() - start;
+        Logger.global.info("Inventory Listener Close 122-157: " + duration4);
         try (IContext ctx = plugin.createContext()) {
             IInventoryDAO invDAO = ctx.getInventoryDAO();
 
             // Find inventory id, or create a new row if none exists
             int id = invDAO.getInventoryId(loc);
             if (id == -1) {
-                Tregmine.LOGGER.warning("Inventory id " + id + " not found!");
                 return;
             }
-
+            
             // Store all changes
+            long logChestTime = System.currentTimeMillis();
             for (int i = 0; i < oldContents.length; i++) {
                 ItemStack a = oldContents[i];
                 ItemStack b = currentContents[i];
@@ -170,9 +177,6 @@ public class InventoryListener implements Listener
                 }
 
                 if (a == null || b == null || !a.equals(b)) {
-                    Tregmine.LOGGER.info("Slot " + i + " changed. Was " +
-                        a + " and is " + b);
-
                     // Removed
                     if (a != null) {
                         invDAO.insertChangeLog(player, id, i, a, ChangeType.REMOVE);
@@ -184,9 +188,17 @@ public class InventoryListener implements Listener
                     }
                 }
             }
-
+            long totalTime = System.currentTimeMillis() - logChestTime;
+            Logger.global.info("Time recording chest: " + totalTime);
             // Store contents
-            invDAO.insertStacks(id, currentContents);
+            long startPoint = System.currentTimeMillis();
+    		try{
+    		invDAO.insertStacks(id, currentContents);
+    		}catch(DAOException e){
+    			throw new RuntimeException(e);
+    		}
+            long endPoint = System.currentTimeMillis() - startPoint;
+            Logger.global.info("Time inserting into SQL: " + endPoint);
         }
         catch (DAOException e) {
             throw new RuntimeException(e);
@@ -211,6 +223,8 @@ public class InventoryListener implements Listener
                 }
             }
         }*/
+        long duration = System.currentTimeMillis() - start;
+        Logger.global.info("Inventory Listener Close End: " + duration);
     }
 
     /*@EventHandler
