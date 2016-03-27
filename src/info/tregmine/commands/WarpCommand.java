@@ -78,6 +78,7 @@ public class WarpCommand extends AbstractCommand
 
         Server server = tregmine.getServer();
         String name = args[0];
+        if(name.equalsIgnoreCase("irl")){
         	player.kickPlayer(plugin, "Welcome to IRL.");
         	Bukkit.broadcastMessage(ChatColor.GOLD + player.getChatName() + " found the IRL warp!");
         	return true;
