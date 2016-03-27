@@ -400,6 +400,7 @@ public class Tregmine extends JavaPlugin
     }
     
     public String parseColors(String rawText){
+    	//Deprecated because I realized ChatColor.translateAlternative exists...
     	String text = rawText;
     		if (text.contains("#r") || text.contains("#R")) {
         		text = text.replaceAll("#R", ChatColor.RESET + "");
