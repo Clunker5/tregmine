@@ -158,8 +158,6 @@ public class ChatListener implements Listener
                     text = text.replaceAll("#O", ChatColor.ITALIC + "");
                     text = text.replaceAll("#o", ChatColor.ITALIC + "");
                 }
-                }else{
-                	sender.sendMessage(ChatColor.RED + "You are not allowed to use chat colors!");
                 }
                 
 
