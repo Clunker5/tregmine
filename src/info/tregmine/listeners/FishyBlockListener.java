@@ -38,6 +38,7 @@ public class FishyBlockListener implements Listener
     {
         this.plugin = plugin;
     }
+    FishyBlock newFishyBlock;
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event)
@@ -351,18 +352,19 @@ public class FishyBlockListener implements Listener
 
         }
     }
-
     @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
-            return;
+
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        
+        if(event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK){
+        	return;
         }
 
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
             return;
         }
@@ -560,11 +562,11 @@ public class FishyBlockListener implements Listener
                 player.setChatState(TregminePlayer.ChatState.FISHY_BUY);
                 player.setCurrentFishyBlock(fishyBlock);
             }
+            
         }
         else if (block.getType() == Material.OBSIDIAN) {
 
-            FishyBlock newFishyBlock = player.getNewFishyBlock();
-
+        	
             // We're creating a new fishy block
             if (heldItem.getType() == Material.RAW_FISH && newFishyBlock == null) {
 
@@ -638,21 +640,23 @@ public class FishyBlockListener implements Listener
                             "empty block in front of the block being fishyfied.");
                     return;
                 }
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    FishyBlock fishyBlock = new FishyBlock();
+                    fishyBlock.setPlayerId(player.getId());
+                    fishyBlock.setBlockLocation(loc);
+                    fishyBlock.setSignLocation(signLoc);
 
-                FishyBlock fishyBlock = new FishyBlock();
-                fishyBlock.setPlayerId(player.getId());
-                fishyBlock.setBlockLocation(loc);
-                fishyBlock.setSignLocation(signLoc);
+                    player.setNewFishyBlock(fishyBlock);
 
-                player.setNewFishyBlock(fishyBlock);
+                    player.sendMessage(ChatColor.GREEN + "You are creating a new " +
+                            "fishy block, which can be used to sell items. Now " +
+                            "select the item or material you want to sell, " +
+                            "and left click on this block again.");
 
-                player.sendMessage(ChatColor.GREEN + "You are creating a new " +
-                        "fishy block, which can be used to sell items. Now " +
-                        "select the item or material you want to sell, " +
-                        "and left click on this block again.");
-
-                heldItem.setAmount(heldItem.getAmount()-1);
-                player.setItemInHand(heldItem);
+                    heldItem.setAmount(heldItem.getAmount()-1);
+                    player.setItemInHand(heldItem);
+                    return;
+                }
             }
             // This is when the player sets the type of the fishy block
             else if (newFishyBlock != null &&
@@ -693,6 +697,7 @@ public class FishyBlockListener implements Listener
                 newFishyBlock.setEnchantments(enchantments);
 
                 player.setChatState(TregminePlayer.ChatState.FISHY_SETUP);
+                
 
                 if (material.getData() != 0) {
                     player.sendMessage(ChatColor.GREEN +
