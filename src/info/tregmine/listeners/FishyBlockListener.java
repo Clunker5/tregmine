@@ -655,8 +655,8 @@ public class FishyBlockListener implements Listener
             }
             // This is when the player sets the type of the fishy block
             else if (newFishyBlock != null &&
-                     loc.equals(newFishyBlock.getBlockLocation())) {
-
+                     loc.equals(newFishyBlock.getBlockLocation()) && heldItem.getType() != Material.AIR) {
+            	
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
                             "whilst in creative mode.");
