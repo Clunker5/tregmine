@@ -698,7 +698,7 @@ public class FishyBlockListener implements Listener
                         "This fishy block will sell " +
                         material.getItemType().toString() + ":" +
                         material.getData() + ".");
-                }else if(material.getItemType() == Material.AIR){
+                }else if(heldItem.getType() == Material.AIR){
                 	return;
                 }
                 else {
