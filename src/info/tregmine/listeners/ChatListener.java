@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.event.*;
 
 import info.tregmine.*;
@@ -88,6 +89,25 @@ public class ChatListener implements Listener
                         }
                     }
                 }
+                String frontBracket = "";
+                String endBracket = "";
+                if(sender.isOp() || sender.getGameMode() == GameMode.CREATIVE){
+                	if(sender.isOp() && sender.getGameMode() == GameMode.CREATIVE){
+                		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
+                		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
+                	}else if(sender.isOp()){
+                		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
+                		endBracket = ChatColor.BLACK + "> " + ChatColor.RESET;
+                	}else if(sender.getGameMode() == GameMode.CREATIVE){
+                		frontBracket = ChatColor.YELLOW + "<" + ChatColor.RESET;
+                		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
+                	}
+                	
+                }else{
+                	frontBracket = "<";
+                	endBracket = ChatColor.WHITE + "> ";
+                }
+               
 
                 String senderChan = sender.getChatChannel();
                 String toChan = to.getChatChannel();
@@ -105,12 +125,12 @@ public class ChatListener implements Listener
                         }
                     } else {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("<" + sender.getChatName()
-                                    + ChatColor.WHITE + "> " + txtColor + text);
+                            to.sendMessage(frontBracket + sender.getChatName()
+                                    + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + " <" + sender.getChatName()
-                                    + ChatColor.WHITE + "> " + txtColor + text);
+                            to.sendMessage(channel + frontBracket + sender.getChatName()
+                                    + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                     }
                 }
