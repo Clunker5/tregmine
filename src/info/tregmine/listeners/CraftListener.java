@@ -24,14 +24,16 @@ public class CraftListener implements Listener{
 	public void onCraft(PrepareItemCraftEvent event){
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		for(ItemStack a : event.getInventory().getContents()) {
-			Bukkit.broadcastMessage(a.getItemMeta().getLore().get(0));
             items.add(a);
         }
 		boolean illegal = false;
+	
 		for(ItemStack item : items){
+				ItemMeta iMeta = item.getItemMeta();
 				List<String> lore = item.getItemMeta().getLore();
 				for(String line : lore){
-				Bukkit.broadcastMessage(line);
+				Bukkit.broadcastMessage(line + "WORK WORK WORK");
+				Bukkit.broadcastMessage(iMeta.toString());
 				if(line.contains("SPAWNED")){
 					//Item is spawned
 					ItemStack result = event.getInventory().getResult();
