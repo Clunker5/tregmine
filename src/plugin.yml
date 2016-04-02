@@ -53,6 +53,9 @@ commands:
   brush:
     description: Create a brush
     usage: /brush <material> <radius>
+  buytool:
+    description: Buy a tool
+    usage: /buytool <lumber,vein>
   cname:
     description: Change your name and color (admin only)
     usage: /cname color new_name
