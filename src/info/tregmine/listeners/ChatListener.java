@@ -17,6 +17,7 @@ import org.bukkit.event.*;
 
 import info.tregmine.*;
 import info.tregmine.api.ListStore;
+import info.tregmine.api.Notification;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
@@ -72,6 +73,7 @@ public class ChatListener implements Listener
 
                         text = text.replaceAll(online.getRealName(),
                                                online.getChatName() + txtColor);
+                        online.sendNotification(Notification.MESSAGE, "%cancel%");
                     }
                 }
                 if(sender.getRank() != Rank.RESIDENT && sender.getRank() != Rank.SETTLER && sender.getRank() != Rank.TOURIST && sender.getRank() != Rank.UNVERIFIED){

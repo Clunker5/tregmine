@@ -405,10 +405,6 @@ public class TregminePlayerListener implements Listener
                     "Type /mentor to offer your services!");
             }
         }
-// Feature has been removed.
-//        if (player.getKeyword() == null && player.getRank().mustUseKeyword()) {
-//            player.sendMessage(ChatColor.RED + "You have not set a keyword! DO SO NOW.");
-//        }
 
         if (rank == Rank.DONATOR &&
                 !player.hasBadge(Badge.PHILANTROPIST)) {
@@ -496,6 +492,9 @@ public class TregminePlayerListener implements Listener
     public void onPlayerMove(PlayerMoveEvent event)
     {
         TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        if(player.getFrozen()){
+        	event.setCancelled(true);
+        }
         if(player.isAfk()){
         	player.setAfk(false);
         }
@@ -505,22 +504,6 @@ public class TregminePlayerListener implements Listener
     public void onPlayerBlockMove(PlayerMoveBlockEvent event)
     {
         TregminePlayer player = event.getPlayer();
-
-//		if (	(player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) ||
-//				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessEnd().getName()) ||
-//				player.getWorld().getName().equalsIgnoreCase(plugin.getRulelessNether().getName())) &&
-//				player.isFlying() &&
-//				!player.getRank().canBypassWorld()) {
-//			player.sendMessage(ChatColor.RED + "Flying in Anarchy will get you banned!" + ChatColor.DARK_RED + " Disabled.");
-//			player.setAllowFlight(false);
-//			player.setFlying(false);
-//
-//			for (TregminePlayer p : plugin.getOnlinePlayers()) {
-//				if (p.getRank().canBypassWorld()) {
-//					p.sendMessage(player.getChatName() + ChatColor.YELLOW + " is flying in anarchy! Plugin disabled it for you...");
-//				}
-//			}
-//		}
 
         // To add player.hasBadge for a flight badge when made
         if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {

@@ -96,6 +96,7 @@ public class TregminePlayer extends PlayerDelegate
     
     // Player state for activity
     private boolean afk = false;
+    private boolean isFrozen = false;
 
     // Fishy Block state
     private FishyBlock newFishyBlock;
@@ -174,6 +175,12 @@ public class TregminePlayer extends PlayerDelegate
     public boolean verifyPassword(String attempt)
     {
         return BCrypt.checkpw(attempt, password);
+    }
+    public boolean getFrozen(){
+    	return isFrozen;
+    }
+    public void setFrozen(boolean v){
+    	isFrozen = v;
     }
 
     public void setFlag(Flags flag) { flags.add(flag); }
@@ -462,14 +469,22 @@ public class TregminePlayer extends PlayerDelegate
      */
     public void sendNotification(Notification notif, String message)
     {
+    	boolean sendMsg = true;
+    	if(message == "%cancel%"){
+    		sendMsg = false;
+    	}
         if (notif != null && notif != Notification.NONE) {
             if (!message.equalsIgnoreCase("") && message != null) {
                 playSound(getLocation(), notif.getSound(), 2F, 1F);
+                if(sendMsg){
                 sendMessage(message);
+                }
             }
         } else {
             if (!message.equalsIgnoreCase("") && message != null) {
-                sendMessage(message);
+            	if(sendMsg){
+                    sendMessage(message);
+                    }
             } else {
                 throw new IllegalArgumentException("Parameters can not both be null");
             }

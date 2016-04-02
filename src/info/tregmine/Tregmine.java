@@ -55,7 +55,8 @@ public class Tregmine extends JavaPlugin
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
-
+    //Possibly a future feature >:)
+    private boolean lockdown = false;
     private World rulelessWorld;
     private World rulelessWorldNether;
     private World rulelessWorldEnd;
