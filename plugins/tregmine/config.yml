@@ -11,11 +11,8 @@ db:
 support:
   user: tregmine.info@gmail.com
   password: will message you
-  to: 
+  to:
     - email@emil.athisemail
-donotevertouch:
-#Possible types: re ; be ; te ; bl ; gm
-  type: re
 #Worlds -- DO NOT ADD THE FOLLOWING: world, world_nether, world_the_end, game,
 #anarchy, anarchy_nether, anarchy_the_end -- You have been warned.
 worlds:
