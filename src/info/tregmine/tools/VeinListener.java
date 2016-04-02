@@ -53,9 +53,6 @@ public class VeinListener implements Listener
         if (!player.getRank().canUseTools()) {
             return;
         }
-        if (!player.isSneaking()) {
-            return;
-        }
         if (player.getItemInHand() == null) {
             return;
         }
