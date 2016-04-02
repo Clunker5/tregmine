@@ -63,6 +63,7 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
     public Tregmine plugin;
+    public String releaseType = "re";
 
     @Override
     public void onLoad()
@@ -282,6 +283,7 @@ public class Tregmine extends JavaPlugin
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
         getCommand("brush").setExecutor(new BrushCommand(this));
+        getCommand("buytool").setExecutor(new BuyToolCommand(this));
         getCommand("channel").setExecutor(new ChannelCommand(this));
         getCommand("channelview").setExecutor(new ChannelViewCommand(this));
         getCommand("clean").setExecutor(new CleanInventoryCommand(this));
@@ -398,7 +400,7 @@ public class Tregmine extends JavaPlugin
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
-    
+    @Deprecated
     public String parseColors(String rawText){
     	//Deprecated because I realized ChatColor.translateAlternative exists...
     	String text = rawText;
