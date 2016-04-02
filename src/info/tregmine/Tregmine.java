@@ -63,7 +63,7 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
     public Tregmine plugin;
-    public String releaseType = "re";
+    public String releaseType = "te";
 
     @Override
     public void onLoad()
@@ -193,6 +193,7 @@ public class Tregmine extends JavaPlugin
 
         // Register all listeners
         PluginManager pluginMgm = server.getPluginManager();
+        pluginMgm.registerEvents(new CraftListener(this), this);
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
         pluginMgm.registerEvents(new BoxFillBlockListener(this), this);
         pluginMgm.registerEvents(new ChatListener(this), this);
