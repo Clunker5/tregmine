@@ -293,6 +293,7 @@ public class Tregmine extends JavaPlugin
         getCommand("fly").setExecutor(new FlyCommand(this));
         getCommand("force").setExecutor(new ForceCommand(this));
         getCommand("forceblock").setExecutor(new ForceShieldCommand(this));
+        getCommand("freeze").setExecutor(new FreezeCommand(this));
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
         getCommand("hide").setExecutor(new HideCommand(this));

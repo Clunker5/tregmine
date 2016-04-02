@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.2.9
+version: 3.2.10
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Revived
@@ -83,6 +83,9 @@ commands:
   forceblock:
     description: Stop people forcing you into channels
     usage: /forceblock <on/off/status>
+  freeze:
+    description: Freeze a specified player
+    usage: /freeze <player>
   give:
     description: Give a user an item (admin only)
     usage: /give player item amount data
