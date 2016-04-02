@@ -247,6 +247,13 @@ public class TregminePlayer extends PlayerDelegate
     
     public Rank getRank() { return rank; }
     public boolean getIsStaff() { return Staff; }
+    public boolean getIsAdmin(){
+    	boolean isStaff = false;
+    	if(rank == Rank.JUNIOR_ADMIN || rank == Rank.SENIOR_ADMIN || isOp()){
+        	isStaff = true;
+        }
+    	return isStaff;
+    }
     public void setRank(Rank v)
     {
         this.rank = v;
