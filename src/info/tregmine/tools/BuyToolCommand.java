@@ -10,6 +10,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.lore.Created;
 import info.tregmine.commands.AbstractCommand;
 
 public class BuyToolCommand extends AbstractCommand{
@@ -26,7 +27,10 @@ public class BuyToolCommand extends AbstractCommand{
 		ItemStack inhand = inv.getItemInMainHand();
 		amount = inhand.getAmount();
 		if(amount >= total){
-			
+			if(inhand.getItemMeta().getLore().contains(Created.SPAWNED.toColorString()) || inhand.getItemMeta().getLore().contains(Created.CREATIVE.toColorString())){
+				player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You cannot use items obtained via creative or spawning.");
+				return true;
+			}
 			ItemStack tool = null;
 			if(args.length == 0){
 				player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
