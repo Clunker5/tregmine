@@ -28,6 +28,10 @@ public class BuyToolCommand extends AbstractCommand{
 		if(amount >= total){
 			
 			ItemStack tool = null;
+			if(args[0].isEmpty()){
+				player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
+				return true;
+			}
 			switch (args[0]) {
             case "lumber":
                 tool = ToolsRegistry.LumberAxe();
@@ -35,7 +39,7 @@ public class BuyToolCommand extends AbstractCommand{
             case "vein":
                 tool = ToolsRegistry.VeinMiner();
                 break;
-        }
+			}
 			if(tool == null){
 					player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
 					return true;
