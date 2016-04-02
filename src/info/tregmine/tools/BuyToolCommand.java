@@ -28,7 +28,7 @@ public class BuyToolCommand extends AbstractCommand{
 		if(amount >= total){
 			
 			ItemStack tool = null;
-			if(args[0].isEmpty()){
+			if(args.length == 0){
 				player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
 				return true;
 			}
