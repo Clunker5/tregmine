@@ -44,7 +44,7 @@ public class CallEventListener implements Listener
 	public void onServerListPing(ServerListPingEvent event){
 		Logger.global.info("A player pinged the server!");
 		String extraText = "";
-		String type = plugin.getConfig().getString("donotevertouch.type");
+		String type = plugin.releaseType;
 		Logger.global.info("Type = " + type);
 		if(type.contains("re")){
 			extraText = ChatColor.GREEN + " Release";
