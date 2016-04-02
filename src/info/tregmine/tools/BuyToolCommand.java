@@ -1,5 +1,7 @@
 package info.tregmine.tools;
 
+import java.util.HashMap;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -18,18 +20,45 @@ public class BuyToolCommand extends AbstractCommand{
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
 		PlayerInventory inv = player.getInventory();
-		Material price = Material.DIAMOND;
+		Material price = Material.DIAMOND_BLOCK;
 		int total = 16;
-		int amount = inv.all(price).size();
+		int amount = 0;
+		ItemStack inhand = inv.getItemInMainHand();
+		amount = inhand.getAmount();
 		if(amount >= total){
-			int removed = 0;
-			while(removed != total){
-			player.getInventory().removeItem(new ItemStack(price));
-			removed += 1;
+			
+			ItemStack tool = null;
+			switch (args[0]) {
+            case "lumber":
+                tool = ToolsRegistry.LumberAxe();
+                break;
+            case "vein":
+                tool = ToolsRegistry.VeinMiner();
+                break;
+        }
+			if(tool == null){
+				if(args.length == 0){
+					player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
+					return true;
+				}else{
+					player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
+					return true;
+				}
 			}
+			HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(tool);
+	        
+	        if (failedItems.size() > 0) {
+	            player.sendMessage(ChatColor.RED + "You have a full inventory, Can't add tool!");
+	            return true;
+	        }
+	        inhand.setAmount(amount - total);
+			player.setItemInHand(inhand);
 			player.sendMessage(total + " " + price.name() + " have been taken from your inventory.");
+			player.sendMessage(ChatColor.GREEN + "Spawned in tool token successfully!");
+			return true;
+	        
 		}else{
-			player.sendMessage(ChatColor.RED + "You need " + total + " " + price.name() + " to use this command.");
+			player.sendMessage(ChatColor.RED + "You need " + total + " " + price.name() + " in your hand to use this command.");
 		}
 		return true;
 	}
