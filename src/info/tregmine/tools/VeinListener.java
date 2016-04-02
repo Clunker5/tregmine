@@ -30,6 +30,7 @@ public class VeinListener implements Listener
         this.plugin = instance;
     }
 
+    
     @SuppressWarnings({ "deprecation", "static-access" })
     @EventHandler
     public void VeinMiner(BlockBreakEvent event)
