@@ -3,7 +3,7 @@ main: info.tregmine.Tregmine
 version: 3.2.10
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
-description: Tregmine Revived
+description: Tregmine Plugin
 loadbefore: [BlockLog,GameMagic]
 
 commands:
