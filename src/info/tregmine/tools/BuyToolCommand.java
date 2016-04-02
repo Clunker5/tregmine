@@ -37,13 +37,8 @@ public class BuyToolCommand extends AbstractCommand{
                 break;
         }
 			if(tool == null){
-				if(args.length == 0){
 					player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
 					return true;
-				}else{
-					player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
-					return true;
-				}
 			}
 			HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(tool);
 	        
