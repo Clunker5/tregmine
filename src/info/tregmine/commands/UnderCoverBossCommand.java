@@ -19,17 +19,22 @@ public class UnderCoverBossCommand extends AbstractCommand{
 			player.nopermsMessage(false, "undercoverboss");
 			return true;
 		}
+		if(args[0].isEmpty()){
+			return false;
+		}
 		this.request = args[0];
 		if(this.request.equalsIgnoreCase("resident")){
 			player.setTemporaryRank(Rank.RESIDENT);
+			player.setTemporaryChatName(Rank.RESIDENT.getColor() + player.getName());
 			player.sendMessage(ChatColor.BLUE + "You have been switched to resident until you re-log.");
 		}else if(this.request.equalsIgnoreCase("donator")){
 			player.setTemporaryRank(Rank.DONATOR);
+			player.setTemporaryChatName(Rank.DONATOR.getColor() + player.getName());
 			player.sendMessage(ChatColor.BLUE + "You have been switched to donator until you re-log.");
 		}else if(this.request.equalsIgnoreCase("guardian")){
 			player.setTemporaryRank(Rank.GUARDIAN);
-			player.setTemporaryChatName(ChatColor.GOLD + player.getName());
 			player.setGuardianState(GuardianState.ACTIVE);
+			player.setTemporaryChatName(Rank.GUARDIAN.getColor() + player.getName());
 			player.sendMessage(ChatColor.BLUE + "You have been switched to guardian until you re-log.");
 		}else{
 			player.sendMessage(ChatColor.RED + "You can use ranks RESIDENT, DONATOR, GUARDIAN");
