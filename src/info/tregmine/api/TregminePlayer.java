@@ -319,6 +319,9 @@ public class TregminePlayer extends PlayerDelegate
 
         setTemporaryChatName(getNameColor() + getRealName());
     }
+    public void setStaff(boolean v){
+    	this.Staff = v;
+    }
 
     public void setQuitMessage(String v) { this.quitMessage = v; }
     public String getQuitMessage() { return quitMessage; }

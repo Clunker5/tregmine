@@ -25,11 +25,13 @@ public class UnderCoverBossCommand extends AbstractCommand{
 		this.request = args[0];
 		if(this.request.equalsIgnoreCase("resident")){
 			player.setTemporaryRank(Rank.RESIDENT);
+			player.setStaff(false);
 			player.setTemporaryChatName(Rank.RESIDENT.getColor() + player.getName());
 			player.sendMessage(ChatColor.BLUE + "You have been switched to resident until you re-log.");
 		}else if(this.request.equalsIgnoreCase("donator")){
 			player.setTemporaryRank(Rank.DONATOR);
 			player.setTemporaryChatName(Rank.DONATOR.getColor() + player.getName());
+			player.setStaff(false);
 			player.sendMessage(ChatColor.BLUE + "You have been switched to donator until you re-log.");
 		}else if(this.request.equalsIgnoreCase("guardian")){
 			player.setTemporaryRank(Rank.GUARDIAN);
