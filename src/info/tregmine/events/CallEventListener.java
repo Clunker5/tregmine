@@ -42,10 +42,8 @@ public class CallEventListener implements Listener
     // Triggers when a player pings the server
 	@EventHandler
 	public void onServerListPing(ServerListPingEvent event){
-		Logger.global.info("A player pinged the server!");
 		String extraText = "";
 		String type = plugin.releaseType;
-		Logger.global.info("Type = " + type);
 		if(type.contains("re")){
 			extraText = ChatColor.GREEN + " Release";
 		}else if(type.contains("be")){

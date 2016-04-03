@@ -10,4 +10,5 @@ make.log
 .settings
 /misc
 /bin
+/dist
 build.bat

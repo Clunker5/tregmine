@@ -97,10 +97,19 @@ public class TregminePlayerListener implements Listener
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null) {
                     ItemMeta meta = item.getItemMeta();
+                    List<String> oldlore = meta.getLore();
+                    String line2 = "";
+                    if(oldlore != null){
+                    line2 = oldlore.get(1).replace("Â", "");
+                    }
                     List<String> lore = new ArrayList<String>();
                     lore.add(Created.CREATIVE.toColorString());
                     TregminePlayer p = this.plugin.getPlayer(player);
-                    lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                    if(line2.contains("by: ") && !line2.contains(p.getChatName())){
+                    	lore.add(line2 + ", " + p.getChatName());
+                    }else{
+                    	lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                    }
                     lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
                             + "0000" + ChatColor.RESET + ChatColor.WHITE
                             + " Treg");

@@ -2,6 +2,7 @@ package info.tregmine.database.db;
 
 import info.tregmine.api.InventoryAccess;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.Coloring;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IInventoryDAO;
 
@@ -214,6 +215,17 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(2, counter);
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
+                ItemMeta meta = stack.getItemMeta();
+                List<String> lores = meta.getLore();
+                Coloring color = new Coloring();
+                for(String lore : lores){
+                	System.out.println(lore);
+                	String v = color.reverseChatColor(lore, '#');
+                	lores.remove(lore);
+                	lores.add(v);
+                }
+                meta.setLore(lores);
+                stack.setItemMeta(meta);
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
                     config.set("meta", stack.getItemMeta());

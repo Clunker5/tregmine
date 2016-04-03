@@ -1,12 +1,13 @@
 package info.tregmine.tools;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-
+import org.bukkit.inventory.meta.ItemMeta;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -25,6 +26,12 @@ public class BuyToolCommand extends AbstractCommand{
 		int total = 16;
 		int amount = 0;
 		ItemStack inhand = inv.getItemInMainHand();
+		ItemMeta itemmeta = inhand.getItemMeta();
+		List<String> lore = itemmeta.getLore();
+		if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SPAWNED")){
+			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items.");
+			return true;
+		}
 		amount = inhand.getAmount();
 		if(amount >= total){
 			if(inhand.getItemMeta().getLore().contains(Created.SPAWNED.toColorString()) || inhand.getItemMeta().getLore().contains(Created.CREATIVE.toColorString())){
