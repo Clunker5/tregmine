@@ -55,14 +55,14 @@ public class CraftListener implements Listener{
 					ItemMeta resultmeta = result.getItemMeta();
 					List<String> resultlore = new ArrayList<String>();
 					resultlore.add(Created.CREATIVE.toColorString());
-					String line2 = lore.get(1).replace("Â", "");
-					String line3 = lore.get(2).replace("Â", "");
+					String line2 = lore.get(1).replace("Ã‚", "");
+					String line3 = lore.get(2).replace("Ã‚", "");
 					resultlore.add(line2);
 					resultlore.add(line3);
 					resultmeta.setLore(resultlore);
 					result.setItemMeta(resultmeta);
 					event.getInventory().setResult(result);
-					//Â
+					//Ã‚
 				}
 			}
 			if(lore.contains(Created.SPAWNED.toColorString()) || lore.get(0).contains("SPAWNED")){
@@ -71,14 +71,14 @@ public class CraftListener implements Listener{
 					ItemMeta resultmeta = result.getItemMeta();
 					List<String> resultlore = new ArrayList<String>();
 					resultlore.add(Created.SPAWNED.toColorString());
-					String line2 = lore.get(1).replace("Â", "");
-					String line3 = lore.get(2).replace("Â", "");
+					String line2 = lore.get(1).replace("Ã‚", "");
+					String line3 = lore.get(2).replace("Ã‚", "");
 					resultlore.add(line2);
 					resultlore.add(line3);
 					resultmeta.setLore(resultlore);
 					result.setItemMeta(resultmeta);
 					event.getInventory().setResult(result);
-					//Â
+					//Ã‚
 				}
 			}
 			}

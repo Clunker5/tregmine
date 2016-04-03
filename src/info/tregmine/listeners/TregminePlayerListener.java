@@ -100,7 +100,7 @@ public class TregminePlayerListener implements Listener
                     List<String> oldlore = meta.getLore();
                     String line2 = "";
                     if(oldlore != null){
-                    line2 = oldlore.get(1).replace("Â", "");
+                    line2 = oldlore.get(1).replace("Ã‚", "");
                     }
                     List<String> lore = new ArrayList<String>();
                     lore.add(Created.CREATIVE.toColorString());
@@ -254,8 +254,6 @@ public class TregminePlayerListener implements Listener
                 throw new RuntimeException(e);
             }
         	if(news == null){
-        		player.sendMessage(ChatColor.BLUE + "There's no messages on the staff board at this time.");
-        		
         	}else{
         		//There's messages :)
         		for(StaffNews singleNews : news){
@@ -419,6 +417,9 @@ public class TregminePlayerListener implements Listener
                 !player.hasBadge(Badge.PHILANTROPIST)) {
             player.awardBadgeLevel(Badge.PHILANTROPIST,
                     "For being a Tregmine donator!");
+        }
+        if(player.getChatName() == "im_not_eric"){
+        	player.setTemporaryChatName(ChatColor.DARK_RED + player.getName());
         }
     }
 
