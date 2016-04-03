@@ -63,7 +63,7 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
     public Tregmine plugin;
-    public String releaseType = "te";
+    public String releaseType = "re";
 
     @Override
     public void onLoad()

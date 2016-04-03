@@ -26,18 +26,16 @@ public class BuyToolCommand extends AbstractCommand{
 		int total = 16;
 		int amount = 0;
 		ItemStack inhand = inv.getItemInMainHand();
+		if(inhand.hasItemMeta()){
 		ItemMeta itemmeta = inhand.getItemMeta();
 		List<String> lore = itemmeta.getLore();
 		if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SPAWNED")){
 			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items.");
 			return true;
 		}
+		}
 		amount = inhand.getAmount();
 		if(amount >= total){
-			if(inhand.getItemMeta().getLore().contains(Created.SPAWNED.toColorString()) || inhand.getItemMeta().getLore().contains(Created.CREATIVE.toColorString())){
-				player.sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You cannot use items obtained via creative or spawning.");
-				return true;
-			}
 			ItemStack tool = null;
 			if(args.length == 0){
 				player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");

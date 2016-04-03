@@ -46,7 +46,7 @@ public class CraftListener implements Listener{
 		ItemStack[] stack = event.getInventory().getMatrix();
 		
 		for(ItemStack onestack : stack){
-			if(onestack.getType() != Material.AIR){
+			if(onestack.getType() != Material.AIR && onestack.hasItemMeta()){
 			ItemMeta meta = onestack.getItemMeta();
 			List<String> lore = meta.getLore();
 			if(lore.contains(Created.CREATIVE.toColorString()) || lore.get(0).contains("CREATIVE")){
@@ -55,6 +55,22 @@ public class CraftListener implements Listener{
 					ItemMeta resultmeta = result.getItemMeta();
 					List<String> resultlore = new ArrayList<String>();
 					resultlore.add(Created.CREATIVE.toColorString());
+					String line2 = lore.get(1).replace("Â", "");
+					String line3 = lore.get(2).replace("Â", "");
+					resultlore.add(line2);
+					resultlore.add(line3);
+					resultmeta.setLore(resultlore);
+					result.setItemMeta(resultmeta);
+					event.getInventory().setResult(result);
+					//Â
+				}
+			}
+			if(lore.contains(Created.SPAWNED.toColorString()) || lore.get(0).contains("SPAWNED")){
+				ItemStack result = event.getInventory().getResult();
+				if(result != null){
+					ItemMeta resultmeta = result.getItemMeta();
+					List<String> resultlore = new ArrayList<String>();
+					resultlore.add(Created.SPAWNED.toColorString());
 					String line2 = lore.get(1).replace("Â", "");
 					String line3 = lore.get(2).replace("Â", "");
 					resultlore.add(line2);

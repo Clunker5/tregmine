@@ -205,32 +205,7 @@ public class InventoryListener implements Listener
         }
 
         openInventories.remove(loc);
-
-        /*Player player = (Player) event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE) {
-            for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null) {
-                    ItemMeta meta = item.getItemMeta();
-                    List<String> lore = new ArrayList<String>();
-                    lore.add(Created.CREATIVE.toColorString());
-                    TregminePlayer p = this.plugin.getPlayer(player);
-                    lore.add(ChatColor.WHITE + "by: " + p.getChatName());
-                    lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
-                            + "0000" + ChatColor.RESET + ChatColor.WHITE
-                            + " Treg");
-                    meta.setLore(lore);
-                    item.setItemMeta(meta);
-                }
-            }
-        }*/
         long duration = System.currentTimeMillis() - start;
         Logger.global.info("Inventory Listener Close End: " + duration);
     }
-
-    /*@EventHandler
-    public void onInventoryCreative(InventoryCreativeEvent event)
-    {
-        Tregmine.LOGGER.info("InventoryCreative");
-        Tregmine.LOGGER.info(event.getInventory().getHolder().toString());
-    }*/
 }

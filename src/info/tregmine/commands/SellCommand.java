@@ -84,16 +84,20 @@ public class SellCommand extends AbstractCommand implements Listener
                 if (stack == null) {
                     continue;
                 }
-                //Check if the item is illegal :)
-                ItemMeta meta = stack.getItemMeta();
-                List<String> lore = meta.getLore();
+
                 Material material = stack.getType();
                 int amount = stack.getAmount();
                 int value = itemDAO.getItemValue(material.getId(), stack.getData().getData());
+                
+                //Check if the item is illegal :)
+                if(stack.hasItemMeta()){
+                ItemMeta meta = stack.getItemMeta();
+                List<String> lore = meta.getLore();
                 if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SURVIVAL")){
                 	player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items. The value for the " + material.toString() + " has been set to 0.");
                 	amount = 0;
                 	value = 0;
+                }
                 }
                 
                 player.sendMessage(YELLOW + "[Sell] " + material.toString() +
