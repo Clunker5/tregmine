@@ -203,7 +203,6 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new SignColorListener(), this);
         pluginMgm.registerEvents(new TabListener(this), this);
         pluginMgm.registerEvents(new TauntListener(this), this);
-        pluginMgm.registerEvents(new TreeListener(this), this);
         pluginMgm.registerEvents(new TregmineBlockListener(this), this);
         pluginMgm.registerEvents(new TregminePlayerListener(this), this);
         pluginMgm.registerEvents(new ZoneBlockListener(this), this);
