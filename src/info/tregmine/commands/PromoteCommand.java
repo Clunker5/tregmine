@@ -89,8 +89,7 @@ public class PromoteCommand extends AbstractCommand{
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-		user.sendMessage(BLUE + "You were promoted to " + newrank + " by " + player.getChatName());
-		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + newrank + "!");
+		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!");
 		return true;
 	}
 

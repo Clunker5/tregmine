@@ -35,11 +35,8 @@ public class NormalCommand extends AbstractCommand
                 player.setGuardianState(GuardianState.ACTIVE);
                 player.sendMessage(YELLOW + "You are now guardian until you reconnect.");
         		return true;
-        	}else if(requestedRank.isEmpty()){
-        		player.sendMessage(ChatColor.RED + "Arguments must be /normal <guardian, donator>");
-        		return true;
         	}else{
-        		player.sendMessage(ChatColor.RED + requestedRank + " either does not exist or you are not allowed to use it.");
+        		player.sendMessage(ChatColor.RED + "Arguments must be /normal <guardian, donator>");
         		return true;
         	}
             

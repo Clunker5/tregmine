@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.2.11
+version: 3.2.12
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -239,6 +239,9 @@ commands:
   update:
     description: See what was last updated!
     usage: /update [version number]
+  undercoverboss:
+    description: Go undercover!
+    usage: /undercoverboss <guardian, donator, resident>
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>
