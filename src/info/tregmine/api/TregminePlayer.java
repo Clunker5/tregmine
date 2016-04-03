@@ -105,6 +105,10 @@ public class TregminePlayer extends PlayerDelegate
 
     // Chunk Watcher
     private boolean newChunk = false;
+    
+    //Ranks
+    private boolean isTemporaryRank = false;
+    private Rank temporaryRank = null;
 
     private Tregmine plugin;
 
@@ -245,7 +249,17 @@ public class TregminePlayer extends PlayerDelegate
     public String getKeyword() { return keyword; }
     public void setKeyword(String v) { this.keyword = v; }
     
-    public Rank getRank() { return rank; }
+    public Rank getRank() {
+    	if(isTemporaryRank){
+    		return temporaryRank;
+    	}else{
+    		return rank;
+    	}
+    	}
+    public Rank getTrueRank(){
+    	return rank;
+    }
+    
     public boolean getIsStaff() { return Staff; }
     public boolean getIsAdmin(){
     	boolean isStaff = false;
@@ -261,6 +275,15 @@ public class TregminePlayer extends PlayerDelegate
         	this.Staff = true;
         }
         setTemporaryChatName(getNameColor() + getRealName());
+    }
+    public void setTemporaryRank(Rank v)
+    {
+    	this.temporaryRank = v;
+    	this.isTemporaryRank = true;
+    	if(v == Rank.GUARDIAN || v == Rank.JUNIOR_ADMIN || v == Rank.SENIOR_ADMIN || v == Rank.CODER){
+        	this.Staff = true;
+        }
+    	setTemporaryChatName(getNameColor() + getRealName());
     }
 
     public void setGuardianRank(int v) { this.guardianRank = v; }

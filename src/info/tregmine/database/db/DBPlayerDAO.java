@@ -192,7 +192,7 @@ public class DBPlayerDAO implements IPlayerDAO
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, player.getUniqueId().toString());
             stmt.setString(2, player.getName());
-            stmt.setString(3, player.getRank().toString());
+            stmt.setString(3, player.getTrueRank().toString());
             stmt.setString(4, player.getRealName());
             stmt.execute();
 
