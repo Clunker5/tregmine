@@ -122,8 +122,6 @@ public class PlayerLookupListener implements Listener
                             player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)){
                         continue;
                     }
-                    current.sendMessage(ChatColor.YELLOW
-                            + "This player has also used names: " + aliasList);
                 }
             }
         } catch (DAOException e) {
