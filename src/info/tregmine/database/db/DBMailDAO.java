@@ -109,7 +109,7 @@ public class DBMailDAO implements IMailDAO{
 	}
 	@Override
 	public boolean deleteMail(String username, int mailId) throws DAOException {
-		String rawstmt = "UPDATE player_mail SET deleted='true' WHERE sender_name = ? AND mail_id = ? AND deleted = 'false'";
+		String rawstmt = "UPDATE player_mail SET deleted='true' WHERE receiver_name = ? AND mail_id = ? AND deleted = 'false'";
 		try(PreparedStatement stmt = conn.prepareStatement(rawstmt)){
 			stmt.setString(1, username);
 			stmt.setInt(2, mailId);
