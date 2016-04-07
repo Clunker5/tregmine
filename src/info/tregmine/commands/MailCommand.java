@@ -53,6 +53,10 @@ public class MailCommand extends AbstractCommand{
 		}
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
+		if(args.length == 0){
+			sendHelp(player);
+			return true;
+		}
 		if(args[0].contains("send")){
 			String msg = argsToMessage(args);
 			try (IContext ctx = tregmine.createContext()) {

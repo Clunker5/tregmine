@@ -278,7 +278,7 @@ public class TregminePlayerListener implements Listener
             	}else{
             		suffix = "messages";
             	}
-            	player.sendMessage("%internal%" + ChatColor.AQUA + "You have " + total + " " + suffix);
+            	player.sendMessage("%internal%" + ChatColor.AQUA + "You have " + total + " " + suffix + " -- Type /mail read to view them.");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
