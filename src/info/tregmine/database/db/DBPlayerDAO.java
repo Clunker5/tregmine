@@ -29,6 +29,9 @@ public class DBPlayerDAO implements IPlayerDAO
         this.conn = conn;
         this.plugin = instance;
     }
+    public DBPlayerDAO(Connection conn){
+    	this.conn = conn;
+    }
 
     @Override
     public TregminePlayer getPlayer(int id) throws DAOException

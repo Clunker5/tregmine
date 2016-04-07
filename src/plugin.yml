@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.2.12
+version: 3.3
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -116,6 +116,9 @@ commands:
   lot:
     description: Manage your lot
     usage: /lot
+  mail:
+    description: Send mail to players, offline or online
+    usage: /mail read|send|delete|total|tbt
   mentor:
     description: Make yourself available for mentoring (residents and above)
     usage: /mentor queue|complete|cancel

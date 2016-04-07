@@ -26,6 +26,21 @@ SET time_zone = "+00:00";
 -- Table structure for table `blessedblock`
 --
 
+CREATE TABLE `player_mail` (
+  `sender_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `receiver_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `deleted` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `mail_id` int(11) NOT NULL,
+  `timestamp` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `player_mail`
+  ADD UNIQUE KEY `mail_id` (`mail_id`);
+  
+ALTER TABLE `player_mail`
+  MODIFY `mail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 CREATE TABLE `blessedblock` (
   `blessedblock_id` int(10) UNSIGNED NOT NULL,
   `player_id` int(10) UNSIGNED DEFAULT NULL,

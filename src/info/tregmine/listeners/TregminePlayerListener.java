@@ -244,6 +244,7 @@ public class TregminePlayerListener implements Listener
             return;
         }
         Rank rank = player.getRank();
+        
         if(player.getIsStaff()){
         	List<StaffNews> news = null;
         	try (IContext ctx = this.plugin.createContext()) {
@@ -261,10 +262,26 @@ public class TregminePlayerListener implements Listener
         			String text = singleNews.getText();
         			long timestamp = singleNews.getDate();
         			int id = singleNews.getId();
-        			player.sendMessage(ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
-        			player.sendMessage(ChatColor.GOLD + text);
+        			player.sendMessage("%CHAT%" + ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
+        			player.sendMessage("%CHAT%" + ChatColor.GOLD + text);
         		}
         	}
+        }
+        List<String[]> mail = new ArrayList<String[]>();
+        try (IContext ctx = this.plugin.createContext()) {
+            IMailDAO maildao = ctx.getMailDAO();
+            int total = maildao.getMailTotal(player.getName());
+            if(total != 0){
+            	String suffix = "";
+            	if(total == 1){
+            		suffix = "message";
+            	}else{
+            		suffix = "messages";
+            	}
+            	player.sendMessage("%internal%" + ChatColor.AQUA + "You have " + total + " " + suffix);
+            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
         }
 
         // Handle invisibility, if set

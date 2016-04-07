@@ -81,7 +81,7 @@ public class PromoteCommand extends AbstractCommand{
 		//Any other errors have now been checked and dealt with. Promote the user.
 		try (IContext ctx = tregmine.createContext()) {
             user.setRank(rank);
-            if(rank != Rank.SENIOR_ADMIN && rank != Rank.GUARDIAN && RANK != Rank.JUNIOR_ADMIN){
+            if(rank != Rank.SENIOR_ADMIN && rank != Rank.GUARDIAN && rank != Rank.JUNIOR_ADMIN){
             	user.setStaff(false);
             }
             user.setMentor(null);

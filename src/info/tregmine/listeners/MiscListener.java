@@ -21,7 +21,7 @@ public class MiscListener implements Listener
     public void autoSave(WorldSaveEvent event) 
     {
         if ("world".equals(event.getWorld().getName())) {
-            Bukkit.broadcastMessage(ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
+            Bukkit.broadcastMessage(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_RED + "Tregmine is saving, You may experience some slowness.");
         }
     }
 

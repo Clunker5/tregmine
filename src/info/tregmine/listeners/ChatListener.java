@@ -127,11 +127,11 @@ public class ChatListener implements Listener
                         }
                     } else {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage(frontBracket + sender.getChatName()
+                            to.sendMessage("%CHAT%" + frontBracket + sender.getChatName()
                                     + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + frontBracket + sender.getChatName()
+                            to.sendMessage("%CHAT%" + channel + frontBracket + sender.getChatName()
                                     + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                     }
@@ -164,7 +164,6 @@ public class ChatListener implements Listener
         }
 
         //event.setCancelled(true);
-
         WebServer server = plugin.getWebServer();
         server.executeChatAction(new WebServer.ChatMessage(sender, channel, event.getMessage()));
         if(plugin.getConfig().getString("general.life-log") == "true"){

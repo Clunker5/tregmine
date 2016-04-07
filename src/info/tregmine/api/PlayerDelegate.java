@@ -2,6 +2,7 @@
 package info.tregmine.api;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 
@@ -1171,7 +1172,17 @@ public abstract class PlayerDelegate
     public void sendMessage(java.lang.String p0)
     {
         checkState();
-        delegate.sendMessage(p0);
+        if(p0.startsWith("%internal%")){
+        	String message = p0.replace("%internal%", "");
+        	delegate.sendMessage(ChatColor.GOLD + "[Internal]" + ChatColor.RESET + " > " + message);
+        }
+        else if(p0.startsWith("%CHAT%")){
+        	String message = p0.replace("%CHAT%", "");
+        	delegate.sendMessage(message);
+        }else{
+            delegate.sendMessage(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + p0);
+        }
+
     }
 
     public void sendMessage(java.lang.String[] p0)

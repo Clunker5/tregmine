@@ -22,4 +22,6 @@ public interface IContext extends AutoCloseable
     public IZonesDAO getZonesDAO();
     public IEnchantmentDAO getEnchantmentDAO();
     public IMiscDAO getMiscDAO();
+
+	public IMailDAO getMailDAO();
 }

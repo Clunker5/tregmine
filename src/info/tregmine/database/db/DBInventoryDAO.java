@@ -215,6 +215,7 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(2, counter);
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
+                if(stack.hasItemMeta()){
                 ItemMeta meta = stack.getItemMeta();
                 List<String> lores = meta.getLore();
                 Coloring color = new Coloring();
@@ -226,6 +227,7 @@ public class DBInventoryDAO implements IInventoryDAO
                 }
                 meta.setLore(lores);
                 stack.setItemMeta(meta);
+                }
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
                     config.set("meta", stack.getItemMeta());
