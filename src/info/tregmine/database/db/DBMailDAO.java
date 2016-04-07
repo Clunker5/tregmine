@@ -28,7 +28,7 @@ public class DBMailDAO implements IMailDAO{
 	@Override
 	public int getMailTotal(String username) throws DAOException {
 		int total = 0;
-        String rawstmt = "SELECT * FROM player_mail WHERE sender_name = ? AND deleted = 'false'";
+        String rawstmt = "SELECT * FROM player_mail WHERE receiver_name = ? AND deleted = 'false'";
 	        try (PreparedStatement stmt = conn.prepareStatement(rawstmt)) {
 	            stmt.setString(1, username);
 	            stmt.execute();
@@ -46,7 +46,7 @@ public class DBMailDAO implements IMailDAO{
 	@Override
 	public int getMailTotalEver(String username) throws DAOException {
 		int total = 0;
-        String rawstmt = "SELECT * FROM player_mail WHERE sender_name = ?";
+        String rawstmt = "SELECT * FROM player_mail WHERE receiver_name = ?";
 	        try (PreparedStatement stmt = conn.prepareStatement(rawstmt)) {
 	            stmt.setString(1, username);
 	            stmt.execute();
