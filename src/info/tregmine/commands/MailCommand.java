@@ -19,6 +19,22 @@ public class MailCommand extends AbstractCommand{
 		super(plugin, "mail");
 		instance = plugin;
 	}
+
+    public boolean sendMailNotification(boolean isWeb, String receiver, String sender, Tregmine tregmine){
+    	if(!isWeb){
+    	List<TregminePlayer> candidates1 = tregmine.matchPlayer(sender);
+    	List<TregminePlayer> candidates = tregmine.matchPlayer(receiver);
+    	if(candidates.size() != 1 || candidates1.size() != 1){
+    		return false;
+    	}
+    	TregminePlayer receiverUser = candidates.get(0);
+    	TregminePlayer senderUser = candidates1.get(0);
+    	receiverUser.sendMessage("%internal%" + ChatColor.AQUA + senderUser.getChatName() + " sent you a message! Use /mail read to view it. ");
+    	//TregminePlayer player = plugin.matchPlayer(username);
+    	}else{
+    		//Web, even though its not implemented.
+    	}
+    }
     private String argsToMessage(String[] args)
     {
         StringBuffer buf = new StringBuffer();
