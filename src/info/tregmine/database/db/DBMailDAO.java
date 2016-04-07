@@ -84,7 +84,7 @@ public class DBMailDAO implements IMailDAO{
 	@Override
 	public List<String[]> getAllMail(String username) throws DAOException {
 		List<String[]> mail = new ArrayList<String[]>();
-        String rawstmt = "SELECT * FROM player_mail WHERE sender_name = ? AND deleted = 'false'";
+        String rawstmt = "SELECT * FROM player_mail WHERE receiver_name = ? AND deleted = 'false'";
 	        try (PreparedStatement stmt = conn.prepareStatement(rawstmt)) {
 	            stmt.setString(1, username);
 	            stmt.execute();
