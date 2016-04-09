@@ -186,6 +186,10 @@ public class TregminePlayerListener implements Listener
     public void onPlayerLogin(PlayerLoginEvent event)
     {
         TregminePlayer player;
+        if(plugin.getLockdown()){
+        	event.disallow(Result.KICK_OTHER, "The server is on lockdown, only staff can join. Check the forums for more info.");
+        	return;
+        }
         try {
             player = plugin.addPlayer(event.getPlayer(), event.getAddress());
             if (player == null) {
