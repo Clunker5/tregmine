@@ -210,7 +210,11 @@ public class TregminePlayerListener implements Listener
             player.teleportWithHorse(this.plugin.getServer().getWorld("world")
                     .getSpawnLocation());
         }
-
+        System.out.println(plugin.getTotalPlayersJoined());
+        if(plugin.getTotalPlayersJoined() == 0){
+        	player.sendMessage("%warning%" + ChatColor.RED + "You're the first person to log into the server since the last reboot. You may experience glitches until you re-log.");
+        	plugin.setTotalPlayersJoined(plugin.getTotalPlayersJoined() + 1);
+        }
         if (player.getKeyword() != null) {
             String keyword =
                     player.getKeyword()
