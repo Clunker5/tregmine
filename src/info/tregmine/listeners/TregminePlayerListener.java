@@ -448,6 +448,8 @@ public class TregminePlayerListener implements Listener
             player.awardBadgeLevel(Badge.PHILANTROPIST,
                     "For being a Tregmine donator!");
         }
+        if(plugin.getTotalPlayersJoined() == 0){
+        	player.sendMessage("%warning%" + "You are the first person to join the server since it last restarted, which means you are prone to experiencing bugs. Please re-log.");
         }
     }
 
