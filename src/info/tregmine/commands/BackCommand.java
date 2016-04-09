@@ -9,13 +9,17 @@ public class BackCommand extends AbstractCommand{
 	Tregmine plugin;
 	public BackCommand(Tregmine tregmine){
 		super(tregmine, "back");
+		plugin = tregmine;
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
 		if(!player.getIsStaff()){
 			player.nopermsMessage(false, "back");
 			return true;
 		}
-		
+		if(player.getLastPos() == null){
+			player.sendMessage("%warning%" + ChatColor.RED + "You don't have a last location!");
+			return true;
+		}
 		boolean success = player.teleport(player.getLastPos());
 		if(!success){
 			player.sendMessage(ChatColor.RED + "Failed to teleport back. Sorry!");

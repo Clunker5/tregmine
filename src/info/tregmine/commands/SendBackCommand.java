@@ -29,7 +29,7 @@ public class SendBackCommand extends AbstractCommand{
 			return true;
 		}
 		TregminePlayer target = players.get(0);
-		if(target.getLastPos().toString().isEmpty()){
+		if(target.getLastPos() == null){
 			player.sendMessage(ChatColor.RED + "Player does not have a last location.");
 			return true;
 		}
