@@ -1,5 +1,9 @@
 general:
-  motd: "#b#lIt's Tregmine!"
+  motd:
+    lineoneauto: true
+    lineone: "#6#nTregmine!"
+    #Line two will always be used, line one will only be used if lineoneauto is set to false.
+    linetwo: "#c#lTregmine?"
   life-log: true
 api:
   signing-key: your-strong-random-key-here
@@ -16,7 +20,7 @@ support:
 #Worlds -- DO NOT ADD THE FOLLOWING: world, world_nether, world_the_end, game,
 #anarchy, anarchy_nether, anarchy_the_end -- You have been warned.
 worlds:
-# Set enabled to true to run the worlds API -- If its true and theres no worlds in names, it will crash.
+# Set enabled to true to run the worlds API
   enabled: false
   names:
 #Rank Chat Colors
