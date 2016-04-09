@@ -448,8 +448,6 @@ public class TregminePlayerListener implements Listener
             player.awardBadgeLevel(Badge.PHILANTROPIST,
                     "For being a Tregmine donator!");
         }
-        if(player.getChatName() == "im_not_eric"){
-        	player.setTemporaryChatName(ChatColor.DARK_RED + player.getName());
         }
     }
 
