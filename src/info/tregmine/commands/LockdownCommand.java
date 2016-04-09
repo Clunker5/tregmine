@@ -20,14 +20,11 @@ public class LockdownCommand extends AbstractCommand{
 			player.sendMessage(ChatColor.RED + "You must specify <on|off>");
 			return true;
 		}
-		if(args[0].toLowerCase() != "on" && args[0].toLowerCase() != "off"){
-			player.sendMessage(ChatColor.RED + "You must specify <on|off>");
-			return true;
-		}
+		System.out.println(args[0]);
 		boolean state;
-		if(args[0].toLowerCase() == "on"){
+		if(args[0].equalsIgnoreCase("on")){
 			state = true;
-		}else if(args[0].toLowerCase() == "off"){
+		}else if(args[0].equalsIgnoreCase("off")){
 			state = false;
 		}else{
 			//Something really bad happened.
