@@ -13,6 +13,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -185,6 +186,7 @@ public class TregminePlayerListener implements Listener
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event)
     {
+    	
         TregminePlayer player;
         if(plugin.getLockdown()){
         	event.disallow(Result.KICK_OTHER, "The server is on lockdown, only staff can join. Check the forums for more info.");
