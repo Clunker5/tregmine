@@ -20,6 +20,9 @@ commands:
   allclear:
     description: Check if any blocks have been changed
     usage: /allclear [radius]
+  back:
+    description: Teleport to your previous location
+    usage: /back
   guardians:
     description: Send a message to all active guardians
     usage: /guardians message
@@ -175,6 +178,9 @@ commands:
   sell:
     description: Sell stuff to the central bank
     usage: /sell
+  sendback:
+    description: Send a player to their previous location (admins only)
+    usage: /sendback player
   sendto:
     description: Send a player to another world (admins only)
     usage: /sendto player world
