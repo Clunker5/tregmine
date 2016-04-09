@@ -510,6 +510,7 @@ public class Tregmine extends JavaPlugin
     	}else{
     		Bukkit.broadcastMessage(ChatColor.GOLD + "[Tregmine] " + ChatColor.RESET + "> The server is no longer on lockdown.");
     	}
+    	this.lockdown = v;
     }
     public boolean getLockdown(){
     	return lockdown;
