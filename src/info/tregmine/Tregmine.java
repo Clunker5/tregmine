@@ -414,6 +414,11 @@ public class Tregmine extends JavaPlugin
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
+    public int getTotalPlayersJoined(){
+    	return this.PlayersJoinedTotal;
+    }
+    public void setTotalPlayersJoined(int v){
+    	this.PlayersJoinedTotal = v;
     }
 
     public WebServer getWebServer()
