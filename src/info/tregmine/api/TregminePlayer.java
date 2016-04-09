@@ -153,11 +153,7 @@ public class TregminePlayer extends PlayerDelegate
     //Intercept sent messages for miscellaneous purposes
     public void sendMessage(String v){
     	String text = v;
-    	if(plugin.getLockdown()){
-    		this.sendTrueMsg(text, true);
-    	}else{
-    		this.sendTrueMsg(text, false);
-    	}
+    	this.sendTrueMsg(v, plugin);
     	
     }
 

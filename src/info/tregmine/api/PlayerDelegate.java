@@ -1169,7 +1169,7 @@ public abstract class PlayerDelegate
         return delegate.beginConversation(p0);
     }
 
-    public void sendTrueMsg(java.lang.String p0, boolean lockdown)
+    public void sendTrueMsg(java.lang.String p0, Tregmine instance)
     {
         checkState();
         if(p0.startsWith("%internal%")){
