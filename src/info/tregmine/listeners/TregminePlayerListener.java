@@ -97,6 +97,7 @@ public class TregminePlayerListener implements Listener
         if (player.getGameMode() == GameMode.CREATIVE) {
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null) {
+                	if(item.hasItemMeta()){
                     ItemMeta meta = item.getItemMeta();
                     List<String> oldlore = meta.getLore();
                     String line2 = "";
@@ -116,6 +117,7 @@ public class TregminePlayerListener implements Listener
                             + " Treg");
                     meta.setLore(lore);
                     item.setItemMeta(meta);
+                	}
                 }
             }
         }
