@@ -1,5 +1,9 @@
 general:
-  motd: "#b#lIt's Tregmine!"
+  motd:
+    lineoneauto: true
+    lineone: "#6#nTregmine!"
+    #Line two will always be used, line one will only be used if lineoneauto is set to false.
+    linetwo: "#c#lTregmine?"
   life-log: true
 api:
   signing-key: your-strong-random-key-here

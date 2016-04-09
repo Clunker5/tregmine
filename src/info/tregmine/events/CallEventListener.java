@@ -42,6 +42,7 @@ public class CallEventListener implements Listener
     // Triggers when a player pings the server
 	@EventHandler
 	public void onServerListPing(ServerListPingEvent event){
+		if(plugin.getConfig().getBoolean("general.motd.lineoneauto")){
 		String extraText = "";
 		String type = plugin.releaseType;
 		if(type.contains("re")){
@@ -57,8 +58,10 @@ public class CallEventListener implements Listener
 		}else{
 			extraText = ChatColor.DARK_RED + "" + ChatColor.BOLD + " YOU DID SOMETHING WRONG.";
 		}
-		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd")));
-		
+		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
+		}else{
+			event.setMotd(ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.lineone")) + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
+		}
 	}
     // Triggers when a player changes lot
     @EventHandler
