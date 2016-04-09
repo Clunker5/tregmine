@@ -62,6 +62,7 @@ public class TregminePlayer extends PlayerDelegate
     private int playTime = 0;
     private Set<Flags> flags;
     private Map<Badge, Integer> badges;
+    private Location lastpos = null;
     
 
     // One-time state
@@ -166,6 +167,12 @@ public class TregminePlayer extends PlayerDelegate
                 setPlayerListName(name);
             }
         }
+    }
+    public void setLastPos(Location pos){
+    	this.lastpos = pos;
+    }
+    public Location getLastPos(){
+    	return this.lastpos;
     }
 
     public void setPassword(String newPassword)

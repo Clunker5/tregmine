@@ -63,7 +63,7 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
     public Tregmine plugin;
-    public String releaseType = "be";
+    public String releaseType = "bl";
 
     @Override
     public void onLoad()
@@ -287,6 +287,7 @@ public class Tregmine extends JavaPlugin
         getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
+        getCommand("back").setExecutor(new BackCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
@@ -336,6 +337,7 @@ public class Tregmine extends JavaPlugin
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
         getCommand("sell").setExecutor(new SellCommand(this));
+        getCommand("sendback").setExecutor(new SendBackCommand(this));
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setbiome").setExecutor(new SetBiomeCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));

@@ -75,7 +75,8 @@ public class PushNotificationAction implements WebHandler.Action
     {
         TregminePlayer subject = tregmine.getPlayer(pushto);
         if (subject == null) {
-            status = true;
+            status = false;
+            this.error = "Player is offline";
             return;
         }
 
