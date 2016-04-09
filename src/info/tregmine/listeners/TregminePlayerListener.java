@@ -188,10 +188,7 @@ public class TregminePlayerListener implements Listener
     {
     	
         TregminePlayer player;
-        if(plugin.getLockdown()){
-        	event.disallow(Result.KICK_OTHER, "The server is on lockdown, only staff can join. Check the forums for more info.");
-        	return;
-        }
+        
         try {
             player = plugin.addPlayer(event.getPlayer(), event.getAddress());
             if (player == null) {
@@ -212,11 +209,15 @@ public class TregminePlayerListener implements Listener
             player.teleportWithHorse(this.plugin.getServer().getWorld("world")
                     .getSpawnLocation());
         }
-        System.out.println(plugin.getTotalPlayersJoined());
-        if(plugin.getTotalPlayersJoined() == 0){
-        	player.sendMessage("%warning%" + ChatColor.RED + "You're the first person to log into the server since the last reboot. You may experience glitches until you re-log.");
-        	plugin.setTotalPlayersJoined(plugin.getTotalPlayersJoined() + 1);
+        if(plugin.getLockdown() && !event.getPlayer().isOp()){
+        
+        		if(!player.getIsStaff()){
+        			event.disallow(Result.KICK_OTHER, ChatColor.GOLD + "Tregmine " + ChatColor.RED + "is on lockdown, only staff can join. Check the forums for more info.");
+                	return;
+        		}
+        	
         }
+        
         if (player.getKeyword() != null) {
             String keyword =
                     player.getKeyword()
