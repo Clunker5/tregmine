@@ -115,7 +115,6 @@ public class InventoryListener implements Listener
             throw new RuntimeException(e);
         }
         long duration = System.currentTimeMillis() - start;
-        Logger.global.info("Inventory Listener Open: " + duration);
     }
 
     @EventHandler
@@ -132,7 +131,6 @@ public class InventoryListener implements Listener
         InventoryHolder holder = inv.getHolder();
         Location loc = null;
         long duration2 = System.currentTimeMillis() - start;
-        Logger.global.info("Inventory Listener Close 122-133: " + duration2);
         if (holder instanceof BlockState) {
             BlockState block = (BlockState)holder;
             loc = block.getLocation();
@@ -146,7 +144,6 @@ public class InventoryListener implements Listener
             return;
         }
         long duration3 = System.currentTimeMillis() - start;
-        Logger.global.info("Inventory Listener Close 122-147: " + duration3);
 
         if (!openInventories.containsKey(loc)) {
             return;
@@ -157,7 +154,6 @@ public class InventoryListener implements Listener
 
         assert oldContents.length == currentContents.length;
         long duration4 = System.currentTimeMillis() - start;
-        Logger.global.info("Inventory Listener Close 122-157: " + duration4);
         try (IContext ctx = plugin.createContext()) {
             IInventoryDAO invDAO = ctx.getInventoryDAO();
 
@@ -189,7 +185,6 @@ public class InventoryListener implements Listener
                 }
             }
             long totalTime = System.currentTimeMillis() - logChestTime;
-            Logger.global.info("Time recording chest: " + totalTime);
             // Store contents
             long startPoint = System.currentTimeMillis();
     		try{
@@ -198,7 +193,6 @@ public class InventoryListener implements Listener
     			throw new RuntimeException(e);
     		}
             long endPoint = System.currentTimeMillis() - startPoint;
-            Logger.global.info("Time inserting into SQL: " + endPoint);
         }
         catch (DAOException e) {
             throw new RuntimeException(e);
@@ -206,6 +200,5 @@ public class InventoryListener implements Listener
 
         openInventories.remove(loc);
         long duration = System.currentTimeMillis() - start;
-        Logger.global.info("Inventory Listener Close End: " + duration);
     }
 }
