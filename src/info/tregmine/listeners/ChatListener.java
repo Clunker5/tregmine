@@ -68,13 +68,19 @@ public class ChatListener implements Listener
 
                 String text = event.getMessage();
                 for (TregminePlayer online : plugin.getOnlinePlayers()) {
+                	
                     if (text.contains(online.getRealName()) &&
                         !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-
+                    	if(text.toLowerCase().contains("@" + online.getRealName())){
+                    		String newName = online.getChatName();
+                        	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "@" + online.getName());
+                        }else{
                         text = text.replaceAll(online.getRealName(),
                                                online.getChatName() + txtColor);
-                        online.sendNotification(Notification.MESSAGE, "%cancel%");
+                        }
+                        online.sendNotification(Notification.MESSAGE);
                     }
+                    
                 }
                 if(sender.getRank() != Rank.RESIDENT && sender.getRank() != Rank.SETTLER && sender.getRank() != Rank.TOURIST && sender.getRank() != Rank.UNVERIFIED){
             	text = ChatColor.translateAlternateColorCodes('#', text);
@@ -86,14 +92,16 @@ public class ChatListener implements Listener
                 if (player_keywords.size() > 0 && player_keywords != null) {
                     for (String keyword : player_keywords) {
                         if (text.toLowerCase().contains(keyword.toLowerCase())) {
+                        	if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
+                            	text = text.replaceAll("@" + keyword.toLowerCase(), ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + ChatColor.GOLD + ChatColor.ITALIC + keyword.toLowerCase());
+                            }else{
                             text = text.replaceAll(Pattern.quote(keyword),
                                     ChatColor.AQUA + keyword + txtColor);
+                            }
                         }
                     }
                 }
-                if(text.toLowerCase().contains("@")){
-                	text = text.replaceAll("@", ChatColor.ITALIC + "@");
-                }
+                
                 String frontBracket = "";
                 String endBracket = "";
                 if(sender.isOp() || sender.getGameMode() == GameMode.CREATIVE){

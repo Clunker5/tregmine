@@ -48,7 +48,7 @@ public class DBBlessedBlockDAO implements IBlessedBlockDAO
     @Override
     public int owner(Location loc) throws DAOException{
 		int id = -1;
-		String sql = "SELECT 1 FROM blessedblock WHERE blessedblock_x = ? AND blessedblock_y = ? AND blessedblock_z = ?";
+		String sql = "SELECT * FROM blessedblock WHERE blessedblock_x = ? AND blessedblock_y = ? AND blessedblock_z = ?";
 		try(PreparedStatement stmt = conn.prepareStatement(sql)){
     		stmt.setInt(1, loc.getBlockX());
     		stmt.setInt(2, loc.getBlockY());
@@ -59,7 +59,7 @@ public class DBBlessedBlockDAO implements IBlessedBlockDAO
                 if (!rs.next()) {
                     return -1;
                 }
-                id = rs.getInt("player_id");
+                return rs.getInt("player_id");
                 
     		}
     	} catch (SQLException e) {

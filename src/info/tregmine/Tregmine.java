@@ -57,10 +57,13 @@ public class Tregmine extends JavaPlugin
     private Queue<TregminePlayer> students;
     //Possibly a future feature >:)
     private boolean lockdown = false;
+    private World rulelessWorld;
+    private World rulelessWorldNether;
+    private World rulelessWorldEnd;
 
     private LookupService cl = null;
     public Tregmine plugin;
-    public String releaseType = "bl";
+    public String releaseType = "be";
 
     @Override
     public void onLoad()
@@ -552,6 +555,10 @@ public class Tregmine extends JavaPlugin
     {
         return quitMessages;
     }
+
+    public World getRulelessWorld() { return rulelessWorld; }
+    public World getRulelessNether() { return rulelessWorldNether; }
+    public World getRulelessEnd() { return rulelessWorldEnd; }
 
     // ============================================================================
     // Player methods

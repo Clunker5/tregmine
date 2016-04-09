@@ -89,9 +89,13 @@ public class BlessedBlockListener implements Listener
                 walletDAO.add(blockOwner, 25000);
                 blessDAO.delete(loc);
                 player.sendMessage(ChatColor.AQUA + "You unblessed a block at X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "");
+                Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
+                blessedBlocks.remove(loc, blockOwner.getId());
+                event.setCancelled(true);
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
+        	
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK &&
             player.getItemInHand().getType() == Material.BONE &&
