@@ -317,6 +317,7 @@ public class Tregmine extends JavaPlugin
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
+        getCommand("lockdown").setExecutor(new LockdownCommand(this));
         getCommand("lot").setExecutor(new LotCommand(this));
         getCommand("lottery").setExecutor(new LotteryCommand(this));
         getCommand("mentor").setExecutor(new MentorCommand(this));
@@ -588,6 +589,20 @@ public class Tregmine extends JavaPlugin
         return players;
     }
 
+    //Interjection point for other stuff
+    
+    public void setLockdown(boolean v){
+    	if(v){
+    		Bukkit.broadcastMessage(ChatColor.RED + "[Tregmine] " + ChatColor.RESET + "> The server is now on lockdown. Only staff will be able to connect.");
+    	}else{
+    		Bukkit.broadcastMessage(ChatColor.GOLD + "[Tregmine] " + ChatColor.RESET + "> The server is no longer on lockdown.");
+    	}
+    }
+    public boolean getLockdown(){
+    	return lockdown;
+    }
+    
+    //End interject
     public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr)
             throws PlayerBannedException
     {
