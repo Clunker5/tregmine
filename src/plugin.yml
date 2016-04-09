@@ -115,7 +115,7 @@ commands:
     usage: /keyword keyword
   kick:
     description: Kick a player (admins and guardians only)
-    usage: /unkown
+    usage: /kick player
   lockdown:
     description: Lock the server (admins only)
     usage: /lockdown on|off
