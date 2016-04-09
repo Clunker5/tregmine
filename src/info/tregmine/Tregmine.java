@@ -41,6 +41,7 @@ public class Tregmine extends JavaPlugin
 
     private Server server;
     private WebServer webServer;
+    private int PlayersJoinedTotal = 0;
 
     private Map<String, TregminePlayer> players;
     private Map<Integer, TregminePlayer> playersById;
@@ -63,7 +64,7 @@ public class Tregmine extends JavaPlugin
 
     private LookupService cl = null;
     public Tregmine plugin;
-    public String releaseType = "bl";
+    public String releaseType = "re";
 
     @Override
     public void onLoad()
@@ -499,7 +500,7 @@ public class Tregmine extends JavaPlugin
         }
 
         return players;
-    }
+}
 
     //Interjection point for other stuff
     
