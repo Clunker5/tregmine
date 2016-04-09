@@ -118,6 +118,21 @@ public class MailCommand extends AbstractCommand{
 			return true;
 		}
 		else if(args[0].contains("total")){
+			List<String[]> messages;
+			try (IContext ctx = tregmine.createContext()) {
+		        IMailDAO mail = ctx.getMailDAO();
+		        messages = mail.getAllMail(player.getName());
+	        	
+		        if(messages.size() == 0){
+		        	player.sendMessage("%internal%" + ChatColor.AQUA + "You haven't received any messages.");
+		        }else if(messages.size() == 1){
+		        	player.sendMessage("%internal%" + ChatColor.AQUA + "You have " + messages.size() + " message.");
+		        }else{
+		        	player.sendMessage("%internal%" + ChatColor.AQUA + "You have " + messages.size() + " messages.");
+		        }
+		    } catch (DAOException e) {
+		        throw new RuntimeException(e);
+		    }
 			return true;
 		}
 		else if(args[0].contains("tbt")){
@@ -165,14 +180,16 @@ public class MailCommand extends AbstractCommand{
 		        	player.sendMessage("%internal%" + ChatColor.AQUA + "You have a message from " + message[0] + " [ID " + message[4] + "]");
 		        	player.sendMessage("%internal%" + ChatColor.AQUA + "\"" + message[3].trim() + "\"");
 		        }
+		        if(messages.size() == 0){
+		        	player.sendMessage("%internal%" + ChatColor.AQUA + "You haven't received any messages.");
+		        }
 		    } catch (DAOException e) {
 		        throw new RuntimeException(e);
 		    }
 			return true;
 		}
 		else{
-			//sendHelp(player);
-			player.sendMessage(args[0]);
+			sendHelp(player);
 			return true;
 		}
 	}
