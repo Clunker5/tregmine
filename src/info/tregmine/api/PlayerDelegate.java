@@ -1171,10 +1171,17 @@ public abstract class PlayerDelegate
 
     public void sendTrueMsg(java.lang.String p0, Tregmine instance)
     {
+    	boolean lockdown = instance.getLockdown();
         checkState();
+        ChatColor color = null;
+        if(lockdown){
+        	color = ChatColor.RED;
+        }else{
+        	color = ChatColor.GOLD;
+        }
         if(p0.startsWith("%internal%")){
         	String message = p0.replace("%internal%", "");
-        	delegate.sendMessage(ChatColor.GOLD + "[Internal]" + ChatColor.RESET + " > " + message);
+        	delegate.sendMessage(color + "[Internal]" + ChatColor.RESET + " > " + message);
         }
         else if(p0.startsWith("%CHAT%")){
         	String message = p0.replace("%CHAT%", "");
@@ -1185,12 +1192,7 @@ public abstract class PlayerDelegate
         	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
         }
         else{
-        	if(lockdown){
-        		delegate.sendMessage(ChatColor.RED + "[Tregmine]" + ChatColor.RESET + " > " + p0);
-        	}else{
-        		delegate.sendMessage(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + p0);
-        	}
-            
+    		delegate.sendMessage(color + "[Tregmine]" + ChatColor.RESET + " > " + p0);
         }
 
     }
