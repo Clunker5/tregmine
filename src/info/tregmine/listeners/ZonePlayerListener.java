@@ -500,12 +500,6 @@ public class ZonePlayerListener implements Listener
         } else {
             player.loadInventory(worldNamePortions[0], true);
         }
-        
-        if (cWorld.getName().equalsIgnoreCase(plugin.getRulelessWorld().getName()) &&
-                (!player.getRank().canBypassWorld() && player.getGameMode() != GameMode.CREATIVE)) {
-            player.setAllowFlight(false);
-            player.setFlying(false);
-        }
 
         Location movingTo = player.getLocation();
         Point currentPos =
