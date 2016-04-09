@@ -523,6 +523,10 @@ public class TregminePlayer extends PlayerDelegate
             }
         }
     }
+    public void sendNotification(Notification notif)
+    {
+            playSound(getLocation(), notif.getSound(), 2F, 1F);
+    }
 
     public void teleportWithHorse(Location loc)
     {
@@ -798,7 +802,7 @@ public class TregminePlayer extends PlayerDelegate
                 firstTime = true;
             }
 
-            if (firstTime && this.getWorld() != plugin.getRulelessWorld()) {
+            if (firstTime) {
                 this.saveInventory(name);
             }
 

@@ -91,6 +91,9 @@ public class ChatListener implements Listener
                         }
                     }
                 }
+                if(text.toLowerCase().contains("@")){
+                	text = text.replaceAll("@", ChatColor.ITALIC + "@");
+                }
                 String frontBracket = "";
                 String endBracket = "";
                 if(sender.isOp() || sender.getGameMode() == GameMode.CREATIVE){
@@ -118,11 +121,11 @@ public class ChatListener implements Listener
 
                     if (event.isWebChat()) {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("(" + sender.getChatName()
+                            to.sendMessage("%CHAT%" + "(" + sender.getChatName()
                                     + ChatColor.WHITE + ") " + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + " (" + sender.getChatName()
+                            to.sendMessage("%CHAT%" + channel + " (" + sender.getChatName()
                                     + ChatColor.WHITE + ") " + txtColor + text);
                         }
                     } else {

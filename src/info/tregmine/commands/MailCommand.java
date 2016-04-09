@@ -30,9 +30,16 @@ public class MailCommand extends AbstractCommand{
     	TregminePlayer receiverUser = candidates.get(0);
     	TregminePlayer senderUser = candidates1.get(0);
     	receiverUser.sendMessage("%internal%" + ChatColor.AQUA + senderUser.getChatName() + " sent you a message! Use /mail read to view it. ");
-    	//TregminePlayer player = plugin.matchPlayer(username);
+    	return true;
     	}else{
     		//Web, even though its not implemented.
+    		List<TregminePlayer> candidates = tregmine.matchPlayer(receiver);
+    		if(candidates.size() != 1){
+    			return false;
+    		}
+    		TregminePlayer receiverUser = candidates.get(0);
+    		receiverUser.sendMessage("%internal%" + ChatColor.AQUA + sender + " sent you a message! Use /mail read to view it.");
+    		return false;
     	}
     }
     private String argsToMessage(String[] args)

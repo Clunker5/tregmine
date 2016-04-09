@@ -57,13 +57,10 @@ public class Tregmine extends JavaPlugin
     private Queue<TregminePlayer> students;
     //Possibly a future feature >:)
     private boolean lockdown = false;
-    private World rulelessWorld;
-    private World rulelessWorldNether;
-    private World rulelessWorldEnd;
 
     private LookupService cl = null;
     public Tregmine plugin;
-    public String releaseType = "re";
+    public String releaseType = "bl";
 
     @Override
     public void onLoad()
@@ -113,7 +110,15 @@ public class Tregmine extends JavaPlugin
                                    LookupService.GEOIP_MEMORY_CACHE);
         } catch (IOException e) {
             Tregmine.LOGGER.warning("GeoIPCity.dat was not found! " +
-                    "Geo location will not function as expected.");
+                    "Generating.");
+            File GeoIPCity = new File(folder,"GeoIPCity.dat");
+            try {
+				GeoIPCity.createNewFile();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				Tregmine.LOGGER.warning("Failed to generate GeoIPCity.dat!");
+			}
         }
     }
 
@@ -547,10 +552,6 @@ public class Tregmine extends JavaPlugin
     {
         return quitMessages;
     }
-
-    public World getRulelessWorld() { return rulelessWorld; }
-    public World getRulelessNether() { return rulelessWorldNether; }
-    public World getRulelessEnd() { return rulelessWorldEnd; }
 
     // ============================================================================
     // Player methods
