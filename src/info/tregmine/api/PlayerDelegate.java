@@ -1169,7 +1169,7 @@ public abstract class PlayerDelegate
         return delegate.beginConversation(p0);
     }
 
-    public void sendMessage(java.lang.String p0)
+    public void sendTrueMsg(java.lang.String p0, boolean lockdown)
     {
         checkState();
         if(p0.startsWith("%internal%")){
@@ -1179,8 +1179,18 @@ public abstract class PlayerDelegate
         else if(p0.startsWith("%CHAT%")){
         	String message = p0.replace("%CHAT%", "");
         	delegate.sendMessage(message);
-        }else{
-            delegate.sendMessage(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + p0);
+        }
+        else if(p0.startsWith("%warning%")){
+        	String message = p0.replace("%warning%", "");
+        	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
+        }
+        else{
+        	if(lockdown){
+        		delegate.sendMessage(ChatColor.RED + "[Tregmine]" + ChatColor.RESET + " > " + p0);
+        	}else{
+        		delegate.sendMessage(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + p0);
+        	}
+            
         }
 
     }

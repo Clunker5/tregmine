@@ -149,6 +149,17 @@ public class TregminePlayer extends PlayerDelegate
     {
         return name;
     }
+    
+    //Intercept sent messages for miscellaneous purposes
+    public void sendMessage(String v){
+    	String text = v;
+    	if(plugin.getLockdown()){
+    		this.sendTrueMsg(text, true);
+    	}else{
+    		this.sendTrueMsg(text, false);
+    	}
+    	
+    }
 
     public String getRealName()
     {
