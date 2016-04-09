@@ -548,17 +548,12 @@ public class TregminePlayerListener implements Listener
         }
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getEntity());
-        try(IContext ctx = plugin.createContext()){
-            IWalletDAO dao = ctx.getWalletDAO();
-            dao.take(player, MathUtil.percentOf(dao.balance(player), 5));
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-    }*/
+        player.setLastPos(player.getLocation());
+    }
 
     @EventHandler
     public void onPlayerFlight(PlayerToggleFlightEvent event)
