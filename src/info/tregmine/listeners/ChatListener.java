@@ -104,6 +104,7 @@ public class ChatListener implements Listener
                 
                 String frontBracket = "";
                 String endBracket = "";
+                if(!event.isWebChat()){
                 if(sender.isOp() || sender.getGameMode() == GameMode.CREATIVE){
                 	if(sender.isOp() && sender.getGameMode() == GameMode.CREATIVE){
                 		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
@@ -116,6 +117,10 @@ public class ChatListener implements Listener
                 		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
                 	}
                 	
+                }else{
+                	frontBracket = "<";
+                	endBracket = ChatColor.WHITE + "> ";
+                }
                 }else{
                 	frontBracket = "<";
                 	endBracket = ChatColor.WHITE + "> ";

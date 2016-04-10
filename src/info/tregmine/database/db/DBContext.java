@@ -141,4 +141,9 @@ public class DBContext implements IContext
 	public IMailDAO getMailDAO(){
 		return new DBMailDAO(conn);
 	}
+
+	@Override
+	public IBlockDAO getBlockDAO() {
+		return new DBBlockDAO(conn);
+	}
 }
