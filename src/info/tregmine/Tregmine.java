@@ -337,6 +337,7 @@ public class Tregmine extends JavaPlugin
         getCommand("reply").setExecutor(new ReplyCommand(this));
         getCommand("report").setExecutor(new ReportCommand(this));
         getCommand("rname").setExecutor(new ResetNameCommand(this));
+        getCommand("resetlore").setExecutor(new ResetLoreCommand(this));
         getCommand("say").setExecutor(new SayCommand(this));
         getCommand("seen").setExecutor(new SeenCommand(this));
         getCommand("sell").setExecutor(new SellCommand(this));
@@ -654,6 +655,8 @@ public class Tregmine extends JavaPlugin
             throw new RuntimeException(e);
         }
     }
+    
+    
 
     public TregminePlayer getPlayerOffline(int id)
     {

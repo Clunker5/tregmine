@@ -1,7 +1,9 @@
 package info.tregmine.database.db;
 
 import info.tregmine.api.InventoryAccess;
+import info.tregmine.api.Tools;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine;
 import info.tregmine.api.Coloring;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IInventoryDAO;
@@ -269,6 +271,8 @@ public class DBInventoryDAO implements IInventoryDAO
                     int data = rs.getInt("item_data");
                     int count = rs.getInt("item_count");
                     String meta = rs.getString("item_meta");
+                    Tools tool = new Tools();
+                    meta = tool.reverseColorCodes(meta);
 
                     ItemMeta metaObj = null;
                     if (!"".equals(meta)) {
@@ -410,6 +414,7 @@ public class DBInventoryDAO implements IInventoryDAO
                        int data = rs.getInt("item_data");
                        int count = rs.getInt("item_count");
                        String meta = rs.getString("item_meta");
+                       meta = meta.replace("Â", "");
                        short durability = rs.getShort("item_durability");
 
                        ItemMeta metaObj = null;

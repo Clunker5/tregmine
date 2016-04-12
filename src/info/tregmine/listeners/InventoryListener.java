@@ -130,7 +130,7 @@ public class InventoryListener implements Listener
         TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
 
         Inventory inv = event.getInventory();
-    	
+    	if(player.getGameMode() == GameMode.CREATIVE){
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
                 ItemMeta meta = item.getItemMeta();
@@ -145,6 +145,7 @@ public class InventoryListener implements Listener
                 item.setItemMeta(meta);
             }
         }
+    	}
         InventoryHolder holder = inv.getHolder();
         Location loc = null;
         if (holder instanceof BlockState) {

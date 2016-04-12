@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.4.3
+version: 3.4.4
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -169,6 +169,9 @@ commands:
   report:
     description: Adds a report to the players record
     usage: /report player message
+  resetlore:
+    description: Reset a lore for an item accidentally flagged as creative or spawned [IM_NOT_ERIC OR OPS ONLY]
+    usage: /resetlore
   rname:
     description: Resets the players nickname
     usage: /rname
