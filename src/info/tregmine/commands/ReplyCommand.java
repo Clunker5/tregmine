@@ -72,13 +72,13 @@ public class ReplyCommand extends AbstractCommand
                 // presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE)
                         || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage(GREEN + "(to) "
+                    player.sendMessage("%chat%" + GREEN + "(to) "
                             + receivingPlayer.getChatName() + GREEN + ": "
                             + message);
                 }
 
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE, GREEN
+                receivingPlayer.sendNotification(Notification.MESSAGE,"%chat%" +  GREEN
                         + "(msg) " + player.getChatName() + GREEN + ": "
                         + message);
                 receivingPlayer.setLastMessenger(player.getName());
