@@ -1193,7 +1193,7 @@ public abstract class PlayerDelegate
         	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
         }
         else{
-    		delegate.sendMessage(color + "[" + n + "]" + ChatColor.RESET + " > " + p0);
+    		delegate.sendMessage(p0);
         }
 
     }

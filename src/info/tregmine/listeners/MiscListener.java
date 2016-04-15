@@ -22,7 +22,7 @@ public class MiscListener implements Listener
     {
     	if("world".equals(event.getWorld().getName())){
     	String n = plugin.getConfig().getString("general.servername");
-            Bukkit.broadcastMessage(ChatColor.GOLD + "["+n+"]" + ChatColor.RESET + " > " + ChatColor.DARK_RED + n +" is saving, You may experience some slowness.");
+            Bukkit.broadcastMessage(ChatColor.GOLD + n + ChatColor.DARK_RED +" is saving, You may experience some slowness.");
     	}
 	}
 

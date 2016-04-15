@@ -515,9 +515,9 @@ public class Tregmine extends JavaPlugin
     
     public void setLockdown(boolean v){
     	if(v){
-    		Bukkit.broadcastMessage(ChatColor.RED + "[" + this.serverName + "] " + ChatColor.RESET + "> The server is now on lockdown. Only staff will be able to connect.");
+    		Bukkit.broadcastMessage(ChatColor.RED + "The server is now on lockdown. Only staff will be able to connect.");
     	}else{
-    		Bukkit.broadcastMessage(ChatColor.GOLD + "[" + this.serverName + "] " + ChatColor.RESET + "> The server is no longer on lockdown.");
+    		Bukkit.broadcastMessage(ChatColor.GREEN + "The server is no longer on lockdown.");
     	}
     	this.lockdown = v;
     }
