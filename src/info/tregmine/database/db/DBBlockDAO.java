@@ -48,7 +48,6 @@ public class DBBlockDAO implements IBlockDAO{
 	    	ResultSet rs = stmt.getResultSet();
 	    	return rs.getInt("price");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			return 0;
 		}
 	}
