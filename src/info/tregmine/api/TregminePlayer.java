@@ -45,6 +45,9 @@ public class TregminePlayer extends PlayerDelegate
         CHANNEL_VIEW,
         WATCHING_CHUNKS;
     };
+    public enum Settings {
+    	NOAFKKICK;
+    }
 
     // Persistent values
     private int id = 0;
@@ -61,6 +64,7 @@ public class TregminePlayer extends PlayerDelegate
     private int guardianRank = 0;
     private int playTime = 0;
     private Set<Flags> flags;
+    private Set<Settings> settings;
     private Map<Badge, Integer> badges;
     private Location lastpos = null;
     
@@ -122,6 +126,7 @@ public class TregminePlayer extends PlayerDelegate
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
+        this.settings = EnumSet.noneOf(Settings.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -133,6 +138,7 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
+        this.settings = EnumSet.noneOf(Settings.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -223,7 +229,13 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setFlag(Flags flag) { flags.add(flag); }
     public void removeFlag(Flags flag) { flags.remove(flag); }
+    @Deprecated
+    public void setSetting(Settings a) {settings.add(a);}
+    @Deprecated
+    public void removeSetting(Settings a){settings.remove(a);}
     public boolean hasFlag(Flags flag) { return flags.contains(flag); }
+    @Deprecated
+    public boolean hasSetting(Settings a) {return settings.contains(a); }
 
     public boolean hasBadge(Badge badge) { return badges.containsKey(badge); }
     
