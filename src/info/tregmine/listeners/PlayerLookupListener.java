@@ -72,26 +72,19 @@ public class PlayerLookupListener implements Listener
                     if (to.getRank().canSeeHiddenInfo()) {
                         if (player.getCountry() != null) {
                             to.sendMessage(
-                            		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                            		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
-                            to.sendMessage(
-                            		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                            		"Welcome " + player.getChatName() + " from " + player.getCountry() + "!");
+                            to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
                         } else {
-                            to.sendMessage(
-                            		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
-                            to.sendMessage(
-                            		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                            to.sendMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                            to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
                         }
                     }
                 }
             } else {
                 if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-                    plugin.getServer().broadcastMessage(
-                    		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_AQUA + "Welcome " + player.getChatName() +
-                    		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName() + ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
                 } else {
-                    plugin.getServer().broadcastMessage(
-                    		ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > " + ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
                 }
             }
         }
