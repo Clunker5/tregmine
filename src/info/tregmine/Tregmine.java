@@ -115,16 +115,7 @@ public class Tregmine extends JavaPlugin
             cl = new LookupService(new File(folder,"GeoIPCity.dat"),
                                    LookupService.GEOIP_MEMORY_CACHE);
         } catch (IOException e) {
-            Tregmine.LOGGER.warning("GeoIPCity.dat was not found! " +
-                    "Generating.");
-            File GeoIPCity = new File(folder,"GeoIPCity.dat");
-            try {
-				GeoIPCity.createNewFile();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				Tregmine.LOGGER.warning("Failed to generate GeoIPCity.dat!");
-			}
+            Tregmine.LOGGER.warning("GeoIPCity.dat was not found! ");
         }
     }
 

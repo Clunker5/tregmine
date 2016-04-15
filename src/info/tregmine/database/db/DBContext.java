@@ -146,4 +146,9 @@ public class DBContext implements IContext
 	public IBlockDAO getBlockDAO() {
 		return new DBBlockDAO(conn);
 	}
+
+	@Override
+	public IHandbookDAO getHandbookDAO() {
+		return new DBHandbookDAO(conn);
+	}
 }

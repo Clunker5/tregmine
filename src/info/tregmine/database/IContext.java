@@ -23,6 +23,7 @@ public interface IContext extends AutoCloseable
     public IEnchantmentDAO getEnchantmentDAO();
     public IMiscDAO getMiscDAO();
     public IBlockDAO getBlockDAO();
+    public IHandbookDAO getHandbookDAO();
 
 	public IMailDAO getMailDAO();
 }

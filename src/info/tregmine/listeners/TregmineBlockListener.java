@@ -97,8 +97,6 @@ public class TregmineBlockListener implements Listener
                 return;
             }
         }
-        List<Material> blocksEarnable = new ArrayList<Material>();
-        //Will add soon
         try(IContext ctx = plugin.createContext()){
         	IBlockDAO blockDAO = ctx.getBlockDAO();
         	int blockvalue = blockDAO.blockValue(block);

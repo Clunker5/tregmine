@@ -41,12 +41,12 @@ public class DBBlockDAO implements IBlockDAO{
 	
 	@Override
 	public int blockValue(Block a) throws DAOException {
-		String sql = "SELECT * FROM block_prices WHERE blockid = ?";
+		String sql = "SELECT * FROM item WHERE item_id = ?";
 		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setDouble(1, a.getTypeId());
 	    	stmt.execute();
 	    	ResultSet rs = stmt.getResultSet();
-	    	return rs.getInt("price");
+	    	return rs.getInt("mine_value");
 		} catch (SQLException e) {
 			return 0;
 		}
