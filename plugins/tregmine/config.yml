@@ -13,6 +13,8 @@ general:
   economy:
     #Disable to use the /sell command instead
     minefortregs: true
+  #DO NOT put a / at the end of the domain
+  url: http://domain.lan
 api:
   signing-key: your-strong-random-key-here
   port: 9192
