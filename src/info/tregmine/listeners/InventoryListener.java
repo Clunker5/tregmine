@@ -130,6 +130,20 @@ public class InventoryListener implements Listener
         TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
 
         Inventory inv = event.getInventory();
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null) {
+                ItemMeta meta = item.getItemMeta();
+                if(meta.hasLore()){
+                	List<String> lore = meta.getLore();
+                	List<String> newlore = new ArrayList<String>();
+                	for(String a : lore){
+                		newlore.add(a.replace("Ã", ""));
+                	}
+                	meta.setLore(newlore);
+                    item.setItemMeta(meta);
+                }
+            }
+        }
     	if(player.getGameMode() == GameMode.CREATIVE){
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
