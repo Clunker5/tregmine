@@ -86,6 +86,7 @@ public class TregminePlayer extends PlayerDelegate
     private TregminePlayer student;
     private String currentInventory;
 	private int combatLog;
+	private long lastOnlineActivity;
 	private String lastMessenger;
 
     // Player state for block fill
@@ -362,6 +363,10 @@ public class TregminePlayer extends PlayerDelegate
     public GuardianState getGuardianState()
     {
         return guardianState;
+    }
+    
+    public boolean isHidden(){
+    	return this.hasFlag(Flags.INVISIBLE);
     }
 
     public void setGuardianState(GuardianState v)
