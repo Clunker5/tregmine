@@ -43,6 +43,10 @@ public class SellCommand extends AbstractCommand implements Listener
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(this.tregmine.getConfig().getBoolean("general.economy.minefortregs")){
+    		player.sendMessage(ChatColor.RED + "The server has decided to use the mining system to obtain tregs.");
+    		return true;
+    	}
         if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
             player.sendMessage(RED + "A trade is already in progress!");
             return true;

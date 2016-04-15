@@ -6,6 +6,9 @@ general:
     linetwo: "#c#lTregmine?"
   life-log: true
   servername: Tregmine
+  economy:
+    #Disable to use the /sell command instead
+    minefortregs: true
 api:
   signing-key: your-strong-random-key-here
   port: 9192
