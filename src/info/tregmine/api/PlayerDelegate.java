@@ -1193,7 +1193,7 @@ public abstract class PlayerDelegate
         	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
         }
         else{
-    		delegate.sendMessage(p0);
+    		delegate.sendMessage(p0.replace(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > ", ""));
         }
 
     }
