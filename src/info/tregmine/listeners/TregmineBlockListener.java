@@ -1,6 +1,7 @@
 package info.tregmine.listeners;
 
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class TregmineBlockListener implements Listener
             Material.QUARTZ_ORE,
             Material.REDSTONE_ORE,
             Material.MOB_SPAWNER);
+    
+    
 
     private Tregmine plugin;
 
@@ -94,6 +97,8 @@ public class TregmineBlockListener implements Listener
                 return;
             }
         }
+        List<Material> blocksEarnable = new ArrayList<Material>();
+        //Will add soon
         try(IContext ctx = plugin.createContext()){
         	IBlockDAO blockDAO = ctx.getBlockDAO();
         	int blockvalue = blockDAO.blockValue(block);
