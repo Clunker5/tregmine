@@ -42,6 +42,9 @@ public class CallEventListener implements Listener
     // Triggers when a player pings the server
 	@EventHandler
 	public void onServerListPing(ServerListPingEvent event){
+		if(plugin.getLockdown()){
+			event.setMotd(ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " is on lockdown.\n" + ChatColor.RED + "Only staff can join.");	
+		}else{
 		if(plugin.getConfig().getBoolean("general.motd.lineoneauto")){
 		String extraText = "";
 		String type = plugin.releaseType;
@@ -61,8 +64,10 @@ public class CallEventListener implements Listener
 		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
 		}else{
 			event.setMotd(ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.lineone")) + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
+			
 		}
 	}
+}
     // Triggers when a player changes lot
     @EventHandler
     public void PlayerLotChangeEventListener(PlayerMoveEvent event)
