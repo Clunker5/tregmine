@@ -5,6 +5,7 @@ general:
     #Line two will always be used, line one will only be used if lineoneauto is set to false.
     linetwo: "#c#lTregmine?"
   life-log: true
+  servername: Tregmine
 api:
   signing-key: your-strong-random-key-here
   port: 9192

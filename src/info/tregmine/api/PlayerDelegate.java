@@ -1172,6 +1172,7 @@ public abstract class PlayerDelegate
     public void sendTrueMsg(java.lang.String p0, Tregmine instance)
     {
     	boolean lockdown = instance.getLockdown();
+    	String n = instance.getConfig().getString("general.servername");
         checkState();
         ChatColor color = null;
         if(lockdown){
@@ -1192,7 +1193,7 @@ public abstract class PlayerDelegate
         	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
         }
         else{
-    		delegate.sendMessage(color + "[Tregmine]" + ChatColor.RESET + " > " + p0);
+    		delegate.sendMessage(color + "[" + n + "]" + ChatColor.RESET + " > " + p0);
         }
 
     }

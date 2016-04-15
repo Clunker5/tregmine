@@ -65,6 +65,7 @@ public class Tregmine extends JavaPlugin
     private LookupService cl = null;
     public Tregmine plugin;
     public String releaseType = "re";
+    public String serverName;
 
     @Override
     public void onLoad()
@@ -147,6 +148,7 @@ public class Tregmine extends JavaPlugin
         	addWorld.createWorld();
         	}
         }
+        this.serverName = getConfig().getString("general.servername");
         
         for(String worldName : worlds){
         	if(!worldName.contains("the_end")){
@@ -473,6 +475,9 @@ public class Tregmine extends JavaPlugin
     {
         return quitMessages;
     }
+    public String serverName(){
+    	return this.serverName;
+    }
 
     public World getRulelessWorld() { return rulelessWorld; }
     public World getRulelessNether() { return rulelessWorldNether; }
@@ -508,9 +513,9 @@ public class Tregmine extends JavaPlugin
     
     public void setLockdown(boolean v){
     	if(v){
-    		Bukkit.broadcastMessage(ChatColor.RED + "[Tregmine] " + ChatColor.RESET + "> The server is now on lockdown. Only staff will be able to connect.");
+    		Bukkit.broadcastMessage(ChatColor.RED + "[" + this.serverName + "] " + ChatColor.RESET + "> The server is now on lockdown. Only staff will be able to connect.");
     	}else{
-    		Bukkit.broadcastMessage(ChatColor.GOLD + "[Tregmine] " + ChatColor.RESET + "> The server is no longer on lockdown.");
+    		Bukkit.broadcastMessage(ChatColor.GOLD + "[" + this.serverName + "] " + ChatColor.RESET + "> The server is no longer on lockdown.");
     	}
     	this.lockdown = v;
     }
