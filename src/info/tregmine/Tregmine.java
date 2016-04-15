@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.maxmind.geoip.LookupService;
 
 import info.tregmine.api.*;
+import info.tregmine.api.Timer;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
@@ -134,6 +135,7 @@ public class Tregmine extends JavaPlugin
         plugin = this;
         FileConfiguration config = getConfig();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Timer(this), 100L, 1L);
         List<?> configWorlds = getConfig().getList("worlds.names");
         if(getConfig().getString("worlds.enabled") == "true"){
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
@@ -205,6 +207,7 @@ public class Tregmine extends JavaPlugin
         // Register all listeners
         PluginManager pluginMgm = server.getPluginManager();
         pluginMgm.registerEvents(new CraftListener(this), this);
+        pluginMgm.registerEvents(new AfkListener(this), this);
         pluginMgm.registerEvents(new BlockStats(this), this);
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
         pluginMgm.registerEvents(new BoxFillBlockListener(this), this);
@@ -286,7 +289,6 @@ public class Tregmine extends JavaPlugin
                     return Rank.CODER.getColor();
                 }
             });
-
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
