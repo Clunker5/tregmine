@@ -156,6 +156,26 @@ public class TregminePlayer extends PlayerDelegate
     	this.sendTrueMsg(v, plugin);
     	
     }
+    public long getLastOnlineActivity(){
+    	return lastOnlineActivity;
+    }
+    public void setLastOnlineActivity(long a){
+    	lastOnlineActivity = a;
+    }
+    public void checkActivity(){
+    	long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
+    	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && !this.hasSetting(Settings.NOAFKKICK)){
+    		String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than " + autoafkkick + " seconds.";
+    		this.lastOnlineActivity = 0;
+    		this.kickPlayer(this.plugin, reason);
+    		Bukkit.broadcastMessage(ChatColor.GRAY + this.getChatName() + " was kicked for idling longer than 15 minutes.");
+    	}
+    	long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
+    	if(!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()){
+    		setAfk(true);
+    	}
+    	
+    }
 
     public String getRealName()
     {
@@ -906,13 +926,18 @@ public class TregminePlayer extends PlayerDelegate
     public boolean isAfk(){
     	return this.afk;
     }
-    public void setAfk(Boolean value){
+    public void setAfk(boolean value){
+    	if(this.isHidden()){
+    		return;
+    	}
     	if(value == true){
     		this.afk = true;
     		Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + BLUE + " is now afk.");
 			String oldname = getChatName();
 			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
     	}else if(value == false){
+    		final long currentTime = System.currentTimeMillis();
+    		this.setLastOnlineActivity(currentTime);
     		this.afk = false;
 			setTemporaryChatName(getNameColor() + getRealName());
 			Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + GREEN + " is no longer afk.");

@@ -6,6 +6,10 @@ general:
     linetwo: "#c#lTregmine?"
   life-log: true
   servername: Tregmine
+  afk:
+    #In seconds
+    timeout: 900
+    autoafk: 300
   economy:
     #Disable to use the /sell command instead
     minefortregs: true
