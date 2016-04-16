@@ -88,6 +88,7 @@ public class TregminePlayer extends PlayerDelegate
 	private int combatLog;
 	private long lastOnlineActivity;
 	private String lastMessenger;
+	private boolean AfkKick = true;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -163,6 +164,12 @@ public class TregminePlayer extends PlayerDelegate
     	this.sendTrueMsg(v, plugin);
     	
     }
+    public boolean getAfkKick(){
+    	return AfkKick;
+    }
+    public void setAfkKick(boolean a){
+    	this.AfkKick = a;
+    }
     public long getLastOnlineActivity(){
     	return lastOnlineActivity;
     }
@@ -171,7 +178,7 @@ public class TregminePlayer extends PlayerDelegate
     }
     public void checkActivity(){
     	long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
-    	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && !this.hasSetting(Settings.NOAFKKICK)){
+    	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true){
     		String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than " + autoafkkick + " seconds.";
     		this.lastOnlineActivity = 0;
     		this.kickPlayer(this.plugin, reason);

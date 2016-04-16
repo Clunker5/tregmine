@@ -194,7 +194,7 @@ public class TregminePlayerListener implements Listener
         try {
             player = plugin.addPlayer(event.getPlayer(), event.getAddress());
             if (player == null) {
-                event.disallow(Result.KICK_OTHER, "Something went wrong");
+                event.disallow(Result.KICK_OTHER, ChatColor.RED + "Something went wrong");
                 return;
             }
         }
@@ -221,20 +221,23 @@ public class TregminePlayerListener implements Listener
         }
         
         if (player.getKeyword() != null) {
+        	String url = plugin.getConfig().getString("general.url").replace("http://", "").replace("https://", "") + ":" + Bukkit.getPort();
+        	String urlnoport = plugin.getConfig().getString("general.url").replace("http://", "").replace("https://", "");
+        	
             String keyword =
                     player.getKeyword()
-                            + ".mc.rabil.org:25565".toLowerCase();
+                            + url.toLowerCase();
             Tregmine.LOGGER.warning("host: " + event.getHostname());
             Tregmine.LOGGER.warning("keyword:" + keyword);
 
             if (keyword.equals(event.getHostname().toLowerCase())
-                    || keyword.matches("mc.rabil.org")) {
+                    || keyword.matches(urlnoport)) {
                 Tregmine.LOGGER.warning(player.getName()
                         + " keyword :: success");
             }
             else {
                 Tregmine.LOGGER.warning(player.getName() + " keyword :: faild");
-                event.disallow(Result.KICK_BANNED, "Wrong keyword!");
+                event.disallow(Result.KICK_BANNED, ChatColor.RED + "Wrong keyword!");
             }
         }
         else {

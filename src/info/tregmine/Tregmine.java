@@ -280,6 +280,8 @@ public class Tregmine extends JavaPlugin
                     return Rank.CODER.getColor();
                 }
             });
+        getCommand("property").setExecutor(new PropertyCommand(this));
+        getCommand("staffbook").setExecutor(new StaffHandbookCommand(this));
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));

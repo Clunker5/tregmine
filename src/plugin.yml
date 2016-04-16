@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.5
+version: 3.5.1
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -150,6 +150,9 @@ commands:
   promote:
     description: Promotes a user
     usage: /promote
+  property:
+    description: Updates a player property (admin only)
+    usage: /property <player> <key> <value>
   quitmessage:
     description: Set a quit message (donators only)
     usage: /quitmessage <message>
@@ -210,6 +213,9 @@ commands:
     description: Send support message
     usage: /support message
     aliases: sup
+  staffbook:
+    description: Gives the guidelines for staff to follow
+    usage: /staffbook
   staffnews:
     description: Add a message to the staff message board
     usage: /staffnews <message>

@@ -177,6 +177,9 @@ public class DBPlayerDAO implements IPlayerDAO
                     else if ("playtime".equals(key)) {
                         player.setPlayTime(Integer.parseInt(value));
                     }
+                    else if("afkkick".equals(key)){
+                    	player.setAfkKick(Boolean.valueOf(value));
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -247,7 +250,7 @@ public class DBPlayerDAO implements IPlayerDAO
         updateProperty(player, key, String.valueOf(value));
     }
 
-    private void updateProperty(TregminePlayer player, String key, String value)
+    public void updateProperty(TregminePlayer player, String key, String value)
             throws DAOException
     {
         String sqlInsert = "REPLACE INTO player_property (player_id, " +
