@@ -1188,6 +1188,10 @@ public abstract class PlayerDelegate
         	String message = p0.replace("%CHAT%", "");
         	delegate.sendMessage(message);
         }
+        else if(p0.startsWith("%chat")){
+        	String message = p0.replace("%chat", "");
+        	delegate.sendMessage(message);
+        }
         else if(p0.startsWith("%warning%")){
         	String message = p0.replace("%warning%", "");
         	delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
