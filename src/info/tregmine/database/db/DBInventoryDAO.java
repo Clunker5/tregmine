@@ -217,7 +217,7 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(2, counter);
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
-                if(stack.hasItemMeta()){
+                if(stack.hasItemMeta() && stack.getItemMeta().getLore() != null){
                 ItemMeta meta = stack.getItemMeta();
                 List<String> lores = meta.getLore();
                 if(lores.size() <= 0){
