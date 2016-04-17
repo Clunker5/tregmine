@@ -551,7 +551,7 @@ public class TregminePlayerListener implements Listener
 
         // To add player.hasBadge for a flight badge when made
         if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
-            player.setFlySpeed(0.7f); // To be balanced
+            player.setFlySpeed(0.4f); // To be balanced
         } else {
             player.setFlySpeed(0.1f); // 0.1 is default
         }
