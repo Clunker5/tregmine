@@ -30,6 +30,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 /**
  * @author Ein Andersson
  * @author Emil Hernvall
+ * @author Eric Rabil
  */
 public class Tregmine extends JavaPlugin
 {
@@ -57,7 +58,6 @@ public class Tregmine extends JavaPlugin
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
-    //Possibly a future feature >:)
     private boolean lockdown = false;
     private World rulelessWorld;
     private World rulelessWorldNether;
@@ -130,6 +130,14 @@ public class Tregmine extends JavaPlugin
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Timer(this), 100L, 1L);
         List<?> configWorlds = getConfig().getList("worlds.names");
+        if(getConfig().getString("worlds.vanillaworld") == "true"){
+        	WorldCreator addWorld = new WorldCreator("vanilla");
+        	addWorld.environment(World.Environment.NORMAL);
+        	addWorld.generateStructures(true);
+        	addWorld.type(WorldType.NORMAL);
+        	addWorld.createWorld();
+        }
+        this.serverName = getConfig().getString("general.servername");
         if(getConfig().getString("worlds.enabled") == "true"){
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
         for(String worldName : worlds){
@@ -139,11 +147,11 @@ public class Tregmine extends JavaPlugin
         	WorldCreator addWorld = new WorldCreator(worldName);
         	addWorld.environment(World.Environment.NORMAL);
         	addWorld.generateStructures(false);
-        	addWorld.type(WorldType.FLAT);
+        	addWorld.type(WorldType.NORMAL);
         	addWorld.createWorld();
         	}
         }
-        this.serverName = getConfig().getString("general.servername");
+        
         
         for(String worldName : worlds){
         	if(!worldName.contains("the_end")){
@@ -152,7 +160,6 @@ public class Tregmine extends JavaPlugin
         	WorldCreator addWorld = new WorldCreator(worldName);
         	addWorld.environment(World.Environment.THE_END);
         	addWorld.generateStructures(false);
-        	addWorld.type(WorldType.FLAT);
         	addWorld.createWorld();
         	}
         }
@@ -163,7 +170,6 @@ public class Tregmine extends JavaPlugin
         	WorldCreator addWorld = new WorldCreator(worldName);
         	addWorld.environment(World.Environment.NETHER);
         	addWorld.generateStructures(false);
-        	addWorld.type(WorldType.FLAT);
         	addWorld.createWorld();
         	}
         }
@@ -263,7 +269,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return Rank.GUARDIAN.getColor();
+                    return Rank.GUARDIAN.getColor(this.tregmine);
                 }
             });
 
