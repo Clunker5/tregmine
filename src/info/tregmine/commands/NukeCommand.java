@@ -1,12 +1,17 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -52,19 +57,23 @@ public class NukeCommand extends AbstractCommand
 
             if (ent instanceof Monster) {
                 Monster mob = (Monster) ent;
-                mob.setHealth(0);
+                mob.remove();
             }
             else if (ent instanceof Animals) {
                 Animals animal = (Animals) ent;
-                animal.setHealth(0);
+                animal.remove();
             }
             else if (ent instanceof Slime) {
                 Slime slime = (Slime) ent;
-                slime.setHealth(0);
+                slime.remove();
             }
             else if (ent instanceof EnderDragon) {
                 EnderDragon dragon = (EnderDragon) ent;
-                dragon.setHealth(0);
+                dragon.remove();
+            }
+            else if(ent instanceof LivingEntity && !(ent instanceof Player)){
+            	LivingEntity entity = (LivingEntity) ent;
+            	ent.remove();
             }
         }
 
