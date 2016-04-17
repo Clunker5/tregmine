@@ -46,13 +46,15 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event)
     {
-    	long start = System.currentTimeMillis();
+    	TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
+        if(player.getGameMode() == GameMode.CREATIVE){
+        	event.setCancelled(true);
+        	player.sendMessage(ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
+        	return;
+        }
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
-
-        TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
-
         Inventory inv = event.getInventory();
         InventoryHolder holder = inv.getHolder();
         Location loc = null;

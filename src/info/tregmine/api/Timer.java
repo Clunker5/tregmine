@@ -4,6 +4,8 @@ package info.tregmine.api;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 
 import info.tregmine.Tregmine;
 
@@ -39,7 +41,21 @@ public class Timer implements Runnable{
 			}
 			try
 			{
+				if(player.scheduledKill()){
+					if(player.getHealth() == 0){
+						player.scheduleKill(false);
+					}
+					player.setHealth(player.getHealth() - 0.5);
+				}
+				if(player.getWorld().getName() == "vanilla"){
+					if(player.getGameMode() == GameMode.CREATIVE){
+						player.setGameMode(GameMode.SURVIVAL);
+						player.setAllowFlight(false);
+						player.sendMessage(ChatColor.RED + "You cannot be in creative in this world.");
+					}
+				}
 				player.checkActivity();
+				
 			}catch(Exception e){
 				t.getLogger().log(Level.WARNING, "Timer Exception", e);
 			}

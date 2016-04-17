@@ -324,6 +324,7 @@ public class Tregmine extends JavaPlugin
         getCommand("item").setExecutor(new ItemCommand(this));
         getCommand("keyword").setExecutor(new KeywordCommand(this));
         getCommand("kick").setExecutor(new KickCommand(this));
+        getCommand("kill").setExecutor(new KillCommand(this));
         getCommand("lockdown").setExecutor(new LockdownCommand(this));
         getCommand("lot").setExecutor(new LotCommand(this));
         getCommand("lottery").setExecutor(new LotteryCommand(this));

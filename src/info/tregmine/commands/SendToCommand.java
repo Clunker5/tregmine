@@ -19,13 +19,43 @@ public class SendToCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if (args.length != 2) {
+            return false;
+        }
+    	if(args[1] == "vanilla" && player.getWorld().getName() == "world"){
+    		List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
+            if (candidates.size() != 1) {
+                return true;
+            }
+    		TregminePlayer victim = candidates.get(0);
+    		if(victim.getGameMode() == GameMode.CREATIVE){
+    			victim.setGameMode(GameMode.SURVIVAL);
+    		}
+            Server server = tregmine.getServer();
+            World world = server.getWorld(args[1]);
+            Location cpspawn = world.getSpawnLocation();
+            victim.teleportWithHorse(cpspawn);
+            if(victim.getGameMode() == GameMode.CREATIVE){
+    			victim.setGameMode(GameMode.SURVIVAL);
+    		}
+            return true;
+    	}else if(args[1] == "world" && player.getWorld().getName() == "vanilla"){
+    		List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
+            if (candidates.size() != 1) {
+                return true;
+            }
+    		TregminePlayer victim = candidates.get(0);
+            Server server = tregmine.getServer();
+            World world = server.getWorld(args[1]);
+            Location cpspawn = world.getSpawnLocation();
+            victim.teleportWithHorse(cpspawn);
+            return true;
+    	}
         if (!player.getRank().canSendPeopleToOtherWorlds()) {
             return true;
         }
 
-        if (args.length != 2) {
-            return false;
-        }
+        
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
         if (candidates.size() != 1) {

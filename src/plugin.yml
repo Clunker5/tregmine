@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.6
+version: 3.6.1
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -116,6 +116,9 @@ commands:
   kick:
     description: Kick a player (admins and guardians only)
     usage: /kick player
+  kill:
+    description: Kill a player (admins only)
+    usage: /kill player
   lockdown:
     description: Lock the server (admins only)
     usage: /lockdown on|off

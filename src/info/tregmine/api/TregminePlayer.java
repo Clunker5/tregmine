@@ -116,6 +116,9 @@ public class TregminePlayer extends PlayerDelegate
     //Ranks
     private boolean isTemporaryRank = false;
     private Rank temporaryRank = null;
+    
+    //Timer states
+    private boolean scheduledKill = false;
 
     private Tregmine plugin;
 
@@ -175,6 +178,12 @@ public class TregminePlayer extends PlayerDelegate
     }
     public void setLastOnlineActivity(long a){
     	lastOnlineActivity = a;
+    }
+    public boolean scheduledKill(){
+    	return this.scheduledKill;
+    }
+    public void scheduleKill(boolean a){
+    	this.scheduledKill = a;
     }
     public void checkActivity(){
     	long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
