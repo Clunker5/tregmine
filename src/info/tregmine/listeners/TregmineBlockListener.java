@@ -104,7 +104,8 @@ public class TregmineBlockListener implements Listener
         		try(IContext ctxNew = plugin.createContext()){
         			IWalletDAO walletDAO = ctx.getWalletDAO();
         			walletDAO.add(player, blockvalue);
-        			player.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + blockvalue + ChatColor.GREEN + " Tregs for breaking " + ChatColor.GOLD + block.getType().name().toLowerCase());
+        			//That message is annoying.
+        			//player.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + blockvalue + ChatColor.GREEN + " Tregs for breaking " + ChatColor.GOLD + block.getType().name().toLowerCase());
         		}catch(DAOException e){
         			e.printStackTrace();
         		}
