@@ -15,6 +15,10 @@ public class FreezeCommand extends AbstractCommand{
 	}
 	@Override
 	public boolean handlePlayer(TregminePlayer player, String[] args){
+		if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
 		if(!player.getIsAdmin()){
 			player.nopermsMessage(false, "freeze");
 			return true;

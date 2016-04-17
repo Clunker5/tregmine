@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Server;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -59,6 +60,10 @@ public class FillCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
     	if(args.length == 0){
     		player.sendMessage(RED + "Please specify the material");
     		return true;

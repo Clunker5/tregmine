@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -60,6 +61,10 @@ public class BrushCommand extends AbstractCommand implements Listener
     @Override
     public boolean handlePlayer(TregminePlayer p, String[] args)
     {
+    	if(p.getWorld().getName() == "vanilla"){
+			p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (!p.getRank().canBrush()) {
             return true;
         }

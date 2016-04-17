@@ -19,6 +19,10 @@ public class HeadCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (player.getRank().canGetPlayerHead()){
             if (args.length == 1) {
                 ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);

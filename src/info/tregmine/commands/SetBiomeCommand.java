@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -26,6 +27,10 @@ public class SetBiomeCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (!player.getRank().canSetBiome()) {
             return true;
         }

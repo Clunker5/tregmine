@@ -2,6 +2,8 @@ package info.tregmine.commands;
 
 import java.util.List;
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -18,6 +20,10 @@ public class GiveCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (args.length == 0) {
             return false;
         }
@@ -35,7 +41,9 @@ public class GiveCommand extends AbstractCommand
         }
 
         TregminePlayer target = candidates.get(0);
-
+        if(target.getWorld().getName() == "vanilla"){
+        	player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        }
         int materialId;
         try {
             materialId = Integer.parseInt(param);

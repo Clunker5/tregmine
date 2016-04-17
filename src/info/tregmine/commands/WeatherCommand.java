@@ -1,6 +1,8 @@
 package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
@@ -18,6 +20,10 @@ public class WeatherCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (!player.getRank().canSetWeather()) {
             return true;
         }

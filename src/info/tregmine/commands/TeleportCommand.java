@@ -64,6 +64,10 @@ public class TeleportCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         Rank rank = player.getRank();
         if (args.length != 1) {
             return false;
@@ -81,9 +85,12 @@ public class TeleportCommand extends AbstractCommand
             player.sendMessage(RED + "Can't find user.");
             return true;
         }
-
+        
         TregminePlayer target = candidates.get(0);
-
+        if(target.getWorld().getName() == "vanilla"){
+        	player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        	return true;
+        }
         if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
             return true;
         }

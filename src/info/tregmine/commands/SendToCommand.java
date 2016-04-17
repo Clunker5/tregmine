@@ -34,7 +34,6 @@ public class SendToCommand extends AbstractCommand
         }
 
         TregminePlayer victim = candidates.get(0);
-
         Server server = tregmine.getServer();
         World world = server.getWorld(args[1]);
         if (world == null) {

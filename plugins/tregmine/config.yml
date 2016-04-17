@@ -27,10 +27,11 @@ support:
   password: will message you
   to:
     - email@emil.athisemail
-#Worlds -- DO NOT ADD THE FOLLOWING: world, world_nether, world_the_end, game,
-#anarchy, anarchy_nether, anarchy_the_end -- You have been warned.
+#Worlds
 worlds:
 # Set enabled to true to run the worlds API
+# Vanilla world is independent of the worlds API - Enable it to disable most of Tregmines features in a specialized vanilla world.
+  vanillaworld: false
   enabled: false
   names:
 #Rank Chat Colors

@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -12,6 +13,10 @@ public class BackCommand extends AbstractCommand{
 		plugin = tregmine;
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
+		if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
 		if(!player.getIsStaff()){
 			player.nopermsMessage(false, "back");
 			return true;

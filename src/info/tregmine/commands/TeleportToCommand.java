@@ -17,6 +17,10 @@ public class TeleportToCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (args.length != 3) {
         	player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
 			return true;

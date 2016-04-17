@@ -2,6 +2,8 @@ package info.tregmine.commands;
 
 import static org.bukkit.ChatColor.*;
 
+import org.bukkit.ChatColor;
+
 import info.tregmine.api.Rank;
 import org.bukkit.GameMode;
 
@@ -24,6 +26,11 @@ public class GameModeCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+    		player.setFireTicks(5);
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (!player.getRank().canUseCreative()) {
             return true;
         }

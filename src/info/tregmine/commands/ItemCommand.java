@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -23,6 +25,10 @@ public class ItemCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (args.length == 0) {
             return false;
         }

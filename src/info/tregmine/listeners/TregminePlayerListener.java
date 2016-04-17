@@ -568,6 +568,12 @@ public class TregminePlayerListener implements Listener
     public void onPlayerFlight(PlayerToggleFlightEvent event)
     {
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if(player.getWorld().getName() == "vanilla"){
+        	event.setCancelled(true);
+        	player.setFlying(false);
+        	player.setFlySpeed(0);
+        	player.sendMessage(ChatColor.RED + "You cannot fly in vanilla!");
+        }
         if (player.getRank().canModifyZones()) {
             return;
         }

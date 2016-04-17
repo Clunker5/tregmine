@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Horse;
 
 import static org.bukkit.ChatColor.*;
@@ -18,6 +19,10 @@ public class SummonCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (args.length == 0) {
             return false;
         }
@@ -28,11 +33,14 @@ public class SummonCommand extends AbstractCommand
         if (candidates.size() != 1) {
             player.sendMessage(RED + "Can't find user.");
         }
-
+        
+        
         TregminePlayer victim = candidates.get(0);
-        if(victim.getIsStaff()){
-            victim.setLastPos(victim.getLocation());
+        if(victim.getWorld().getName() == "vanilla"){
+        	player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        	return true;
         }
+        victim.setLastPos(victim.getLocation());
 
         // Mentors can summon their students, but nobody else. In those cases,
         // you need the canSummon-permission.

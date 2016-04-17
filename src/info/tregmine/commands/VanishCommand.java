@@ -2,6 +2,8 @@ package info.tregmine.commands;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -19,6 +21,10 @@ public class VanishCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
         if (!player.getRank().canVanish()) {
             return true;
         }
