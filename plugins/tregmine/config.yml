@@ -34,4 +34,14 @@ worlds:
   enabled: false
   names:
 #Rank Chat Colors
-#Coming soon :-)
+ranks:
+  colors:
+    tourist: "f"
+    settler: "a"
+    resident: "2"
+    donator: "6"
+    guardian: "9"
+    coder: "#5"
+    builder: "#e"
+    junior: "#c"
+    senior: "#4"

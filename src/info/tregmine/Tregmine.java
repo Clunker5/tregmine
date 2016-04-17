@@ -67,6 +67,8 @@ public class Tregmine extends JavaPlugin
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
+    public ChatColor[] rankColors = new ChatColor[9];
+    
 
     @Override
     public void onLoad()
@@ -245,7 +247,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return Rank.JUNIOR_ADMIN.getColor();
+                    return Rank.JUNIOR_ADMIN.getColor(this.tregmine);
                 }
             });
 
@@ -277,7 +279,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return Rank.CODER.getColor();
+                    return Rank.CODER.getColor(this.tregmine);
                 }
             });
         getCommand("property").setExecutor(new PropertyCommand(this));

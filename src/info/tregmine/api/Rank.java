@@ -634,9 +634,31 @@ public enum Rank
         return (this == JUNIOR_ADMIN || this == SENIOR_ADMIN);
     }
 
-    public ChatColor getColor()
+    public ChatColor getColor(Tregmine t)
     {
-        return color;
+    	Tools tools = new Tools();
+    	ChatColor[] colors = t.rankColors;
+        if(this == TOURIST){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.tourist"));
+        }else if(this == SETTLER){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.settler"));
+        }else if(this == RESIDENT){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.resident"));
+        }else if(this == DONATOR){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.donator"));
+        }else if(this == GUARDIAN){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.guardian"));
+        }else if(this == CODER){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.coder"));
+        }else if(this == BUILDER){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.builder"));
+        }else if(this == JUNIOR_ADMIN){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.junior"));
+        }else if(this == SENIOR_ADMIN){
+        	return tools.toColor(t.getConfig().getString("ranks.colors.senior"));
+        }else{
+        	return ChatColor.WHITE;
+        }
     }
 
     public static Rank fromString(String value)

@@ -414,7 +414,7 @@ public class TregminePlayer extends PlayerDelegate
             default:
             }}
 
-        return rank.getColor();
+        return rank.getColor(this.plugin);
     }
     public ChatColor RankColor(){
     	// Gives admins, guardians a chat color
@@ -667,7 +667,7 @@ public class TregminePlayer extends PlayerDelegate
                     this.getRank() == Rank.SETTLER)) {
                 return new BooleanStringReturn(false, ChatColor.RED + "[" +
                         zone.getName() + "] You must be atleast " +
-                        Rank.RESIDENT.getColor() + "Resident" + ChatColor.RED +
+                        Rank.RESIDENT.getColor(this.plugin) + "Resident" + ChatColor.RED +
                         zone.getName());
             }
         } else {
