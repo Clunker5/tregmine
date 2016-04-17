@@ -179,12 +179,6 @@ public class TregminePlayer extends PlayerDelegate
     public void setLastOnlineActivity(long a){
     	lastOnlineActivity = a;
     }
-    public boolean scheduledKill(){
-    	return this.scheduledKill;
-    }
-    public void scheduleKill(boolean a){
-    	this.scheduledKill = a;
-    }
     public void checkActivity(){
     	long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
     	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true){

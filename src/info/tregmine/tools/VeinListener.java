@@ -35,6 +35,7 @@ public class VeinListener implements Listener
     @EventHandler
     public void VeinMiner(BlockBreakEvent event)
     {
+    	
         Block block = event.getBlock();
         if (!block.getType().equals(Material.GOLD_ORE) &&
             !block.getType().equals(Material.DIAMOND_ORE) &&
@@ -48,6 +49,9 @@ public class VeinListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if(player.getWorld().getName() == "vanilla"){
+			return;
+		}
         if (player.getGameMode() != GameMode.SURVIVAL) {
             return;
         }

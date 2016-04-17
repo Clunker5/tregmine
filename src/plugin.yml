@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 3.6.1
+version: 3.6.2
 website: http://tregmine.info
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -208,6 +208,9 @@ commands:
   spawn:
     description: Go back to spawn
     usage: /spawn
+  suicide:
+    description: Commit suicide
+    usage: /suicide
   summon:
     description: Summon a player to your location
     usage: /summon player

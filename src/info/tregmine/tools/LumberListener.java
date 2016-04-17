@@ -32,6 +32,7 @@ public class LumberListener implements Listener
     @EventHandler
     public void Lumber(BlockBreakEvent event)
     {
+    	
         Block block = event.getBlock();
         if (!block.getType().equals(Material.LOG) &&
             !block.getType().equals(Material.LOG_2)) {
@@ -40,6 +41,9 @@ public class LumberListener implements Listener
        }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if(player.getWorld().getName() == "vanilla"){
+			return;
+		}
         if (player.getGameMode() != GameMode.SURVIVAL) {
             return;
         }

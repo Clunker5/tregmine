@@ -41,12 +41,6 @@ public class Timer implements Runnable{
 			}
 			try
 			{
-				if(player.scheduledKill()){
-					if(player.getHealth() == 0){
-						player.scheduleKill(false);
-					}
-					player.setHealth(player.getHealth() - 0.5);
-				}
 				if(player.getWorld().getName() == "vanilla"){
 					if(player.getGameMode() == GameMode.CREATIVE){
 						player.setGameMode(GameMode.SURVIVAL);

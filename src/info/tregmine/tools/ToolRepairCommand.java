@@ -24,6 +24,10 @@ public class ToolRepairCommand  extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
+    	if(player.getWorld().getName() == "vanilla"){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
     	try (IContext dbCtx = tregmine.createContext()){
     	if(player.getItemInHand().getItemMeta().getLore() != null){
         List<String> lore = player.getItemInHand().getItemMeta().getLore();

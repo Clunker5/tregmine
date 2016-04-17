@@ -15,6 +15,10 @@ public class KillCommand extends AbstractCommand{
 		t = instance;
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
+		if(!player.getIsAdmin()){
+			player.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
+			return true;
+		}
 		if(args.length != 1){
 			player.sendMessage(ChatColor.RED + "Invalid arguments - Use /kill player");
 			return true;
@@ -40,7 +44,7 @@ public class KillCommand extends AbstractCommand{
 			return true;
 		}
 		player.sendMessage(ChatColor.RED + "Killing " + victim.getChatName() + ChatColor.RED + "...");
-		victim.scheduleKill(true);
+		victim.setHealth(0);
 		return true;
 	}
 }

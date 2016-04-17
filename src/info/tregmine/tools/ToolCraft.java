@@ -1,12 +1,14 @@
 package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.lore.Created;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -26,7 +28,12 @@ public class ToolCraft implements Listener
     @EventHandler
     public void CraftTool(PrepareItemCraftEvent event){
         if (event.isRepair()) return;
-        
+        if(event.getView().getPlayer() instanceof Player){
+        	TregminePlayer player = plugin.getPlayer((Player) event.getView().getPlayer());
+        	if(player.getWorld().getName() == "vanilla"){
+    			return;
+    		}
+        }
         List<ItemStack> items = new ArrayList<ItemStack>();
         boolean success = false;
         for(ItemStack a : event.getInventory().getContents()) {
