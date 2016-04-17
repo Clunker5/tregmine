@@ -3,6 +3,8 @@ package info.tregmine.api;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
+import info.tregmine.Tregmine;
+
 public enum Rank
 {
     UNVERIFIED(ChatColor.WHITE),
@@ -279,6 +281,7 @@ public enum Rank
         return this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
+        
     }
 
     public boolean canFill()
