@@ -130,8 +130,11 @@ public class PortalListener implements Listener
 
             return;
         }
-
+        
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+			return;
+		}
         if (!gravityTasks.containsKey(player)) {
             return;
         }
@@ -163,7 +166,9 @@ public class PortalListener implements Listener
         }
 
         TregminePlayer p = plugin.getPlayer(event.getPlayer());
-
+        if(p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()){
+			return;
+		}
         if (!p.getRank().canUseTools()) return;
 
         List<String> lore = p.getItemInHand().getItemMeta().getLore();

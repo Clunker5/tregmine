@@ -105,11 +105,7 @@ public class MentorCommand extends AbstractCommand
 
             int timeRemaining = Math.max(60*5 - student.getPlayTime()
                                                - student.getTimeOnline(), 0);
-            if (timeRemaining > 0) {
-                player.sendMessage(RED + student.getChatName() + RED + " has " +
-                        timeRemaining + " seconds of mentoring left.");
-                return true;
-            }
+            
 
             player.sendMessage(GREEN + "Mentoring of " + student.getChatName() +
                     GREEN + " has now finished!");

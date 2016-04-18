@@ -22,14 +22,6 @@ public class ChangeNameCommand extends AbstractCommand
             return true;
         }
         String colorstring = args[0];
-
-// Example comparisons
-//        if(colorstring.equalsIgnoreCase("")){
-//        	usecolor = ChatColor.;
-//        }
-//        if(colorstring.equalsIgnoreCase("") || colorstring.equalsIgnoreCase("")){
-//        	usecolor = ChatColor.;
-//        }
         ChatColor usecolor = ChatColor.WHITE;
         if(colorstring.equalsIgnoreCase("red")){
         	usecolor = ChatColor.RED;

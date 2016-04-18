@@ -39,7 +39,7 @@ public class StaffNewsCommand extends AbstractCommand{
 
 public boolean handlePlayer(TregminePlayer player, String[] args){
 	if(!player.getIsStaff()){
-		player.nopermsMessage(false, "staffnews");
+		player.sendMessage(ChatColor.RED + "Nothing is so urgent that you need to put it on the news board!");
 		return true;
 	}
 	

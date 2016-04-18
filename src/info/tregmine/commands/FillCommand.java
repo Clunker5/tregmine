@@ -60,7 +60,7 @@ public class FillCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-    	if(player.getWorld().getName() == "vanilla"){
+    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
@@ -69,7 +69,7 @@ public class FillCommand extends AbstractCommand
     		return true;
     	}
         if (!player.getRank().canFill()) {
-        	player.nopermsMessage(false, "/fill");
+        	player.sendMessage(ChatColor.RED + "You don't have the permissions to fill.");
             return true;
         }
 

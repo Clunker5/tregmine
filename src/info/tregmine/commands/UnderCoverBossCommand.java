@@ -10,10 +10,14 @@ import info.tregmine.api.TregminePlayer.GuardianState;
 public class UnderCoverBossCommand extends AbstractCommand{
 	private Tregmine plugin;
 	private String request;
+	
+	@Deprecated
 	public UnderCoverBossCommand(Tregmine tregmine){
 		super(tregmine, "undercoverboss");
 		this.plugin = tregmine;
 	}
+	
+	
 	public boolean handlePlayer(TregminePlayer player, String[] args){
 		return true;
 	}

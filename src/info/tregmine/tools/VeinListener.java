@@ -49,7 +49,7 @@ public class VeinListener implements Listener
         }
 
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if(player.getWorld().getName() == "vanilla"){
+        if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
 			return;
 		}
         if (player.getGameMode() != GameMode.SURVIVAL) {

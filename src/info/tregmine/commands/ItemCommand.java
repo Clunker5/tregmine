@@ -25,8 +25,7 @@ public class ItemCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-    	if(player.getWorld().getName() == "vanilla"){
-    		player.setFireTicks(30);
+    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}

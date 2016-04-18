@@ -47,6 +47,11 @@ public class InventoryListener implements Listener
     public void onInventoryOpen(InventoryOpenEvent event)
     {
     	TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
+        if(player.getGameMode() == GameMode.CREATIVE){
+        	event.setCancelled(true);
+        	player.sendMessage(ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
+        	return;
+        }
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }

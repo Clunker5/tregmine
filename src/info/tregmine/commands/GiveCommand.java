@@ -20,7 +20,7 @@ public class GiveCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-    	if(player.getWorld().getName() == "vanilla"){
+    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
     		player.setFireTicks(30);
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
@@ -42,8 +42,9 @@ public class GiveCommand extends AbstractCommand
         }
 
         TregminePlayer target = candidates.get(0);
-        if(target.getWorld().getName() == "vanilla"){
+        if(target.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
         	player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        	return true;
         }
         int materialId;
         try {

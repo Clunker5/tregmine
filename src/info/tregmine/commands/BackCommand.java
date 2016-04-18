@@ -13,12 +13,13 @@ public class BackCommand extends AbstractCommand{
 		plugin = tregmine;
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
-		if(player.getWorld().getName() == "vanilla"){
+		if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
 		if(!player.getIsStaff()){
-			player.nopermsMessage(false, "back");
+			player.sendMessage(ChatColor.RED + "You don't have the permissions to do that command.");
+			player.sendMessage(ChatColor.RED + "There's no going back!");
 			return true;
 		}
 		if(player.getLastPos() == null){

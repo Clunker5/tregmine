@@ -20,6 +20,10 @@ public class ResetLoreCommand extends AbstractCommand{
 		plugin = instance;
 	}
 	public boolean handlePlayer(TregminePlayer sender, String[] args){
+		if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
 		if(!sender.isOp() && sender.getName() != "im_not_eric"){
 			sender.sendMessage("%warning%" + ChatColor.RED + "You do not have permission to reset lores.");
 			return true;

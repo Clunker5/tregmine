@@ -30,7 +30,7 @@ public class ToolCraft implements Listener
         if (event.isRepair()) return;
         if(event.getView().getPlayer() instanceof Player){
         	TregminePlayer player = plugin.getPlayer((Player) event.getView().getPlayer());
-        	if(player.getWorld().getName() == "vanilla"){
+        	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
     			return;
     		}
         }

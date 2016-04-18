@@ -9,6 +9,7 @@ import static org.bukkit.ChatColor.RESET;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
@@ -33,7 +34,7 @@ public class SkipMentorCommand extends AbstractCommand{
 		}
 		if(args.length != 1){
 			//Player didn't enter two arguments, terminate.
-			player.invalidArgsMessage("/skipmentor <player>");
+			player.sendMessage(ChatColor.RED + "Invalid arguments! Use /skipmentor <player>");
 			return true;
 		}
 		//The checks have finished, perform the command

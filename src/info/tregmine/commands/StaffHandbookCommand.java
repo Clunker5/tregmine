@@ -19,7 +19,7 @@ public class StaffHandbookCommand extends AbstractCommand{
 	}
 	public boolean handlePlayer(TregminePlayer a, String[] b){
 		if(!a.getIsStaff()){
-			a.nopermsMessage(false, "staffbook");
+			a.sendMessage(ChatColor.RED + "You don't need to read this, books are boring!");
 			return true;
 		}
 		try (IContext ctx = tregmine.createContext()) {

@@ -26,7 +26,7 @@ public class GameModeCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-    	if(player.getWorld().getName() == "vanilla"){
+    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
     		player.setFireTicks(30);
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;

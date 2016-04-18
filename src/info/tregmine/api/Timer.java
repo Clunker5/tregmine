@@ -41,7 +41,7 @@ public class Timer implements Runnable{
 			}
 			try
 			{
-				if(player.getWorld().getName() == "vanilla"){
+				if(player.getWorld().getName().equalsIgnoreCase("vanilla")){
 					if(player.getGameMode() == GameMode.CREATIVE){
 						player.setGameMode(GameMode.SURVIVAL);
 						player.setAllowFlight(false);

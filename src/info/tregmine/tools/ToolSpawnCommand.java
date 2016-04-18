@@ -19,12 +19,12 @@ public class ToolSpawnCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
-    	if(player.getWorld().getName() == "vanilla"){
+    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canSpawnTools()){ 
-        	player.nopermsMessage(false, "tool");
+        	player.sendMessage(ChatColor.RED + "You cheapskate! If you want to get a tool, you need 16 diamond blocks!");
         	return true;}
         if (args.length != 1) {
             player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");

@@ -17,6 +17,10 @@ public class InventoryCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
+    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
     	if(args.length == 0){
     		player.sendMessage(ChatColor.RED + "Incorrect usage:");
             player.sendMessage(ChatColor.AQUA + "/inv inspect <name> - Inspect someones inventory");
@@ -27,12 +31,10 @@ public class InventoryCommand extends AbstractCommand
         if (!player.getRank().canInspectInventories()) {
             return true;
         }
-        
         if ("save".equalsIgnoreCase(args[0]) && args.length == 1) {
             player.saveInventory(player.getCurrentInventory());
             return true;
         }
-        
         if ("reload".equalsIgnoreCase(args[0]) && args.length == 3) {
             List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {

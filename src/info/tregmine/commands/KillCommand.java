@@ -19,6 +19,10 @@ public class KillCommand extends AbstractCommand{
 			player.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
 			return true;
 		}
+		if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			return true;
+		}
 		if(args.length != 1){
 			player.sendMessage(ChatColor.RED + "Invalid arguments - Use /kill player");
 			return true;

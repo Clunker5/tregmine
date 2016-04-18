@@ -15,16 +15,16 @@ public class FreezeCommand extends AbstractCommand{
 	}
 	@Override
 	public boolean handlePlayer(TregminePlayer player, String[] args){
-		if(player.getWorld().getName() == "vanilla"){
+		if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
 		if(!player.getIsAdmin()){
-			player.nopermsMessage(false, "freeze");
+			player.sendMessage(ChatColor.RED + "You don't have permission to freeze players!");
 			return true;
 		}
 		if(args.length != 1){
-			player.invalidArgsMessage("/freeze <player>");
+			player.sendMessage(ChatColor.RED + "Invalid arguments! Use /freeze <player>");
 			return true;
 		}
 		String raw = args[0];
@@ -34,21 +34,24 @@ public class FreezeCommand extends AbstractCommand{
 			return true;
 		}
 		TregminePlayer victim = victims.get(0);
+		if(victim.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+			player.sendMessage(ChatColor.RED + "You cannot freeze that player because they are in the vanilla world!");
+			return true;
+		}
 		boolean newValue = !victim.getFrozen();
 		victim.setFrozen(newValue);
 		String getState = "";
-		if(newValue = true){
+		if(newValue == true){
 			getState = "frozen";
-		}else if(newValue = false){
+		}else if(newValue == false){
 			getState = "unfrozen";
 		}else{
-			//Fatal error, should never happen
 			return false;
 		}
 		ChatColor color = ChatColor.WHITE;
-		if(newValue = true){
+		if(newValue == true){
 			color = ChatColor.RED;
-		}else if(newValue = false){
+		}else if(newValue == false){
 			color = ChatColor.BLUE;
 		}else{
 			//Fatal error, should never happen
