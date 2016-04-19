@@ -1,7 +1,12 @@
 package info.tregmine.commands;
 
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import info.tregmine.Tregmine;
+import info.tregmine.api.Tools;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.Flags;
 
 public class SuicideCommand extends AbstractCommand{
 	Tregmine t;
@@ -10,7 +15,9 @@ public class SuicideCommand extends AbstractCommand{
 		t = inst;
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
-		player.setHealth(0);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.HARM, 1, 10000));
+		player.setDeathCause("suicide");
+		Tools tools = new Tools();
 		return true;
 	}
 }

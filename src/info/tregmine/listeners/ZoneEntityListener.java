@@ -28,12 +28,6 @@ import info.tregmine.zones.ZoneWorld;
 
 public class ZoneEntityListener implements Listener
 {
-    private static final Set<EntityType> allowedMobs = EnumSet.of(
-            EntityType.CHICKEN, EntityType.COW, EntityType.PIG,
-            EntityType.SHEEP, EntityType.SQUID, EntityType.WOLF,
-            EntityType.IRON_GOLEM, EntityType.SNOWMAN, EntityType.BAT,
-            EntityType.VILLAGER, EntityType.MUSHROOM_COW, EntityType.OCELOT,
-            EntityType.HORSE);
 
     private Tregmine plugin;
 
@@ -56,9 +50,14 @@ public class ZoneEntityListener implements Listener
         if (zone == null || zone.hasHostiles()) {
             return;
         }
-
+        Set<EntityType> allowedMobs = EnumSet.of(
+                EntityType.CHICKEN, EntityType.COW, EntityType.PIG,
+                EntityType.SHEEP, EntityType.SQUID, EntityType.WOLF,
+                EntityType.IRON_GOLEM, EntityType.SNOWMAN, EntityType.BAT,
+                EntityType.VILLAGER, EntityType.MUSHROOM_COW, EntityType.OCELOT,
+                EntityType.HORSE);
         if (!allowedMobs.contains(event.getEntityType()) &&
-            event.getSpawnReason() == SpawnReason.NATURAL) {
+            event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() != EntityType.SKELETON) {
 
             event.setCancelled(true);
         }

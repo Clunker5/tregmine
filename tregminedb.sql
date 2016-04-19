@@ -64,6 +64,17 @@ CREATE TABLE `bank_transaction` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `banned_words`
+--
+
+CREATE TABLE `banned_words` (
+  `id` int(11) NOT NULL,
+  `word` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `blessedblock`
 --
 
@@ -788,6 +799,12 @@ ALTER TABLE `bank_transaction`
   ADD PRIMARY KEY (`transaction_id`),
   ADD KEY `idx_account` (`account_id`,`transaction_timestamp`),
   ADD KEY `idx_player` (`player_id`,`transaction_timestamp`);
+  
+--
+-- Indexes for table `banned_words`
+--
+ALTER TABLE `banned_words`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `blessedblock`
@@ -1095,6 +1112,13 @@ ALTER TABLE `bank_account`
 --
 ALTER TABLE `bank_transaction`
   MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  
+--
+-- AUTO_INCREMENT for table `banned_words`
+--
+ALTER TABLE `banned_words`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  
 --
 -- AUTO_INCREMENT for table `blessedblock`
 --

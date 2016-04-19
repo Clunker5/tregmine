@@ -26,6 +26,7 @@ import info.tregmine.events.TregmineChatEvent;
 public class ChatListener implements Listener
 {
     private Tregmine plugin;
+    
 
     public ChatListener(Tregmine instance)
     {
@@ -82,7 +83,40 @@ public class ChatListener implements Listener
                     }
                     
                 }
-                if(sender.getRank() != Rank.RESIDENT && sender.getRank() != Rank.SETTLER && sender.getRank() != Rank.TOURIST && sender.getRank() != Rank.UNVERIFIED){
+                boolean curse = false;
+                boolean avoided = false;
+                int cursetotal = 0;
+                for(String word : plugin.getBannedWords()){
+                	if(text.toLowerCase().contains(word.toLowerCase())){
+                		curse = true;
+                		cursetotal += 1;
+                		String replacement = "";
+                		for(int count = 1; count<=word.length(); count++){
+                			replacement += "*";
+                		}
+                		text = text.replaceAll(word, replacement);
+                		if(text.toLowerCase().contains(word.toLowerCase())){
+                			avoided = true;
+                		}
+                	}
+                }
+                if(curse == true){
+                	IPlayerDAO playerdao = ctx.getPlayerDAO();
+                	if(sender.isCurseWarned()){
+                	sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account.");
+                	IWalletDAO wallet = ctx.getWalletDAO();
+                	wallet.take(sender, cursetotal * 50);
+                	}else{
+                		playerdao.updateProperty(sender, "cursewarned", "true");
+                		sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account.");
+                		sender.setCurseWarned(true);
+                	}
+                	if(avoided){
+                		sender.sendMessage(ChatColor.RED + "You thought you were slick... Your chat has been cancelled.");
+            			return;
+                	}
+                }
+                if(sender.getRank().canUseChatColors()){
             	text = ChatColor.translateAlternateColorCodes('#', text);
                 }
                 
@@ -134,20 +168,20 @@ public class ChatListener implements Listener
 
                     if (event.isWebChat()) {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("%CHAT%" + "(" + sender.getChatName()
+                            to.sendMessage("(" + sender.getChatName()
                                     + ChatColor.WHITE + ") " + txtColor + text);
                         }
                         else {
-                            to.sendMessage("%CHAT%" + channel + " (" + sender.getChatName()
+                            to.sendMessage(channel + " (" + sender.getChatName()
                                     + ChatColor.WHITE + ") " + txtColor + text);
                         }
                     } else {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("%CHAT%" + frontBracket + sender.getChatName()
+                            to.sendMessage(frontBracket + sender.getChatName()
                                     + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                         else {
-                            to.sendMessage("%CHAT%" + channel + frontBracket + sender.getChatName()
+                            to.sendMessage(channel + frontBracket + sender.getChatName()
                                     + ChatColor.WHITE + endBracket + txtColor + text);
                         }
                     }

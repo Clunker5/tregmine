@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -48,7 +50,8 @@ public class KillCommand extends AbstractCommand{
 			return true;
 		}
 		player.sendMessage(ChatColor.RED + "Killing " + victim.getChatName() + ChatColor.RED + "...");
-		victim.setHealth(0);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.HARM, 1, 10000));
+		victim.setDeathCause("adminkilled");
 		return true;
 	}
 }

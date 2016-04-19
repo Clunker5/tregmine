@@ -59,6 +59,34 @@ public class DBMiscDAO implements IMiscDAO
         
         return messages;
     }
+    
+    /*
+     * Table Structure
+     * Table: banned_words
+     * Column 1: word VARCHAR(64) NOT NULL NO AI
+     * 
+     */
+    
+    @Override
+    public List<String> loadBannedWords() throws DAOException
+    {
+        String sql = "SELECT * FROM banned_words";
+        List<String> words = new ArrayList<String>();
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.execute();
+            
+            try (ResultSet rs = stmt.getResultSet()) {
+                while (rs.next()) {
+                    words.add(rs.getString("word"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+        
+        return words;
+    }
 
     @Override
     public boolean blocksWereChanged(Location start, int radius)

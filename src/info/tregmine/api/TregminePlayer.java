@@ -89,6 +89,7 @@ public class TregminePlayer extends PlayerDelegate
 	private long lastOnlineActivity;
 	private String lastMessenger;
 	private boolean AfkKick = true;
+	private boolean CurseWarned;
 
     // Player state for block fill
     private Block fillBlock1 = null;
@@ -119,6 +120,9 @@ public class TregminePlayer extends PlayerDelegate
     
     //Timer states
     private boolean scheduledKill = false;
+    
+    // Death states
+    private String deathcause = "";
 
     private Tregmine plugin;
 
@@ -155,6 +159,9 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setStoredUuid(UUID v) { this.storedUuid = v; }
     public UUID getStoredUuid() { return storedUuid; }
+    
+    public void setCurseWarned(boolean a) {this.CurseWarned = a;}
+    public boolean isCurseWarned(){return this.CurseWarned;}
 
     public String getChatName()
     {
@@ -237,6 +244,12 @@ public class TregminePlayer extends PlayerDelegate
     public boolean verifyPassword(String attempt)
     {
         return BCrypt.checkpw(attempt, password);
+    }
+    public String causeOfDeath(){
+    	return this.deathcause;
+    }
+    public void setDeathCause(String a){
+    	this.deathcause = a;
     }
     public boolean getFrozen(){
     	return isFrozen;

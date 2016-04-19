@@ -13,4 +13,5 @@ public interface IMiscDAO
      * I don't know where else to put this
      */
     public boolean blocksWereChanged(Location start, int radius) throws DAOException;
+	List<String> loadBannedWords() throws DAOException;
 }

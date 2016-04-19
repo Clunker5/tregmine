@@ -180,6 +180,9 @@ public class DBPlayerDAO implements IPlayerDAO
                     else if("afkkick".equals(key)){
                     	player.setAfkKick(Boolean.valueOf(value));
                     }
+                    else if("cursewarned".equals(key)){
+                    	player.setCurseWarned(Boolean.valueOf(value));
+                    }
                 }
             }
         } catch (SQLException e) {

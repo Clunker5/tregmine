@@ -1,12 +1,15 @@
 package info.tregmine.api;
 
+import java.util.Random;
+
 import org.bukkit.ChatColor;
+
+import info.tregmine.Tregmine;
 
 public class Tools {
 	public Tools(){
 		
 	}
-	
 	public String reverseColorCodes(String a){
     	String b = a.replace("§", "#");
     	return b;
@@ -46,8 +49,8 @@ public class Tools {
 		             if (text.contains("#9")) {		
 		            	 return ChatColor.BLUE;
 		             }		
-		             if (text.contains("#a") || text.contains("#A")) {		
-		            	 return ChatColor.BLUE;
+		             if (text.contains("#a") || text.contains("#A")) {	
+		            	 return ChatColor.GREEN;
 		             }		
 		             if (text.contains("#b") || text.contains("#B")) {		
 		                 return ChatColor.AQUA;	

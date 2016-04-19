@@ -55,6 +55,16 @@ public class BadgeCommand extends AbstractCommand
                         " - Level " + badge.getValue());
             }
 
+        } else if(args[0].equalsIgnoreCase("give") && args.length == 2){
+        	if(!player.getRank().canGiveBadges()){
+        		return true;
+        	}
+        	TregminePlayer target = tregmine.getPlayerOffline(args[1]);
+        	if(target == null){
+        		player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+        		return true;
+        	}
+        	
         }
         return true;
     }

@@ -51,7 +51,12 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
-
+    
+    public boolean canGiveBadges()
+    {
+    	return this == SENIOR_ADMIN;
+    }
+    
     public boolean canPickup()
     {
         return this == SETTLER ||
@@ -353,6 +358,15 @@ public enum Rank
     {
         return this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
+    }
+    
+    public boolean canUseChatColors()
+    {
+    	return this == GUARDIAN ||
+    			this == CODER ||
+    			this == DONATOR ||
+    			this == JUNIOR_ADMIN ||
+    			this == SENIOR_ADMIN;
     }
 
     public boolean canBeGod()

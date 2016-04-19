@@ -55,19 +55,18 @@ public class Tregmine extends JavaPlugin
 
     private List<String> insults;
     private List<String> quitMessages;
+    private List<String> bannedWords;
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
     private boolean lockdown = false;
-    private World rulelessWorld;
-    private World rulelessWorldNether;
-    private World rulelessWorldEnd;
 
     private LookupService cl = null;
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
     public ChatColor[] rankColors = new ChatColor[9];
+    public boolean playerCaching = false;
     
 
     @Override
@@ -192,6 +191,7 @@ public class Tregmine extends JavaPlugin
             IMiscDAO miscDAO = ctx.getMiscDAO();
             this.insults = miscDAO.loadInsults();
             this.quitMessages = miscDAO.loadQuitMessages();
+            this.bannedWords = miscDAO.loadBannedWords();
             if(insults.size() == 0){insults.add(0, "NO DEATH MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO");}
             if(quitMessages.size() == 0){quitMessages.add(0, "NO QUIT MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO.");}
             LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
@@ -480,13 +480,13 @@ public class Tregmine extends JavaPlugin
     {
         return quitMessages;
     }
+    public List<String> getBannedWords()
+    {
+    	return bannedWords;
+    }
     public String serverName(){
     	return this.serverName;
     }
-
-    public World getRulelessWorld() { return rulelessWorld; }
-    public World getRulelessNether() { return rulelessWorldNether; }
-    public World getRulelessEnd() { return rulelessWorldEnd; }
 
     // ============================================================================
     // Player methods
@@ -535,11 +535,11 @@ public class Tregmine extends JavaPlugin
         if (players.containsKey(srcPlayer.getName())) {
             return players.get(srcPlayer.getName());
         }
-
         try (IContext ctx = contextFactory.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            
             TregminePlayer player = playerDAO.getPlayer(srcPlayer.getPlayer());
-
+            
             if (player == null) {
                 player = playerDAO.createPlayer(srcPlayer);
             }
