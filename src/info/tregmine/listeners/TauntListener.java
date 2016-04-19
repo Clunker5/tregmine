@@ -63,12 +63,15 @@ public class TauntListener implements Listener
     public void onEntityDeath(EntityDeathEvent event)
     {
 
-        Player player = (Player) event.getEntity();
-        TregminePlayer player2 = plugin.getPlayer(player);
-        if (!(event instanceof PlayerDeathEvent) && player2.causeOfDeath() != "suicide") {
+        
+        if (!(event instanceof PlayerDeathEvent)) {
             return;
         }
-
+        Player player = (Player) event.getEntity();
+        TregminePlayer player2 = plugin.getPlayer(player);
+        if(player2.causeOfDeath() != "suicide"){
+        	return;
+        }
         PlayerDeathEvent e = (PlayerDeathEvent) event;
         
         
