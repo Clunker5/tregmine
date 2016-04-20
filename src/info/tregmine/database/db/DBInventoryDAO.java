@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -218,22 +219,21 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(2, counter);
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
-                if(stack.hasItemMeta() && stack.getItemMeta().getLore() != null){
+                if(stack.hasItemMeta() && stack.getItemMeta().hasLore()){
 	                ItemMeta meta = stack.getItemMeta();
 	                List<String> lores = meta.getLore();
-		                if(lores.size() >= 1){
-			                Coloring color = new Coloring();
-			                if(meta.hasLore()){
-			                for(String lore : lores){
-			                	System.out.println(lore);
-			                	String v = color.reverseChatColor(lore, '#');
-			                	lores.remove(lore);
-			                	lores.add(v);
-			                }
-			                meta.setLore(lores);
-			                stack.setItemMeta(meta);
-			                }
-		                }
+	                Iterator<String> iterator = lores.iterator();
+	                Coloring color = new Coloring();
+	                while(iterator.hasNext()){
+	                	String lore = iterator.next();
+	                	System.out.println(lore);
+	                	String v = color.reverseChatColor(lore, '#');
+	                	lores.remove(lore);
+	                	lores.add(v);
+		                iterator.remove();
+	                }
+	                meta.setLore(lores);
+	                stack.setItemMeta(meta);
                 }
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();

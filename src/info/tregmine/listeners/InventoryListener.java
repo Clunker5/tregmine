@@ -47,14 +47,14 @@ public class InventoryListener implements Listener
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event)
     {
-    	TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
-        if(player.getGameMode() == GameMode.CREATIVE){
+        if (!(event.getPlayer() instanceof Player)) {
+            return;
+        }
+        TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
+        if(player.getGameMode() == GameMode.CREATIVE || player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
         	event.setCancelled(true);
         	player.sendMessage(ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
         	return;
-        }
-        if (!(event.getPlayer() instanceof Player)) {
-            return;
         }
         Inventory inv = event.getInventory();
         InventoryHolder holder = inv.getHolder();
@@ -196,7 +196,7 @@ public class InventoryListener implements Listener
             }
             ItemStack[] oldContents = openInventories.get(loc);
             ItemStack[] currentContents = inv.getContents();
-
+            
         	ItemStack[] oc = openInventories.get(loc);
             ItemStack[] cc = inv.getContents();
             // Store all changes
