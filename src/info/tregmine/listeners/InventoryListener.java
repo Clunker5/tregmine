@@ -10,6 +10,7 @@ import info.tregmine.database.IInventoryDAO.InventoryType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,8 +184,7 @@ public class InventoryListener implements Listener
         }
         
 
-        ItemStack[] oldContents = openInventories.get(loc);
-        ItemStack[] currentContents = inv.getContents();
+        
         
         try (IContext ctx = plugin.createContext()) {
             IInventoryDAO invDAO = ctx.getInventoryDAO();
@@ -194,12 +194,16 @@ public class InventoryListener implements Listener
             if (id == -1) {
                 return;
             }
-            
+            ItemStack[] oldContents = openInventories.get(loc);
+            ItemStack[] currentContents = inv.getContents();
+
+        	ItemStack[] oc = openInventories.get(loc);
+            ItemStack[] cc = inv.getContents();
             // Store all changes
-            long logChestTime = System.currentTimeMillis();
             for (int i = 0; i < oldContents.length; i++) {
-                ItemStack a = oldContents[i];
-                ItemStack b = currentContents[i];
+                ItemStack a = oc[i];
+                ItemStack b = cc[i];
+               
                 if (a == null && b == null) {
                     continue;
                 }
@@ -216,15 +220,13 @@ public class InventoryListener implements Listener
                     }
                 }
             }
-            long totalTime = System.currentTimeMillis() - logChestTime;
             // Store contents
-            long startPoint = System.currentTimeMillis();
     		try{
     		invDAO.insertStacks(id, currentContents);
     		}catch(DAOException e){
     			throw new RuntimeException(e);
     		}
-            long endPoint = System.currentTimeMillis() - startPoint;
+    		
         }
         catch (DAOException e) {
             throw new RuntimeException(e);

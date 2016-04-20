@@ -8,6 +8,7 @@ import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.PluginManager;
@@ -242,6 +243,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new MiscListener(this), this);
 
         // Declaration of all commands
+
         getCommand("admins").setExecutor(
             new NotifyCommand(this, "admins") {
                 @Override
@@ -379,7 +381,6 @@ public class Tregmine extends JavaPlugin
         getCommand("who").setExecutor(new WhoCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
         getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
-
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
 
         for (TregminePlayer player : getOnlinePlayers()) {

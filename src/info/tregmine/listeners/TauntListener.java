@@ -62,16 +62,11 @@ public class TauntListener implements Listener
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event)
     {
-
-        
         if (!(event instanceof PlayerDeathEvent)) {
             return;
         }
         Player player = (Player) event.getEntity();
         TregminePlayer player2 = plugin.getPlayer(player);
-        if(player2.causeOfDeath() != "suicide"){
-        	return;
-        }
         PlayerDeathEvent e = (PlayerDeathEvent) event;
         
         
@@ -84,7 +79,7 @@ public class TauntListener implements Listener
         DamageCause cause = damage.getCause();
 
         boolean playerCause = false;
-        if (damage.getEntity() instanceof Player) playerCause = true;
+        if (damage.getEntity() instanceof Player){ if(player.getKiller() != null){ playerCause = true;}}
 
         Location location = player.getLocation();
 
@@ -109,6 +104,8 @@ public class TauntListener implements Listener
 
             item.setItemMeta(meta);
             player.getWorld().dropItem(player.getLocation(), item);
+            e.setDeathMessage(death);
+            return;
         }
         if(player2.causeOfDeath() == "suicide"){
         	death = ChatColor.DARK_GRAY + "DIED - " + player.getName() + " commit suicide.";

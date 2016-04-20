@@ -20,7 +20,7 @@ public class ResetLoreCommand extends AbstractCommand{
 		plugin = instance;
 	}
 	public boolean handlePlayer(TregminePlayer sender, String[] args){
-		if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+		if(sender.getWorld().getName().equalsIgnoreCase("vanilla") || sender.isInVanillaWorld()){
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
@@ -35,7 +35,7 @@ public class ResetLoreCommand extends AbstractCommand{
 			if (item != null) {
                 ItemMeta meta = item.getItemMeta();
                 List<String> lore = new ArrayList<String>();
-                lore.add(ChatColor.WHITE + "Reset by: " + player.getChatName());
+                lore.add("Flags reset by: " + player.getName());
                 meta.setLore(lore);
                 item.setItemMeta(meta);
             }

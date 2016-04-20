@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
@@ -218,21 +219,21 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setInt(3, stack.getTypeId());
                 stmt.setInt(4, stack.getData().getData());
                 if(stack.hasItemMeta() && stack.getItemMeta().getLore() != null){
-                ItemMeta meta = stack.getItemMeta();
-                List<String> lores = meta.getLore();
-                if(lores.size() <= 0){
-                	
-                }else{
-                Coloring color = new Coloring();
-                for(String lore : lores){
-                	System.out.println(lore);
-                	String v = color.reverseChatColor(lore, '#');
-                	lores.remove(lore);
-                	lores.add(v);
-                }
-                meta.setLore(lores);
-                stack.setItemMeta(meta);
-                }
+	                ItemMeta meta = stack.getItemMeta();
+	                List<String> lores = meta.getLore();
+		                if(lores.size() >= 1){
+			                Coloring color = new Coloring();
+			                if(meta.hasLore()){
+			                for(String lore : lores){
+			                	System.out.println(lore);
+			                	String v = color.reverseChatColor(lore, '#');
+			                	lores.remove(lore);
+			                	lores.add(v);
+			                }
+			                meta.setLore(lores);
+			                stack.setItemMeta(meta);
+			                }
+		                }
                 }
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
@@ -249,6 +250,8 @@ public class DBInventoryDAO implements IInventoryDAO
             }
         } catch (SQLException e) {
             throw new DAOException(sqlInsert, e);
+        } catch (ConcurrentModificationException e){
+        	e.printStackTrace();
         }
     }
 
