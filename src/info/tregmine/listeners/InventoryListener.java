@@ -51,7 +51,7 @@ public class InventoryListener implements Listener
             return;
         }
         TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
-        if(player.getGameMode() == GameMode.CREATIVE || player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+        if(player.getGameMode() == GameMode.CREATIVE && (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld())){
         	event.setCancelled(true);
         	player.sendMessage(ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
         	return;
