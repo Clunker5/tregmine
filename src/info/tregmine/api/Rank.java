@@ -57,6 +57,39 @@ public enum Rank
     	return this == SENIOR_ADMIN;
     }
     
+    public boolean canGoToVanilla()
+    {
+    	return this == DONATOR || this == GUARDIAN || this == CODER || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    public String getName(Tregmine t)
+    {
+    	ChatColor rankcolor = t.getRankColor(this);
+    	if(this == UNVERIFIED){
+    		return rankcolor + "Unverified";
+    	}else if(this == TOURIST){
+    		return rankcolor + "Tourist";
+    	}else if(this == SETTLER){
+    		return rankcolor + "Settler";
+    	}else if(this == RESIDENT){
+    		return rankcolor + "Resident";
+    	}else if(this == DONATOR){
+    		return rankcolor + "Donator";
+    	}else if(this == GUARDIAN){
+    		return rankcolor + "Guardian";
+    	}else if(this == CODER){
+    		return rankcolor + "Coder";
+    	}else if(this == BUILDER){
+    		return rankcolor + "Builder";
+    	}else if(this == JUNIOR_ADMIN){
+    		return rankcolor + "Junior Admin";
+    	}else if(this == SENIOR_ADMIN){
+    		return rankcolor + "Senior Admin";
+    	}else{
+    		return ChatColor.MAGIC + "ABCDEFGH";
+    	}
+    }
+    
     public boolean canPickup()
     {
         return this == SETTLER ||
@@ -649,33 +682,6 @@ public enum Rank
     public boolean canCheckBlocks()
     {
         return (this == JUNIOR_ADMIN || this == SENIOR_ADMIN);
-    }
-
-    public ChatColor getColor(Tregmine t)
-    {
-    	Tools tools = new Tools();
-    	ChatColor[] colors = t.rankColors;
-        if(this == TOURIST){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.tourist"));
-        }else if(this == SETTLER){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.settler"));
-        }else if(this == RESIDENT){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.resident"));
-        }else if(this == DONATOR){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.donator"));
-        }else if(this == GUARDIAN){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.guardian"));
-        }else if(this == CODER){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.coder"));
-        }else if(this == BUILDER){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.builder"));
-        }else if(this == JUNIOR_ADMIN){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.junior"));
-        }else if(this == SENIOR_ADMIN){
-        	return tools.toColor(t.getConfig().getString("ranks.colors.senior"));
-        }else{
-        	return ChatColor.WHITE;
-        }
     }
 
     public static Rank fromString(String value)

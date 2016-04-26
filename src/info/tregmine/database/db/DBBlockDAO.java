@@ -46,12 +46,14 @@ public class DBBlockDAO implements IBlockDAO{
 			stmt.setDouble(1, a.getTypeId());
 	    	stmt.execute();
 	    	ResultSet rs = stmt.getResultSet();
-	    	rs.next();
-	    	return rs.getInt("mine_value");
+	    	while(rs.next()){
+	    		return rs.getInt("mine_value");
+	    	}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;
 		}
+		return 0;
 	}
 
 }

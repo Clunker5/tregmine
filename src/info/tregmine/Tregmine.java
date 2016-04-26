@@ -8,9 +8,6 @@ import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventException;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -63,12 +60,13 @@ public class Tregmine extends JavaPlugin
     private boolean lockdown = false;
 
     private LookupService cl = null;
+    private boolean keywordsEnabled;
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
-    public ChatColor[] rankColors = new ChatColor[9];
     public boolean playerCaching = false;
-    
+    private World vanillaWorld = null;
+    private ChatColor[] rankcolors = new ChatColor[9];
 
     @Override
     public void onLoad()
@@ -126,7 +124,6 @@ public class Tregmine extends JavaPlugin
     {
         this.server = getServer();
         plugin = this;
-        FileConfiguration config = getConfig();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Lag(), 100L, 1L);
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this,  new Timer(this), 100L, 1L);
         List<?> configWorlds = getConfig().getList("worlds.names");
@@ -135,13 +132,14 @@ public class Tregmine extends JavaPlugin
         	addWorld.environment(World.Environment.NORMAL);
         	addWorld.generateStructures(true);
         	addWorld.type(WorldType.NORMAL);
-        	addWorld.createWorld();
+        	this.vanillaWorld = addWorld.createWorld();
         }
         this.serverName = getConfig().getString("general.servername");
+        this.keywordsEnabled = getConfig().getBoolean("general.keywords");
         if(getConfig().getString("worlds.enabled") == "true"){
         String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
         for(String worldName : worlds){
-        	if(worldName.contains("the_end") || worldName.contains("nether")){
+        	if(worldName.contains("_the_end") || worldName.contains("_nether")){
         		//Do nothing
         	}else{
         	WorldCreator addWorld = new WorldCreator(worldName);
@@ -151,7 +149,6 @@ public class Tregmine extends JavaPlugin
         	addWorld.createWorld();
         	}
         }
-        
         
         for(String worldName : worlds){
         	if(!worldName.contains("the_end")){
@@ -255,7 +252,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return Rank.JUNIOR_ADMIN.getColor(this.tregmine);
+                    return plugin.getRankColor(Rank.JUNIOR_ADMIN);
                 }
             });
 
@@ -271,7 +268,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return Rank.GUARDIAN.getColor(this.tregmine);
+                    return plugin.getRankColor(Rank.GUARDIAN);
                 }
             });
 
@@ -287,7 +284,7 @@ public class Tregmine extends JavaPlugin
                 @Override
                 public ChatColor getColor()
                 {
-                    return Rank.CODER.getColor(this.tregmine);
+                    return plugin.getRankColor(Rank.CODER);
                 }
             });
         getCommand("property").setExecutor(new PropertyCommand(this));
@@ -369,7 +366,6 @@ public class Tregmine extends JavaPlugin
         getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
         getCommand("tpto").setExecutor(new TeleportToCommand(this));
         getCommand("trade").setExecutor(new TradeCommand(this));
-        getCommand("undercoverboss").setExecutor(new UnderCoverBossCommand(this));
         getCommand("update").setExecutor(new UpdateCommand(this));
         getCommand("vanish").setExecutor(new VanishCommand(this));
         getCommand("wallet").setExecutor(new WalletCommand(this));
@@ -379,6 +375,7 @@ public class Tregmine extends JavaPlugin
         getCommand("weather").setExecutor(new WeatherCommand(this));
         getCommand("webkick").setExecutor(new WebKickCommand(this));
         getCommand("who").setExecutor(new WhoCommand(this));
+        getCommand("vanilla").setExecutor(new VanillaCommand(this));
         getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
         getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
@@ -414,6 +411,7 @@ public class Tregmine extends JavaPlugin
 
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
+        	player.sendMessage(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA + " may be shutting down soon! Please prepare to be kicked.");
             player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
@@ -440,6 +438,41 @@ public class Tregmine extends JavaPlugin
     public IContextFactory getContextFactory()
     {
         return contextFactory;
+    }
+    public ChatColor getRankColor(Rank rank){
+    	if(this.rankcolors[0] == null){
+    		Tools tools = new Tools();
+    		this.rankcolors[0] = tools.toColor(this.getConfig().getString("ranks.colors.tourist"));
+            this.rankcolors[1] = tools.toColor(this.getConfig().getString("ranks.colors.settler"));
+            this.rankcolors[2] = tools.toColor(this.getConfig().getString("ranks.colors.resident"));
+            this.rankcolors[3] = tools.toColor(this.getConfig().getString("ranks.colors.donator"));
+            this.rankcolors[4] = tools.toColor(this.getConfig().getString("ranks.colors.guardian"));
+            this.rankcolors[5] = tools.toColor(this.getConfig().getString("ranks.colors.coder"));
+            this.rankcolors[6] = tools.toColor(this.getConfig().getString("ranks.colors.builder"));
+            this.rankcolors[7] = tools.toColor(this.getConfig().getString("ranks.colors.junior"));
+            this.rankcolors[8] = tools.toColor(this.getConfig().getString("ranks.colors.senior"));
+    	}
+    	if(rank == Rank.TOURIST){
+    		return this.rankcolors[0];
+    	}else if(rank == Rank.SETTLER){
+    		return this.rankcolors[1];
+    	}else if(rank == Rank.RESIDENT){
+    		return this.rankcolors[2];
+    	}else if(rank == Rank.DONATOR){
+    		return this.rankcolors[3];
+    	}else if(rank == Rank.GUARDIAN){
+    		return this.rankcolors[4];
+    	}else if(rank == Rank.CODER){
+    		return this.rankcolors[5];
+    	}else if(rank == Rank.BUILDER){
+    		return this.rankcolors[6];
+    	}else if(rank == Rank.JUNIOR_ADMIN){
+    		return this.rankcolors[7];
+    	}else if(rank == Rank.SENIOR_ADMIN){
+    		return this.rankcolors[8];
+    	}else{
+    		return ChatColor.BLACK;
+    	}
     }
 
     public IContext createContext()
@@ -485,6 +518,12 @@ public class Tregmine extends JavaPlugin
     {
     	return bannedWords;
     }
+    
+    public boolean keywordsEnabled()
+    {
+    	return keywordsEnabled;
+    }
+    
     public String serverName(){
     	return this.serverName;
     }
@@ -609,6 +648,10 @@ public class Tregmine extends JavaPlugin
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public World getVanillaWorld(){
+    	return this.vanillaWorld;
     }
 
     public void removePlayer(TregminePlayer player)

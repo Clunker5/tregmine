@@ -15,6 +15,7 @@ general:
     minefortregs: true
   #DO NOT put a / at the end of the domain
   url: http://domain.lan
+  mentorsystem: false
 discord:
   consoleid: "12345678"
   chatid: "910111213"

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
@@ -95,5 +96,7 @@ public class PromoteCommand extends AbstractCommand{
 		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!");
 		return true;
 	}
+	
+	
 
 }

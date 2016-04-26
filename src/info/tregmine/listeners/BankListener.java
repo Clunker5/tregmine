@@ -42,23 +42,25 @@ public class BankListener implements Listener
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event)
     {
+    	
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getChatState() != ChatState.BANK) {
             return;
         }
-
+        
         Bank bank = bankingPlayers.get(player);
         if (bank == null) {
             player.setChatState(ChatState.CHAT);
             return;
         }
-
+        String[] args = event.getMessage().split(" ");
+        String message = event.getMessage();
+        event.setMessage("%cancel%");
         player.sendMessage(ChatColor.AQUA + "[BANK] " +
                 ChatColor.WHITE + "<" + player.getChatName() +
-                ChatColor.WHITE + "> " + ChatColor.AQUA + event.getMessage());
+                ChatColor.WHITE + "> " + ChatColor.AQUA + message);
         event.setCancelled(true);
 
-        String[] args = event.getMessage().split(" ");
         if ("help".equalsIgnoreCase(args[0])) {
             player.sendMessage(ChatColor.RED + "[BANK] "+
                     "Type \"exit\" to go back to chat");

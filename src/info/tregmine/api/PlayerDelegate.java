@@ -3,8 +3,10 @@ package info.tregmine.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player.Spigot;
 
 import info.tregmine.Tregmine;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public abstract class PlayerDelegate
 {
@@ -326,13 +328,19 @@ public abstract class PlayerDelegate
         checkState();
         //delegate.kickPlayer(p0);
         Bukkit.getScheduler().scheduleSyncDelayedTask(instance, new Runnable(){
-
+        	
 			@Override
 			public void run() {
 				delegate.kickPlayer(p0);
 			}
         	
         });
+    }
+    
+    public Spigot getSpigot()
+    {
+    	checkState();
+    	return delegate.spigot();
     }
 
     public void chat(java.lang.String p0)
@@ -1206,6 +1214,11 @@ public abstract class PlayerDelegate
     {
         checkState();
         delegate.sendMessage(p0);
+    }
+    
+    public void sendSpigotMessage(TextComponent a){
+    	checkState();
+    	delegate.spigot().sendMessage(a);
     }
 
     public boolean isBanned()

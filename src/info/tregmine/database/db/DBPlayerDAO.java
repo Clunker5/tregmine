@@ -98,7 +98,7 @@ public class DBPlayerDAO implements IPlayerDAO
     public TregminePlayer getPlayer(String name, Player wrap)
             throws DAOException
     {
-        String sql = "SELECT * FROM player WHERE player_name = ?";
+    	String sql = "SELECT * FROM player WHERE player_name = ?";
 
         TregminePlayer player;
         if (wrap != null) {
@@ -149,8 +149,36 @@ public class DBPlayerDAO implements IPlayerDAO
         }
 
         loadSettings(player);
+        loadReports(player);
 
         return player;
+    }
+    
+    private void loadReports(TregminePlayer player) throws DAOException
+    {
+    	String sql = "SELECT * FROM player_report WHERE subject_id = ?";
+    	try(PreparedStatement stmt = conn.prepareStatement(sql)){
+    		stmt.setInt(1, player.getId());
+    		stmt.execute();
+    		try(ResultSet rs = stmt.getResultSet()){
+    			while(rs.next()){
+    				if("softwarn".equals(rs.getString("report_action"))){
+    					player.setTotalSofts(player.getTotalSofts() + 1);
+    				}
+    				if("hardwarn".equals(rs.getString("report_action"))){
+    					player.setTotalHards(player.getTotalHards() + 1);
+    				}
+    				if("kick".equals(rs.getString("report_action"))){
+    					player.setTotalKicks(player.getTotalKicks() + 1);
+    				}
+    				if("ban".equals(rs.getString("report_action"))){
+    					player.setTotalBans(player.getTotalBans() + 1);
+    				}
+    			}
+    		}
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
     }
 
     private void loadSettings(TregminePlayer player) throws DAOException

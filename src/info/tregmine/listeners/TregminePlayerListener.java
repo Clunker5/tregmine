@@ -434,7 +434,7 @@ public class TregminePlayerListener implements Listener
         // Recalculate guardians
         activateGuardians();
 
-        if (rank == Rank.TOURIST) {
+        if (rank == Rank.TOURIST || rank == Rank.UNVERIFIED) {
             // Try to find a mentor for tourists that rejoin
             MentorCommand.findMentor(plugin, player);
         }

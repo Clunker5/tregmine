@@ -120,7 +120,7 @@ public class GameMagic extends JavaPlugin implements Listener
         return checksum;
     }
 
-    private void gotoWorld(Player player, Location loc)
+    public void gotoWorld(Player player, Location loc)
     {
         World world = loc.getWorld();
         Chunk chunk = world.getChunkAt(loc);
@@ -237,12 +237,6 @@ public class GameMagic extends JavaPlugin implements Listener
         if (block.getType() == Material.OBSIDIAN) {
             event.setCancelled(false);
         }
-    }
-    
-    @EventHandler
-    public void onPlayerMove(PlayerMoveBlockEvent event)
-    {
-//Deprecated.
     }
 
 	private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo)

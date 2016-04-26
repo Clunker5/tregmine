@@ -35,6 +35,7 @@ public class VanishCommand extends AbstractCommand
             } else {
                 player.sendMessage(DARK_AQUA + "You are currently visible.");
             }
+            player.sendMessage(DARK_AQUA + "If you wanted to switch your visibility status, do /vanish on|off");
             return true;
         }
 

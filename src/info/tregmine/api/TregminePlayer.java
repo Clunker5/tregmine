@@ -90,7 +90,14 @@ public class TregminePlayer extends PlayerDelegate
 	private String lastMessenger;
 	private boolean AfkKick = true;
 	private boolean CurseWarned;
-
+	
+	//Reports
+	private List<String[]> reports = new ArrayList<String[]>();
+	private int kicks = 0;
+	private int softwarns = 0;
+	private int hardwarns = 0;
+	private int bans = 0;
+	
     // Player state for block fill
     private Block fillBlock1 = null;
     private Block fillBlock2 = null;
@@ -187,6 +194,43 @@ public class TregminePlayer extends PlayerDelegate
     		return false;
     	}
     }
+    
+    public void addReport(String[] report){
+    	this.reports.add(report);
+    }
+    
+    public List<String[]> getReports(){
+    	return this.reports;
+    }
+    
+    public int getReportTotal(){
+    	return this.reports.size();
+    }
+    public int getTotalKicks(){
+    	return this.kicks;
+    }
+    public int getTotalBans(){
+    	return this.bans;
+    }
+    public int getTotalSofts(){
+    	return this.softwarns;
+    }
+    public int getTotalHards(){
+    	return this.hardwarns;
+    }
+    public void setTotalKicks(int total){
+    	this.kicks = total;
+    }
+    public void setTotalBans(int total){
+    	this.bans = total;
+    }
+    public void setTotalSofts(int total){
+    	this.softwarns = total;
+    }
+    public void setTotalHards(int total){
+    	this.hardwarns = total;
+    }
+    
     public long getLastOnlineActivity(){
     	return lastOnlineActivity;
     }
@@ -198,8 +242,9 @@ public class TregminePlayer extends PlayerDelegate
     	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true){
     		String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than " + autoafkkick + " seconds.";
     		this.lastOnlineActivity = 0;
+    		this.setSilentAfk(false);
     		this.kickPlayer(this.plugin, reason);
-    		Bukkit.broadcastMessage(ChatColor.GRAY + this.getChatName() + " was kicked for idling longer than 15 minutes.");
+    		Bukkit.broadcastMessage(ChatColor.GRAY + this.getChatName() + " was kicked for idling longer than" + autoafkkick / 60 + " minutes.");
     	}
     	long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
     	if(!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()){
@@ -216,7 +261,7 @@ public class TregminePlayer extends PlayerDelegate
     public void setTemporaryChatName(String name)
     {
         this.name = name;
-
+        
         if (getDelegate() != null) {
             if (getChatName().length() > 16) {
                 setPlayerListName(name.substring(0, 15));
@@ -226,6 +271,20 @@ public class TregminePlayer extends PlayerDelegate
             }
         }
     }
+    
+    public void gotoWorld(Player player, Location loc, String success, String failure)
+    {
+        World world = loc.getWorld();
+        Chunk chunk = world.getChunkAt(loc);
+        world.loadChunk(chunk);
+        if (world.isChunkLoaded(chunk)) {
+            plugin.getPlayer(player).teleportWithHorse(loc);
+            player.sendMessage(success);
+        } else {
+            player.sendMessage(failure);
+        }
+    }
+    
     public void setLastPos(Location pos){
     	this.lastpos = pos;
     }
@@ -395,14 +454,14 @@ public class TregminePlayer extends PlayerDelegate
         else if (rank == Rank.GUARDIAN) {
             switch (guardianState) {
             case ACTIVE:
-                return ChatColor.BLUE;
+                return plugin.getRankColor(Rank.GUARDIAN);
             case INACTIVE:
             case QUEUED:
                 return ChatColor.GOLD;
             default:
             }}
 
-        return rank.getColor(this.plugin);
+        return plugin.getRankColor(rank);
     }
     public ChatColor RankColor(){
     	// Gives admins, guardians a chat color
@@ -654,8 +713,7 @@ public class TregminePlayer extends PlayerDelegate
                     this.getRank() == Rank.TOURIST ||
                     this.getRank() == Rank.SETTLER)) {
                 return new BooleanStringReturn(false, ChatColor.RED + "[" +
-                        zone.getName() + "] You must be atleast " +
-                        Rank.RESIDENT.getColor(this.plugin) + "Resident" + ChatColor.RED +
+                        zone.getName() + "] You must be atleast " + plugin.getRankColor(Rank.RESIDENT)  + "Resident" + ChatColor.RED +
                         zone.getName());
             }
         } else {
@@ -953,6 +1011,23 @@ public class TregminePlayer extends PlayerDelegate
     		this.afk = false;
 			setTemporaryChatName(getNameColor() + getRealName());
 			Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + GREEN + " is no longer afk.");
+    	}else{
+    		return;
+    	}
+    }
+    public void setSilentAfk(boolean value){
+    	if(this.isHidden()){
+    		return;
+    	}
+    	if(value == true){
+    		this.afk = true;
+			String oldname = getChatName();
+			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
+    	}else if(value == false){
+    		final long currentTime = System.currentTimeMillis();
+    		this.setLastOnlineActivity(currentTime);
+    		this.afk = false;
+			setTemporaryChatName(getNameColor() + getRealName());
     	}else{
     		return;
     	}

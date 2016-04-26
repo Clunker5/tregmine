@@ -283,7 +283,6 @@ public class DBInventoryDAO implements IInventoryDAO
                         config.loadFromString(meta);
                         metaObj = (ItemMeta) config.get("meta");
                     }
-
                     stacks[slot] = new ItemStack(materialId, count, (short) data);
                     if (metaObj != null) {
                         stacks[slot].setItemMeta(metaObj);

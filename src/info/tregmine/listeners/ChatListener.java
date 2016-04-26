@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Player.Spigot;
 import org.bukkit.event.*;
 
 import info.tregmine.*;
@@ -22,6 +23,10 @@ import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
 import info.tregmine.events.TregmineChatEvent;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatListener implements Listener
 {
@@ -31,6 +36,10 @@ public class ChatListener implements Listener
     public ChatListener(Tregmine instance)
     {
         this.plugin = instance;
+    }
+    
+    private TextComponent createTC(String str){
+    	return new TextComponent(str);
     }
     
     @EventHandler
@@ -45,9 +54,44 @@ public class ChatListener implements Listener
         if(sender.isAfk()){
         	sender.setAfk(false);
         }
+        
 
         try (IContext ctx = plugin.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            String text = event.getMessage();
+            boolean curse = false;
+            boolean avoided = false;
+            int cursetotal = 0;
+            for(String word : plugin.getBannedWords()){
+            	if(text.toLowerCase().contains(word.toLowerCase())){
+            		curse = true;
+            		cursetotal += 1;
+            		String replacement = "";
+            		for(int count = 1; count<=word.length(); count++){
+            			replacement += "*";
+            		}
+            		text = text.replaceAll(word, replacement);
+            		if(text.toLowerCase().contains(word.toLowerCase())){
+            			avoided = true;
+            		}
+            	}
+            }
+            if(curse == true){
+            	IPlayerDAO playerdao = ctx.getPlayerDAO();
+            	if(sender.isCurseWarned()){
+            	sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account.");
+            	IWalletDAO wallet = ctx.getWalletDAO();
+            	wallet.take(sender, cursetotal * 50);
+            	}else{
+            		playerdao.updateProperty(sender, "cursewarned", "true");
+            		sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account.");
+            		sender.setCurseWarned(true);
+            	}
+            	if(avoided){
+            		sender.sendMessage(ChatColor.RED + "You thought you were slick... Your chat has been cancelled.");
+        			return;
+            	}
+            }
             for (TregminePlayer to : plugin.getOnlinePlayers()) {
                 if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
                     continue;
@@ -60,21 +104,15 @@ public class ChatListener implements Listener
                 }
 
                 ChatColor txtColor = ChatColor.WHITE;
-                if (sender.getRank() == Rank.JUNIOR_ADMIN || sender.getRank() == Rank.SENIOR_ADMIN){
-                	txtColor = ChatColor.GRAY;
-                }else if(sender.getRank() != Rank.JUNIOR_ADMIN && sender.getRank() != Rank.SENIOR_ADMIN){
-                	if (sender.equals(to)) {
-                    txtColor = ChatColor.GRAY;
-                }}
 
-                String text = event.getMessage();
                 for (TregminePlayer online : plugin.getOnlinePlayers()) {
                 	
                     if (text.contains(online.getRealName()) &&
                         !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
                     	if(text.toLowerCase().contains("@" + online.getRealName())){
                     		String newName = online.getChatName();
-                        	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "@" + online.getName());
+                    		
+                        	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "" + plugin.getRankColor(online.getRank()) + "@" + online.getChatName());
                         }else{
                         text = text.replaceAll(online.getRealName(),
                                                online.getChatName() + txtColor);
@@ -83,39 +121,7 @@ public class ChatListener implements Listener
                     }
                     
                 }
-                boolean curse = false;
-                boolean avoided = false;
-                int cursetotal = 0;
-                for(String word : plugin.getBannedWords()){
-                	if(text.toLowerCase().contains(word.toLowerCase())){
-                		curse = true;
-                		cursetotal += 1;
-                		String replacement = "";
-                		for(int count = 1; count<=word.length(); count++){
-                			replacement += "*";
-                		}
-                		text = text.replaceAll(word, replacement);
-                		if(text.toLowerCase().contains(word.toLowerCase())){
-                			avoided = true;
-                		}
-                	}
-                }
-                if(curse == true){
-                	IPlayerDAO playerdao = ctx.getPlayerDAO();
-                	if(sender.isCurseWarned()){
-                	sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account.");
-                	IWalletDAO wallet = ctx.getWalletDAO();
-                	wallet.take(sender, cursetotal * 50);
-                	}else{
-                		playerdao.updateProperty(sender, "cursewarned", "true");
-                		sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account.");
-                		sender.setCurseWarned(true);
-                	}
-                	if(avoided){
-                		sender.sendMessage(ChatColor.RED + "You thought you were slick... Your chat has been cancelled.");
-            			return;
-                	}
-                }
+                
                 if(sender.getRank().canUseChatColors()){
             	text = ChatColor.translateAlternateColorCodes('#', text);
                 }
@@ -136,53 +142,52 @@ public class ChatListener implements Listener
                     }
                 }
                 
-                String frontBracket = "";
-                String endBracket = "";
-                if(!event.isWebChat()){
-                if(sender.isOp() || sender.getGameMode() == GameMode.CREATIVE){
-                	if(sender.isOp() && sender.getGameMode() == GameMode.CREATIVE){
-                		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
-                		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
-                	}else if(sender.isOp()){
-                		frontBracket = ChatColor.BLACK + "<" + ChatColor.RESET;
-                		endBracket = ChatColor.BLACK + "> " + ChatColor.RESET;
-                	}else if(sender.getGameMode() == GameMode.CREATIVE){
-                		frontBracket = ChatColor.YELLOW + "<" + ChatColor.RESET;
-                		endBracket = ChatColor.YELLOW + "> " + ChatColor.RESET;
-                	}
-                	
-                }else{
-                	frontBracket = "<";
-                	endBracket = ChatColor.WHITE + "> ";
-                }
-                }else{
-                	frontBracket = "<";
-                	endBracket = ChatColor.WHITE + "> ";
-                }
-               
-
+                String frontBracket = "<";
+                String endBracket = ChatColor.WHITE + "> ";
                 String senderChan = sender.getChatChannel();
                 String toChan = to.getChatChannel();
+                Spigot toSpigot = to.getSpigot();
+                TextComponent sendername = new TextComponent(sender.getChatName());
+                String addon = "";
+                if(to.getIsStaff()){
+                if(sender.getTotalBans() != 0){
+                	addon += "\n" + ChatColor.DARK_GRAY + "Bans: " + sender.getTotalBans();
+                }
+                if(sender.getTotalKicks() != 0){
+            		addon += "\n" + ChatColor.GRAY + "Kicks: " + sender.getTotalKicks();
+                }
+                if(sender.getTotalHards() != 0){
+            		addon += "\n" + ChatColor.DARK_GRAY + "Hard-Warns: " + sender.getTotalHards();
+                }
+                if(sender.getTotalSofts() != 0){
+            		addon += "\n" + ChatColor.GRAY + "Soft-Warns " + sender.getTotalSofts();
+                }
+                }
+                sendername.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(sender.getRank().getName(plugin) + addon).create()));
                 if (senderChan.equalsIgnoreCase(toChan) ||
                     to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
 
                     if (event.isWebChat()) {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("(" + sender.getChatName()
-                                    + ChatColor.WHITE + ") " + txtColor + text);
+                        	TextComponent begin = createTC("(");
+                        	TextComponent end = createTC(ChatColor.WHITE + ") " + txtColor + text);
+                            toSpigot.sendMessage(begin, sendername, end);
                         }
                         else {
-                            to.sendMessage(channel + " (" + sender.getChatName()
-                                    + ChatColor.WHITE + ") " + txtColor + text);
+                        	TextComponent begin = createTC(channel + "(");
+                        	TextComponent end = createTC(ChatColor.WHITE + ") " + txtColor + text);
+                            toSpigot.sendMessage(begin, sendername, end);
                         }
                     } else {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage(frontBracket + sender.getChatName()
-                                    + ChatColor.WHITE + endBracket + txtColor + text);
+                        	TextComponent begin = createTC(frontBracket);
+                        	TextComponent end = createTC(ChatColor.WHITE + endBracket + txtColor + text);
+                            toSpigot.sendMessage(begin, sendername, end);
                         }
                         else {
-                            to.sendMessage(channel + frontBracket + sender.getChatName()
-                                    + ChatColor.WHITE + endBracket + txtColor + text);
+                        	TextComponent begin = createTC(channel + frontBracket);
+                        	TextComponent end = createTC(ChatColor.WHITE + endBracket + txtColor + text);
+                            toSpigot.sendMessage(begin, sendername, end);
                         }
                     }
                 }
@@ -199,11 +204,12 @@ public class ChatListener implements Listener
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-
+        TextComponent sendername = new TextComponent(sender.getChatName());
+        sendername.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(sender.getRank().getName(plugin)).create()));
         if (event.isWebChat()) {
-            Tregmine.LOGGER.info(channel + " (" + sender.getRealName() + ") " + event.getMessage());
+            Tregmine.LOGGER.info(channel + " (" + sender.getChatName() + ") " + event.getMessage());
         } else {
-            Tregmine.LOGGER.info(channel + " <" + sender.getRealName() + "> " + event.getMessage());
+            Tregmine.LOGGER.info(channel + " <" + sender.getChatName() + "> " + event.getMessage());
         }
 
         try (IContext ctx = plugin.createContext()) {
@@ -212,6 +218,7 @@ public class ChatListener implements Listener
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
+        
 
         //event.setCancelled(true);
         WebServer server = plugin.getWebServer();

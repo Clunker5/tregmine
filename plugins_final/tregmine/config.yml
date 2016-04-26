@@ -15,6 +15,13 @@ general:
     minefortregs: true
   #DO NOT put a / at the end of the domain
   url: http://domain.lan
+  mentorsystem: false
+discord:
+  consoleid: "12345678"
+  chatid: "910111213"
+  serverid: "1415161718"
+  status: "Slaying hoes!"
+  bottoken: "123491345"
 api:
   signing-key: your-strong-random-key-here
   port: 9192

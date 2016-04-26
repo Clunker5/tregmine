@@ -61,6 +61,9 @@ public class ZoneEntityListener implements Listener
 
             event.setCancelled(true);
         }
+        if(event.getEntityType() == EntityType.SKELETON){
+        	event.setCancelled(true);
+        }
     }
 
     @EventHandler

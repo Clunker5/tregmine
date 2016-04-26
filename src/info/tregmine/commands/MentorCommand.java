@@ -147,6 +147,16 @@ public class MentorCommand extends AbstractCommand
     	if(student.getRank() != Rank.UNVERIFIED && student.getRank() != Rank.TOURIST){
     		return;
     	}
+    	if(!plugin.getConfig().getBoolean("general.mentorsystem")){
+    		try (IContext ctx = plugin.createContext()) {
+                student.setRank(Rank.SETTLER);
+                IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                playerDAO.updatePlayer(student);
+                playerDAO.updatePlayerInfo(student);
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+    	}
         Queue<TregminePlayer> mentors = plugin.getMentorQueue();
         TregminePlayer mentor = mentors.poll();
         if (mentor != null) {

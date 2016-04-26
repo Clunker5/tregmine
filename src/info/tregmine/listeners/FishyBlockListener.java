@@ -485,6 +485,19 @@ public class FishyBlockListener implements Listener
                             if (i == null) {
                                 continue; // Get rid of NPE
                             }
+                            if(i.hasItemMeta()){
+                            	if(i.getItemMeta().hasLore()){
+                            		for(String lore : i.getItemMeta().getLore()){
+                            			if(lore.contains("CREATIVE") || lore.contains("SPAWNED")){
+                            				allow = false;
+                            			}
+                            		}
+                            	}
+                            }
+                            if(!allow){
+                            	player.sendMessage(ChatColor.RED + "You cannot deposit illegal items.");
+                            	continue;
+                            }
                             if (i.getType().getMaxDurability() != 0 && i.getData().getData() != 0) {
                                 continue; // Ignore damaged items
                             }
@@ -500,9 +513,6 @@ public class FishyBlockListener implements Listener
                                 continue;
                             }
                             if (i.getEnchantments().size() > 0) {
-                                continue;
-                            }
-                            if (!allow) {
                                 continue;
                             }
                             allAmount += i.getAmount();
