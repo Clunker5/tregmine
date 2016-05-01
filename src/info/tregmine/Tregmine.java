@@ -47,6 +47,7 @@ public class Tregmine extends JavaPlugin
     private Map<Integer, TregminePlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
     private Map<Location, FishyBlock> fishyBlocks;
+    private Map<Material, Integer> minedBlockPrices;
 
     private Map<String, ZoneWorld> worlds;
     private Map<Integer, Zone> zones;
@@ -64,7 +65,6 @@ public class Tregmine extends JavaPlugin
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
-    public boolean playerCaching = false;
     private World vanillaWorld = null;
     private ChatColor[] rankcolors = new ChatColor[9];
 
@@ -185,7 +185,10 @@ public class Tregmine extends JavaPlugin
             this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
 
             LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
-
+            
+        	IBlockDAO blockDAO = ctx.getBlockDAO();
+        	this.minedBlockPrices = blockDAO.loadBlockMinePrices();
+            
             IMiscDAO miscDAO = ctx.getMiscDAO();
             this.insults = miscDAO.loadInsults();
             this.quitMessages = miscDAO.loadQuitMessages();
@@ -435,6 +438,10 @@ public class Tregmine extends JavaPlugin
         return webServer;
     }
 
+    public int getMinedPrice(Material q){
+    	return this.minedBlockPrices.get(q);
+    }
+    
     public IContextFactory getContextFactory()
     {
         return contextFactory;
@@ -471,7 +478,7 @@ public class Tregmine extends JavaPlugin
     	}else if(rank == Rank.SENIOR_ADMIN){
     		return this.rankcolors[8];
     	}else{
-    		return ChatColor.BLACK;
+    		return ChatColor.WHITE;
     	}
     }
 
