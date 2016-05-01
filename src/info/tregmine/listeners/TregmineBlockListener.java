@@ -14,6 +14,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -97,16 +98,20 @@ public class TregmineBlockListener implements Listener
                 return;
             }
         }
+        
         try(IContext ctx = plugin.createContext()){
         	IBlockDAO blockDAO = ctx.getBlockDAO();
-        	int blockvalue = blockDAO.blockValue(block);
+        	int blockvalue = plugin.getMinedPrice(block.getType());
         	if(!blockDAO.isPlaced(block) && !event.isCancelled() && blockvalue != 0){
+        		if(block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2){
+        			if(player.getItemInHand().getType() != Material.SHEARS){
+        				return;
+        			}
+        		}
         		try(IContext ctxNew = plugin.createContext()){
         			IWalletDAO walletDAO = ctx.getWalletDAO();
         			walletDAO.add(player, blockvalue);
-        			//That message is annoying.
-        			//player.sendMessage(ChatColor.GREEN + "You received " + ChatColor.GOLD + blockvalue + ChatColor.GREEN + " Tregs for breaking " + ChatColor.GOLD + block.getType().name().toLowerCase());
-        		}catch(DAOException e){
+        			}catch(DAOException e){
         			e.printStackTrace();
         		}
         	}
