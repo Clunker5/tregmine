@@ -19,6 +19,10 @@ public class CleanInventoryCommand extends AbstractCommand
 			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
+    	if(!args[0].equalsIgnoreCase("yes")){
+    		player.sendMessage(ChatColor.RED + "Are you sure you want to run that command?");
+    		player.sendMessage(ChatColor.RED + "Type /clean yes");
+    	}
         player.getInventory().clear();
         return true;
     }
