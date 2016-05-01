@@ -313,6 +313,11 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean canUnbless()
+    {
+    	return this == SENIOR_ADMIN || this == JUNIOR_ADMIN;
+    }
 
     public boolean canUseCreative()
     {
@@ -334,6 +339,11 @@ public enum Rank
         return this == BUILDER ||
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
+    }
+    
+    public boolean canForceChannel()
+    {
+    	return (this != SETTLER || this != TOURIST || this  != UNVERIFIED);
     }
 
     public boolean canTeleportBetweenWorlds()
