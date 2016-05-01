@@ -24,7 +24,10 @@ public class ForceCommand extends AbstractCommand
         if (args.length != 2) {
             return false;
         }
-
+        if(!player.getRank().canForceChannel()){
+        	player.sendMessage(ChatColor.RED + "You cannot force players into channels.");
+        	return true;
+        }
         String playerPattern = args[0];
         String channel = args[1];
 
