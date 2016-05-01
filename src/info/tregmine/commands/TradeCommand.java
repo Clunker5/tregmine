@@ -151,6 +151,7 @@ public class TradeCommand extends AbstractCommand implements Listener
 
         ItemStack[] contents = ctx.inventory.getContents();
         for(ItemStack i : contents){
+        	if(i == null){
         		//ABORT!
         	}
         	if(!isIllegal && i.getType() != Material.AIR){
