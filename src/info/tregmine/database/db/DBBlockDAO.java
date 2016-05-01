@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -54,6 +57,22 @@ public class DBBlockDAO implements IBlockDAO{
 			return 0;
 		}
 		return 0;
+	}
+	
+	@Override
+	public Map<Material, Integer> loadBlockMinePrices(){
+		Map<Material, Integer> prices = new HashMap<>();
+		String sql = "SELECT DISTINCT `item_id`,`mine_value` FROM item";
+		try(PreparedStatement stmt = conn.prepareStatement(sql)){
+			stmt.execute();
+			ResultSet rs = stmt.getResultSet();
+			while(rs.next()){
+				prices.put(Material.getMaterial(rs.getInt("item_id")), rs.getInt("mine_value"));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return prices;
 	}
 
 }
