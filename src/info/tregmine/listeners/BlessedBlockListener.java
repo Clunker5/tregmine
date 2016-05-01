@@ -72,7 +72,7 @@ public class BlessedBlockListener implements Listener
     {
         Block block = event.getClickedBlock();
         TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.FEATHER && player.getRank().canBless() && ALLOWED_MATERIALS.contains(block.getType())){
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.FEATHER && player.getRank().canUnbless() && ALLOWED_MATERIALS.contains(block.getType())){
         	Location loc = block.getLocation();
         	
         	try (IContext ctx = plugin.createContext()) {

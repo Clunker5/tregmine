@@ -43,11 +43,9 @@ public class TregminePlayer extends PlayerDelegate
         CHEST_LOG,
         HIDDEN_ANNOUNCEMENT,
         CHANNEL_VIEW,
-        WATCHING_CHUNKS;
+        WATCHING_CHUNKS,
+        AFK_KICK;
     };
-    public enum Settings {
-    	NOAFKKICK;
-    }
 
     // Persistent values
     private int id = 0;
@@ -64,7 +62,6 @@ public class TregminePlayer extends PlayerDelegate
     private int guardianRank = 0;
     private int playTime = 0;
     private Set<Flags> flags;
-    private Set<Settings> settings;
     private Map<Badge, Integer> badges;
     private Location lastpos = null;
     
@@ -142,7 +139,6 @@ public class TregminePlayer extends PlayerDelegate
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
-        this.settings = EnumSet.noneOf(Settings.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -154,7 +150,6 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
-        this.settings = EnumSet.noneOf(Settings.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
