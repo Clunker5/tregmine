@@ -241,6 +241,25 @@ public enum Rank
                this == JUNIOR_ADMIN ||
                this == SENIOR_ADMIN;
     }
+    
+    public boolean getsDiscordRank()
+    {
+    	return this != UNVERIFIED && this != SETTLER && this != RESIDENT && this != DONATOR;
+    }
+    
+    public String getProperDiscordName(){
+    	if(this == GUARDIAN){
+    		return "Guardian";
+    	}else if(this == CODER){
+    		return "Coder";
+    	}else if(this == JUNIOR_ADMIN){
+    		return "Junior Admin";
+    	}else if(this == SENIOR_ADMIN){
+    		return "Senior Admin";
+    	}else{
+    		return "";
+    	}
+    }
 
     public boolean canSeeAliases()
     {

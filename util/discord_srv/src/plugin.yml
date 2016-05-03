@@ -1,0 +1,10 @@
+main: com.scarsz.discordsrv.DiscordSRV
+version: 8.3
+name: DiscordSRV
+softdepend: [Vault]
+
+commands:
+  discordsrv:
+    description: DiscordSRV commands
+    usage: /discordsrv
+    permission: discordsrv

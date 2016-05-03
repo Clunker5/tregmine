@@ -65,6 +65,9 @@ public class TregminePlayer extends PlayerDelegate
     private Map<Badge, Integer> badges;
     private Location lastpos = null;
     
+    //Discord values
+    private boolean alertedAfk;
+    
 
     // One-time state
     private String chatChannel = "GLOBAL";
@@ -510,6 +513,14 @@ public class TregminePlayer extends PlayerDelegate
     public void resetTimeOnline()
     {
         loginTime = new Date();
+    }
+    
+    public void setAlerted(boolean a){
+    	this.alertedAfk = a;
+    }
+    
+    public boolean alertedAfk(){
+    	return this.alertedAfk;
     }
 
     public int getTimeOnline()
