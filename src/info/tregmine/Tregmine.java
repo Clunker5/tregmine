@@ -19,10 +19,17 @@ import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.events.CallEventListener;
+import info.tregmine.events.TregmineChatEvent;
 import info.tregmine.listeners.*;
 import info.tregmine.quadtree.IntersectionException;
 import info.tregmine.tools.*;
+import info.tregmine.tools.PortalListener;
 import info.tregmine.zones.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.scheduler.BukkitScheduler;
 
 /**
@@ -55,6 +62,8 @@ public class Tregmine extends JavaPlugin
     private List<String> insults;
     private List<String> quitMessages;
     private List<String> bannedWords;
+    
+    private List<TregmineChatEvent> blockedChats;
 
     private Queue<TregminePlayer> mentors;
     private Queue<TregminePlayer> students;
@@ -66,7 +75,16 @@ public class Tregmine extends JavaPlugin
     public String releaseType = "re";
     public String serverName;
     private World vanillaWorld = null;
+    private World vanillaNetherWorld = null;
+    private World vanillaEndWorld = null;
     private ChatColor[] rankcolors = new ChatColor[9];
+    FileConfiguration config;
+    
+    //Special!
+    private World world2 = null;
+    private World world2nether = null;
+    private World world2end = null;
+    private boolean secondaryworld = false;
 
     @Override
     public void onLoad()
@@ -76,7 +94,7 @@ public class Tregmine extends JavaPlugin
 
         reloadConfig();
 
-        FileConfiguration config = getConfig();
+        config = getConfig();
 
         contextFactory = new DBContextFactory(config, this);
 
@@ -133,6 +151,32 @@ public class Tregmine extends JavaPlugin
         	addWorld.generateStructures(true);
         	addWorld.type(WorldType.NORMAL);
         	this.vanillaWorld = addWorld.createWorld();
+        	
+        	//Nether
+        	WorldCreator addNether = new WorldCreator("vanilla_nether").environment(World.Environment.NETHER).type(WorldType.NORMAL);
+        	this.vanillaNetherWorld = addNether.createWorld();
+        	
+        	//End
+        	WorldCreator addEnd = new WorldCreator("vanilla_the_end").environment(World.Environment.THE_END).type(WorldType.NORMAL);
+        	this.vanillaEndWorld = addEnd.createWorld();
+        }
+        if(config.getBoolean("worlds.special.newworld")){
+        	WorldCreator world2g = new WorldCreator("world_2");
+        	WorldCreator world2netherg = new WorldCreator("world_2_nether");
+        	WorldCreator world2endg = new WorldCreator("world_2_the_end");
+        	world2g.environment(World.Environment.NORMAL);
+        	world2g.generateStructures(true);
+        	world2g.type(WorldType.NORMAL);
+        	this.world2 = world2g.createWorld();
+        	world2netherg.environment(World.Environment.NETHER);
+        	world2netherg.generateStructures(true);
+        	world2netherg.type(WorldType.NORMAL);
+        	this.world2nether = world2netherg.createWorld();
+        	world2endg.environment(World.Environment.THE_END);
+        	world2endg.generateStructures(true);
+        	world2endg.type(WorldType.NORMAL);
+        	this.world2end = world2endg.createWorld();
+        	this.secondaryworld = true;
         }
         this.serverName = getConfig().getString("general.servername");
         this.keywordsEnabled = getConfig().getBoolean("general.keywords");
@@ -383,9 +427,9 @@ public class Tregmine extends JavaPlugin
         getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool recipes
 
-        for (TregminePlayer player : getOnlinePlayers()) {
-            player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
-        }
+//        for (TregminePlayer player : getOnlinePlayers()) {
+//            player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded. Version " + getDescription().getVersion());
+//        }
 
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this,
@@ -396,8 +440,8 @@ public class Tregmine extends JavaPlugin
                             player.setCombatLog(player.getCombatLog() - 1);
 
                             if (player.getCombatLog() == 0) {
-                                player.sendMessage(ChatColor.GREEN +
-                                    "Combat log has warn off... Safe to log off!");
+                                player.sendMessage(buildTC(ChatColor.GREEN +
+                                    "Combat log has warn off... Safe to log off!"));
                             }
                         }
                     }
@@ -414,7 +458,7 @@ public class Tregmine extends JavaPlugin
 
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
-        	player.sendMessage(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA + " may be shutting down soon! Please prepare to be kicked.");
+        	player.sendMessage(this.buildTC(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA + " may be shutting down soon! Please prepare to be kicked."));
             player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
@@ -426,11 +470,29 @@ public class Tregmine extends JavaPlugin
             LOGGER.log(Level.WARNING, "Failed to start web server!", e);
         }
     }
-    public int getTotalPlayersJoined(){
-    	return this.PlayersJoinedTotal;
+    
+    public FileConfiguration plConfig(){
+    	return this.config;
     }
-    public void setTotalPlayersJoined(int v){
-    	this.PlayersJoinedTotal = v;
+    
+    public boolean hasSecondaryWorld(){
+    	return this.secondaryworld;
+    }
+    
+    public World getSWorld(){
+    	return this.world2;
+    }
+    
+    public World getSWorldNether(){
+    	return this.world2nether;
+    }
+    
+    public World getSWorldEnd(){
+    	return this.world2end;
+    }
+    
+    public HoverEvent buildHover(String abc){
+    	return new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(abc).create());
     }
 
     public WebServer getWebServer()
@@ -440,6 +502,20 @@ public class Tregmine extends JavaPlugin
 
     public int getMinedPrice(Material q){
     	return this.minedBlockPrices.get(q);
+    }
+    
+    public List<TregmineChatEvent> getBlockedChats(){
+    	return this.blockedChats;
+    }
+    
+    public void addBlockedChat(TregmineChatEvent e){
+    	this.blockedChats.add(e);
+    }
+    
+    public void broadcast(BaseComponent a){
+    	for(TregminePlayer player : this.getOnlinePlayers()){
+    		player.sendMessage(a);
+    	}
     }
     
     public IContextFactory getContextFactory()
@@ -486,6 +562,10 @@ public class Tregmine extends JavaPlugin
     throws DAOException
     {
         return contextFactory.createContext();
+    }
+    
+    public TextComponent buildTC(String string){
+    	return new TextComponent(string);
     }
 
     // ============================================================================
@@ -659,6 +739,21 @@ public class Tregmine extends JavaPlugin
     
     public World getVanillaWorld(){
     	return this.vanillaWorld;
+    }
+    public World getVanillaEnd(){
+    	return this.vanillaEndWorld;
+    }
+    public World getVanillaNether(){
+    	return this.vanillaNetherWorld;
+    }
+    
+    public boolean isInVanilla(TregminePlayer player)
+    {
+    	if(player.getWorld() == this.vanillaWorld || player.getWorld() == this.vanillaEndWorld || player.getWorld() == this.vanillaNetherWorld){
+    		return true;
+    	}else{
+    		return false;
+    	}
     }
 
     public void removePlayer(TregminePlayer player)

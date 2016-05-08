@@ -57,7 +57,7 @@ public class FishyBlockListener implements Listener
         String text = message.trim();
         String[] textSplit = text.split(" ");
 
-        player.sendMessage(ChatColor.YELLOW + "[FISHY] " +
+        player.sendStringMessage(ChatColor.YELLOW + "[FISHY] " +
                 ChatColor.WHITE + "<" +
                 player.getChatName() +
                 ChatColor.WHITE + "> " + text);
@@ -77,14 +77,14 @@ public class FishyBlockListener implements Listener
                 try {
                     int cost = Integer.parseInt(text);
                     if (cost <= 0) {
-                        player.sendMessage(ChatColor.RED +
+                        player.sendStringMessage(ChatColor.RED +
                                 "Please enter a positive number.");
                         return;
                     }
 
                     newFishyBlock.setCost(cost);
 
-                    player.sendMessage(ChatColor.GREEN +
+                    player.sendStringMessage(ChatColor.GREEN +
                         "Cost set to " + cost + " tregs. Fishy block set up.");
 
                     fishyBlocks.put(newFishyBlock.getBlockLocation(), newFishyBlock);
@@ -105,7 +105,7 @@ public class FishyBlockListener implements Listener
                     }
                 }
                 catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED +
+                    player.sendStringMessage(ChatColor.RED +
                             "Please enter a positive number.");
                     return;
                 }
@@ -116,7 +116,7 @@ public class FishyBlockListener implements Listener
 
             if ("changecost".equalsIgnoreCase(textSplit[0])) {
                 if (textSplit.length != 2) {
-                    player.sendMessage(ChatColor.RED + "Type \"changecost x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"changecost x\", with " +
                             "x being the cost in tregs of the item.");
                     return;
                 }
@@ -125,13 +125,13 @@ public class FishyBlockListener implements Listener
                 try {
                     cost = Integer.parseInt(textSplit[1]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Type \"changecost x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"changecost x\", with " +
                             "x being the cost in tregs of the item.");
                     return;
                 }
 
                 if (cost <= 0) {
-                    player.sendMessage(ChatColor.RED + "Type \"changecost x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"changecost x\", with " +
                             "x being the cost in tregs of the item.");
                     return;
                 }
@@ -139,7 +139,7 @@ public class FishyBlockListener implements Listener
                 int oldCost = fishyBlock.getCost();
                 fishyBlock.setCost(cost);
 
-                player.sendMessage(ChatColor.GREEN + "Cost changed to " +
+                player.sendStringMessage(ChatColor.GREEN + "Cost changed to " +
                         cost + " tregs.");
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
@@ -158,7 +158,7 @@ public class FishyBlockListener implements Listener
             }
             else if ("withdraw".equalsIgnoreCase(textSplit[0])) {
                 if (textSplit.length != 2) {
-                    player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"withdraw x\", with " +
                             "x being the number of items you wish to withdraw.");
                     return;
                 }
@@ -171,21 +171,21 @@ public class FishyBlockListener implements Listener
                     try {
                         num = Integer.parseInt(textSplit[1]);
                     } catch (NumberFormatException e) {
-                        player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                        player.sendStringMessage(ChatColor.RED + "Type \"withdraw x\", with " +
                                 "x being the number of items you wish to withdraw.");
                         return;
                     }
                 }
 
                 if (num <= 0) {
-                    player.sendMessage(ChatColor.RED + "Type \"withdraw x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"withdraw x\", with " +
                             "x being the number of items you wish to withdraw.");
                     return;
                 }
 
                 int available = fishyBlock.getAvailableInventory();
                 if (num > available) {
-                    player.sendMessage(ChatColor.RED + "There are only " +
+                    player.sendStringMessage(ChatColor.RED + "There are only " +
                             available + "items available.");
                     return;
                 }
@@ -193,10 +193,10 @@ public class FishyBlockListener implements Listener
                 int added = transferToInventory(fishyBlock, player, num);
 
                 if (num != added) {
-                    player.sendMessage(ChatColor.GREEN + "Your inventory is full. " +
+                    player.sendStringMessage(ChatColor.GREEN + "Your inventory is full. " +
                         "Could only withdraw " + added + " items.");
                 } else {
-                    player.sendMessage(ChatColor.GREEN + "" +
+                    player.sendStringMessage(ChatColor.GREEN + "" +
                         added + " items withdrawn successfully.");
                 }
 
@@ -217,14 +217,14 @@ public class FishyBlockListener implements Listener
                 }
             }
             else if ("quit".equalsIgnoreCase(textSplit[0])) {
-                player.sendMessage(ChatColor.GREEN +
+                player.sendStringMessage(ChatColor.GREEN +
                     "Quitting without action.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             }
             else {
-                player.sendMessage(ChatColor.RED +
+                player.sendStringMessage(ChatColor.RED +
                                    "Type withdraw, changecost or quit.");
             }
         }
@@ -233,7 +233,7 @@ public class FishyBlockListener implements Listener
 
             if ("buy".equalsIgnoreCase(textSplit[0])) {
                 if (textSplit.length != 2) {
-                    player.sendMessage(ChatColor.RED + "Type \"buy x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"buy x\", with " +
                             "x being the number of items you wish to biy.");
                     return;
                 }
@@ -242,20 +242,20 @@ public class FishyBlockListener implements Listener
                 try {
                     num = Integer.parseInt(textSplit[1]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Type \"buy x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"buy x\", with " +
                             "x being the number of items you wish to biy.");
                     return;
                 }
 
                 if (num <= 0) {
-                    player.sendMessage(ChatColor.RED + "Type \"buy x\", with " +
+                    player.sendStringMessage(ChatColor.RED + "Type \"buy x\", with " +
                             "x being the number of items you wish to buy.");
                     return;
                 }
 
                 int available = fishyBlock.getAvailableInventory();
                 if (num > available) {
-                    player.sendMessage(ChatColor.RED + "There are only " +
+                    player.sendStringMessage(ChatColor.RED + "There are only " +
                             available + "items available.");
                     return;
                 }
@@ -264,14 +264,14 @@ public class FishyBlockListener implements Listener
 
                 int cost = num * fishyBlock.getCost();
 
-                player.sendMessage(ChatColor.YELLOW + "Do you wish to buy " +
+                player.sendStringMessage(ChatColor.YELLOW + "Do you wish to buy " +
                     num + " items for a total cost of " + cost + " tregs?");
-                player.sendMessage(ChatColor.YELLOW + "Type \"accept\" to confirm " +
+                player.sendStringMessage(ChatColor.YELLOW + "Type \"accept\" to confirm " +
                     "or quit to exit.");
             }
             else if ("accept".equalsIgnoreCase(textSplit[0])) {
                 if (player.getFishyBuyCount() == 0) {
-                    player.sendMessage(ChatColor.RED + "Please specify how many " +
+                    player.sendStringMessage(ChatColor.RED + "Please specify how many " +
                             "items you wish to buy using \"buy x\".");
                     return;
                 }
@@ -282,7 +282,7 @@ public class FishyBlockListener implements Listener
                 // is buying at the same time
                 int available = fishyBlock.getAvailableInventory();
                 if (num > available) {
-                    player.sendMessage(ChatColor.RED + "There are only " +
+                    player.sendStringMessage(ChatColor.RED + "There are only " +
                             available + "items available.");
                     return;
                 }
@@ -293,7 +293,7 @@ public class FishyBlockListener implements Listener
 
                     long balance = walletDAO.balance(player);
                     if (balance < cost) {
-                        player.sendMessage(ChatColor.RED + "You do not have " +
+                        player.sendStringMessage(ChatColor.RED + "You do not have " +
                             "enough money to complete your purchase.");
                         return;
                     }
@@ -301,11 +301,11 @@ public class FishyBlockListener implements Listener
                     int added = transferToInventory(fishyBlock, player, num);
 
                     if (num != added) {
-                        player.sendMessage(ChatColor.GREEN + "Your inventory is full. " +
+                        player.sendStringMessage(ChatColor.GREEN + "Your inventory is full. " +
                             "Could only buy " + added + " items.");
                         cost = added * fishyBlock.getCost();
                     } else {
-                        player.sendMessage(ChatColor.GREEN + "" +
+                        player.sendStringMessage(ChatColor.GREEN + "" +
                             added + " items added to your inventory.");
                     }
 
@@ -317,7 +317,7 @@ public class FishyBlockListener implements Listener
                         walletDAO.insertTransaction(player.getId(), seller.getId(),
                                 cost);
 
-                        player.sendMessage(ChatColor.GREEN + "" + cost
+                        player.sendStringMessage(ChatColor.GREEN + "" + cost
                                 + " tregs was taken from your wallet!");
 
                         IFishyBlockDAO fishyBlockDAO = dbCtx.getFishyBlockDAO();
@@ -339,14 +339,14 @@ public class FishyBlockListener implements Listener
                 updateSign(player.getWorld(), fishyBlock);
             }
             else if ("quit".equalsIgnoreCase(textSplit[0])) {
-                player.sendMessage(ChatColor.GREEN +
+                player.sendStringMessage(ChatColor.GREEN +
                     "Quitting without buying.");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             }
             else {
-                player.sendMessage(ChatColor.RED + "Type buy or quit.");
+                player.sendStringMessage(ChatColor.RED + "Type buy or quit.");
             }
 
         }
@@ -377,7 +377,7 @@ public class FishyBlockListener implements Listener
         if (fishyBlocks.containsKey(loc)) {
 
             if (player.getGameMode() == GameMode.CREATIVE) {
-                player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                player.sendStringMessage(ChatColor.RED + "Cannot use fishy blocks " +
                         "whilst in creative mode.");
                 event.setCancelled(true);
                 return;
@@ -394,12 +394,12 @@ public class FishyBlockListener implements Listener
 
             MaterialData material = fishyBlock.getMaterial();
             if (material.getData() != 0) {
-                player.sendMessage(ChatColor.YELLOW +
+                player.sendStringMessage(ChatColor.YELLOW +
                     "You are now talking to a fishy block that is selling: " +
                     material.getItemType().toString() + ":" +
                     material.getData() + ".");
             } else {
-                player.sendMessage(ChatColor.YELLOW +
+                player.sendStringMessage(ChatColor.YELLOW +
                     "You are now talking to a fishy block that is selling: " +
                     material.getItemType().toString() + ".");
             }
@@ -407,10 +407,10 @@ public class FishyBlockListener implements Listener
             Map<Enchantment, Integer> enchantments = fishyBlock.getEnchantments();
             if (enchantments.size() > 0) {
                 if (fishyBlock.hasStoredEnchantments()) {
-                    player.sendMessage(ChatColor.YELLOW +
+                    player.sendStringMessage(ChatColor.YELLOW +
                             "With the following STORED enchants:");
                 } else {
-                    player.sendMessage(ChatColor.YELLOW +
+                    player.sendStringMessage(ChatColor.YELLOW +
                             "With the following enchants:");
                 }
                 try (IContext dbCtx = plugin.createContext()) {
@@ -419,7 +419,7 @@ public class FishyBlockListener implements Listener
                         Enchantment enchant = entry.getKey();
                         Integer level = entry.getValue();
                         String enchantName = enchantDAO.localize(enchant.getName());
-                        player.sendMessage("- " + enchantName +
+                        player.sendStringMessage("- " + enchantName +
                                 " Level: " + level.toString());
                     }
                 } catch (DAOException e) {
@@ -472,7 +472,7 @@ public class FishyBlockListener implements Listener
                 if (match) {
                     Material type = heldMaterial.getItemType();
                     if (type.getMaxDurability() != 0 && heldMaterial.getData() != 0) {
-                        player.sendMessage(ChatColor.RED + "You cannot add " +
+                        player.sendStringMessage(ChatColor.RED + "You cannot add " +
                                 "damaged items.");
                         return;
                     }
@@ -495,7 +495,7 @@ public class FishyBlockListener implements Listener
                             	}
                             }
                             if(!allow){
-                            	player.sendMessage(ChatColor.RED + "You cannot deposit illegal items.");
+                            	player.sendStringMessage(ChatColor.RED + "You cannot deposit illegal items.");
                             	continue;
                             }
                             if (i.getType().getMaxDurability() != 0 && i.getData().getData() != 0) {
@@ -506,7 +506,7 @@ public class FishyBlockListener implements Listener
                             }
                             if (fishyBlock.hasStoredEnchantments()) {
                                 if (massEnchant == false) {
-                                    player.sendMessage(ChatColor.RED +
+                                    player.sendStringMessage(ChatColor.RED +
                                             "Mass Submition only works with non enchanted items and blocks.");
                                     massEnchant = true;
                                 }
@@ -524,7 +524,7 @@ public class FishyBlockListener implements Listener
                     }
 
                     fishyBlock.addAvailableInventory(allAmount);
-                    player.sendMessage(ChatColor.GREEN + "" +
+                    player.sendStringMessage(ChatColor.GREEN + "" +
                             allAmount + " items added to fishy block.");
 
                     updateSign(player.getWorld(), fishyBlock);
@@ -542,14 +542,14 @@ public class FishyBlockListener implements Listener
                 }
                 // Enter withdrawal mode
                 else {
-                    player.sendMessage(ChatColor.YELLOW + "There are " +
+                    player.sendStringMessage(ChatColor.YELLOW + "There are " +
                         fishyBlock.getAvailableInventory() + " items available. ");
-                    player.sendMessage(ChatColor.YELLOW +
+                    player.sendStringMessage(ChatColor.YELLOW +
                         "Type \"withdraw x\" to withdraw items to your inventory.");
-                    player.sendMessage(ChatColor.YELLOW +
+                    player.sendStringMessage(ChatColor.YELLOW +
                         "Type \"changecost x\" to change the cost of the items " +
                         "sold by this block.");
-                    player.sendMessage(ChatColor.YELLOW +
+                    player.sendStringMessage(ChatColor.YELLOW +
                         "Type \"quit\" to exit without doing anything.");
 
                     player.setChatState(TregminePlayer.ChatState.FISHY_WITHDRAW);
@@ -561,7 +561,7 @@ public class FishyBlockListener implements Listener
             else {
                 event.setCancelled(true);
 
-                player.sendMessage(ChatColor.YELLOW + "Each block is " +
+                player.sendStringMessage(ChatColor.YELLOW + "Each block is " +
                     fishyBlock.getCost() + " tregs. Type \"buy x\" to buy, " +
                     "with x being the number of items you want to buy. Type " +
                     "\"quit\" to exit without buying anything.");
@@ -578,14 +578,14 @@ public class FishyBlockListener implements Listener
             if (heldItem.getType() == Material.RAW_FISH && newFishyBlock == null) {
 
                 if (player.getGameMode() == GameMode.CREATIVE) {
-                    player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                    player.sendStringMessage(ChatColor.RED + "Cannot use fishy blocks " +
                             "whilst in creative mode.");
                     event.setCancelled(true);
                     return;
                 }
 
                 if (face.getModY() != 0) {
-                    player.sendMessage(ChatColor.RED + "Click on the sides of " +
+                    player.sendStringMessage(ChatColor.RED + "Click on the sides of " +
                             "the block to set up a fishy block.");
                     return;
                 }
@@ -607,26 +607,26 @@ public class FishyBlockListener implements Listener
 
                 // Make sure that both the block and the sign are in an lot
                 if (blockLot == null && signLot == null) {
-                    player.sendMessage(ChatColor.RED +
+                    player.sendStringMessage(ChatColor.RED +
                         "Fishy blocks can only be created in lots.");
                     return;
                 }
                 // In case one of them is, but the other one isn't
                 else if (blockLot == null || signLot == null) {
-                    player.sendMessage(ChatColor.RED +
+                    player.sendStringMessage(ChatColor.RED +
                             "Too close to the edge of the lot.");
                     return;
                 }
                 // Make sure it's the same lot
                 else if (blockLot.getId() != signLot.getId()) {
-                    player.sendMessage(ChatColor.RED +
+                    player.sendStringMessage(ChatColor.RED +
                             "Too close to the edge of the lot.");
                     return;
                 }
                 // Since we've already verified that it's the same lot, we only
                 // need to check the owner for one of the lots
                 else if (!blockLot.isOwner(player)) {
-                    player.sendMessage(ChatColor.RED +
+                    player.sendStringMessage(ChatColor.RED +
                             "You have to be owner of the lot to create fishy blocks.");
                     return;
                 }
@@ -635,7 +635,7 @@ public class FishyBlockListener implements Listener
                 if (fishyBlocks.containsKey(loc) ||
                     fishyBlocks.containsKey(signLoc)) {
 
-                    player.sendMessage(ChatColor.RED + "This block has already " +
+                    player.sendStringMessage(ChatColor.RED + "This block has already " +
                             "been fishyfied.");
                     return;
                 }
@@ -643,7 +643,7 @@ public class FishyBlockListener implements Listener
                 World world = block.getWorld();
                 Block signBlock = world.getBlockAt(signLoc);
                 if (signBlock.getType() != Material.AIR) {
-                    player.sendMessage(ChatColor.RED + "There must be at least one " +
+                    player.sendStringMessage(ChatColor.RED + "There must be at least one " +
                             "empty block in front of the block being fishyfied.");
                     return;
                 }
@@ -655,7 +655,7 @@ public class FishyBlockListener implements Listener
 
                 player.setNewFishyBlock(fishyBlock);
 
-                player.sendMessage(ChatColor.GREEN + "You are creating a new " +
+                player.sendStringMessage(ChatColor.GREEN + "You are creating a new " +
                         "fishy block, which can be used to sell items. Now " +
                         "select the item or material you want to sell, " +
                         "and left click on this block again.");
@@ -668,7 +668,7 @@ public class FishyBlockListener implements Listener
                      loc.equals(newFishyBlock.getBlockLocation()) && heldItem.getType() != Material.AIR) {
             	
                 if (player.getGameMode() == GameMode.CREATIVE) {
-                    player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+                    player.sendStringMessage(ChatColor.RED + "Cannot use fishy blocks " +
                             "whilst in creative mode.");
                     event.setCancelled(true);
                     return;
@@ -681,7 +681,7 @@ public class FishyBlockListener implements Listener
                 // This is an item with limited durability that has been
                 // damaged
                 if (type.getMaxDurability() != 0 && material.getData() != 0) {
-                    player.sendMessage(ChatColor.RED + "You cannot sell " +
+                    player.sendStringMessage(ChatColor.RED + "You cannot sell " +
                             "damaged items.");
                     return;
                 }
@@ -704,7 +704,7 @@ public class FishyBlockListener implements Listener
                 player.setChatState(TregminePlayer.ChatState.FISHY_SETUP);
 
                 if (material.getData() != 0) {
-                    player.sendMessage(ChatColor.GREEN +
+                    player.sendStringMessage(ChatColor.GREEN +
                         "This fishy block will sell " +
                         material.getItemType().toString() + ":" +
                         material.getData() + ".");
@@ -712,17 +712,17 @@ public class FishyBlockListener implements Listener
                 	return;
                 }
                 else {
-                    player.sendMessage(ChatColor.GREEN +
+                    player.sendStringMessage(ChatColor.GREEN +
                         "This fishy block will sell " +
                         material.getItemType().toString() + ".");
                 }
 
                 if (enchantments.size() > 0) {
                     if (newFishyBlock.hasStoredEnchantments()) {
-                        player.sendMessage(ChatColor.GREEN +
+                        player.sendStringMessage(ChatColor.GREEN +
                                 "With the following STORED enchants:");
                     } else {
-                        player.sendMessage(ChatColor.GREEN +
+                        player.sendStringMessage(ChatColor.GREEN +
                                 "With the following enchants:");
                     }
                     try (IContext dbCtx = plugin.createContext()) {
@@ -731,7 +731,7 @@ public class FishyBlockListener implements Listener
                             Enchantment enchant = entry.getKey();
                             Integer level = entry.getValue();
                             String enchantName = enchantDAO.localize(enchant.getName());
-                            player.sendMessage("- " + enchantName +
+                            player.sendStringMessage("- " + enchantName +
                                     " Level: " + level.toString());
                         }
                     } catch (DAOException e) {
@@ -739,7 +739,7 @@ public class FishyBlockListener implements Listener
                     }
                 }
 
-                player.sendMessage(ChatColor.YELLOW +
+                player.sendStringMessage(ChatColor.YELLOW +
                         "How much should one item cost?");
                 return;
             }
@@ -766,7 +766,7 @@ public class FishyBlockListener implements Listener
         }
 
         if (player.getGameMode() == GameMode.CREATIVE) {
-            player.sendMessage(ChatColor.RED + "Cannot use fishy blocks " +
+            player.sendStringMessage(ChatColor.RED + "Cannot use fishy blocks " +
                     "whilst in creative mode.");
             event.setCancelled(true);
             return;
@@ -777,12 +777,12 @@ public class FishyBlockListener implements Listener
 
         if (signLoc.equals(loc)) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot delete the sign " +
+            player.sendStringMessage(ChatColor.RED + "You cannot delete the sign " +
                     "for a fishy block. Delete the obisidan to remove it.");
             return;
         }
         else if (blockLoc.equals(loc)) {
-            player.sendMessage(ChatColor.GREEN + "Fishy block deleted.");
+            player.sendStringMessage(ChatColor.GREEN + "Fishy block deleted.");
 
             try (IContext ctx = plugin.createContext()) {
                 IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
@@ -849,7 +849,7 @@ public class FishyBlockListener implements Listener
                     MaterialData material = fishyBlock.getMaterial();
 
                     Sign sign = (Sign)signBlock.getState();
-                    sign.setLine(0, player.getChatName());
+                    sign.setLine(0, player.getChatNameNoHover());
                     if (material.getData() != 0) {
                         sign.setLine(1, material.toString());
                     } else {

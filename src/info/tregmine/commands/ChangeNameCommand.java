@@ -75,6 +75,7 @@ public class ChangeNameCommand extends AbstractCommand
         	player.sendMessage(ChatColor.RED + "You have entered an invalid color. White will be used instead.");
         }
         player.setTemporaryChatName(usecolor + args[1]);
+        player.setHasNick(true);
         player.sendMessage("You are now: " + player.getChatName());
         LOGGER.info(player.getName() + " changed name to "
                 + player.getChatName());

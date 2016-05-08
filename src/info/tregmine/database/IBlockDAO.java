@@ -12,5 +12,5 @@ import info.tregmine.api.TregminePlayer;
 public interface IBlockDAO {
 	public boolean isPlaced(Block a) throws DAOException;
 	int blockValue(Block a) throws DAOException;
-	Map<Material, Integer> loadBlockMinePrices();
+	public Map<Material, Integer> loadBlockMinePrices() throws DAOException;
 }

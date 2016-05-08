@@ -53,10 +53,10 @@ public class Lag implements Runnable {
 		for(Player player : Bukkit.getOnlinePlayers()){
 			TregminePlayer dplayer = tregmine.getPlayer(player);
 			if(dplayer.isAfk() && !dplayer.alertedAfk()){
-				DiscordSRV.sendMessage(DiscordSRV.chatChannel, dplayer.getChatName() + " is now AFK.");
+				DiscordSRV.sendMessage(DiscordSRV.chatChannel, dplayer.getChatName().replace("[AFK]", "") + " is now AFK.");
 				dplayer.setAlerted(true);
 			}else if(!dplayer.isAfk() && dplayer.alertedAfk()){
-				DiscordSRV.sendMessage(DiscordSRV.chatChannel, dplayer.getChatName() + " is no longer AFK.");
+				DiscordSRV.sendMessage(DiscordSRV.chatChannel, dplayer.getChatName().replace("[AFK]", "") + " is no longer AFK.");
 				dplayer.setAlerted(false);
 			}
 		}

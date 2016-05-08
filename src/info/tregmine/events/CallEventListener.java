@@ -43,29 +43,11 @@ public class CallEventListener implements Listener
 	@EventHandler
 	public void onServerListPing(ServerListPingEvent event){
 		if(plugin.getLockdown()){
+			event.setMaxPlayers(0);
 			event.setMotd(ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " is on lockdown.\n" + ChatColor.RED + "Only staff can join.");	
 		}else{
-		if(plugin.getConfig().getBoolean("general.motd.lineoneauto")){
-		String extraText = "";
-		String type = plugin.releaseType;
-		if(type.contains("re")){
-			extraText = ChatColor.GREEN + " Release";
-		}else if(type.contains("be")){
-			extraText = ChatColor.BOLD + " Beta";
-		}else if(type.contains("te")){
-			extraText = ChatColor.BLUE + " Test Release";
-		}else if(type.contains("bl")){
-			extraText = ChatColor.RED + " Bleeding Edge";
-		}else if(type.contains("gm")){
-			extraText = ChatColor.GOLD + " Golden Master";
-		}else{
-			extraText = ChatColor.DARK_RED + "" + ChatColor.BOLD + " YOU DID SOMETHING WRONG.";
-		}
-		event.setMotd(ChatColor.GOLD + "" + ChatColor.BOLD + "Tregmine " + plugin.getDescription().getVersion() + extraText + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
-		}else{
+			event.setMaxPlayers(plugin.plConfig().getInt("general.motd.maxplayers"));
 			event.setMotd(ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.lineone")) + "\n" + ChatColor.RESET + "" + ChatColor.translateAlternateColorCodes('#', plugin.getConfig().getString("general.motd.linetwo")));
-			
-		}
 	}
 }
     // Triggers when a player changes lot

@@ -37,16 +37,23 @@
 
     </target>
 
-    <target name="jar" depends="compile">
-        <jar destfile="${ant.project.name}.jar" basedir="${build}">
+    <target name="create" depends="compile">
+        <jar destfile="zone_mapper_unshaded.jar" basedir="${build}">
             <manifest>
                 <attribute name="Main-Class" value="info.tregmine.zonemapper.Main" />
-                <attribute name="Class-Path"
+                <!--<attribute name="Class-Path"
                            value="lib/mojang_nbt.jar
                                   lib/bukkit.jar
-                                  lib/mysql-connector-java-bin.jar" />
+                                  lib/mysql-connector-java-bin.jar" />-->
             </manifest>
         </jar>
+    </target>
+	
+	<target name="jar" depends="create">
+      <zip destfile="zone_mapper.jar">
+          <zipgroupfileset dir="lib" includes="*.jar"/>
+          <zipgroupfileset dir="./" includes="zone_mapper_unshaded.jar"/>
+      </zip>
     </target>
 
     <target name="clean" depends="init">

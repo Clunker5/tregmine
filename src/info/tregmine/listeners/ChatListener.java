@@ -79,16 +79,18 @@ public class ChatListener implements Listener
             if(curse == true){
             	IPlayerDAO playerdao = ctx.getPlayerDAO();
             	if(sender.isCurseWarned()){
-            	sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account.");
+            	sender.sendMessage(plugin.buildTC(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account."));
             	IWalletDAO wallet = ctx.getWalletDAO();
             	wallet.take(sender, cursetotal * 50);
             	}else{
             		playerdao.updateProperty(sender, "cursewarned", "true");
-            		sender.sendMessage(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account.");
+            		sender.sendMessage(plugin.buildTC(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account."));
             		sender.setCurseWarned(true);
             	}
             	if(avoided){
-            		sender.sendMessage(ChatColor.RED + "You thought you were slick... Your chat has been cancelled.");
+            		sender.sendMessage(plugin.buildTC(ChatColor.RED + "You thought you were slick... Your chat has been cancelled."));
+            		event.setCancelled(true);
+            		plugin.addBlockedChat(event);
         			return;
             	}
             }
@@ -110,12 +112,12 @@ public class ChatListener implements Listener
                     if (text.contains(online.getRealName()) &&
                         !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
                     	if(text.toLowerCase().contains("@" + online.getRealName())){
-                    		String newName = online.getChatName();
+                    		String newName = online.getChatNameNoHover();
                     		
                         	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "" + plugin.getRankColor(online.getRank()) + "@" + online.getChatName());
                         }else{
                         text = text.replaceAll(online.getRealName(),
-                                               online.getChatName() + txtColor);
+                                               online.getChatNameNoHover() + txtColor);
                         }
                         online.sendNotification(Notification.MESSAGE);
                     }
@@ -132,12 +134,8 @@ public class ChatListener implements Listener
                 if (player_keywords.size() > 0 && player_keywords != null) {
                     for (String keyword : player_keywords) {
                         if (text.toLowerCase().contains(keyword.toLowerCase())) {
-                        	if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
-                            	text = text.replaceAll("@" + keyword.toLowerCase(), ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + ChatColor.GOLD + ChatColor.ITALIC + keyword.toLowerCase());
-                            }else{
                             text = text.replaceAll(Pattern.quote(keyword),
                                     ChatColor.AQUA + keyword + txtColor);
-                            }
                         }
                     }
                 }
@@ -147,23 +145,15 @@ public class ChatListener implements Listener
                 String senderChan = sender.getChatChannel();
                 String toChan = to.getChatChannel();
                 Spigot toSpigot = to.getSpigot();
-                TextComponent sendername = new TextComponent(sender.getChatName());
+                
+                
+                TextComponent sendername;
                 String addon = "";
                 if(to.getIsStaff()){
-                if(sender.getTotalBans() != 0){
-                	addon += "\n" + ChatColor.DARK_GRAY + "Bans: " + sender.getTotalBans();
+                	sendername = sender.getChatNameStaff();
+                }else{
+                	sendername = sender.getChatName();
                 }
-                if(sender.getTotalKicks() != 0){
-            		addon += "\n" + ChatColor.GRAY + "Kicks: " + sender.getTotalKicks();
-                }
-                if(sender.getTotalHards() != 0){
-            		addon += "\n" + ChatColor.DARK_GRAY + "Hard-Warns: " + sender.getTotalHards();
-                }
-                if(sender.getTotalSofts() != 0){
-            		addon += "\n" + ChatColor.GRAY + "Soft-Warns " + sender.getTotalSofts();
-                }
-                }
-                sendername.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(sender.getRank().getName(plugin) + addon).create()));
                 if (senderChan.equalsIgnoreCase(toChan) ||
                     to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
 
@@ -191,27 +181,32 @@ public class ChatListener implements Listener
                         }
                     }
                 }
-
+                
+                
+                
                 if (text.contains(to.getRealName()) &&
                     "GLOBAL".equalsIgnoreCase(senderChan) &&
                     !"GLOBAL".equalsIgnoreCase(toChan)) {
 
-                    to.sendMessage(ChatColor.BLUE +
+                    to.sendMessage(plugin.buildTC(ChatColor.BLUE +
                         "You were mentioned in GLOBAL by " + sender.getNameColor() +
-                        sender.getChatName());
+                        sender.getChatName()));
                 }
+                /*
+                 * if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
+                            	text = text.replaceAll("@" + keyword.toLowerCase(), ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + ChatColor.GOLD + ChatColor.ITALIC + keyword.toLowerCase());
+                            }
+                 */
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-        TextComponent sendername = new TextComponent(sender.getChatName());
-        sendername.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(sender.getRank().getName(plugin)).create()));
+        
         if (event.isWebChat()) {
             Tregmine.LOGGER.info(channel + " (" + sender.getChatName() + ") " + event.getMessage());
         } else {
             Tregmine.LOGGER.info(channel + " <" + sender.getChatName() + "> " + event.getMessage());
         }
-
         try (IContext ctx = plugin.createContext()) {
             ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertChatMessage(sender, channel, event.getMessage());

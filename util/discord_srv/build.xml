@@ -41,18 +41,18 @@
         <delete dir="${build}"/>
     </target>
 
-    <target name="jar" depends="compile">
-        <jar destfile="${ant.project.name}.jar" basedir="${build}">
+    <target name="create" depends="compile">
+        <jar destfile="tregmine_discord_unshaded.jar" basedir="${build}">
             <manifest>
                 <attribute name="Class-Path" value="tregmine.jar" />
             </manifest>
         </jar>
     </target>
 
-    <target name="final" depends="jar">
-      <zip destfile="out.jar">
+    <target name="jar" depends="create">
+      <zip destfile="tregmine_discord.jar">
           <zipgroupfileset dir="lib" includes="*.jar"/>
-          <zipgroupfileset dir="./" includes="${ant.project.name}.jar"/>
+          <zipgroupfileset dir="./" includes="tregmine_discord_unshaded.jar"/>
       </zip>
     </target>
 

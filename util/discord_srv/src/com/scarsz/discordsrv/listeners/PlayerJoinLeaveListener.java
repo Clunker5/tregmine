@@ -64,7 +64,10 @@ public class PlayerJoinLeaveListener implements Listener {
         // No quit message, user shouldn't have one from permission
         if (Bukkit.getPluginManager().isPluginEnabled("VanishNoPacket") && event.getPlayer().hasPermission("vanish.silentquit")) return;
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        TregminePlayer player = plugin.getPlayerOffline(event.getPlayer().getName());
+        if(player == null){
+        	DiscordSRV.sendMessage(DiscordSRV.chatChannel, event.getPlayer().getName() + " left the game; Additionally, DiscordSRV encountered a null exception when trying to get the players Tregmine profile.");
+        }
         if(player.hasFlag(Flags.INVISIBLE)){
         	return;
         }

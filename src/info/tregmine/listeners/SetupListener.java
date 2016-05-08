@@ -24,6 +24,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class SetupListener implements Listener
 {
@@ -51,14 +52,16 @@ public class SetupListener implements Listener
 
         Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " is a new player!");
 
-        player.sendMessage(ChatColor.YELLOW + "Welcome to Tregmine!");
-        player.sendMessage(ChatColor.YELLOW + "This is an age restricted server. " +
+        player.sendStringMessage(ChatColor.YELLOW + "Welcome to Tregmine!");
+        player.sendStringMessage(ChatColor.YELLOW + "This is an age restricted server. " +
                 "Please confirm that you are 13 years or older by typing \"yes\". " +
                 "If you are younger than 13, please leave this server, or " +
                 "type \"no\" to quit.");
-        player.sendMessage(ChatColor.YELLOW + "You will not be able to talk " +
+        player.sendStringMessage(ChatColor.YELLOW + "You will not be able to talk " +
                 "to other players until you've verified your age.");
-        player.sendMessage(ChatColor.RED + "Are you 13 years or older?");
+        TextComponent msg = new TextComponent(ChatColor.RED + "" + ChatColor.UNDERLINE + "Are you 13 years or older?");
+        msg.setHoverEvent(this.plugin.buildHover(ChatColor.AQUA + "Because we are a " + ChatColor.GOLD + "COPPA" + ChatColor.AQUA + " compliant server, we must enforce the age requirement."));
+        player.sendMessage(msg);
     }
 
     @EventHandler
@@ -72,14 +75,14 @@ public class SetupListener implements Listener
         event.setCancelled(true);
 
         String text = event.getMessage();
-        player.sendMessage(text);
+        player.sendStringMessage(text);
 
         Tregmine.LOGGER.info("[SETUP] <" + player.getChatName() + "> " + text);
 
         try (IContext ctx = plugin.createContext()) {
             Server server = plugin.getServer();
             if ("yes".equalsIgnoreCase(text)) {
-                player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine " +
+                player.sendStringMessage(ChatColor.GREEN + "You have now joined Tregmine " +
                         "and can talk with other players! Say Hi! :)");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setRank(Rank.TOURIST);
@@ -96,12 +99,12 @@ public class SetupListener implements Listener
                 MentorCommand.findMentor(plugin, player);
             }
             else if ("no".equalsIgnoreCase(text)) {
-                player.sendMessage(ChatColor.YELLOW + "Unfortunately Tregmine has an " +
-                        "age limit of 13 years and older. Please come back after " +
-                        "your 13th birthday! :)");
+                player.sendStringMessage(ChatColor.YELLOW + "Unfortunately Tregmine has an " +
+                        "age limit of 13 years and older. Your account has been flagged as a child.");
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setFlag(TregminePlayer.Flags.CHILD);
+                this.plugin.broadcast(this.plugin.buildTC(player.getChatName() + " is a child; Please be aware when sending messages."));
                 player.setRank(Rank.TOURIST);
 
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -111,7 +114,7 @@ public class SetupListener implements Listener
                         " has been marked as a child.");
             }
             else {
-                player.sendMessage(ChatColor.RED + "Please say \"yes\" or \"no\". " +
+                player.sendStringMessage(ChatColor.RED + "Please say \"yes\" or \"no\". " +
                         "You will not be able to talk to other players until you do.");
             }
         } catch (DAOException e) {

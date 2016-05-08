@@ -171,7 +171,7 @@ public class BookShelfListener implements Listener
         
         if (event.isSigning()) {
             BookMeta meta = event.getNewBookMeta();
-            meta.setAuthor(player.getChatName());
+            meta.setAuthor(player.getChatNameNoHover());
             event.setNewBookMeta(meta);
         }
     }

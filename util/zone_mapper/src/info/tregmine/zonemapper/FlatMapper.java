@@ -312,4 +312,9 @@ public class FlatMapper implements IMapper
         return index % 2 == 0 ? (byte)(arr[index/2] & 0x0F) :
                                 (byte)((arr[index/2] >> 4) & 0x0F);
     }
+
+	@Override
+	public void close() throws Exception {
+		
+	}
 }

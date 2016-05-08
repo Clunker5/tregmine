@@ -55,10 +55,11 @@ public class ReplyCommand extends AbstractCommand
                 if (candidates.size() != 1) {
                     player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of "
                                     + lastMessenger);
+                    return true;
                 }
 
                 TregminePlayer receivingPlayer = candidates.get(0);
-
+                
                 boolean ignored;
                 ignored = playerDAO.doesIgnore(receivingPlayer, player);
 

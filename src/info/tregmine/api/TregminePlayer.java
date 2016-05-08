@@ -19,6 +19,10 @@ import info.tregmine.api.returns.BooleanStringReturn;
 import info.tregmine.database.*;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class TregminePlayer extends PlayerDelegate
 {
@@ -130,6 +134,9 @@ public class TregminePlayer extends PlayerDelegate
     
     // Death states
     private String deathcause = "";
+    
+    //Nickname stats
+    private boolean hasNick = false;
 
     private Tregmine plugin;
 
@@ -167,18 +174,54 @@ public class TregminePlayer extends PlayerDelegate
     
     public void setCurseWarned(boolean a) {this.CurseWarned = a;}
     public boolean isCurseWarned(){return this.CurseWarned;}
-
-    public String getChatName()
+    
+    public String getChatNameNoHover()
     {
-        return name;
+    	return name;
+    }
+
+    public TextComponent getChatName()
+    {
+    	TextComponent returns = new TextComponent(this.name);
+    	if(this.hasFlag(Flags.CHILD)){
+		returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD").create()));
+    	}else{
+        returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(this.getRank().getName(plugin)).create()));
+    	}
+        return returns;
     }
     
-    //Intercept sent messages for miscellaneous purposes
-    public void sendMessage(String v){
-    	String text = v;
-    	this.sendTrueMsg(v, plugin);
-    	
+    public TextComponent getChatNameStaff(){
+    	TextComponent returns = new TextComponent(this.name);
+    	String addon = "";
+    	if(this.getTotalBans() != 0){
+        	addon += "\n" + ChatColor.DARK_GRAY + "Bans: " + this.getTotalBans();
+        }
+        if(this.getTotalKicks() != 0){
+    		addon += "\n" + ChatColor.GRAY + "Kicks: " + this.getTotalKicks();
+        }
+        if(this.getTotalHards() != 0){
+    		addon += "\n" + ChatColor.DARK_GRAY + "Hard-Warns: " + this.getTotalHards();
+        }
+        if(this.getTotalSofts() != 0){
+    		addon += "\n" + ChatColor.GRAY + "Soft-Warns " + this.getTotalSofts();
+        }
+        if(this.hasFlag(Flags.CHILD)){
+		returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD" + addon).create()));
+    	}else{
+        returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(this.getRank().getName(plugin) + addon).create()));
+    	}
+        return returns;
     }
+    
+    public void setHasNick(boolean a){
+    	this.hasNick = a;
+    }
+    
+    public boolean hasNick(){
+    	return this.hasNick;
+    }
+    
     public boolean getAfkKick(){
     	return AfkKick;
     }
@@ -242,7 +285,8 @@ public class TregminePlayer extends PlayerDelegate
     		this.lastOnlineActivity = 0;
     		this.setSilentAfk(false);
     		this.kickPlayer(this.plugin, reason);
-    		Bukkit.broadcastMessage(ChatColor.GRAY + this.getChatName() + " was kicked for idling longer than" + autoafkkick / 60 + " minutes.");
+    		BaseComponent message = new TextComponent(ChatColor.GRAY + "" + this.getChatName() + " was kicked for idling longer than" + autoafkkick / 60 + " minutes.");
+    		plugin.broadcast(message);
     	}
     	long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
     	if(!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()){
@@ -261,7 +305,7 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
         
         if (getDelegate() != null) {
-            if (getChatName().length() > 16) {
+            if (getChatNameNoHover().length() > 16) {
                 setPlayerListName(name.substring(0, 15));
             }
             else {
@@ -341,10 +385,10 @@ public class TregminePlayer extends PlayerDelegate
         badges.put(badge, badgeLevel);
 
         if (badgeLevel == 1) {
-            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " +
+            sendStringMessage(ChatColor.GOLD + "Congratulations! You've been awarded " +
                     "the " + badge.getName() + " badge of honor: " + message);
         } else {
-            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " +
+            sendStringMessage(ChatColor.GOLD + "Congratulations! You've been awarded " +
                     "the level " + ChatColor.GREEN + badgeLevel + " " +
                     ChatColor.GOLD + badge.getName() + "badge of honor: " + message);
         }
@@ -626,13 +670,13 @@ public class TregminePlayer extends PlayerDelegate
             if (!message.equalsIgnoreCase("") && message != null) {
                 playSound(getLocation(), notif.getSound(), 2F, 1F);
                 if(sendMsg){
-                sendMessage(message);
+                sendStringMessage(message);
                 }
             }
         } else {
             if (!message.equalsIgnoreCase("") && message != null) {
             	if(sendMsg){
-                    sendMessage(message);
+                    sendStringMessage(message);
                     }
             } else {
                 throw new IllegalArgumentException("Parameters can not both be null");
@@ -652,7 +696,7 @@ public class TregminePlayer extends PlayerDelegate
         Entity v = getVehicle();
         if (v != null && v instanceof Horse) {
             if (!worldNamePortions[0].equalsIgnoreCase("world")) {
-                this.sendMessage(ChatColor.RED + "Can not teleport with horse! Sorry!");
+                this.sendStringMessage(ChatColor.RED + "Can not teleport with horse! Sorry!");
                 return;
             }
 
@@ -772,7 +816,7 @@ public class TregminePlayer extends PlayerDelegate
         if (this.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
             if (punish == true) {
                 this.setFireTicks(100);
-                this.sendMessage(ChatColor.RED + "["
+                this.sendStringMessage(ChatColor.RED + "["
                         + zone.getName() + "] "
                         + "You are hardwarned!");
             }
@@ -797,7 +841,7 @@ public class TregminePlayer extends PlayerDelegate
         if (perm == Zone.Permission.Banned) { // If banned then return false
             if (punish == true) {
                 this.setFireTicks(100);
-                this.sendMessage(ChatColor.RED + "["
+                this.sendStringMessage(ChatColor.RED + "["
                         + zone.getName() + "] "
                         + "You are banned from this zone!");
             }
@@ -835,7 +879,7 @@ public class TregminePlayer extends PlayerDelegate
             if (lot != null && zone != null) { // Lot Error Message
 
                 this.setFireTicks(100);
-                this.sendMessage(ChatColor.RED + "["
+                this.sendStringMessage(ChatColor.RED + "["
                         + currentZone.getName() + "] "
                         + "You do not have sufficient permissions in "
                         + lot.getName() + ".");
@@ -843,7 +887,7 @@ public class TregminePlayer extends PlayerDelegate
             } else { // Zone Error Message
 
                 this.setFireTicks(100);
-                this.sendMessage(ChatColor.RED + "["
+                this.sendStringMessage(ChatColor.RED + "["
                         + currentZone.getName() + "] "
                         + "You do not have sufficient permissions in "
                         + zone.getName() + ".");
@@ -1008,15 +1052,17 @@ public class TregminePlayer extends PlayerDelegate
     	}
     	if(value == true){
     		this.afk = true;
-    		Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + BLUE + " is now afk.");
-			String oldname = getChatName();
+    		BaseComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + BLUE + " is now afk.");
+    		this.plugin.broadcast(message);
+			String oldname = getChatNameNoHover();
 			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
     	}else if(value == false){
     		final long currentTime = System.currentTimeMillis();
     		this.setLastOnlineActivity(currentTime);
     		this.afk = false;
 			setTemporaryChatName(getNameColor() + getRealName());
-			Bukkit.broadcastMessage(ITALIC + getChatName() + RESET + GREEN + " is no longer afk.");
+			BaseComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + GREEN + " is no longer afk.");
+			this.plugin.broadcast(message);
     	}else{
     		return;
     	}
@@ -1027,7 +1073,7 @@ public class TregminePlayer extends PlayerDelegate
     	}
     	if(value == true){
     		this.afk = true;
-			String oldname = getChatName();
+			String oldname = getChatNameNoHover();
 			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
     	}else if(value == false){
     		final long currentTime = System.currentTimeMillis();

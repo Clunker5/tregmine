@@ -7,6 +7,8 @@ import info.tregmine.api.lore.Created;
 import info.tregmine.database.*;
 import info.tregmine.database.IInventoryDAO.ChangeType;
 import info.tregmine.database.IInventoryDAO.InventoryType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class InventoryListener implements Listener
         TregminePlayer player = plugin.getPlayer((Player)event.getPlayer());
         if(player.getGameMode() == GameMode.CREATIVE && (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld())){
         	event.setCancelled(true);
-        	player.sendMessage(ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
+        	player.sendStringMessage(ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
         	return;
         }
         Inventory inv = event.getInventory();
@@ -98,7 +100,7 @@ public class InventoryListener implements Listener
                 }
 
                 if (others > 0 && player.hasFlag(TregminePlayer.Flags.CHEST_LOG)) {
-                    player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
+                    player.sendStringMessage(ChatColor.YELLOW + "Last accessed by:");
                     SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
                     int i = 0;
                     for (InventoryAccess access : accessLog) {
@@ -107,8 +109,8 @@ public class InventoryListener implements Listener
                                 break;
                             }
                             TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
-                            player.sendMessage(p.getChatName() + ChatColor.YELLOW + " on " +
-                                dfm.format(access.getTimestamp()) + ".");
+                            TextComponent message = new TextComponent(p.getChatName() + "" + ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
+                            player.sendMessage(message);
                             i++;
                         }
                     }

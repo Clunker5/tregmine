@@ -11,14 +11,18 @@ import java.util.zip.ZipException;
 
 import com.mojang.nbt.*;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.bukkit.Material;
 
 public class Main
 {
+	
+	private static BasicDataSource ds;
+	
     public static void main(String[] args)
     throws Exception
     {
-        if (args.length != 2) {
+        if (args.length < 2) {
             printUsageAndExit();
         }
 
@@ -38,13 +42,39 @@ public class Main
             System.out.println("Please set environment var TREGMINE_SECRET");
             return;
         }
+//        if (connectionString == null) {
+//            System.out.println("Please set environment var TREGMINE_CONNSTR");
+//            return;
+//        }
+        Properties props = new Properties();
+        props.put("user", "root");
+        props.put("password", "PeBbLeS1029!");
+        //Connection conn = DriverManager.getConnection(connectionString, props);
 
-        String connectionString = System.getenv("TREGMINE_CONNSTR");
-        if (connectionString == null) {
-            System.out.println("Please set environment var TREGMINE_CONNSTR");
-            return;
+        try {
+            Class.forName(driver).newInstance();
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (InstantiationException ex) {
+            throw new RuntimeException(ex);
         }
-        Connection conn = DriverManager.getConnection(connectionString);
+
+        String user = "server";
+        String password = "b2TZmdrvp63q35Nm";
+        String url = "jdbc:mysql://localhost:3306/tregmine_db?autoReconnect=true";
+
+        ds = new BasicDataSource();
+        ds.setDriverClassName(driver);
+        ds.setUrl(url);
+        ds.setUsername(user);
+        ds.setPassword(password);
+        ds.setMaxActive(5);
+        ds.setMaxIdle(5);
+        ds.setDefaultAutoCommit(true);
+        
+        Connection conn = ds.getConnection();
 
         File baseFolder;
         try {
@@ -95,9 +125,15 @@ public class Main
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        int start = 0;
+        if(args.length == 3){
+        	start = Integer.parseInt(args[2]);
+        }
         IMapper mapper = new FlatMapper(baseFolder, mapFolder, secret);
         for (Zone zone : zones) {
+        	if(zone.id < start){
+        		continue;
+        	}
             System.out.printf("Processing %s (%d)\n", zone.name, zone.id);
             mapper.map(zone);
         }

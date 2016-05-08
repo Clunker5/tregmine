@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player.Spigot;
 
 import info.tregmine.Tregmine;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public abstract class PlayerDelegate
@@ -1210,10 +1211,17 @@ public abstract class PlayerDelegate
 
     }
 
-    public void sendMessage(java.lang.String[] p0)
+    public void sendMessage(BaseComponent p0)
     {
         checkState();
-        delegate.sendMessage(p0);
+        Spigot spig = this.getSpigot();
+        spig.sendMessage(p0);
+        //delegate.sendMessage(p0);
+    }
+    
+    public void sendStringMessage(String a){
+    	checkState();
+    	delegate.sendMessage(a);
     }
     
     public void sendSpigotMessage(TextComponent a){

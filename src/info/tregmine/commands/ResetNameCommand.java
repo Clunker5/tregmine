@@ -15,7 +15,7 @@ public class ResetNameCommand  extends AbstractCommand{
     {
         player.setTemporaryChatName(player.getNameColor() + player.getName());
         player.sendMessage(ChatColor.GREEN + "Your name has been reset.");
-
+        player.setHasNick(false);
         return true;
     }
 }

@@ -9,6 +9,9 @@ import org.bukkit.GameMode;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer.Flags;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Timer implements Runnable{
 	Tregmine t;
@@ -46,11 +49,16 @@ public class Timer implements Runnable{
 					if(player.hasFlag(Flags.FLY_ENABLED) || player.isFlying()){
 						player.removeFlag(Flags.FLY_ENABLED);
 						player.setFlying(false);
-						player.sendMessage(ChatColor.RED + "You're not allowed to fly in this world, your flying has been disabled.");
+						TextComponent message = new TextComponent(ChatColor.RED + "You're not allowed to fly in this world, your flying has been disabled.");
+						message.setHoverEvent(t.buildHover(ChatColor.RED + "The vanilla world has opted to remove flying."));
+						player.sendMessage(message);
 					}
 					if(player.getGameMode() != GameMode.SURVIVAL){
 						player.setGameMode(GameMode.SURVIVAL);
-						player.sendMessage(ChatColor.RED + "You must be in survival mode in this world.");
+						TextComponent message = t.buildTC(ChatColor.RED + "You must be in survival mode in this world.");
+						message.setHoverEvent(t.buildHover(ChatColor.RED + "The vanilla world has opted to remove survival mode."));
+						player.sendMessage(message);
+						
 					}
 				}
 				player.checkActivity();

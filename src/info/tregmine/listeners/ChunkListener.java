@@ -49,14 +49,14 @@ public class ChunkListener implements Listener
 
             // If previous chunk was new, and this one is old
             if (player.getNewChunk() && !event.isNewChunk()) {
-                player.sendMessage(ChatColor.RED + "You just loaded an already existing chunk!");
+                player.sendStringMessage(ChatColor.RED + "You just loaded an already existing chunk!");
                 player.setNewChunk(false);
                 continue;
             }
             
             // If previou chunk was old, and this one is new
             if (!player.getNewChunk() && event.isNewChunk()) {
-                player.sendMessage(ChatColor.GREEN + "You just loaded a new chunk!");
+                player.sendStringMessage(ChatColor.GREEN + "You just loaded a new chunk!");
                 player.setNewChunk(true);
                 continue;
             }

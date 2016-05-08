@@ -11,6 +11,8 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class PlayerLookupListener implements Listener
                 }
 
                 SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
-                player.sendMessage(ChatColor.RED +
+                player.sendStringMessage(ChatColor.RED +
                         "[" + i.getAction() + "]" +
                         i.getMessage() + " - Valid until: " +
                         dfm.format(i.getTimestamp()));
@@ -71,12 +73,12 @@ public class PlayerLookupListener implements Listener
                 for (TregminePlayer to : plugin.getOnlinePlayers()) {
                     if (to.getRank().canSeeHiddenInfo()) {
                         if (player.getCountry() != null) {
-                            to.sendMessage(
-                            		"Welcome " + player.getChatName() + " from " + player.getCountry() + "!");
-                            to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                            to.sendMessage(new TextComponent(
+                            		"Welcome " + player.getChatNameStaff() + " from " + player.getCountry() + "!"));
+                            to.sendMessage(this.plugin.buildTC(player.getChatNameStaff() + "" + ChatColor.DARK_AQUA + " is invisible!"));
                         } else {
-                            to.sendMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
-                            to.sendMessage(player.getChatName() + ChatColor.DARK_AQUA + " is invisible!");
+                            to.sendMessage(this.plugin.buildTC(ChatColor.DARK_AQUA + "Welcome " + player.getChatNameStaff()));
+                            to.sendMessage(this.plugin.buildTC(player.getChatNameStaff() + "" + ChatColor.DARK_AQUA + " is invisible!"));
                         }
                     }
                 }

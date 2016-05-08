@@ -69,7 +69,7 @@ public class DBContextFactory implements IContextFactory
             // connection is correctly closed
             Connection conn = ds.getConnection();
             try (Statement stmt = conn.createStatement()) {
-                stmt.execute("SET NAMES latin1");
+                stmt.execute("SET NAMES utf8_general_ci");
             }
 
             return new DBContext(new LoggingConnection(conn, queryLog), plugin);
