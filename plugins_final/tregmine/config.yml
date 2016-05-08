@@ -1,9 +1,8 @@
 general:
   motd:
-    lineoneauto: true
     lineone: "#6#nTregmine!"
-    #Line two will always be used, line one will only be used if lineoneauto is set to false.
     linetwo: "#c#lTregmine?"
+    maxplayers: 64
   life-log: true
   servername: Tregmine
   afk:
@@ -39,6 +38,9 @@ worlds:
 # Set enabled to true to run the worlds API
 # Vanilla world is independent of the worlds API - Enable it to disable most of Tregmines features in a specialized vanilla world.
   vanillaworld: false
+  special:
+    # Before setting to true, move world to world_2 as with the nether and end
+    newworld: false
   enabled: false
   names:
 #Rank Chat Colors

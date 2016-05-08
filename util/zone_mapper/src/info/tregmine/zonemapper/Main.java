@@ -47,8 +47,8 @@ public class Main
 //            return;
 //        }
         Properties props = new Properties();
-        props.put("user", "root");
-        props.put("password", "PeBbLeS1029!");
+//        props.put("user", "root");
+//        props.put("password", "PeBbLeS1029!");
         //Connection conn = DriverManager.getConnection(connectionString, props);
 
         try {
