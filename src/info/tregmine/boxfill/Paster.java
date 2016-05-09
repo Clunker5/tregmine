@@ -99,7 +99,7 @@ public class Paster implements Runnable
 
         if (!partialWork) {
             undoHistory.set(player, undo);
-            player.sendMessage(ChatColor.DARK_AQUA + "Paste is finished.");
+            player.sendStringMessage(ChatColor.DARK_AQUA + "Paste is finished.");
             scheduler.cancelTask(taskId);
         }
     }

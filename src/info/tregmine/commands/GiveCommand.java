@@ -20,9 +20,9 @@ public class GiveCommand extends AbstractCommand
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
-    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+    	if(player.isInVanillaWorld()){
     		player.setFireTicks(30);
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (args.length == 0) {
@@ -43,7 +43,7 @@ public class GiveCommand extends AbstractCommand
 
         TregminePlayer target = candidates.get(0);
         if(target.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-        	player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        	player.sendStringMessage(ChatColor.RED + "That player is in the vanilla world!");
         	return true;
         }
         int materialId;
@@ -54,7 +54,7 @@ public class GiveCommand extends AbstractCommand
                 Material material = Material.getMaterial(param);
                 materialId = material.getId();
             } catch (NullPointerException ne) {
-                player.sendMessage(DARK_AQUA
+                player.sendStringMessage(DARK_AQUA
                         + "/item <id|name> <amount> <data>.");
                 return true;
             }
@@ -93,9 +93,9 @@ public class GiveCommand extends AbstractCommand
         Material material = Material.getMaterial(materialId);
         String materialName = material.toString();
 
-        player.sendMessage("You gave " + amount + " of " + DARK_AQUA
+        player.sendStringMessage("You gave " + amount + " of " + DARK_AQUA
                 + materialName.toLowerCase() + " to " + target.getName() + ".");
-        target.sendMessage(YELLOW
+        target.sendStringMessage(YELLOW
                 + "You were gifted by the gods. Look in your " + "inventory!");
         LOGGER.info(player.getName() + " SPAWNED " + amount + ":"
                 + materialName + "=>" + target.getName());

@@ -44,20 +44,20 @@ public class SellCommand extends AbstractCommand implements Listener
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	if(this.tregmine.getConfig().getBoolean("general.economy.minefortregs")){
-    		player.sendMessage(ChatColor.RED + "The server has decided to use the mining system to obtain tregs.");
+    		player.sendStringMessage(ChatColor.RED + "The server has decided to use the mining system to obtain tregs.");
     		return true;
     	}
         if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
-            player.sendMessage(RED + "A trade is already in progress!");
+            player.sendStringMessage(RED + "A trade is already in progress!");
             return true;
         }
 
         Server server = tregmine.getServer();
 
         player.setChatState(TregminePlayer.ChatState.SELL);
-        player.sendMessage(YELLOW + "[Sell] Welcome to the Federal Reserve " +
+        player.sendStringMessage(YELLOW + "[Sell] Welcome to the Federal Reserve " +
                 " of Tregmine!");
-        player.sendMessage(YELLOW + "[Sell] What do you want to sell?");
+        player.sendStringMessage(YELLOW + "[Sell] What do you want to sell?");
 
         Inventory inv = server.createInventory(null, InventoryType.CHEST);
         player.openInventory(inv);
@@ -77,7 +77,7 @@ public class SellCommand extends AbstractCommand implements Listener
             return;
         }
 
-        player.sendMessage("[Sell] You are offering: ");
+        player.sendStringMessage("[Sell] You are offering: ");
 
         int bid = 0;
         try (IContext ctx = tregmine.createContext()) {
@@ -98,13 +98,13 @@ public class SellCommand extends AbstractCommand implements Listener
                 ItemMeta meta = stack.getItemMeta();
                 List<String> lore = meta.getLore();
                 if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SURVIVAL")){
-                	player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items. The value for the " + material.toString() + " has been set to 0.");
+                	player.sendStringMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items. The value for the " + material.toString() + " has been set to 0.");
                 	amount = 0;
                 	value = 0;
                 }
                 }
                 
-                player.sendMessage(YELLOW + "[Sell] " + material.toString() +
+                player.sendStringMessage(YELLOW + "[Sell] " + material.toString() +
                         ": " + amount + " * " + value + " = " + (amount*value) +
                         " tregs");
 
@@ -114,7 +114,7 @@ public class SellCommand extends AbstractCommand implements Listener
             throw new RuntimeException(e);
         }
 
-        player.sendMessage(YELLOW + "[Sell] The Federal Reserve of Tregmine " +
+        player.sendStringMessage(YELLOW + "[Sell] The Federal Reserve of Tregmine " +
                 "bids " + bid + " tregs. Type \"accept\" to sell, \"change\" " +
                 "to modify your offering, and \"quit\" to abort.");
     }
@@ -151,7 +151,7 @@ public class SellCommand extends AbstractCommand implements Listener
                 playerInv.addItem(stack);
             }
 
-            player.sendMessage(YELLOW + "[Sell] Trade ended.");
+            player.sendStringMessage(YELLOW + "[Sell] Trade ended.");
         }
         else if ("change".equalsIgnoreCase(text)) {
             player.openInventory(inventory);
@@ -187,7 +187,7 @@ public class SellCommand extends AbstractCommand implements Listener
                                                    bid);
                 tradeDAO.insertStacks(tradeId, contents);
 
-                player.sendMessage(YELLOW + "[Sell] " + bid
+                player.sendStringMessage(YELLOW + "[Sell] " + bid
                         + " tregs was " + "added to your wallet!");
             } catch (DAOException e) {
                 throw new RuntimeException(e);
@@ -207,7 +207,7 @@ public class SellCommand extends AbstractCommand implements Listener
         
         player.setChatState(TregminePlayer.ChatState.CHAT);
         inventories.remove(player);
-		player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
+		player.sendStringMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
     }
 
 	@EventHandler
@@ -218,6 +218,6 @@ public class SellCommand extends AbstractCommand implements Listener
 
 		player.setChatState(TregminePlayer.ChatState.CHAT);
 		inventories.remove(player);
-		player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
+		player.sendStringMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
 	}
 }

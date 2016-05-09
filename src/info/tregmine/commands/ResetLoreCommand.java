@@ -21,18 +21,18 @@ public class ResetLoreCommand extends AbstractCommand{
 	}
 	public boolean handlePlayer(TregminePlayer sender, String[] args){
 		if(sender.getWorld().getName().equalsIgnoreCase("vanilla") || sender.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
-		if(!sender.isOp() && sender.getName() != "im_not_eric"){
-			sender.sendMessage("%warning%" + ChatColor.RED + "You do not have permission to reset lores.");
+		if(!sender.getIsAdmin()){
+			sender.sendStringMessage(ChatColor.RED + "You do not have permission to reset lores.");
 			return true;
 		}
 		player = sender;
 		Inventory inv = player.getInventory();
 		ItemStack[] contents = inv.getContents();
 		for(ItemStack item : contents){
-			if (item != null) {
+			if (item != null && item.hasItemMeta()) {
                 ItemMeta meta = item.getItemMeta();
                 List<String> lore = new ArrayList<String>();
                 lore.add("Flags reset by: " + player.getName());
@@ -40,7 +40,7 @@ public class ResetLoreCommand extends AbstractCommand{
                 item.setItemMeta(meta);
             }
 		}
-		player.sendMessage(ChatColor.GOLD + "Any items that had a lore have lost their lore.");
+		player.sendStringMessage(ChatColor.GOLD + "Any items that had a lore have lost their lore.");
 		return true;
 	}
 }

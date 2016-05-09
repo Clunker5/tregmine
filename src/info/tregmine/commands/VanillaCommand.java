@@ -14,11 +14,11 @@ public class VanillaCommand extends AbstractCommand{
 	}
 	public boolean handlePlayer(TregminePlayer sender, String[] args){
 		if(plugin.getVanillaWorld() == null){
-			sender.sendMessage(ChatColor.RED + "The server does not have the vanilla world enabled.");
+			sender.sendStringMessage(ChatColor.RED + "The server does not have the vanilla world enabled.");
 			return true;
 		}
 		if(!sender.getRank().canGoToVanilla()){
-			sender.sendMessage(ChatColor.RED + "You have to be a donator to go to the vanilla world!");
+			sender.sendStringMessage(ChatColor.RED + "You have to be a donator to go to the vanilla world!");
 			return true;
 		}
 		if(sender.getWorld() == plugin.getServer().getWorld("world")){
@@ -26,7 +26,7 @@ public class VanillaCommand extends AbstractCommand{
 		}else if(sender.getWorld() == plugin.getVanillaWorld()){
 			sender.gotoWorld(sender.getPlayer(), plugin.getServer().getWorld("world").getSpawnLocation(), ChatColor.YELLOW + "Thanks for riding the Starlight Express!", ChatColor.RED + "The Starlight Express is having some issues, try again later.");
 		}else{
-			sender.sendMessage(ChatColor.RED + "You cannot switch between worlds if you are not in WORLD or VANILLA");
+			sender.sendStringMessage(ChatColor.RED + "You cannot switch between worlds if you are not in WORLD or VANILLA");
 		}
 		return true;
 	}

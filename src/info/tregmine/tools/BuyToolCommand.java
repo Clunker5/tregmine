@@ -30,7 +30,7 @@ public class BuyToolCommand extends AbstractCommand{
 		ItemMeta itemmeta = inhand.getItemMeta();
 		List<String> lore = itemmeta.getLore();
 		if(lore.get(0).contains("CREATIVE") || lore.get(0).contains("SPAWNED")){
-			player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items.");
+			player.sendStringMessage(ChatColor.RED + "" + ChatColor.BOLD + "You CANNOT sell illegal items.");
 			return true;
 		}
 		}
@@ -38,7 +38,7 @@ public class BuyToolCommand extends AbstractCommand{
 		if(amount >= total){
 			ItemStack tool = null;
 			if(args.length == 0){
-				player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
+				player.sendStringMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
 				return true;
 			}
 			switch (args[0]) {
@@ -50,23 +50,23 @@ public class BuyToolCommand extends AbstractCommand{
                 break;
 			}
 			if(tool == null){
-					player.sendMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
+					player.sendStringMessage(ChatColor.RED + "Usage: /buytool <lumber/vein>");
 					return true;
 			}
 			HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(tool);
 	        
 	        if (failedItems.size() > 0) {
-	            player.sendMessage(ChatColor.RED + "You have a full inventory, Can't add tool!");
+	            player.sendStringMessage(ChatColor.RED + "You have a full inventory, Can't add tool!");
 	            return true;
 	        }
 	        inhand.setAmount(amount - total);
 			player.setItemInHand(inhand);
-			player.sendMessage(total + " " + price.name() + " have been taken from your inventory.");
-			player.sendMessage(ChatColor.GREEN + "Spawned in tool token successfully!");
+			player.sendStringMessage(total + " " + price.name() + " have been taken from your inventory.");
+			player.sendStringMessage(ChatColor.GREEN + "Spawned in tool token successfully!");
 			return true;
 	        
 		}else{
-			player.sendMessage(ChatColor.RED + "You need " + total + " " + price.name() + " in your hand to use this command.");
+			player.sendStringMessage(ChatColor.RED + "You need " + total + " " + price.name() + " in your hand to use this command.");
 		}
 		return true;
 	}

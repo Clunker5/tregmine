@@ -13,11 +13,11 @@ public class LockdownCommand extends AbstractCommand{
 	}
 	public boolean handlePlayer(TregminePlayer player, String[] args){
 		if(!player.getIsAdmin()){
-			player.sendMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
+			player.sendStringMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
 			return true;
 		}
 		if(args.length == 0){
-			player.sendMessage(ChatColor.RED + "You must specify <on|off>");
+			player.sendStringMessage(ChatColor.RED + "You must specify <on|off>");
 			return true;
 		}
 		System.out.println(args[0]);

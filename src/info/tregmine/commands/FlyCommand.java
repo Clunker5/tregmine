@@ -21,19 +21,19 @@ public class FlyCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canFly()) return false;
 
         if ( player.hasFlag(TregminePlayer.Flags.FLY_ENABLED) ) {
-            player.sendMessage(ChatColor.YELLOW +
+            player.sendStringMessage(ChatColor.YELLOW +
                     "Flying Disabled!");
             player.removeFlag(TregminePlayer.Flags.FLY_ENABLED);
             player.setAllowFlight(false);
         } else {
 
-            player.sendMessage(ChatColor.YELLOW +
+            player.sendStringMessage(ChatColor.YELLOW +
                     "Flying Enabled!");
             player.setFlag(TregminePlayer.Flags.FLY_ENABLED);
             player.setAllowFlight(true);

@@ -26,7 +26,7 @@ public class AfkCommand extends AbstractCommand{
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
 		if(args.length != 0){
-			player.sendMessage(RED + "This command does not need arguments.");
+			player.sendStringMessage(RED + "This command does not need arguments.");
 			
 			return true;
 		}

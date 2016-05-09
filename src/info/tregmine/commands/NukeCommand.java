@@ -28,7 +28,7 @@ public class NukeCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canNuke()) {
@@ -44,9 +44,9 @@ public class NukeCommand extends AbstractCommand
             distance = 160;
         }
 
-        player.sendMessage(YELLOW + "You nuked all mobs within " + distance
+        player.sendStringMessage(YELLOW + "You nuked all mobs within " + distance
                 + " meters");
-        player.sendMessage(YELLOW
+        player.sendStringMessage(YELLOW
                 + "say /nuke <number> to select a larger or smaller distance");
 
         Location loc = player.getLocation();

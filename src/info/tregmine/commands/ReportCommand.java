@@ -36,7 +36,7 @@ public class ReportCommand extends AbstractCommand
         }
 
         if (args.length < 2) {
-            player.sendMessage(DARK_AQUA + "/report <player> <message>");
+            player.sendStringMessage(DARK_AQUA + "/report <player> <message>");
             return true;
         }
 
@@ -64,7 +64,7 @@ public class ReportCommand extends AbstractCommand
             throw new RuntimeException(e);
         }
 
-        player.sendMessage(YELLOW + "Report filed.");
+        player.sendStringMessage(YELLOW + "Report filed.");
 
         return true;
     }

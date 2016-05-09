@@ -10,6 +10,7 @@ import info.tregmine.api.PlayerReport;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class KickCommand extends AbstractCommand
 {
@@ -39,7 +40,7 @@ public class KickCommand extends AbstractCommand
         }
 
         if (args.length < 2) {
-            player.sendMessage(DARK_AQUA + "/kick <player> <message>");
+            player.sendStringMessage(DARK_AQUA + "/kick <player> <message>");
             return true;
         }
 
@@ -54,8 +55,8 @@ public class KickCommand extends AbstractCommand
         }
 
         TregminePlayer victim = candidates.get(0);
-        server.broadcastMessage(player.getChatName() + AQUA + " kicked "
-                + victim.getChatName() + AQUA + ": " + message);
+        plugin.broadcast(new TextComponent(player.getChatName() + "" + AQUA + " kicked "
+                + victim.getChatName() + AQUA + ": " + message));
         LOGGER.info(victim.getName() + " kicked by " + player.getName());
         victim.kickPlayer(plugin, "kicked by " + player.getName() + ": " + message);
 

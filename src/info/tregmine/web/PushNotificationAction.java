@@ -85,7 +85,7 @@ public class PushNotificationAction implements WebHandler.Action
             issuer = tregmine.getPlayerOffline(pushfrom);
         }
         if(type == "mail"){
-        	subject.sendMessage("%internal%" + ChatColor.AQUA + "You got an e-mail from " + issuer.getName() + "! Type /mail read to view it.");
+        	subject.sendStringMessage(ChatColor.AQUA + "You got an e-mail from " + issuer.getName() + "! Type /mail read to view it.");
         	subject.sendNotification(Notification.MAIL);
             Tregmine.LOGGER.info(subject.getChatName() + " got an e-mail from " + issuer.getName());
         }

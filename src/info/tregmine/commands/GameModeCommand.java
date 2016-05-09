@@ -28,7 +28,7 @@ public class GameModeCommand extends AbstractCommand
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
     		player.setFireTicks(30);
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canUseCreative()) {
@@ -40,7 +40,7 @@ public class GameModeCommand extends AbstractCommand
         	player.getInventory().clear();
         	additional = "Your inventory has been cleared.";
         }
-        player.sendMessage(YELLOW + "You are now in "
+        player.sendStringMessage(YELLOW + "You are now in "
                 + mode.toString().toLowerCase() + " mode. " + additional);
 
         if (player.getRank().canFly()) {

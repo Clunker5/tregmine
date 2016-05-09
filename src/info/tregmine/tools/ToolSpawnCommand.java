@@ -20,14 +20,14 @@ public class ToolSpawnCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String args[])
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canSpawnTools()){ 
-        	player.sendMessage(ChatColor.RED + "You cheapskate! If you want to get a tool, you need 16 diamond blocks!");
+        	player.sendStringMessage(ChatColor.RED + "You cheapskate! If you want to get a tool, you need 16 diamond blocks!");
         	return true;}
         if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
+            player.sendStringMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
             return true;
         }
         
@@ -49,18 +49,18 @@ public class ToolSpawnCommand extends AbstractCommand
         }
         
         if (tool == null) {
-            player.sendMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
+            player.sendStringMessage(ChatColor.RED + "Usage: /tool <lumber/vein/gravity>");
             return true;
         }
         
         HashMap<Integer, ItemStack> failedItems = player.getInventory().addItem(tool);
         
         if (failedItems.size() > 0) {
-            player.sendMessage(ChatColor.RED + "You have a full inventory, Can't add tool!");
+            player.sendStringMessage(ChatColor.RED + "You have a full inventory, Can't add tool!");
             return true;
         }
         
-        player.sendMessage(ChatColor.GREEN + "Spawned in tool token successfully!");
+        player.sendStringMessage(ChatColor.GREEN + "Spawned in tool token successfully!");
         return true;
     }
 }

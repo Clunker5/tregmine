@@ -36,7 +36,7 @@ public class SpawnCommand extends AbstractCommand
 			    oldLocation.getBlockY() != player.getLocation().getBlockY() ||
 			    oldLocation.getBlockZ() != player.getLocation().getBlockZ()) {
 
-				player.sendMessage(ChatColor.RED + "Teleportation stopped! You moved...");
+				player.sendStringMessage(ChatColor.RED + "Teleportation stopped! You moved...");
 				return;
 			}
 			player.teleportWithHorse(loc);

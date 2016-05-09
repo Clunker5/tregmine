@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
-import org.kitteh.tag.PlayerReceiveNameTagEvent;
+import org.mcsg.double0negative.tabapi.TabAPI;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.*;
@@ -261,7 +261,6 @@ public class TregminePlayerListener implements Listener
             return;
         }
         Rank rank = player.getRank();
-        
         if(player.getIsStaff()){
         	List<StaffNews> news = null;
         	try (IContext ctx = this.plugin.createContext()) {
@@ -406,23 +405,16 @@ public class TregminePlayerListener implements Listener
         if (player.isOnline()) {
             ScoreboardManager manager = Bukkit.getScoreboardManager();
             Scoreboard board = manager.getNewScoreboard();
+            
 
             Objective objective = board.registerNewObjective("1", "2");
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            objective.setDisplayName("" + ChatColor.DARK_RED + ""
+            objective.setDisplayName("" + ChatColor.AQUA + ""
                     + ChatColor.BOLD + "Welcome to Tregmine!");
 
-            try (IContext ctx = plugin.createContext()) {
-                IWalletDAO walletDAO = ctx.getWalletDAO();
-
-                // Get a fake offline player
-                String desc = ChatColor.BLACK + "Your Balance:";
-                Score score = objective.getScore(Bukkit.getOfflinePlayer(desc));
-                score.setScore((int)walletDAO.balance(player));
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-
+            // Get a fake offline player
+            String desc = ChatColor.GREEN + "";
+            Score score = objective.getScore(Bukkit.getOfflinePlayer(desc));
             try {
                 player.setScoreboard(board);
 
@@ -452,7 +444,6 @@ public class TregminePlayerListener implements Listener
             player.awardBadgeLevel(Badge.PHILANTROPIST,
                     "For being a Tregmine donator!");
         }
-        plugin.setTotalPlayersJoined(plugin.getTotalPlayersJoined() + 1);
     }
 
     @EventHandler
@@ -674,17 +665,6 @@ public class TregminePlayerListener implements Listener
     public void onPlayerKick(PlayerKickEvent event)
     {
         event.setLeaveMessage(null);
-    }
-
-    @EventHandler
-    public void onNameTag(PlayerReceiveNameTagEvent event)
-    {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player == null) {
-            return;
-        }
-
-        event.setTag(player.getChatNameNoHover());
     }
 
     private void activateGuardians()

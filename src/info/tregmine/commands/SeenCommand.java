@@ -10,6 +10,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class SeenCommand extends AbstractCommand
 {
@@ -27,7 +28,7 @@ public class SeenCommand extends AbstractCommand
 
         TregminePlayer target = tregmine.getPlayerOffline(args[0]);
         if (target == null) {
-            player.sendMessage(ChatColor.RED + "Could not find player: "
+            player.sendStringMessage(ChatColor.RED + "Could not find player: "
                     + ChatColor.YELLOW + args[0]);
             return true;
         }
@@ -37,11 +38,11 @@ public class SeenCommand extends AbstractCommand
             Date seen = logDAO.getLastSeen(target);
 
             if (seen != null) {
-                player.sendMessage(ChatColor.GREEN + target.getChatName() + ChatColor.YELLOW
-                        + " was last seen on: " + ChatColor.AQUA + seen);
+                player.sendMessage(new TextComponent(ChatColor.GREEN + "" + target.getChatName() + ChatColor.YELLOW
+                        + " was last seen on: " + ChatColor.AQUA + seen));
             } else {
-                player.sendMessage(ChatColor.GREEN + target.getChatName() + ChatColor.YELLOW
-                        + " hasn't been seen for a while.");
+                player.sendMessage(new TextComponent(ChatColor.GREEN + "" + target.getChatName() + ChatColor.YELLOW
+                        + " hasn't been seen for a while."));
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);

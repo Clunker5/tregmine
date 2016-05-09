@@ -8,6 +8,7 @@ import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class BlessCommand extends AbstractCommand
 {
@@ -28,13 +29,13 @@ public class BlessCommand extends AbstractCommand
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
         if (candidates.size() != 1) {
-            player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found");
+            player.sendNotification(Notification.COMMAND_FAIL, new TextComponent(ChatColor.RED + "No player found"));
             return false;
         }
 
         TregminePlayer candidate = candidates.get(0);
-        player.sendMessage(AQUA + "You will bless following " + "blocks to "
-                + candidate.getChatName() + ".");
+        player.sendMessage(new TextComponent(AQUA + "You will bless following " + "blocks to "
+                + candidate.getChatName() + "."));
         player.setBlessTarget(candidate.getId());
 
         return true;

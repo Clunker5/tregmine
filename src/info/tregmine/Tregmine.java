@@ -85,6 +85,11 @@ public class Tregmine extends JavaPlugin
     private World world2nether = null;
     private World world2end = null;
     private boolean secondaryworld = false;
+    
+    //Statistics
+    private int onlineGuards = 0;
+    private int onlineJuniors = 0;
+    private int onlineSeniors = 0;
 
     @Override
     public void onLoad()
@@ -566,6 +571,32 @@ public class Tregmine extends JavaPlugin
     
     public TextComponent buildTC(String string){
     	return new TextComponent(string);
+    }
+    
+    public int getOnlineGuardians(){
+    	return this.onlineGuards;
+    }
+    
+    public int getOnlineJuniors(){
+    	return this.onlineJuniors;
+    }
+    
+    public int getOnlineSeniors(){
+    	return this.onlineSeniors;
+    }
+    
+    public void updateStatistics(){
+    	int g = 0;
+    	int j = 0;
+    	int s = 0;
+    	for(TregminePlayer yeezy : this.getOnlinePlayers()){
+    		if(yeezy.getRank() == Rank.GUARDIAN) g++;
+    		else if(yeezy.getRank() == Rank.JUNIOR_ADMIN) j++;
+    		else if(yeezy.getRank() == Rank.SENIOR_ADMIN) s++;
+    	}
+    	this.onlineGuards = g;
+    	this.onlineJuniors = j;
+    	this.onlineSeniors = s;
     }
 
     // ============================================================================

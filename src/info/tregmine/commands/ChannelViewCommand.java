@@ -24,7 +24,7 @@ public class ChannelViewCommand extends AbstractCommand
         }
         
         if (args.length < 1) {
-            player.sendMessage("Your ChannelView is set to " +
+            player.sendStringMessage("Your ChannelView is set to " +
                 (player.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");
             return true;
         }
@@ -33,18 +33,18 @@ public class ChannelViewCommand extends AbstractCommand
 
         if ("on".equalsIgnoreCase(state)) {
             player.setFlag(TregminePlayer.Flags.CHANNEL_VIEW);
-            player.sendMessage(AQUA + "Channel View display is now turned on for you.");
+            player.sendStringMessage(AQUA + "Channel View display is now turned on for you.");
         }
         else if ("off".equalsIgnoreCase(state)) {
             player.removeFlag(TregminePlayer.Flags.CHANNEL_VIEW);
-            player.sendMessage(AQUA + "Channel View display is now turned off for you.");
+            player.sendStringMessage(AQUA + "Channel View display is now turned off for you.");
         }
         else if ("status".equalsIgnoreCase(state)) {
-            player.sendMessage("Your Channel View display is set to " +
+            player.sendStringMessage("Your Channel View display is set to " +
                 (player.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");
         }
         else {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "The commands are /channelview on, /channelview off and /channelview status.");
         }
 

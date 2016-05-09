@@ -20,7 +20,7 @@ public class InventoryLogCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length < 1) {
-            player.sendMessage("Your InventoryLog is set to " +
+            player.sendStringMessage("Your InventoryLog is set to " +
                 (player.hasFlag(TregminePlayer.Flags.CHEST_LOG) ? "on" : "off") + ".");
             return true;
         }
@@ -29,18 +29,18 @@ public class InventoryLogCommand extends AbstractCommand
 
         if ("on".equalsIgnoreCase(state)) {
             player.setFlag(TregminePlayer.Flags.CHEST_LOG);
-            player.sendMessage(AQUA + "Inventory Log display is now turned on for you.");
+            player.sendStringMessage(AQUA + "Inventory Log display is now turned on for you.");
         }
         else if ("off".equalsIgnoreCase(state)) {
             player.removeFlag(TregminePlayer.Flags.CHEST_LOG);
-            player.sendMessage(AQUA + "Inventory Log display is now turned off for you.");
+            player.sendStringMessage(AQUA + "Inventory Log display is now turned off for you.");
         }
         else if ("status".equalsIgnoreCase(state)) {
-            player.sendMessage("Your Inventory Log display is set to " +
+            player.sendStringMessage("Your Inventory Log display is set to " +
                 (player.hasFlag(TregminePlayer.Flags.CHEST_LOG) ? "on" : "off") + ".");
         }
         else {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "The commands are /invlog on, /invlog off and /invlog status.");
         }
 

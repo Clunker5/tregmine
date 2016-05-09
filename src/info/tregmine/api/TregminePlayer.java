@@ -191,6 +191,18 @@ public class TregminePlayer extends PlayerDelegate
         return returns;
     }
     
+    public boolean canVS(){
+    	return this.getRank().canViewPlayerStats();
+    }
+    
+    public TextComponent decideVS(TregminePlayer canthey){
+    	if(canthey.canVS()){
+    		return this.getChatNameStaff();
+    	}else{
+    		return this.getChatName();
+    	}
+    }
+    
     public TextComponent getChatNameStaff(){
     	TextComponent returns = new TextComponent(this.name);
     	String addon = "";
@@ -229,7 +241,7 @@ public class TregminePlayer extends PlayerDelegate
     	this.AfkKick = a;
     }
     public boolean isInVanillaWorld(){
-    	if(this.getWorld().getName().toLowerCase().contains("vanilla")){
+    	if(this.getWorld() == this.plugin.getVanillaWorld() || this.getWorld() == this.plugin.getVanillaNether() || this.getWorld() == this.plugin.getVanillaEnd()){
     		return true;
     	}else{
     		return false;
@@ -660,27 +672,13 @@ public class TregminePlayer extends PlayerDelegate
      * @param message - The message to send the player with the notification
      * @throws IllegalArgumentException if both notif and message are null
      */
-    public void sendNotification(Notification notif, String message)
+    public void sendNotification(Notification notif, TextComponent message)
     {
-    	boolean sendMsg = true;
-    	if(message == "%cancel%"){
-    		sendMsg = false;
-    	}
         if (notif != null && notif != Notification.NONE) {
-            if (!message.equalsIgnoreCase("") && message != null) {
                 playSound(getLocation(), notif.getSound(), 2F, 1F);
-                if(sendMsg){
-                sendStringMessage(message);
-                }
-            }
+                sendMessage(message);
         } else {
-            if (!message.equalsIgnoreCase("") && message != null) {
-            	if(sendMsg){
-                    sendStringMessage(message);
-                    }
-            } else {
-                throw new IllegalArgumentException("Parameters can not both be null");
-            }
+                sendMessage(message);
         }
     }
     public void sendNotification(Notification notif)

@@ -82,9 +82,9 @@ public class SupportCommand extends AbstractCommand
                             "Message: " + text + "\n"
                     );
             Transport.send(message);
-            p.sendMessage(ChatColor.GREEN + "Help request sent, we will get back to you ASAP :)");
+            p.sendStringMessage(ChatColor.GREEN + "Help request sent, we will get back to you ASAP :)");
         } catch (MessagingException e) {
-            p.sendMessage(ChatColor.RED + "Error sending message, please try again.");
+            p.sendStringMessage(ChatColor.RED + "Error sending message, please try again.");
             throw new RuntimeException(e);
         }
     }

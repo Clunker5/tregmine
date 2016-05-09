@@ -22,7 +22,7 @@ public class HideCommand extends AbstractCommand
         if (!player.getRank().canSeeHiddenInfo()) return true;
         
         if (args.length < 1) {
-            player.sendMessage("Your Announcement prevention is set to " +
+            player.sendStringMessage("Your Announcement prevention is set to " +
                 (player.hasFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT) ? "on" : "off") + ".");
             return true;
         }
@@ -31,18 +31,18 @@ public class HideCommand extends AbstractCommand
 
         if ("on".equalsIgnoreCase(state)) {
             player.setFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT);
-            player.sendMessage(AQUA + "Announcement prevention is now turned on for you.");
+            player.sendStringMessage(AQUA + "Announcement prevention is now turned on for you.");
         }
         else if ("off".equalsIgnoreCase(state)) {
             player.removeFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT);
-            player.sendMessage(AQUA + "Announcement prevention is now turned off for you.");
+            player.sendStringMessage(AQUA + "Announcement prevention is now turned off for you.");
         }
         else if ("status".equalsIgnoreCase(state)) {
-            player.sendMessage("Your Announcement prevention display is set to " +
+            player.sendStringMessage("Your Announcement prevention display is set to " +
                 (player.hasFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT) ? "on" : "off") + ".");
         }
         else {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "The commands are /hide on, /hide off and /hide status.");
         }
 

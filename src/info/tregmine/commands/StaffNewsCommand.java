@@ -39,7 +39,7 @@ public class StaffNewsCommand extends AbstractCommand{
 
 public boolean handlePlayer(TregminePlayer player, String[] args){
 	if(!player.getIsStaff()){
-		player.sendMessage(ChatColor.RED + "Nothing is so urgent that you need to put it on the news board!");
+		player.sendStringMessage(ChatColor.RED + "Nothing is so urgent that you need to put it on the news board!");
 		return true;
 	}
 	
@@ -54,7 +54,7 @@ public boolean handlePlayer(TregminePlayer player, String[] args){
     } catch (DAOException e) {
         throw new RuntimeException(e);
     }
-	player.sendMessage(BLUE + "I DID IT STFU");
+	player.sendStringMessage(BLUE + "Your message has been added to the news board.");
 	return true;
 }
 

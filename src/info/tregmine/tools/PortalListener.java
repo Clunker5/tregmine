@@ -142,13 +142,13 @@ public class PortalListener implements Listener
         GravityTask task = gravityTasks.get(player);
 
         if (!player.hasBlockPermission(task.getDstLocation(), false)) {
-            player.sendMessage(ChatColor.RED + "Can not place it here!");
+            player.sendStringMessage(ChatColor.RED + "Can not place it here!");
             return;
         }
 
         gravityTasks.remove(player);
         task.cancel();
-        player.sendMessage(ChatColor.GREEN + "Successfully dropped block!");
+        player.sendStringMessage(ChatColor.GREEN + "Successfully dropped block!");
     }
 
     @SuppressWarnings("deprecation")
@@ -180,35 +180,35 @@ public class PortalListener implements Listener
         if (!block.getType().isSolid() ||
             disallowedBlocks.contains(block.getType())) {
 
-            p.sendMessage(ChatColor.RED + "Denied use of Gravity Gun!");
-            p.sendMessage(ChatColor.AQUA + "Try using blocks!");
+            p.sendStringMessage(ChatColor.RED + "Denied use of Gravity Gun!");
+            p.sendStringMessage(ChatColor.AQUA + "Try using blocks!");
 
             return;
         }
 
         if (plugin.getBlessedBlocks().containsKey(block.getLocation())) {
-            p.sendMessage(ChatColor.RED + "This block is blessed!");
+            p.sendStringMessage(ChatColor.RED + "This block is blessed!");
             return;
         }
 
         if (plugin.getFishyBlocks().containsKey(block.getLocation())) {
-            p.sendMessage(ChatColor.RED + "Can not move fishyblocks!");
+            p.sendStringMessage(ChatColor.RED + "Can not move fishyblocks!");
             return;
         }
 
         if (!p.hasBlockPermission(block.getLocation(), false)) {
-            p.sendMessage(ChatColor.RED + "Can not pick up from here!");
+            p.sendStringMessage(ChatColor.RED + "Can not pick up from here!");
             return;
         }
 
         if (gravityTasks.containsKey(p)) {
-            p.sendMessage(ChatColor.RED + "You are already carrying a block, You're not that strong!");
+            p.sendStringMessage(ChatColor.RED + "You are already carrying a block, You're not that strong!");
             return;
         }
 
         String[] durability = lore.get(1).split("/");
         if (Integer.parseInt(durability[0]) == 0) {
-            p.sendMessage(ChatColor.RED + "You are out of durability, Try repairing!");
+            p.sendStringMessage(ChatColor.RED + "You are out of durability, Try repairing!");
             return;
         }
 

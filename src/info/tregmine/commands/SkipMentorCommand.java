@@ -29,25 +29,25 @@ public class SkipMentorCommand extends AbstractCommand{
 	
 	public boolean handlePlayer(TregminePlayer player, String[] args){
 		if(player.getRank() != Rank.SENIOR_ADMIN && player.getRank() != Rank.JUNIOR_ADMIN && player.getRank() != Rank.GUARDIAN){
-			player.sendMessage(RED + "You are not authorized to perform that command. All online administrators have been notified.");
+			player.sendStringMessage(RED + "You are not authorized to perform that command. All online administrators have been notified.");
 			return true;
 		}
 		if(args.length != 1){
 			//Player didn't enter two arguments, terminate.
-			player.sendMessage(ChatColor.RED + "Invalid arguments! Use /skipmentor <player>");
+			player.sendStringMessage(ChatColor.RED + "Invalid arguments! Use /skipmentor <player>");
 			return true;
 		}
 		//The checks have finished, perform the command
 		String possibleuser = args[0];
 		List<TregminePlayer> candidate = tregmine.matchPlayer(possibleuser);
 		if(candidate.size() != 1){
-			player.sendMessage(RED + "The player specified was not found. Please try again.");
+			player.sendStringMessage(RED + "The player specified was not found. Please try again.");
 			return true;
 		}
 		TregminePlayer user = candidate.get(0);
 		if(user.hasFlag(Flags.HARDWARNED)){
 			//Players with a hardwarn cannot be promoted using this command. They must be promoted manually.
-			player.sendMessage(RED + "The player specified has been hardwarned and is not eligible for promotion.");
+			player.sendStringMessage(RED + "The player specified has been hardwarned and is not eligible for promotion.");
 			return true;
 		}
 		if(user.getRank() == Rank.UNVERIFIED || user.getRank() == Rank.TOURIST){
@@ -62,10 +62,9 @@ public class SkipMentorCommand extends AbstractCommand{
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-		Bukkit.broadcastMessage(GREEN + user.getChatName() + " has skipped mentoring.");
 		return true;
 		}else{
-			player.sendMessage(RED + "This player cannot skip mentoring because their rank does not qualify them.");
+			player.sendStringMessage(RED + "This player cannot skip mentoring because their rank does not qualify them.");
 			return true;
 		}
 		

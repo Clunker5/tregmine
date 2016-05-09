@@ -14,6 +14,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class MsgCommand extends AbstractCommand
 {
@@ -51,7 +52,7 @@ public class MsgCommand extends AbstractCommand
                 List<TregminePlayer> candidates = tregmine.matchPlayer(possiblePlayer);
                 
                 if (candidates.size() != 1) {
-                    player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of " + possiblePlayer);
+                    player.sendNotification(Notification.COMMAND_FAIL, new TextComponent(ChatColor.RED + "No player found by the name of " + possiblePlayer));
                 }
                 
                 TregminePlayer receivingPlayer = candidates.get(0);
@@ -65,13 +66,13 @@ public class MsgCommand extends AbstractCommand
                 // Show message in senders terminal, as long as the recipient isn't
                 // invisible, to prevent /msg from giving away hidden players presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage("%CHAT%" + GREEN + "(to) " + receivingPlayer.getChatName()
-                            + GREEN + ": " + message);
+                    player.sendMessage(new TextComponent(GREEN + "(to) " + receivingPlayer.decideVS(player)
+                            + GREEN + ": " + message));
                 }
                 receivingPlayer.setLastMessenger(player.getName());
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE, "%CHAT%" + GREEN + "(msg) " + player.getChatName() + GREEN
-                        + ": " + message);
+                receivingPlayer.sendNotification(Notification.MESSAGE, new TextComponent(GREEN + "(msg) " + player.getChatName() + GREEN
+                        + ": " + message));
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);

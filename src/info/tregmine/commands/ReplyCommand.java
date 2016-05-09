@@ -14,6 +14,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ReplyCommand extends AbstractCommand
 {
@@ -43,7 +44,7 @@ public class ReplyCommand extends AbstractCommand
             String lastMessenger = player.getLastMessenger();
 
             if (lastMessenger == null || lastMessenger.equalsIgnoreCase("")) {
-                player.sendMessage(ChatColor.RED + "No one has messaged you");
+                player.sendStringMessage(ChatColor.RED + "No one has messaged you");
                 return true;
             }
 
@@ -53,8 +54,8 @@ public class ReplyCommand extends AbstractCommand
                 List<TregminePlayer> candidates = tregmine.matchPlayer(lastMessenger);
 
                 if (candidates.size() != 1) {
-                    player.sendNotification(Notification.COMMAND_FAIL, ChatColor.RED + "No player found by the name of "
-                                    + lastMessenger);
+                    player.sendNotification(Notification.COMMAND_FAIL, new TextComponent(ChatColor.RED + "No player found by the name of "
+                                    + lastMessenger));
                     return true;
                 }
 
@@ -73,22 +74,22 @@ public class ReplyCommand extends AbstractCommand
                 // presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE)
                         || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage(GREEN + "(to) "
+                    player.sendMessage(new TextComponent(GREEN + "(to) "
                             + receivingPlayer.getChatName() + GREEN + ": "
-                            + message);
+                            + message));
                 }
 
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE,GREEN
-                        + "(msg) " + player.getChatName() + GREEN + ": "
-                        + message);
+                receivingPlayer.sendNotification(Notification.MESSAGE,
+                        new TextComponent(GREEN + "(msg) " + player.getChatName() + GREEN + ": "
+                        + message));
                 receivingPlayer.setLastMessenger(player.getName());
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
 
         }else{
-        	player.sendMessage(ChatColor.RED + "You need to type a message!");
+        	player.sendStringMessage(ChatColor.RED + "You need to type a message!");
         }
         return true;
     }

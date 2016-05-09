@@ -23,7 +23,7 @@ public class RegenerateChunkCommand extends AbstractCommand
         	return false;
         }
         if (player.getFillBlock1() == null){
-        	player.sendMessage(ChatColor.RED + "You haven't made a selection! [Wand is the wooden shovel]");
+        	player.sendStringMessage(ChatColor.RED + "You haven't made a selection! [Wand is the wooden shovel]");
         	return true;
         }
 

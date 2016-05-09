@@ -24,13 +24,13 @@ public class PasswordCommand extends AbstractCommand
         String password = args[0];
 
         if (password.length() < 1) {
-            player.sendMessage(RED + "Your password must be at least "
+            player.sendStringMessage(RED + "Your password must be at least "
                     + "6 characters long.");
             return true;
         }
 
         player.setPassword(password);
-        player.sendMessage(YELLOW + "Your password has been changed.");
+        player.sendStringMessage(YELLOW + "Your password has been changed.");
 
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();

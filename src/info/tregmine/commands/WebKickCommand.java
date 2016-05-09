@@ -11,6 +11,7 @@ import info.tregmine.api.PlayerReport;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class WebKickCommand extends AbstractCommand
 {
@@ -38,7 +39,7 @@ public class WebKickCommand extends AbstractCommand
         }
 
         if (args.length < 2) {
-            player.sendMessage(DARK_AQUA + "/webkick <player> <message>");
+            player.sendStringMessage(DARK_AQUA + "/webkick <player> <message>");
             return true;
         }
 
@@ -54,12 +55,12 @@ public class WebKickCommand extends AbstractCommand
 
         WebServer webServer = tregmine.getWebServer();
         if (!webServer.isPlayerOnWeb(victim)) {
-            player.sendMessage(RED + "Player is not on web chat.");
+            player.sendStringMessage(RED + "Player is not on web chat.");
             return true;
         }
 
-        server.broadcastMessage(player.getChatName() + AQUA + " webkicked "
-                + victim.getChatName() + AQUA + ": " + message);
+        tregmine.broadcast(new TextComponent(player.getChatName() + "" + AQUA + " webkicked "
+                + victim.getChatName() + AQUA + ": " + message));
         LOGGER.info(victim.getRealName() + " was webkicked by " + player.getName());
         //victim.kickPlayer("webkicked by " + player.getName() + ": " + message);
         webServer.executeChatAction(new WebServer.KickAction(player, victim, message));

@@ -20,17 +20,17 @@ public class PositionCommand extends AbstractCommand
         Location spawn = player.getWorld().getSpawnLocation();
         double distance = info.tregmine.api.math.MathUtil.calcDistance2d(spawn, loc);
 
-        player.sendMessage(DARK_AQUA + "World: " + WHITE
+        player.sendStringMessage(DARK_AQUA + "World: " + WHITE
                 + player.getWorld().getName());
-        player.sendMessage(DARK_AQUA + "X: " + WHITE + loc.getX() + RED + " ("
+        player.sendStringMessage(DARK_AQUA + "X: " + WHITE + loc.getX() + RED + " ("
                 + loc.getBlockX() + ")");
-        player.sendMessage(DARK_AQUA + "Y: " + WHITE + loc.getY() + RED + " ("
+        player.sendStringMessage(DARK_AQUA + "Y: " + WHITE + loc.getY() + RED + " ("
                 + loc.getBlockY() + ")");
-        player.sendMessage(DARK_AQUA + "Z: " + WHITE + loc.getZ() + RED + " ("
+        player.sendStringMessage(DARK_AQUA + "Z: " + WHITE + loc.getZ() + RED + " ("
                 + loc.getBlockZ() + ")");
-        player.sendMessage(DARK_AQUA + "Yaw: " + WHITE + loc.getYaw());
-        player.sendMessage(DARK_AQUA + "Pitch: " + WHITE + loc.getPitch());
-        player.sendMessage(DARK_AQUA + "Blocks from spawn: " + WHITE + distance);
+        player.sendStringMessage(DARK_AQUA + "Yaw: " + WHITE + loc.getYaw());
+        player.sendStringMessage(DARK_AQUA + "Pitch: " + WHITE + loc.getPitch());
+        player.sendStringMessage(DARK_AQUA + "Blocks from spawn: " + WHITE + distance);
 
         LOGGER.info("World: " + player.getWorld().getName());
         LOGGER.info("X: " + loc.getX() + " (" + loc.getBlockX() + ")");

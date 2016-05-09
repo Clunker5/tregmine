@@ -10,6 +10,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ForceCommand extends AbstractCommand
 {
@@ -25,7 +26,7 @@ public class ForceCommand extends AbstractCommand
             return false;
         }
         if(!player.getRank().canForceChannel()){
-        	player.sendMessage(ChatColor.RED + "You cannot force players into channels.");
+        	player.sendStringMessage(ChatColor.RED + "You cannot force players into channels.");
         	return true;
         }
         String playerPattern = args[0];
@@ -41,22 +42,24 @@ public class ForceCommand extends AbstractCommand
         
         if (toPlayer.hasFlag(TregminePlayer.Flags.FORCESHIELD) &&
                 !player.getRank().canOverrideForceShield()) {
-            toPlayer.sendMessage(ChatColor.AQUA + player.getChatName() + " tried to force you into a channel!");
-            player.sendMessage(ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!");
+            toPlayer.sendMessage(new TextComponent((toPlayer.canVS()) ? ChatColor.AQUA + "" + player.getChatNameStaff() + " tried to force you into a channel!" : ChatColor.AQUA + "" + player.getChatName() + " tried to force you into a channel!"));
+            player.sendMessage(new TextComponent((toPlayer.canVS()) ? ChatColor.AQUA + "Can not force " + toPlayer.getChatNameStaff() + " into a channel!" : ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!"));
             return true;
         }
         String oldChannel = player.getChatChannel();
         player.setChatChannel(channel);
         toPlayer.setChatChannel(channel);
 
-        toPlayer.sendMessage(YELLOW + player.getChatName()
+        toPlayer.sendMessage(new TextComponent((toPlayer.canVS()) ? YELLOW + "" + player.getChatNameStaff()
                 + " forced you into " + "channel " + channel.toUpperCase()
-                + ".");
-        toPlayer.sendMessage(YELLOW
+                + "." : YELLOW + "" + player.getChatName()
+                + " forced you into " + "channel " + channel.toUpperCase()
+                + "."));
+        toPlayer.sendStringMessage(YELLOW
                 + "Write /channel global to switch back to "
                 + "the global chat.");
-        player.sendMessage(YELLOW + "You are now in a forced chat "
-                + channel.toUpperCase() + " with " + toPlayer.getDisplayName()
+        player.sendStringMessage(YELLOW + "You are now in a forced chat "
+                + channel.toUpperCase() + " with " + toPlayer.decideVS(player)
                 + ".");
         LOGGER.info(player.getName() + " FORCED CHAT WITH "
                 + toPlayer.getDisplayName() + " IN CHANNEL "
@@ -64,11 +67,11 @@ public class ForceCommand extends AbstractCommand
         
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
-                        " have left channel " + oldChannel);
+                players.sendMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                        " have left channel " + oldChannel));
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
-                        " have joined channel " + channel);
+                players.sendMessage(new TextComponent(players.decideVS(players) + "" + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                        " have joined channel " + channel));
             }
         }
 

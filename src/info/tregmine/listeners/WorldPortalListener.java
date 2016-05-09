@@ -62,7 +62,7 @@ public class WorldPortalListener implements Listener{
 				player.teleportWithHorse(loc);
 			}else{
 				//This player shouldn't do that
-    			player.sendMessage(this.prefix(true) + "You are in an illegal world for that portal; Please contact an admin for assistance.");
+    			player.sendStringMessage(this.prefix(true) + "You are in an illegal world for that portal; Please contact an admin for assistance.");
 				break;
 			}
     	case END_PORTAL:
@@ -76,7 +76,7 @@ public class WorldPortalListener implements Listener{
     			player.teleportWithHorse(loc);
     		}else{
     			//This player shouldn't do that
-    			player.sendMessage(this.prefix(true) + "You are in an illegal world for that portal; Please contact an admin for assistance.");
+    			player.sendStringMessage(this.prefix(true) + "You are in an illegal world for that portal; Please contact an admin for assistance.");
 				break;
     		}
     	case END_GATEWAY:
@@ -90,7 +90,7 @@ public class WorldPortalListener implements Listener{
     			player.teleportWithHorse(loc);
     		}else{
     			//This player shouldn't do that
-    			player.sendMessage(this.prefix(true) + "You are in an illegal world for that portal; Please contact an admin for assistance.");
+    			player.sendStringMessage(this.prefix(true) + "You are in an illegal world for that portal; Please contact an admin for assistance.");
 				break;
     		}
     	}
@@ -129,11 +129,11 @@ public class WorldPortalListener implements Listener{
 //        if (player.getWorld().getName().equalsIgnoreCase(newWorld.getName())) {
 //			plugin.getServer().getPluginManager().callEvent(new TregminePortalEvent(player.getWorld(), plugin.getServer().getWorld("world"), player));
 //            player.teleportWithHorse(plugin.getServer().getWorld("world").getSpawnLocation());
-//            player.sendMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to main world!");
+//            player.sendStringMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to main world!");
 //        } else {
 //			plugin.getServer().getPluginManager().callEvent(new TregminePortalEvent(player.getWorld(), newWorld, player));
 //            player.teleportWithHorse(newWorld.getSpawnLocation());
-//            player.sendMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to " + worldName + " world!");
+//            player.sendStringMessage(ChatColor.GOLD + "[PORTAL] " + ChatColor.GREEN + "Teleporting to " + worldName + " world!");
 //        }
 //        player.setFireTicks(0);
 //    }

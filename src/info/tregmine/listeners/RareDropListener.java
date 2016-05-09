@@ -5,6 +5,7 @@ import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.lore.Lore.Armor;
 import info.tregmine.api.lore.Lore.Sword;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -289,7 +290,7 @@ public class RareDropListener implements Listener
         stack.setItemMeta(meta);
         player.getInventory().addItem(stack);
         player.sendNotification(Notification.RARE_DROP,
-                ChatColor.GOLD + "Congratulations, you've aquired an item from the rare drop table.");
+                new TextComponent(ChatColor.GOLD + "Congratulations, you've aquired an item from the rare drop table."));
         players.add(player);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,

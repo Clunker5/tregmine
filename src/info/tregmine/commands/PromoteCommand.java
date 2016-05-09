@@ -16,6 +16,7 @@ import info.tregmine.commands.NotifyCommand;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 
 public class PromoteCommand extends AbstractCommand{
@@ -26,13 +27,13 @@ public class PromoteCommand extends AbstractCommand{
 	
 	public boolean handlePlayer(TregminePlayer player, String[] args){
 		if(player.getRank() != Rank.SENIOR_ADMIN && !player.isOp()){
-			player.sendMessage(ChatColor.RED + "You certainly don't have permission to promote players!");
+			player.sendStringMessage(ChatColor.RED + "You certainly don't have permission to promote players!");
 			return true;
 		}
 		//This player is a senior admin and is allowed to promote. Continue.
 		if(args.length != 2){
 			//Player didn't enter two arguments, terminate.
-			player.sendMessage(RED + "You have entered an invalid amount of arguments. Please try again.");
+			player.sendStringMessage(RED + "You have entered an invalid amount of arguments. Please try again.");
 			return true;
 		}
 		//The checks have finished, perform the command
@@ -65,18 +66,18 @@ public class PromoteCommand extends AbstractCommand{
 			rank = Rank.SENIOR_ADMIN;
 			sayrank = "Senior Admin";
 		}else{
-			player.sendMessage(RED + "You have specified an invalid rank. Please try again.");
+			player.sendStringMessage(RED + "You have specified an invalid rank. Please try again.");
 			return true;
 		}
 		List<TregminePlayer> candidate = tregmine.matchPlayer(possibleuser);
 		if(candidate.size() != 1){
-			player.sendMessage(RED + "The player specified was not found. Please try again.");
+			player.sendStringMessage(RED + "The player specified was not found. Please try again.");
 			return true;
 		}
 		TregminePlayer user = candidate.get(0);
 		if(user.hasFlag(Flags.HARDWARNED)){
 			//Players with a hardwarn cannot be promoted using this command. They must be promoted manually.
-			player.sendMessage(RED + "The player specified has been hardwarned and is not eligible for promotion.");
+			player.sendStringMessage(RED + "The player specified has been hardwarned and is not eligible for promotion.");
 			return true;
 		}
 		//Any other errors have now been checked and dealt with. Promote the user.
@@ -93,7 +94,7 @@ public class PromoteCommand extends AbstractCommand{
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-		Bukkit.broadcastMessage("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!");
+		this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!"));
 		return true;
 	}
 	

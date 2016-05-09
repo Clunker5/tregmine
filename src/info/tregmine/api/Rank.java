@@ -29,6 +29,11 @@ public enum Rank
     {
         return this != UNVERIFIED;
     }
+    
+    public boolean canViewPlayerStats()
+    {
+    	return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
 
     public boolean canBuild()
     {

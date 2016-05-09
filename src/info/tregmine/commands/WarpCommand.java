@@ -20,6 +20,7 @@ import info.tregmine.Tregmine;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWarpDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Warp;
@@ -58,7 +59,7 @@ public class WarpCommand extends AbstractCommand
                         new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
             } else {
-                player.sendMessage(RED + "You can't teleport between worlds.");
+                player.sendStringMessage(RED + "You can't teleport between worlds.");
             }
         }
     }
@@ -80,7 +81,7 @@ public class WarpCommand extends AbstractCommand
         String name = args[0];
         if(name.equalsIgnoreCase("irl")){
         	player.kickPlayer(plugin, "Welcome to IRL.");
-        	Bukkit.broadcastMessage(ChatColor.GOLD + player.getChatName() + " found the IRL warp!");
+        	plugin.broadcast(new TextComponent(ChatColor.GOLD + "" + player.getChatName() + " found the IRL warp!"));
         	return true;
         }
 
@@ -89,7 +90,7 @@ public class WarpCommand extends AbstractCommand
             IWarpDAO warpDAO = ctx.getWarpDAO();
             warp = warpDAO.getWarp(name, server);
             if (warp == null) {
-                player.sendMessage("Warp not found!");
+                player.sendStringMessage("Warp not found!");
                 LOGGER.info("[warp failed] + <" + player.getName() + "> "
                         + name + " -- not found");
                 return true;
@@ -105,7 +106,7 @@ public class WarpCommand extends AbstractCommand
 
         World world = warpPoint.getWorld();
 
-        player.sendMessage(AQUA + "You started teleport to " + DARK_GREEN
+        player.sendStringMessage(AQUA + "You started teleport to " + DARK_GREEN
                 + name + AQUA + " in " + BLUE + world.getName() + ".");
         LOGGER.info("[warp] + <" + player.getName() + "> " + name + ":"
                 + world.getName());
@@ -118,7 +119,7 @@ public class WarpCommand extends AbstractCommand
         if (world.isChunkLoaded(chunk)) {
             long delay = player.getRank().getTeleportTimeout();
 
-            player.sendMessage(AQUA + "You must now stand still and wait "
+            player.sendStringMessage(AQUA + "You must now stand still and wait "
                     + (delay/20) + " seconds for the stars to align, "
                     + "allowing you to warp");
 
@@ -128,7 +129,7 @@ public class WarpCommand extends AbstractCommand
 
         }
         else {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "Chunk failed to load. Please try to warp again");
         }
 

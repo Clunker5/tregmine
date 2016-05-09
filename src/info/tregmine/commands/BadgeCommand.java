@@ -20,13 +20,13 @@ public class BadgeCommand extends AbstractCommand
 
             Map<Badge, Integer> badges = player.getBadges();
             if(badges.isEmpty()){
-                player.sendMessage(ChatColor.AQUA +
+                player.sendStringMessage(ChatColor.AQUA +
                         "You currently have no badges!");
                 return true;
             }
 
             for(Map.Entry<Badge, Integer> badge : badges.entrySet()){
-                player.sendMessage(ChatColor.AQUA + badge.getKey().name() +
+                player.sendStringMessage(ChatColor.AQUA + badge.getKey().name() +
                         " - Level " + badge.getValue());
             }
 
@@ -39,19 +39,19 @@ public class BadgeCommand extends AbstractCommand
             TregminePlayer target = tregmine.getPlayerOffline(args[0]);
 
             if (target == null) {
-                player.sendMessage(ChatColor.RED + "Could not find player: "
+                player.sendStringMessage(ChatColor.RED + "Could not find player: "
                         + ChatColor.YELLOW + args[0]);
                 return true;
             }
             Map<Badge, Integer> badges = target.getBadges();
             if(badges.isEmpty()){
-                player.sendMessage(target.getChatName() + ChatColor.AQUA +
+                player.sendStringMessage(target.getChatName() + "" + ChatColor.AQUA +
                         " currently has no badges!");
                 return true;
             }
 
             for(Map.Entry<Badge, Integer> badge : badges.entrySet()){
-                player.sendMessage(ChatColor.AQUA + badge.getKey().name() +
+                player.sendStringMessage(ChatColor.AQUA + badge.getKey().name() +
                         " - Level " + badge.getValue());
             }
 
@@ -61,7 +61,7 @@ public class BadgeCommand extends AbstractCommand
         	}
         	TregminePlayer target = tregmine.getPlayerOffline(args[1]);
         	if(target == null){
-        		player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+        		player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
         		return true;
         	}
         	

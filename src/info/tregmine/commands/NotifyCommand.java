@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public abstract class NotifyCommand extends AbstractCommand
 {
@@ -40,14 +41,14 @@ public abstract class NotifyCommand extends AbstractCommand
 
         // Don't send it twice
         if (!isTarget(player)) {
-            player.sendMessage(getColor() + " + " + player.getChatName() + " " + WHITE + msg);
+            player.sendMessage(new TextComponent(getColor() + " + " + player.decideVS(player) + " " + WHITE + msg));
         }
 
         for (TregminePlayer to : tregmine.getOnlinePlayers()) {
             if (!isTarget(to)) {
                 continue;
             }
-            to.sendMessage(getColor() + " + " + player.getChatName() + " " + WHITE + msg);
+            to.sendMessage(new TextComponent(getColor() + " + " + player.decideVS(to) + " " + WHITE + msg));
         }
 
         return true;

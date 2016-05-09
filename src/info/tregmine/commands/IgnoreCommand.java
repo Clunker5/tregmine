@@ -30,17 +30,17 @@ public class IgnoreCommand extends AbstractCommand
         
         if (args.length == 0 || args.length > 2) {
             
-            player.sendMessage(ChatColor.DARK_RED + "Incorrect Syntax:");
-            player.sendMessage(ChatColor.AQUA + "/ignore <add/remove> player_name (To add/remove someone to ignore)");
-            player.sendMessage(ChatColor.AQUA + "/ignore list (To view everyone your ignoring)");
+            player.sendStringMessage(ChatColor.DARK_RED + "Incorrect Syntax:");
+            player.sendStringMessage(ChatColor.AQUA + "/ignore <add/remove> player_name (To add/remove someone to ignore)");
+            player.sendStringMessage(ChatColor.AQUA + "/ignore list (To view everyone your ignoring)");
             
             return true;
         } else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             
             if (ignoredPeople.size() > 0) {
-                player.sendMessage(ChatColor.AQUA + ignoredPeople.toString().replace(",", " ").replace("[", "").replace("]", ""));
+                player.sendStringMessage(ChatColor.AQUA + ignoredPeople.toString().replace(",", " ").replace("[", "").replace("]", ""));
             } else {
-                player.sendMessage("You are currently not ignoring anyone!");
+                player.sendStringMessage("You are currently not ignoring anyone!");
             }
             
             return true;
@@ -51,7 +51,7 @@ public class IgnoreCommand extends AbstractCommand
             TregminePlayer target = tregmine.getPlayerOffline(args[1]);
             
             if (target == null) {
-                player.sendMessage(ChatColor.RED + "Could not find player: "
+                player.sendStringMessage(ChatColor.RED + "Could not find player: "
                         + ChatColor.YELLOW + args[1]);
                 return true;
             }
@@ -65,9 +65,9 @@ public class IgnoreCommand extends AbstractCommand
             }
             
             if (ignoredPeopleAdmin.size() > 0) {
-                player.sendMessage(ChatColor.AQUA + ignoredPeopleAdmin.toString().replace(",", " ").replace("[", "").replace("]", ""));
+                player.sendStringMessage(ChatColor.AQUA + ignoredPeopleAdmin.toString().replace(",", " ").replace("[", "").replace("]", ""));
             } else {
-                player.sendMessage(target.getDisplayName() + " is not ignoring anyone!");
+                player.sendStringMessage(target.getDisplayName() + " is not ignoring anyone!");
             }
             
             return true;
@@ -76,13 +76,13 @@ public class IgnoreCommand extends AbstractCommand
             TregminePlayer target = tregmine.getPlayerOffline(args[1]);
             
             if (target == null) {
-                player.sendMessage(ChatColor.RED + "Could not find player: "
+                player.sendStringMessage(ChatColor.RED + "Could not find player: "
                         + ChatColor.YELLOW + args[1]);
                 return true;
             }
             
             if (target.getRank().canNotBeIgnored()) {
-                player.sendMessage(ChatColor.RED + "Can not ignore this player!");
+                player.sendStringMessage(ChatColor.RED + "Can not ignore this player!");
                 return true;
             }
             
@@ -91,7 +91,7 @@ public class IgnoreCommand extends AbstractCommand
             try (IContext ctx = tregmine.createContext()) {
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updateIgnore(player, ignoredPeople);
-                player.sendMessage(ChatColor.AQUA + "Now ignoring the player: " + target.getDisplayName());
+                player.sendStringMessage(ChatColor.AQUA + "Now ignoring the player: " + target.getDisplayName());
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
@@ -102,14 +102,14 @@ public class IgnoreCommand extends AbstractCommand
             if (ignoredPeople.contains(args[1])) {
                 ignoredPeople.remove(args[1]);
             } else { 
-                player.sendMessage(ChatColor.DARK_RED + "You are not ignoring: " + args[1] + "!");
+                player.sendStringMessage(ChatColor.DARK_RED + "You are not ignoring: " + args[1] + "!");
                 return true;
             }
             
             try (IContext ctx = tregmine.createContext()) {
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updateIgnore(player, ignoredPeople);
-                player.sendMessage(ChatColor.AQUA + "No longer ignoring the player: " + args[1]);
+                player.sendStringMessage(ChatColor.AQUA + "No longer ignoring the player: " + args[1]);
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }

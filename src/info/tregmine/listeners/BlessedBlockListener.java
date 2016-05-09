@@ -27,6 +27,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IWalletDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class BlessedBlockListener implements Listener
 {
@@ -135,8 +136,8 @@ public class BlessedBlockListener implements Listener
 
             Location loc = block.getLocation();
             if (target.isOnline()) {
-                target.sendNotification(Notification.BLESS, ChatColor.AQUA
-                        + "Your god blessed it in your name!");
+                target.sendNotification(Notification.BLESS, new TextComponent(ChatColor.AQUA
+                        + "Your god blessed it in your name!"));
             }
             player.sendMessage(plugin.buildTC(ChatColor.AQUA + "You blessed for "
                     + target.getChatNameStaff() + "."));

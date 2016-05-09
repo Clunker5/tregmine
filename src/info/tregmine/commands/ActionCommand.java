@@ -14,6 +14,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ActionCommand extends AbstractCommand
 {
@@ -134,7 +135,7 @@ public class ActionCommand extends AbstractCommand
                 msg = msg.replaceAll("#o", ChatColor.ITALIC + "");
             }
             }else{
-            	player.sendMessage(ChatColor.RED + "You are not allowed to use chat colors!");
+            	player.sendStringMessage(ChatColor.RED + "You are not allowed to use chat colors!");
             }
 
         Collection<? extends Player> players = server.getOnlinePlayers();
@@ -153,8 +154,13 @@ public class ActionCommand extends AbstractCommand
             }
             if (player.getRank().canNotBeIgnored()) ignored = false;
             if (ignored == true) continue;
-
-            to.sendMessage("%CHAT%" + "* " + player.getChatName() + " " + WHITE + msg);
+            TextComponent mesg;
+            if(to.getRank().canViewPlayerStats()){
+        	mesg = new TextComponent("* " + player.getChatNameStaff() + " " + WHITE + msg);
+            }else{
+            mesg = new TextComponent("* " + player.getChatName() + " " + WHITE + msg);
+            }
+            to.sendMessage(mesg);
         }
 
         return true;

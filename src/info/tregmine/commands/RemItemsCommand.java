@@ -32,7 +32,7 @@ public class RemItemsCommand extends AbstractCommand
     public boolean handlePlayer(final TregminePlayer p, String[] args)
     {
     	if(p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()){
-			p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			p.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!p.getRank().canRemItems()) {
@@ -40,13 +40,13 @@ public class RemItemsCommand extends AbstractCommand
         }
 
         if (args.length != 1){
-            p.sendMessage(ChatColor.GRAY + "Please type /remitems help");
+            p.sendStringMessage(ChatColor.GRAY + "Please type /remitems help");
             return true;
         }
 
         if(args[0].equalsIgnoreCase("help")){
-            p.sendMessage(ChatColor.GRAY + "/remitems <radius> - Remove all ground items in the specified radius");
-            p.sendMessage(ChatColor.GRAY + "/remitems all - Remove all ground items in your current world.");
+            p.sendStringMessage(ChatColor.GRAY + "/remitems <radius> - Remove all ground items in the specified radius");
+            p.sendStringMessage(ChatColor.GRAY + "/remitems all - Remove all ground items in your current world.");
         }
 
         else if(args[0].equalsIgnoreCase("all")){
@@ -63,7 +63,7 @@ public class RemItemsCommand extends AbstractCommand
                 distance = 500;
             }
 
-            p.sendMessage(ChatColor.GREEN + "Removing all ground items within " + distance + " blocks.");
+            p.sendStringMessage(ChatColor.GREEN + "Removing all ground items within " + distance + " blocks.");
 
             Location loc = p.getLocation();
 
@@ -82,7 +82,7 @@ public class RemItemsCommand extends AbstractCommand
 
                 }
             }
-            p.sendMessage(ChatColor.GOLD + "" + total + ChatColor.GREEN + " items successfully removed!");
+            p.sendStringMessage(ChatColor.GOLD + "" + total + ChatColor.GREEN + " items successfully removed!");
         }
 
         return true;
@@ -106,7 +106,7 @@ public class RemItemsCommand extends AbstractCommand
                 else{
                     if (number == 60){
                         for (Player online : Bukkit.getOnlinePlayers()){
-                            online.sendMessage(p.getChatName() + ChatColor.DARK_RED + " is clearing all ground items in " + ChatColor.GOLD + world.getName());
+                            online.sendMessage(p.getName() + ChatColor.DARK_RED + " is clearing all ground items in " + ChatColor.GOLD + world.getName());
                             online.sendMessage(ChatColor.AQUA + "Please pick up any items you have on the ground.");
                             online.sendMessage(ChatColor.AQUA + "Item removal commencing in 60 seconds.");
                         }
@@ -137,7 +137,7 @@ public class RemItemsCommand extends AbstractCommand
                                 current.remove();
                             }
                         }
-                        p.sendMessage(ChatColor.GOLD + "" + count +  ChatColor.GREEN + " items successfully removed");
+                        p.sendStringMessage(ChatColor.GOLD + "" + count +  ChatColor.GREEN + " items successfully removed");
 
                         for (Player online : Bukkit.getOnlinePlayers()){
                             online.sendMessage(ChatColor.GREEN + "Item removal in " + ChatColor.GOLD 

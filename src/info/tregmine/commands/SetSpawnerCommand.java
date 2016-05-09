@@ -24,7 +24,7 @@ public class SetSpawnerCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canSetSpawners()) {
@@ -32,14 +32,14 @@ public class SetSpawnerCommand extends AbstractCommand
         }
 
         if (args.length != 1) {
-            player.sendMessage(RED + "Type /spawner <mobname> whilst pointing "
+            player.sendStringMessage(RED + "Type /spawner <mobname> whilst pointing "
                     + "at a spawner");
             return false;
         }
 
         Block target = player.getDelegate().getTargetBlock((Set<Material>) null, 15);
         if (!target.getType().equals(Material.MOB_SPAWNER)) {
-            player.sendMessage(RED + "Please point at a spawner.");
+            player.sendStringMessage(RED + "Please point at a spawner.");
             return false;
         }
 
@@ -47,7 +47,7 @@ public class SetSpawnerCommand extends AbstractCommand
         try {
             spawner.setSpawnedType(EntityType.valueOf(args[0].toUpperCase()));
         } catch (Exception error) {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "An error occured. Did you specify a valid "
                     + "mob type?");
         }

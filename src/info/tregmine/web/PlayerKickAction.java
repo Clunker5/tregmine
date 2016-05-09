@@ -18,6 +18,7 @@ import info.tregmine.api.PlayerReport;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class PlayerKickAction implements WebHandler.Action
 {
@@ -90,8 +91,8 @@ public class PlayerKickAction implements WebHandler.Action
                              issuer.getChatName() + " (from web)");
 
         Server server = tregmine.getServer();
-        server.broadcastMessage(issuer.getChatName() + AQUA + " kicked "
-                + subject.getChatName() + AQUA + ": " + message);
+        tregmine.broadcast(new TextComponent(issuer.getChatName() + "" + AQUA + " kicked "
+                + subject.getChatName() + AQUA + ": " + message));
 
         if (status) {
             try (IContext ctx = tregmine.createContext()) {

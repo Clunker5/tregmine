@@ -24,13 +24,13 @@ public class KeywordCommand extends AbstractCommand
         String keyword = args[0];
 
         if (keyword.length() < 1) {
-            player.sendMessage(RED + "Your keyword must be at least "
+            player.sendStringMessage(RED + "Your keyword must be at least "
                     + "1 characters long.");
             return true;
         }
 
         player.setKeyword(keyword.toLowerCase());
-        player.sendMessage(YELLOW
+        player.sendStringMessage(YELLOW
                 + "From now on you can only log in by using ip "
                 + keyword.toLowerCase() + ".mc.rabil.org");
 

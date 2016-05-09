@@ -11,6 +11,7 @@ import info.tregmine.api.PlayerReport;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class WarnCommand extends AbstractCommand
 {
@@ -38,7 +39,7 @@ public class WarnCommand extends AbstractCommand
         }
 
         if (args.length < 3) {
-            player.sendMessage(DARK_AQUA
+            player.sendStringMessage(DARK_AQUA
                     + "/warn <hard|soft> <player> <message>");
             return true;
         }
@@ -55,7 +56,7 @@ public class WarnCommand extends AbstractCommand
             hard = true;
         }
         else {
-            player.sendMessage(DARK_AQUA
+            player.sendStringMessage(DARK_AQUA
                     + "/warn <hard|soft> <player> <message>");
             return true;
         }
@@ -68,13 +69,13 @@ public class WarnCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
         if (hard) {
-            player.sendMessage(GREEN + "You hardwarned " + victim.getChatName() + GREEN + ": "
-                    + message);
+            player.sendMessage(new TextComponent(GREEN + "You hardwarned " + victim.getChatName() + GREEN + ": "
+                    + message));
             LOGGER.info(victim.getName() + " hardwarned by " + player.getName());
         }
         else {
-            player.sendMessage(GREEN + "You warned "
-                    + victim.getChatName() + GREEN + ": " + message);
+            player.sendMessage(new TextComponent(GREEN + "You warned "
+                    + victim.getChatName() + GREEN + ": " + message));
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }
 

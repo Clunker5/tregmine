@@ -28,7 +28,7 @@ public class SetBiomeCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (!player.getRank().canSetBiome()) {
@@ -39,7 +39,7 @@ public class SetBiomeCommand extends AbstractCommand
         Block b2 = player.getFillBlock2();
 
         if (b1 == null || b2 == null) {
-            player.sendMessage(RED + "You must select 2 corners!");
+            player.sendStringMessage(RED + "You must select 2 corners!");
             return true;
         }
 
@@ -62,17 +62,17 @@ public class SetBiomeCommand extends AbstractCommand
         z = minZ;
 
         if (args.length != 1){
-            player.sendMessage(RED + "Correct usage: /setbiome <biome>");
-            player.sendMessage(RED + "For a list of availiable biomes type /setbiome help");
+            player.sendStringMessage(RED + "Correct usage: /setbiome <biome>");
+            player.sendStringMessage(RED + "For a list of availiable biomes type /setbiome help");
             return true;
         }
 
         if(args[0].equalsIgnoreCase("help")){
-            player.sendMessage(GREEN + "Availiable Biomes:");
-            player.sendMessage(GRAY + "Beach, Desert, Desert_Hills, Extreme_Hills, Forest, Forest_Hills");
-            player.sendMessage(GRAY + "Frozen_Ocean, Frozen_River, Hell, Ice_Mountains, Ice_Plains");
-            player.sendMessage(GRAY + "Jungle, Jungle_Hills, Mushroom, Mushroom_Shore, Ocean, Plains");
-            player.sendMessage(GRAY + "River, Sky, Small_Mountains, Swampland, Taiga, Taiga_Hills");
+            player.sendStringMessage(GREEN + "Availiable Biomes:");
+            player.sendStringMessage(GRAY + "Beach, Desert, Desert_Hills, Extreme_Hills, Forest, Forest_Hills");
+            player.sendStringMessage(GRAY + "Frozen_Ocean, Frozen_River, Hell, Ice_Mountains, Ice_Plains");
+            player.sendStringMessage(GRAY + "Jungle, Jungle_Hills, Mushroom, Mushroom_Shore, Ocean, Plains");
+            player.sendStringMessage(GRAY + "River, Sky, Small_Mountains, Swampland, Taiga, Taiga_Hills");
         }
         else{
             try {
@@ -83,11 +83,11 @@ public class SetBiomeCommand extends AbstractCommand
                         world.getBlockAt(x, 0, z).setBiome(Biome.valueOf(args[0].toUpperCase()));
                     }
                 }
-                player.sendMessage(GREEN + "Biome successfully changed to " + args[0].toLowerCase() + "!");
+                player.sendStringMessage(GREEN + "Biome successfully changed to " + args[0].toLowerCase() + "!");
             } catch (Exception error) {
-                player.sendMessage(RED
+                player.sendStringMessage(RED
                         + "An error has occured, Please type " + GRAY + "/setbiome help");
-                player.sendMessage(RED + "for a list of valid biomes.");
+                player.sendStringMessage(RED + "for a list of valid biomes.");
 
             }
         }

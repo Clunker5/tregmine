@@ -41,6 +41,8 @@ worlds:
   special:
     # Before setting to true, move world to world_2 as with the nether and end
     newworld: false
+    worlds:
+      - world_2
   enabled: false
   names:
 #Rank Chat Colors

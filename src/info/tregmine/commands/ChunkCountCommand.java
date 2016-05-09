@@ -25,7 +25,7 @@ public class ChunkCountCommand extends AbstractCommand
         Server server = player.getServer();
         for (World world : server.getWorlds()) {
             int chunks = world.getLoadedChunks().length;
-            player.sendMessage(world.getName() + ": " + chunks + " chunks loaded, autosave: " + world.isAutoSave());
+            player.sendStringMessage(world.getName() + ": " + chunks + " chunks loaded, autosave: " + world.isAutoSave());
         }
 
         return true;

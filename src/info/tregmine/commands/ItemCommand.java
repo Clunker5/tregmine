@@ -26,7 +26,7 @@ public class ItemCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (args.length == 0) {
@@ -46,7 +46,7 @@ public class ItemCommand extends AbstractCommand
                 Material material = Material.getMaterial(param);
                 materialId = material.getId();
             } catch (NullPointerException ne) {
-                player.sendMessage(DARK_AQUA
+                player.sendStringMessage(DARK_AQUA
                         + "/item <id|name> <amount> <data>.");
                 return true;
             }
@@ -88,7 +88,7 @@ public class ItemCommand extends AbstractCommand
 
         Material material = Material.getMaterial(materialId);
         String materialName = material.toString();
-        player.sendMessage("You received " + amount + " of " + DARK_AQUA
+        player.sendStringMessage("You received " + amount + " of " + DARK_AQUA
                 + materialName.toLowerCase() + ".");
         LOGGER.info(player.getName() + " SPAWNED " + amount + ":"
                 + materialName);

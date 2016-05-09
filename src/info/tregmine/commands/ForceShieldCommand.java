@@ -19,7 +19,7 @@ public class ForceShieldCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length < 1) {
-            player.sendMessage("Your forceblock is set to " +
+            player.sendStringMessage("Your forceblock is set to " +
                 (player.hasFlag(TregminePlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
             return true;
         }
@@ -28,18 +28,18 @@ public class ForceShieldCommand extends AbstractCommand
 
         if ("on".equalsIgnoreCase(state)) {
             player.setFlag(TregminePlayer.Flags.FORCESHIELD);
-            player.sendMessage(AQUA + "Channel Forcing is now blocked for you.");
+            player.sendStringMessage(AQUA + "Channel Forcing is now blocked for you.");
         }
         else if ("off".equalsIgnoreCase(state)) {
             player.removeFlag(TregminePlayer.Flags.FORCESHIELD);
-            player.sendMessage(AQUA + "Channel Forcing is now allowed for you.");
+            player.sendStringMessage(AQUA + "Channel Forcing is now allowed for you.");
         }
         else if ("status".equalsIgnoreCase(state)) {
-            player.sendMessage("Your forceblock is set to " +
+            player.sendStringMessage("Your forceblock is set to " +
                 (player.hasFlag(TregminePlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
         }
         else {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "The commands are /forceblock on, /forceblock off and /forceblock status.");
         }
 

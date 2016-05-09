@@ -11,6 +11,7 @@ import info.tregmine.api.PlayerReport;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class BanCommand extends AbstractCommand
 {
@@ -36,11 +37,11 @@ public class BanCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (!player.getRank().canBan()) {
-        	player.sendMessage(DARK_AQUA + "You don't have permission to do that command.");
+        	player.sendStringMessage(DARK_AQUA + "You don't have permission to do that command.");
             return true;
         }
         if (args.length < 2) {
-            player.sendMessage(DARK_AQUA + "/ban <player> <message>");
+            player.sendStringMessage(DARK_AQUA + "/ban <player> <message>");
             return true;
         }
 
@@ -73,9 +74,8 @@ public class BanCommand extends AbstractCommand
             throw new RuntimeException(e);
         }
 
-        Server server = tregmine.getServer();
-        server.broadcastMessage(victim.getChatName() + RED + " was banned by "
-                + player.getChatName() + ".");
+        plugin.broadcast(new TextComponent(victim.getChatName() + "" + RED + " was banned by "
+                + player.getChatName() + "."));
 
         LOGGER.info(victim.getName() + " Banned by " + player.getName());
 

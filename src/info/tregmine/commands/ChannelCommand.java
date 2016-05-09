@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChannelCommand extends AbstractCommand
 {
@@ -24,9 +25,9 @@ public class ChannelCommand extends AbstractCommand
         String channel = args[0];
         String oldchannel = player.getChatChannel();
 
-        player.sendMessage(YELLOW + "You are now talking in channel " + channel
+        player.sendStringMessage(YELLOW + "You are now talking in channel " + channel
                 + ".");
-        player.sendMessage(YELLOW + "Write /channel global to switch to "
+        player.sendStringMessage(YELLOW + "Write /channel global to switch to "
                 + "the global chat.");
         player.setChatChannel(channel);
 
@@ -38,11 +39,21 @@ public class ChannelCommand extends AbstractCommand
         
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldchannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + ChatColor.YELLOW +
-                        " has left channel " + oldchannel);
+            	if(players.getRank().canViewPlayerStats()){
+                	players.sendMessage(new TextComponent(player.getChatNameStaff() + "" + ChatColor.YELLOW +
+                        " has left channel " + oldchannel));
+            	}else{
+            		players.sendMessage(new TextComponent(player.getChatName() + "" + ChatColor.YELLOW +
+                            " has left channel " + oldchannel));
+            	}
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(player.getChatName() + ChatColor.YELLOW +
-                        " has joined channel " + channel);
+                if(players.getRank().canViewPlayerStats()){
+                	players.sendMessage(new TextComponent(player.getChatNameStaff() + "" + ChatColor.YELLOW +
+                            " has joined channel " + channel));
+                }else{
+                	players.sendMessage(new TextComponent(player.getChatName() + "" + ChatColor.YELLOW +
+                            " has joined channel " + channel));
+                }
             }
         }
 

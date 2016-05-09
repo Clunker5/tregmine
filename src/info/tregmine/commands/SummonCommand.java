@@ -8,6 +8,7 @@ import org.bukkit.entity.Horse;
 import static org.bukkit.ChatColor.*;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class SummonCommand extends AbstractCommand
 {
@@ -20,7 +21,7 @@ public class SummonCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
     	if(player.getWorld().getName() == "vanilla"){
-			player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
         if (args.length == 0) {
@@ -31,13 +32,13 @@ public class SummonCommand extends AbstractCommand
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
-            player.sendMessage(RED + "Can't find user.");
+            player.sendStringMessage(RED + "Can't find user.");
         }
         
         
         TregminePlayer victim = candidates.get(0);
         if(victim.getWorld().getName() == "vanilla"){
-        	player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        	player.sendStringMessage(ChatColor.RED + "That player is in the vanilla world!");
         	return true;
         }
         victim.setLastPos(victim.getLocation());
@@ -52,9 +53,9 @@ public class SummonCommand extends AbstractCommand
 
         victim.teleportWithHorse(player.getLocation());
 
-        victim.sendMessage(player.getChatName() + AQUA + " summoned you.");
-        player.sendMessage(AQUA + "You summoned " + victim.getChatName() + AQUA
-                + " to yourself.");
+        victim.sendMessage(new TextComponent(player.getChatName() + "" + AQUA + " summoned you."));
+        player.sendMessage(new TextComponent(AQUA + "You summoned " + victim.getChatName() + AQUA
+                + " to yourself."));
 
         return true;
     }

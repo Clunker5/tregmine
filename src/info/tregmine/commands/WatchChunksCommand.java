@@ -17,7 +17,7 @@ public class WatchChunksCommand extends AbstractCommand
     public boolean handlePlayer(TregminePlayer player, String[] args)
     {
         if (args.length < 1) {
-            player.sendMessage("Your WatchChunks is set to " +
+            player.sendStringMessage("Your WatchChunks is set to " +
                 (player.hasFlag(TregminePlayer.Flags.WATCHING_CHUNKS) ? "on" : "off") + ".");
             return true;
         }
@@ -26,18 +26,18 @@ public class WatchChunksCommand extends AbstractCommand
 
         if ("on".equalsIgnoreCase(state)) {
             player.setFlag(TregminePlayer.Flags.WATCHING_CHUNKS);
-            player.sendMessage(AQUA + "Watching Chunks is now turned on for you.");
+            player.sendStringMessage(AQUA + "Watching Chunks is now turned on for you.");
         }
         else if ("off".equalsIgnoreCase(state)) {
             player.removeFlag(TregminePlayer.Flags.WATCHING_CHUNKS);
-            player.sendMessage(AQUA + "Watching Chunks is now turned off for you.");
+            player.sendStringMessage(AQUA + "Watching Chunks is now turned off for you.");
         }
         else if ("status".equalsIgnoreCase(state)) {
-            player.sendMessage("Your Watching Chunks is set to " +
+            player.sendStringMessage("Your Watching Chunks is set to " +
                 (player.hasFlag(TregminePlayer.Flags.WATCHING_CHUNKS) ? "on" : "off") + ".");
         }
         else {
-            player.sendMessage(RED
+            player.sendStringMessage(RED
                     + "The commands are /watchchunks on, /watchchunks off and /watchchunks status.");
         }
 

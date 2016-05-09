@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import info.tregmine.Tregmine;
 import info.tregmine.ChatHandler;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class SayCommand extends AbstractCommand
 {
@@ -38,7 +39,7 @@ public class SayCommand extends AbstractCommand
             return true;
         }
         if(args.length == 0){
-        	player.sendMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
+        	player.sendStringMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
         	return true;
         }
         Server server = player.getServer();
@@ -53,8 +54,8 @@ public class SayCommand extends AbstractCommand
         for (Player p : players) {
             TregminePlayer current = tregmine.getPlayer((p.getName()));
             if (current.getRank().canBeGod()) {
-                current.sendMessage(DARK_AQUA + "/say used by: "
-                        + player.getChatName());
+                current.sendMessage(new TextComponent(DARK_AQUA + "/say used by: "
+                        + player.getChatName()));
             }
         }
 
