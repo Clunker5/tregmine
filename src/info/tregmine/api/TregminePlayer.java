@@ -50,6 +50,10 @@ public class TregminePlayer extends PlayerDelegate
         WATCHING_CHUNKS,
         AFK_KICK;
     };
+    
+    public enum Property {
+    	NICKNAME
+    }
 
     // Persistent values
     private int id = 0;
@@ -66,6 +70,7 @@ public class TregminePlayer extends PlayerDelegate
     private int guardianRank = 0;
     private int playTime = 0;
     private Set<Flags> flags;
+    private Set<Property> properties;
     private Map<Badge, Integer> badges;
     private Location lastpos = null;
     
@@ -149,6 +154,7 @@ public class TregminePlayer extends PlayerDelegate
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
+        this.properties = EnumSet.noneOf(Property.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -160,6 +166,7 @@ public class TregminePlayer extends PlayerDelegate
         this.name = name;
         this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
+        this.properties = EnumSet.noneOf(Property.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
@@ -374,6 +381,10 @@ public class TregminePlayer extends PlayerDelegate
     public void setFlag(Flags flag) { flags.add(flag); }
     public void removeFlag(Flags flag) { flags.remove(flag); }
     public boolean hasFlag(Flags flag) { return flags.contains(flag); }
+    
+    public void setProperty(Property prop) { properties.add(prop); }
+    public void removeProperty(Property prop) { properties.remove(prop); }
+    public boolean hasProperty(Property prop) { return properties.contains(prop); }
 
     public boolean hasBadge(Badge badge) { return badges.containsKey(badge); }
     
@@ -1065,6 +1076,11 @@ public class TregminePlayer extends PlayerDelegate
     		return;
     	}
     }
+    
+    public String getChatNameNoColor(){
+    	return ChatColor.stripColor(this.getChatNameNoHover());
+    }
+    
     public void setSilentAfk(boolean value){
     	if(this.isHidden()){
     		return;

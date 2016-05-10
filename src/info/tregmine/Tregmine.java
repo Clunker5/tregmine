@@ -15,6 +15,7 @@ import com.maxmind.geoip.LookupService;
 
 import info.tregmine.api.*;
 import info.tregmine.api.Timer;
+import info.tregmine.api.TregminePlayer.Property;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
@@ -798,10 +799,13 @@ public class Tregmine extends JavaPlugin
 
             ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertLogin(player, true, onlinePlayerCount);
-
+            
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
             playerDAO.updateBadges(player);
+            if(player.hasProperty(Property.NICKNAME)){
+            	playerDAO.updateProperty(player, "nick:color", ChatColor.stripColor(player.getChatNameNoHover()));
+            }
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

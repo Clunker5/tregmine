@@ -1,15 +1,16 @@
 package info.tregmine.api;
 
 public enum DeathCause {
-	ADMIN("admin");
+	ADMIN("An admin"),
+	CONSOLE("God");
 	
-	private String name;
+	private String cause;
 	
 	private DeathCause(String s){
-		this.name = s;
+		this.cause = s;
 	}
 	
 	public String getName(){
-		return this.name;
+		return this.cause;
 	}
 }

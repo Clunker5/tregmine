@@ -3,6 +3,7 @@ package info.tregmine.commands;
 import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.Property;
 
 public class ChangeNameCommand extends AbstractCommand
 {
@@ -75,7 +76,9 @@ public class ChangeNameCommand extends AbstractCommand
         	player.sendStringMessage(ChatColor.RED + "You have entered an invalid color. White will be used instead.");
         }
         player.setTemporaryChatName(usecolor + args[1]);
-        player.setHasNick(true);
+        
+        player.setProperty(Property.NICKNAME);
+        
         player.sendStringMessage("You are now: " + player.getChatNameNoHover());
         LOGGER.info(player.getName() + " changed name to "
                 + player.getChatName());

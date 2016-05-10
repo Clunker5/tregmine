@@ -30,6 +30,11 @@ public enum Rank
         return this != UNVERIFIED;
     }
     
+    public boolean canHaveHiddenNickname()
+    {
+    	return this == SENIOR_ADMIN;
+    }
+    
     public boolean canViewPlayerStats()
     {
     	return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.Property;
 import info.tregmine.api.Badge;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IPlayerDAO;
@@ -210,6 +211,9 @@ public class DBPlayerDAO implements IPlayerDAO
                     }
                     else if("cursewarned".equals(key)){
                     	player.setCurseWarned(Boolean.valueOf(value));
+                    }else if("nick".equals(key)){
+                    	player.setProperty(Property.NICKNAME);
+                    	player.setTemporaryChatName(player.getRank().getName(plugin) + value);
                     }
                 }
             }

@@ -20,10 +20,10 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
-import org.mcsg.double0negative.tabapi.TabAPI;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.*;
+import info.tregmine.api.TregminePlayer.Property;
 import info.tregmine.api.lore.Created;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.commands.MentorCommand;
@@ -411,10 +411,22 @@ public class TregminePlayerListener implements Listener
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             objective.setDisplayName("" + ChatColor.AQUA + ""
                     + ChatColor.BOLD + "Welcome to Tregmine!");
-
+            
+            //Update staff statistics
+            plugin.updateStatistics();
+            
             // Get a fake offline player
-            String desc = ChatColor.GREEN + "";
+            String desc = ChatColor.BLUE + "Online guardians: ";
             Score score = objective.getScore(Bukkit.getOfflinePlayer(desc));
+            score.setScore(plugin.getOnlineGuardians());
+            
+            String juniors = ChatColor.RED + "Online juniors: ";
+            Score junior = objective.getScore(Bukkit.getOfflinePlayer(juniors));
+            junior.setScore(plugin.getOnlineJuniors());
+            
+            String seniors = ChatColor.DARK_RED + "Online seniors: ";
+            Score senior = objective.getScore(Bukkit.getOfflinePlayer(seniors));
+            senior.setScore(plugin.getOnlineSeniors());
             try {
                 player.setScoreboard(board);
 
