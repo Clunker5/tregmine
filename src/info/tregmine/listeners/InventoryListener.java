@@ -109,8 +109,8 @@ public class InventoryListener implements Listener
                                 break;
                             }
                             TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
-                            TextComponent message = new TextComponent(p.getChatNameNoHover() + "" + ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
-                            player.sendMessage(message);
+                            TextComponent message = new TextComponent(ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
+                            player.sendSpigotMessage(p.getChatName(), message);
                             i++;
                         }
                     }
@@ -142,7 +142,7 @@ public class InventoryListener implements Listener
                 	List<String> lore = meta.getLore();
                 	List<String> newlore = new ArrayList<String>();
                 	for(String a : lore){
-                		newlore.add(a.replace("Ã", ""));
+                		newlore.add(a.replace("ï¿½", ""));
                 	}
                 	meta.setLore(newlore);
                     item.setItemMeta(meta);

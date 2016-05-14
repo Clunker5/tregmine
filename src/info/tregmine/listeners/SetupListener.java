@@ -61,7 +61,7 @@ public class SetupListener implements Listener
                 "to other players until you've verified your age.");
         TextComponent msg = new TextComponent(ChatColor.RED + "" + ChatColor.UNDERLINE + "Are you 13 years or older?");
         msg.setHoverEvent(this.plugin.buildHover(ChatColor.AQUA + "Because we are a " + ChatColor.GOLD + "COPPA" + ChatColor.AQUA + " compliant server, we must enforce the age requirement."));
-        player.sendMessage(msg);
+        player.sendSpigotMessage(msg);
     }
 
     @EventHandler

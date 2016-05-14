@@ -74,14 +74,14 @@ public class ReplyCommand extends AbstractCommand
                 // presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE)
                         || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage(new TextComponent(GREEN + "(to) "
-                            + receivingPlayer.getChatName() + GREEN + ": "
+                    player.sendSpigotMessage(new TextComponent(GREEN + "(to) "
+                            ),receivingPlayer.getChatName(), new TextComponent( GREEN + ": "
                             + message));
                 }
 
                 // Send message to recipient
                 receivingPlayer.sendNotification(Notification.MESSAGE,
-                        new TextComponent(GREEN + "(msg) " + player.getChatName() + GREEN + ": "
+                        new TextComponent(GREEN + "(msg) "), player.getChatName(), new TextComponent(GREEN + ": "
                         + message));
                 receivingPlayer.setLastMessenger(player.getName());
             } catch (DAOException e) {

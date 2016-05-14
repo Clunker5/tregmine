@@ -91,7 +91,7 @@ public class BlessedBlockListener implements Listener
                 blessDAO.delete(loc);
                 player.sendStringMessage(ChatColor.AQUA + "You unblessed a block at X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + "");
                 Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
-                blessedBlocks.remove(loc, blockOwner.getId());
+                blessedBlocks.remove(loc);
                 event.setCancelled(true);
             } catch (DAOException e) {
                 throw new RuntimeException(e);

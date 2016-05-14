@@ -589,7 +589,7 @@ public class ZoneCommand extends AbstractCommand
             for (Integer id : zone.getUsers()) {
                 TregminePlayer user = tregmine.getPlayerOffline(id);
                 Zone.Permission perm = zone.getUser(user);
-                player.sendMessage(new TextComponent(YELLOW + "" + user.getChatName() +
+                player.sendSpigotMessage(new TextComponent(YELLOW + ""), user.getChatName(), new TextComponent(
                         YELLOW + " - " + perm));
             }
         }

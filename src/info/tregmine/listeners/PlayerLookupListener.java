@@ -11,7 +11,6 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerReportDAO;
-import net.coreprotect.CoreProtect;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.text.SimpleDateFormat;

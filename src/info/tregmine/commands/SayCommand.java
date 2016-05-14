@@ -54,8 +54,8 @@ public class SayCommand extends AbstractCommand
         for (Player p : players) {
             TregminePlayer current = tregmine.getPlayer((p.getName()));
             if (current.getRank().canBeGod()) {
-                current.sendMessage(new TextComponent(DARK_AQUA + "/say used by: "
-                        + player.getChatName()));
+                current.sendSpigotMessage(new TextComponent(DARK_AQUA + "/say used by: "
+                        ), player.getChatName());
             }
         }
 

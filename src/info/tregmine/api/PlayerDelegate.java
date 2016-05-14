@@ -339,7 +339,7 @@ public abstract class PlayerDelegate
         delegate.sendRawMessage(p0);
     }
 
-    public void kickPlayer(Tregmine instance, java.lang.String p0)
+    public void kickPlayer(Tregmine instance, final java.lang.String p0)
     {
         checkState();
         //delegate.kickPlayer(p0);

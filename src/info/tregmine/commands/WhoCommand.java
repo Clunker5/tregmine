@@ -180,7 +180,7 @@ public class WhoCommand extends AbstractCommand
 				String playerList = sb.toString();
 
 				player.sendStringMessage(padString(DARK_PURPLE + "Player List for World: " + world.getName(), 55));
-				player.sendMessage(new TextComponent(playerList));
+				player.sendSpigotMessage(new TextComponent(playerList));
 			}
 		}
 

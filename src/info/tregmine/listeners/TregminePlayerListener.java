@@ -632,12 +632,12 @@ public class TregminePlayerListener implements Listener
                 ILogDAO logDAO = ctx.getLogDAO();
                 logDAO.insertGiveLog(droppedBy, player, stack);
 
-                player.sendMessage(new TextComponent(ChatColor.YELLOW + "You got " +
+                player.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "You got " +
                         stack.getAmount() + " " + stack.getType() + " from " +
                         droppedBy.getName() + "."));
 
                 if (droppedBy.isOnline()) {
-                    droppedBy.sendMessage(new TextComponent(ChatColor.YELLOW + "You gave " +
+                    droppedBy.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "You gave " +
                             stack.getAmount() + " " + stack.getType() + " to " +
                             player.getName() + "."));
                 }
