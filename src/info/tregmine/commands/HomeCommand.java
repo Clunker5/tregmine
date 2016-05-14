@@ -121,7 +121,7 @@ public class HomeCommand extends AbstractCommand
     private boolean teleportTo(TregminePlayer player, String playerName, String name)
     {
         if (!player.getRank().canVisitHomes()) {
-            return true;
+            player.sendStringMessage(RED + "You can't teleport to other player's homes");
         }
 
         TregminePlayer target = tregmine.getPlayerOffline(playerName);
@@ -252,6 +252,9 @@ public class HomeCommand extends AbstractCommand
             player.sendStringMessage(RED + "/home save <home name> - To save a home");
             player.sendStringMessage(RED + "/home delete <home name> - To delete a home");
             player.sendStringMessage(RED + "/home list - To list your homes");
+            if(player.getRank().canVisitHomes()){
+            	player.sendStringMessage(RED + "/home to <player> <name>");
+            }
         }
 
         return true;

@@ -69,13 +69,13 @@ public class WarnCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
         if (hard) {
-            player.sendMessage(new TextComponent(GREEN + "You hardwarned " + victim.getChatName() + GREEN + ": "
+            player.sendSpigotMessage(new TextComponent(GREEN + "You hardwarned "),  victim.decideVS(player), new TextComponent(GREEN + ": "
                     + message));
             LOGGER.info(victim.getName() + " hardwarned by " + player.getName());
         }
         else {
-            player.sendMessage(new TextComponent(GREEN + "You warned "
-                    + victim.getChatName() + GREEN + ": " + message));
+            player.sendSpigotMessage(new TextComponent(GREEN + "You warned "
+                    ), victim.decideVS(player), new TextComponent(GREEN + ": " + message));
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }
 

@@ -51,13 +51,13 @@ public class Timer implements Runnable{
 						player.setFlying(false);
 						TextComponent message = new TextComponent(ChatColor.RED + "You're not allowed to fly in this world, your flying has been disabled.");
 						message.setHoverEvent(t.buildHover(ChatColor.RED + "The vanilla world has opted to remove flying."));
-						player.sendMessage(message);
+						player.sendSpigotMessage(message);
 					}
 					if(player.getGameMode() != GameMode.SURVIVAL){
 						player.setGameMode(GameMode.SURVIVAL);
-						TextComponent message = t.buildTC(ChatColor.RED + "You must be in survival mode in this world.");
+						TextComponent message = new TextComponent(ChatColor.RED + "You must be in survival mode in this world.");
 						message.setHoverEvent(t.buildHover(ChatColor.RED + "The vanilla world has opted to remove survival mode."));
-						player.sendMessage(message);
+						player.sendSpigotMessage(message);
 						
 					}
 				}

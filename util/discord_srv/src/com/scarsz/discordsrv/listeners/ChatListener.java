@@ -59,12 +59,17 @@ public class ChatListener implements Listener {
         if(event.getMessage().toLowerCase().contains("%cancel%")){
         	return;
         }
-
+        String name = "";
+        if(sender.hasNick()){
+        	name = sender.getNickname().getNicknamePlaintext();
+        }else{
+        	name = sender.getChatNameNoColor();
+        }
         String message = DiscordSRV.plugin.getConfig().getString("MinecraftChatToDiscordMessageFormat")
                 .replaceAll("&([0-9a-qs-z])", "")
                 .replace("%message%", ChatColor.stripColor(event.getMessage()))
                 .replace("%primarygroup%", srv.getPrimaryGroup(event.getPlayer()))
-                .replace("%displayname%", ChatColor.stripColor(sender.getChatName()))
+                .replace("%displayname%", name)
                 .replace("%username%", ChatColor.stripColor(event.getPlayer().getName()))
                 .replace("%time%", new Date().toString());
         

@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import info.tregmine.Tregmine;
 import info.tregmine.api.*;
 import info.tregmine.api.math.MathUtil;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class TeleportCommand extends AbstractCommand
 {
@@ -30,7 +31,7 @@ public class TeleportCommand extends AbstractCommand
         {
         	
             if (!from.canBeHere(to.getLocation()).getBoolean()) {
-                from.sendStringMessage(RED + "You do not have permission for the location of " + to.getChatName());
+                from.sendSpigotMessage(new TextComponent(RED + "You do not have permission for the location of "), to.decideVS(from));
                 return;
             }
             // Check position hasn't changed since task started.

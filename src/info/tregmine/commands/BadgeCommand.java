@@ -3,6 +3,8 @@ package info.tregmine.commands;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import java.util.Map;
 import org.bukkit.ChatColor;
 
@@ -45,8 +47,9 @@ public class BadgeCommand extends AbstractCommand
             }
             Map<Badge, Integer> badges = target.getBadges();
             if(badges.isEmpty()){
-                player.sendStringMessage(target.getChatName() + "" + ChatColor.AQUA +
-                        " currently has no badges!");
+            	
+                player.getSpigot().sendMessage(target.getChatName(), new TextComponent( ChatColor.AQUA +
+                        " currently has no badges!"));
                 return true;
             }
 

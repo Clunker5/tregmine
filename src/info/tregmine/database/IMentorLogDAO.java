@@ -13,7 +13,8 @@ public interface IMentorLogDAO
     enum MentoringEvent {
         STARTED,
         COMPLETED,
-        CANCELLED;
+        CANCELLED,
+        SKIPPED;
 
         public MentoringEvent fromString(String str)
         {

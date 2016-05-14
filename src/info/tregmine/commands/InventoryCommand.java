@@ -50,7 +50,7 @@ public class InventoryCommand extends AbstractCommand
             } else {
                 candidate.loadInventory(candidate.getCurrentInventory(), false);
             }
-            player.sendMessage(new TextComponent(ChatColor.GREEN + "Reloaded " + candidate.decideVS(player) + "'s inventory from DB!"));
+            player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + "Reloaded "), candidate.decideVS(player), new TextComponent("'s inventory from DB!"));
             return true;
         }
         
@@ -62,7 +62,7 @@ public class InventoryCommand extends AbstractCommand
             }
             TregminePlayer candidate = candidates.get(0);
             player.openInventory(candidate.getInventory());
-            player.sendMessage(new TextComponent(ChatColor.GREEN + "Inspecting " + candidate.decideVS(player) + "'s inventory!"));
+            player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + "Inspecting "), candidate.decideVS(player), new TextComponent("'s inventory!"));
             return true;
         }
         

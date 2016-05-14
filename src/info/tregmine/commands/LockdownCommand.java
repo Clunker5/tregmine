@@ -27,8 +27,8 @@ public class LockdownCommand extends AbstractCommand{
 		}else if(args[0].equalsIgnoreCase("off")){
 			state = false;
 		}else{
-			//Something really bad happened.
-			return false;
+			player.sendStringMessage(ChatColor.RED + "You must specify <on|off>");
+			return true;
 		}
 		plugin.setLockdown(state);
 		return true;

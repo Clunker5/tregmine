@@ -2,17 +2,15 @@ package info.tregmine.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
 
-import info.tregmine.Tregmine;
-
 public class Nickname {
 	
 	//Base values
-	private Tregmine plugin;
 	private TregminePlayer owner;
 	
 	//Nickname
@@ -22,7 +20,7 @@ public class Nickname {
 	private boolean hasColor = false;
 	
 	//Special nickname characteristics
-	private ChatColor formatting;
+	private List<ChatColor> formatting = new ArrayList<ChatColor>();
 	private boolean hasFormatting;
 	private boolean showNickFlag;
 	
@@ -30,8 +28,7 @@ public class Nickname {
 	private String spacer = "$";
 	private String breakcolor = ";;";
 	
-	public Nickname(Tregmine tregmine, TregminePlayer player, String setnickname){
-		this.plugin = tregmine;
+	public Nickname(TregminePlayer player, String setnickname){
 		this.owner = player;
 		if(this.owner.getRank().canHaveHiddenNickname()){
 			this.showNickFlag = false;
@@ -51,7 +48,7 @@ public class Nickname {
 		this.color = setcolor;
 	}
 	
-	public void setNicknameColor(ChatColor setcolor){
+	public void setColor(ChatColor setcolor){
 		this.hasColor = true;
 		this.color = setcolor;
 		this.colorString = setcolor.name();
@@ -64,7 +61,7 @@ public class Nickname {
 	}
 	
 	public Map<ColorType, ChatColor> translateSql(String sql){
-		Map<ColorType, ChatColor> map = new ArrayList<>();
+		Map<ColorType, ChatColor> map = new HashMap<>();
 		List<String> returnme = Arrays.asList(sql.split(spacer));
 		ChatColor returnc;
 		ChatColor returnf;
@@ -84,17 +81,27 @@ public class Nickname {
 				map.put(ColorType.COLOR, returnc);
 			}else if(ChatColor.getByChar(str).isFormat()){
 				returnf = ChatColor.getByChar(str);
+				map.put(ColorType.FORMAT, returnf);
 			}else{
 				continue;
 			}
 		}
+		return map;
 	}
 	
 	public String getColorName(){
 		if(this.hasColor){
 		return this.colorString;
 		}else{
-			
+		return "%";
+		}
+	}
+	
+	public List<ChatColor> getFormatting(){
+		if(this.hasFormatting){
+			return this.formatting;
+		}else{
+			return new ArrayList<ChatColor>();
 		}
 	}
 	
@@ -109,14 +116,27 @@ public class Nickname {
 	
 	public String getNickname(){
 		if(this.showNickFlag){
-			if(hasColor && hasFormatting) return "!" + this.color + "" + this.formatting + this.nickname;
+			if(hasColor && hasFormatting) return "!" + this.color + "" + this.getFormattingCF() + this.nickname;
 			else if(hasColor && !hasFormatting) return "!" + this.color +  "" + this.nickname;
 			else return "!" + this.nickname;
 		}else{
-			if(hasColor && hasFormatting) return this.color + "" + this.formatting + this.nickname;
+			if(hasColor && hasFormatting) return this.color + "" + this.getFormattingCF() + this.nickname;
 			else if(hasColor && !hasFormatting) return this.color +  "" + this.nickname;
 			else return this.nickname;
 		}
+	}
+	
+	public String getFormattingCF(){
+		String returns = "";
+		for(Object color : this.formatting.toArray()){
+			ChatColor clr = (ChatColor) color;
+			returns += clr;
+		}
+		return returns;
+	}
+	
+	public String getNicknamePlaintext(){
+		return this.nickname;
 	}
 	
 	public ChatColor getChatColor(){
@@ -124,19 +144,29 @@ public class Nickname {
 		else return ChatColor.WHITE;
 	}
 	
-	public ChatColor getChatFormatting(){
+	public List<ChatColor> getChatFormatting(){
 		if(hasFormatting) return this.formatting;
 		else return null;
 	}
 	
-	public void setChatFormatting(ChatColor format){
-		this.formatting = format;
-		this.hasFormatting = true;
+	public void addFormatting(ChatColor format){
+		if(this.hasFormatting == false){
+			this.hasFormatting = true;
+		}
+		if(this.formatting.contains(format)){
+			return;
+		}
+		this.formatting.add(format);
+	}
+	
+	public void setFormatting(List<ChatColor> fmt){
+		if(!this.hasFormatting) this.hasFormatting = true;
+		this.formatting = fmt;
 	}
 	
 	public void removeFormatting(){
 		this.hasFormatting = false;
-		this.formatting = ChatColor.WHITE;
+		this.formatting.clear();
 	}
 	
 	public boolean hasChatColor(){

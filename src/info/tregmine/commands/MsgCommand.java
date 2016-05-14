@@ -66,12 +66,14 @@ public class MsgCommand extends AbstractCommand
                 // Show message in senders terminal, as long as the recipient isn't
                 // invisible, to prevent /msg from giving away hidden players presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage(new TextComponent(GREEN + "(to) " + receivingPlayer.decideVS(player)
-                            + GREEN + ": " + message));
+                    player.sendSpigotMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.decideVS(player), new TextComponent(
+                            GREEN + ": " + message));
+                }else{
+                	player.sendNotification(Notification.COMMAND_FAIL, new TextComponent(ChatColor.RED + "No player found by the name of " + possiblePlayer));
                 }
                 receivingPlayer.setLastMessenger(player.getName());
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE, new TextComponent(GREEN + "(msg) " + player.getChatName() + GREEN
+                receivingPlayer.sendNotification(Notification.MESSAGE, new TextComponent(GREEN + "(msg) "), player.decideVS(receivingPlayer), new TextComponent(GREEN
                         + ": " + message));
             }
         } catch (DAOException e) {

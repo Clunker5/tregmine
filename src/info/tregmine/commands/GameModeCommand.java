@@ -34,14 +34,9 @@ public class GameModeCommand extends AbstractCommand
         if (!player.getRank().canUseCreative()) {
             return true;
         }
-        String additional = "";
         player.setGameMode(mode);
-        if(mode == GameMode.SURVIVAL && !player.isOp()){
-        	player.getInventory().clear();
-        	additional = "Your inventory has been cleared.";
-        }
         player.sendStringMessage(YELLOW + "You are now in "
-                + mode.toString().toLowerCase() + " mode. " + additional);
+                + mode.toString().toLowerCase() + " mode. ");
 
         if (player.getRank().canFly()) {
             player.setAllowFlight(true);

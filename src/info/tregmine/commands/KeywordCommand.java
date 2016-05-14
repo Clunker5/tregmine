@@ -32,7 +32,7 @@ public class KeywordCommand extends AbstractCommand
         player.setKeyword(keyword.toLowerCase());
         player.sendStringMessage(YELLOW
                 + "From now on you can only log in by using ip "
-                + keyword.toLowerCase() + ".mc.rabil.org");
+                + keyword.toLowerCase() + ".mc.tregmine.com");
 
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();

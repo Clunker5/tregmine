@@ -1,7 +1,11 @@
 package info.tregmine.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
+import info.tregmine.api.Nickname;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.Property;
 
@@ -22,66 +26,51 @@ public class ChangeNameCommand extends AbstractCommand
         	player.sendStringMessage(ChatColor.RED + "You can't change your name!");
             return true;
         }
-        String colorstring = args[0];
-        ChatColor usecolor = ChatColor.WHITE;
-        if(colorstring.equalsIgnoreCase("red")){
-        	usecolor = ChatColor.RED;
+        //String colorstring = args[0];
+        String use[] = args[0].split(":");
+        String colorstring = use[0];
+        List<String> formatting = new ArrayList<String>();
+        List<ChatColor> format = new ArrayList<ChatColor>();
+        if(use.length >= 2){ if(use[1] != null){ 
+        		for(String lol : use){
+        			if(lol != colorstring && !formatting.contains(lol.toLowerCase())){
+        				formatting.add(lol.toLowerCase());
+        			}
+        		}
+        	}
         }
-        else if(colorstring.equalsIgnoreCase("darkred") || colorstring.equalsIgnoreCase("dark_red")){
-        	usecolor = ChatColor.DARK_RED;
+        for(ChatColor color : ChatColor.values()){
+        	if(!color.isFormat()){
+        		continue;
+        	}
+        	if(formatting.contains(color.name().toLowerCase())){
+        		format.add(color);
+        		continue;
+        	}
         }
-        else if(colorstring.equalsIgnoreCase("aqua")){
-        	usecolor = ChatColor.AQUA;
+        ChatColor usecolor = null;
+        for(ChatColor color : ChatColor.values()){
+        	if(!color.isColor()){
+        		continue;
+        	}
+        	if(colorstring.toLowerCase().equals(color.name().toLowerCase())){
+        		usecolor = color;
+        		break;
+        	}
         }
-        else if(colorstring.equalsIgnoreCase("black")){
-        	usecolor = ChatColor.BLACK;
+        Nickname nname = new Nickname(player, args[1]);
+        if(usecolor != null){
+            nname.setColor(usecolor);
         }
-        else if(colorstring.equalsIgnoreCase("blue")){
-        	usecolor = ChatColor.BLUE;
+        if(!format.isEmpty()){
+        	nname.setFormatting(format);
         }
-        else if(colorstring.equalsIgnoreCase("darkaqua") || colorstring.equalsIgnoreCase("dark_aqua")){
-        	usecolor = ChatColor.DARK_AQUA;
-        }
-        else if(colorstring.equalsIgnoreCase("darkblue") || colorstring.equalsIgnoreCase("dark_blue")){
-        	usecolor = ChatColor.DARK_BLUE;
-        }
-        else if(colorstring.equalsIgnoreCase("darkgray") || colorstring.equalsIgnoreCase("dark_gray")){
-        	usecolor = ChatColor.DARK_GRAY;
-        }
-        else if(colorstring.equalsIgnoreCase("darkgreen") || colorstring.equalsIgnoreCase("dark_green")){
-        	usecolor = ChatColor.DARK_GREEN;
-        }
-        else if(colorstring.equalsIgnoreCase("darkpurple") || colorstring.equalsIgnoreCase("dark_purple")){
-        	usecolor = ChatColor.DARK_PURPLE;
-        }
-        else if(colorstring.equalsIgnoreCase("gold")){
-        	usecolor = ChatColor.GOLD;
-        }
-        else if(colorstring.equalsIgnoreCase("gray")){
-        	usecolor = ChatColor.GRAY;
-        }
-        else if(colorstring.equalsIgnoreCase("green")){
-        	usecolor = ChatColor.GREEN;
-        }
-        else if(colorstring.equalsIgnoreCase("lightpurple") || colorstring.equalsIgnoreCase("light_purple") || colorstring.equalsIgnoreCase("purple")){
-        	usecolor = ChatColor.LIGHT_PURPLE;
-        }
-        else if(colorstring.equalsIgnoreCase("white")){
-        	usecolor = ChatColor.WHITE;
-        }
-        else if(colorstring.equalsIgnoreCase("yellow")){
-        	usecolor = ChatColor.YELLOW;
-        }
-        else{
-        	player.sendStringMessage(ChatColor.RED + "You have entered an invalid color. White will be used instead.");
-        }
-        player.setTemporaryChatName(usecolor + args[1]);
+        player.setTemporaryChatName(nname.getNickname());
         
         player.setProperty(Property.NICKNAME);
-        
         player.sendStringMessage("You are now: " + player.getChatNameNoHover());
         LOGGER.info(player.getName() + " changed name to "
-                + player.getChatName());
+                + player.getChatNameNoHover());
 
         return true;
     }

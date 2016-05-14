@@ -109,9 +109,9 @@ public class TregminePlayerListener implements Listener
                     lore.add(Created.CREATIVE.toColorString());
                     TregminePlayer p = this.plugin.getPlayer(player);
                     if(line2.contains("by: ") && !line2.contains(p.getChatNameNoHover())){
-                    	lore.add(line2 + ", " + p.getChatName());
+                    	lore.add(line2 + ", " + p.getChatNameNoHover());
                     }else{
-                    	lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                    	lore.add(ChatColor.WHITE + "by: " + p.getChatNameNoHover());
                     }
                     lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
                             + "0000" + ChatColor.RESET + ChatColor.WHITE
@@ -477,15 +477,13 @@ public class TregminePlayerListener implements Listener
         event.setQuitMessage(null);
 
         if (!player.isOp()) {
-            TextComponent message;
             if (player.getQuitMessage() != null) {
-                message = new TextComponent(player.getChatName() + " quit: " + ChatColor.YELLOW + player.getQuitMessage());
+                plugin.broadcast(player.getChatName(), new TextComponent(" quit: " + ChatColor.YELLOW + player.getQuitMessage()));
             } else {
                 Random rand = new Random();
                 int msgIndex = rand.nextInt(plugin.getQuitMessages().size());
-                message = new TextComponent(ChatColor.GRAY + "Quit: " + player.getChatName() + ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex));
+                plugin.broadcast(new TextComponent(ChatColor.GRAY + "Quit: "), player.getChatName(), new TextComponent(ChatColor.GRAY + " " + plugin.getQuitMessages().get(msgIndex)));
             }
-            plugin.broadcast(message);
         }
 
         // Look if there are any students being mentored by the exiting player

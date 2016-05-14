@@ -42,19 +42,14 @@ public class ForceCommand extends AbstractCommand
         
         if (toPlayer.hasFlag(TregminePlayer.Flags.FORCESHIELD) &&
                 !player.getRank().canOverrideForceShield()) {
-            toPlayer.sendMessage(new TextComponent((toPlayer.canVS()) ? ChatColor.AQUA + "" + player.getChatNameStaff() + " tried to force you into a channel!" : ChatColor.AQUA + "" + player.getChatName() + " tried to force you into a channel!"));
-            player.sendMessage(new TextComponent((toPlayer.canVS()) ? ChatColor.AQUA + "Can not force " + toPlayer.getChatNameStaff() + " into a channel!" : ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!"));
+            toPlayer.sendSpigotMessage(new TextComponent((toPlayer.canVS()) ? ChatColor.AQUA + "" + player.getChatNameStaff() + " tried to force you into a channel!" : ChatColor.AQUA + "" + player.getChatName() + " tried to force you into a channel!"));
+            player.sendSpigotMessage(new TextComponent((toPlayer.canVS()) ? ChatColor.AQUA + "Can not force " + toPlayer.getChatNameStaff() + " into a channel!" : ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!"));
             return true;
         }
         String oldChannel = player.getChatChannel();
         player.setChatChannel(channel);
         toPlayer.setChatChannel(channel);
-
-        toPlayer.sendMessage(new TextComponent((toPlayer.canVS()) ? YELLOW + "" + player.getChatNameStaff()
-                + " forced you into " + "channel " + channel.toUpperCase()
-                + "." : YELLOW + "" + player.getChatName()
-                + " forced you into " + "channel " + channel.toUpperCase()
-                + "."));
+        toPlayer.sendSpigotMessage(new TextComponent(YELLOW + ""), player.decideVS(player), new TextComponent(" forced you into channel " + channel.toUpperCase()));
         toPlayer.sendStringMessage(YELLOW
                 + "Write /channel global to switch back to "
                 + "the global chat.");
@@ -67,11 +62,11 @@ public class ForceCommand extends AbstractCommand
         
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
+                players.sendSpigotMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
                         " have left channel " + oldChannel));
+                players.sendSpigotMessage(player.decideVS(players), new TextComponent(YELLOW + " and "), toPlayer.decideVS(players), new TextComponent(YELLOW + " have left channel " + oldChannel));
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(new TextComponent(players.decideVS(players) + "" + ChatColor.YELLOW + " and " + toPlayer.getChatName() + ChatColor.YELLOW +
-                        " have joined channel " + channel));
+                players.sendSpigotMessage(player.decideVS(players), new TextComponent(YELLOW + " and "), toPlayer.decideVS(players), new TextComponent(YELLOW + " have joined channel " + channel));
             }
         }
 

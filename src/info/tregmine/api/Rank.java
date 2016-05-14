@@ -158,6 +158,58 @@ public enum Rank
                this == SENIOR_ADMIN;
     }
     
+    public boolean bypassAFKKick()
+    {
+    	return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    /*
+     * CoreProtect permissions
+     */
+    
+    public boolean canUseAllCO()
+    {
+    	return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    public boolean canInspect()
+    {
+    	return this != UNVERIFIED && this != TOURIST;
+    }
+    
+    public boolean canLookup()
+    {
+    	return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    public boolean canRollback()
+    {
+    	return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    public boolean canRestore()
+    {
+    	return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    public boolean canPurge()
+    {
+    	return this == SENIOR_ADMIN;
+    }
+    
+    public boolean canReload()
+    {
+    	return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+    
+    public boolean canViewHelp()
+    {
+    	return this != UNVERIFIED;
+    }
+    /*
+     * End CoreProtect Permissions
+     */
+    
     public boolean canForceOpenChests()
     {
         return  this == JUNIOR_ADMIN ||

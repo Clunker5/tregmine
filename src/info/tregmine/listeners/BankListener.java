@@ -57,10 +57,9 @@ public class BankListener implements Listener
         String[] args = event.getMessage().split(" ");
         String message = event.getMessage();
         event.setMessage("%cancel%");
-        TextComponent component = new TextComponent(ChatColor.AQUA + "[BANK] " +
-                ChatColor.WHITE + "<" + player.getChatName() +
-                ChatColor.WHITE + "> " + ChatColor.AQUA + message);
-        player.sendMessage(component);
+        player.sendSpigotMessage(new TextComponent(ChatColor.AQUA + "[BANK] " +
+                ChatColor.WHITE + "<"), player.getChatName(), new TextComponent(
+                ChatColor.WHITE + "> " + ChatColor.AQUA + message));
         event.setCancelled(true);
 
         if ("help".equalsIgnoreCase(args[0])) {

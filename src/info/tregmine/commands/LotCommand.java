@@ -318,20 +318,20 @@ public class LotCommand extends AbstractCommand
             if ("addowner".equals(args[0])) {
 
                 if (lot.isOwner(candidate)) {
-                    player.sendMessage(new TextComponent(RED + "" + candidate.decideVS(player) + RED +
+                    player.sendSpigotMessage(new TextComponent(RED + ""), candidate.decideVS(player), new TextComponent(RED +
                             " is already an owner of lot " + name + "."));
                     return;
                 }
                 else {
                     lot.addOwner(candidate);
                     dao.addLotUser(lot.getId(), candidate.getId());
-                    player.sendMessage(new TextComponent(GREEN + "" + candidate.decideVS(player) + GREEN +
+                    player.sendSpigotMessage(new TextComponent(GREEN + ""), candidate.decideVS(player), new TextComponent(GREEN +
                             " has been added as owner of " + lot.getName() + "."));
                 }
             }
             else if ("delowner".equals(args[0])) {
                 if (!lot.isOwner(candidate)) {
-                    player.sendMessage(new TextComponent(RED + "" + candidate.decideVS(player) + RED +
+                    player.sendSpigotMessage(new TextComponent(RED + ""), candidate.decideVS(player), new TextComponent(RED +
                             " is not an owner of lot " + name + "."));
                     return;
                 }
@@ -339,7 +339,7 @@ public class LotCommand extends AbstractCommand
                     lot.deleteOwner(candidate);
                     dao.deleteLotUser(lot.getId(), candidate.getId());
 
-                    player.sendMessage(new TextComponent(GREEN + "" + candidate.decideVS(player) + "" + GREEN +
+                    player.sendSpigotMessage(new TextComponent(GREEN + ""), candidate.decideVS(player), new TextComponent(GREEN +
                             " is no longer an owner of " + lot.getName() + "."));
                 }
             }

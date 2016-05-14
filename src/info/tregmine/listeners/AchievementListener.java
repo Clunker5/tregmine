@@ -25,6 +25,6 @@ public class AchievementListener implements Listener{
     public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
         TregminePlayer achiever = t.getPlayer(event.getPlayer());
         String alltogether = achiever.getChatName() + " won the achievement " + event.getAchievement().name();
-        
+       
     }
 }

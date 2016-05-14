@@ -77,7 +77,7 @@ public class SetupListener implements Listener
         String text = event.getMessage();
         player.sendStringMessage(text);
 
-        Tregmine.LOGGER.info("[SETUP] <" + player.getChatName() + "> " + text);
+        Tregmine.LOGGER.info("[SETUP] <" + player.getChatNameNoHover() + "> " + text);
 
         try (IContext ctx = plugin.createContext()) {
             Server server = plugin.getServer();
@@ -93,8 +93,9 @@ public class SetupListener implements Listener
                 Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
                         " joined the server.");
 
-                server.broadcastMessage(ChatColor.GREEN + "Welcome to Tregmine, " +
-                        player.getChatName() + ChatColor.GREEN + "!");
+                //server.broadcastMessage(ChatColor.GREEN + "Welcome to Tregmine, " +
+                //        player.getChatName() + ChatColor.GREEN + "!");
+                plugin.broadcast(new TextComponent(ChatColor.GREEN + "Welcome to Tregmine, "), player.getChatName(), new TextComponent(ChatColor.GREEN + "!"));
 
                 MentorCommand.findMentor(plugin, player);
             }
@@ -104,13 +105,13 @@ public class SetupListener implements Listener
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setFlag(TregminePlayer.Flags.CHILD);
-                this.plugin.broadcast(this.plugin.buildTC(player.getChatName() + " is a child; Please be aware when sending messages."));
+                plugin.broadcast(player.getChatName(), new TextComponent(" is a child; Please be aware when sending messages."));
                 player.setRank(Rank.TOURIST);
 
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(player);
 
-                Tregmine.LOGGER.info("[SETUP] " + player.getChatName() +
+                Tregmine.LOGGER.info("[SETUP] " + player.getChatNameNoHover() +
                         " has been marked as a child.");
             }
             else {

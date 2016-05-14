@@ -4,6 +4,7 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;

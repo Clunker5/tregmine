@@ -41,14 +41,14 @@ public abstract class NotifyCommand extends AbstractCommand
 
         // Don't send it twice
         if (!isTarget(player)) {
-            player.sendMessage(new TextComponent(getColor() + " + " + player.decideVS(player) + " " + WHITE + msg));
+            player.sendSpigotMessage(new TextComponent(getColor() + " + "), player.decideVS(player), new TextComponent(" " + WHITE + msg));
         }
 
         for (TregminePlayer to : tregmine.getOnlinePlayers()) {
             if (!isTarget(to)) {
                 continue;
             }
-            to.sendMessage(new TextComponent(getColor() + " + " + player.decideVS(to) + " " + WHITE + msg));
+            to.sendSpigotMessage(new TextComponent(getColor() + " + "), player.decideVS(to), new TextComponent(" " + WHITE + msg));
         }
 
         return true;

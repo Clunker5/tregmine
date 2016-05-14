@@ -55,8 +55,8 @@ public class KickCommand extends AbstractCommand
         }
 
         TregminePlayer victim = candidates.get(0);
-        plugin.broadcast(new TextComponent(player.getChatName() + "" + AQUA + " kicked "
-                + victim.getChatName() + AQUA + ": " + message));
+        plugin.broadcast(new TextComponent(player.getChatName(), new TextComponent(AQUA + " kicked "
+                ), victim.getChatName(), new TextComponent(AQUA + ": " + message)));
         LOGGER.info(victim.getName() + " kicked by " + player.getName());
         victim.kickPlayer(plugin, "kicked by " + player.getName() + ": " + message);
 
@@ -92,7 +92,8 @@ public class KickCommand extends AbstractCommand
 
         TregminePlayer victim = candidates.get(0);
 
-        server.broadcastMessage("GOD kicked " + victim.getChatName() + ".");
+        //server.broadcastMessage("GOD kicked " + victim.getChatName() + ".");
+        plugin.broadcast(new TextComponent(GOLD + "" + ITALIC + "GOD" + RESET + "" + AQUA + " kicked "), victim.getChatName());
         victim.kickPlayer(plugin, "kicked by GOD.");
 
         return true;

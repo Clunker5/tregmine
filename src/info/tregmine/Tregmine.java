@@ -7,6 +7,7 @@ import java.util.logging.*;
 
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +31,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_9_R1.PacketPlayOutChat;
 
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -75,22 +77,23 @@ public class Tregmine extends JavaPlugin
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
-    private World vanillaWorld = null;
-    private World vanillaNetherWorld = null;
-    private World vanillaEndWorld = null;
+    private World vanillaWorld;
+    private World vanillaNetherWorld;
+    private World vanillaEndWorld;
     private ChatColor[] rankcolors = new ChatColor[9];
     FileConfiguration config;
     
     //Special!
-    private World world2 = null;
-    private World world2nether = null;
-    private World world2end = null;
-    private boolean secondaryworld = false;
+    private World world2;
+    private World world2nether;
+    private World world2end;
+    private boolean secondaryworld;
     
     //Statistics
     private int onlineGuards = 0;
     private int onlineJuniors = 0;
     private int onlineSeniors = 0;
+    private int onlineTeachers = 0;
 
     @Override
     public void onLoad()
@@ -284,7 +287,7 @@ public class Tregmine extends JavaPlugin
         pluginMgm.registerEvents(new LumberListener(this), this);
         pluginMgm.registerEvents(new VeinListener(this), this);
         pluginMgm.registerEvents(new CallEventListener(this), this);
-        pluginMgm.registerEvents(new WorldPortalListener(this), this);
+        pluginMgm.registerEvents(new TregminePortalListener(this), this);
         pluginMgm.registerEvents(new PortalListener(this), this);
         pluginMgm.registerEvents(new BankListener(this), this);
         pluginMgm.registerEvents(new RareDropListener(this), this);
@@ -340,6 +343,7 @@ public class Tregmine extends JavaPlugin
                     return plugin.getRankColor(Rank.CODER);
                 }
             });
+        getCommand("oldworld").setExecutor(new OWCommand(this));
         getCommand("property").setExecutor(new PropertyCommand(this));
         getCommand("staffbook").setExecutor(new StaffHandbookCommand(this));
         getCommand("action").setExecutor(new ActionCommand(this));
@@ -446,7 +450,7 @@ public class Tregmine extends JavaPlugin
                             player.setCombatLog(player.getCombatLog() - 1);
 
                             if (player.getCombatLog() == 0) {
-                                player.sendMessage(buildTC(ChatColor.GREEN +
+                                player.sendSpigotMessage(new TextComponent(ChatColor.GREEN +
                                     "Combat log has warn off... Safe to log off!"));
                             }
                         }
@@ -464,7 +468,7 @@ public class Tregmine extends JavaPlugin
 
         // Add a record of logout to db for all players
         for (TregminePlayer player : getOnlinePlayers()) {
-        	player.sendMessage(this.buildTC(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA + " may be shutting down soon! Please prepare to be kicked."));
+        	player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA + " may be shutting down soon! Please prepare to be kicked."));
             player.saveInventory(player.getCurrentInventory());
             removePlayer(player);
         }
@@ -520,7 +524,13 @@ public class Tregmine extends JavaPlugin
     
     public void broadcast(BaseComponent a){
     	for(TregminePlayer player : this.getOnlinePlayers()){
-    		player.sendMessage(a);
+    		player.sendSpigotMessage(a);
+    	}
+    }
+    
+    public void broadcast(BaseComponent... a){
+    	for(TregminePlayer player : this.getOnlinePlayers()){
+    		player.sendSpigotMessage(a);
     	}
     }
     
@@ -570,10 +580,6 @@ public class Tregmine extends JavaPlugin
         return contextFactory.createContext();
     }
     
-    public TextComponent buildTC(String string){
-    	return new TextComponent(string);
-    }
-    
     public int getOnlineGuardians(){
     	return this.onlineGuards;
     }
@@ -590,14 +596,21 @@ public class Tregmine extends JavaPlugin
     	int g = 0;
     	int j = 0;
     	int s = 0;
+    	int t = 0;
     	for(TregminePlayer yeezy : this.getOnlinePlayers()){
     		if(yeezy.getRank() == Rank.GUARDIAN) g++;
     		else if(yeezy.getRank() == Rank.JUNIOR_ADMIN) j++;
     		else if(yeezy.getRank() == Rank.SENIOR_ADMIN) s++;
+    		
+    		if(yeezy.getRank().canMentor()) t++;
     	}
     	this.onlineGuards = g;
     	this.onlineJuniors = j;
     	this.onlineSeniors = s;
+    }
+    
+    public int getOnlineTeachers(){
+    	return this.onlineTeachers;
     }
 
     // ============================================================================
@@ -770,13 +783,13 @@ public class Tregmine extends JavaPlugin
     }
     
     public World getVanillaWorld(){
-    	return this.vanillaWorld;
+    	return vanillaWorld;
     }
     public World getVanillaEnd(){
-    	return this.vanillaEndWorld;
+    	return vanillaEndWorld;
     }
     public World getVanillaNether(){
-    	return this.vanillaNetherWorld;
+    	return vanillaNetherWorld;
     }
     
     public boolean isInVanilla(TregminePlayer player)
@@ -803,9 +816,6 @@ public class Tregmine extends JavaPlugin
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
             playerDAO.updateBadges(player);
-            if(player.hasProperty(Property.NICKNAME)){
-            	playerDAO.updateProperty(player, "nick:color", ChatColor.stripColor(player.getChatNameNoHover()));
-            }
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }

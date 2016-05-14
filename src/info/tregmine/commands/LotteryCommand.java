@@ -97,8 +97,7 @@ public class LotteryCommand extends AbstractCommand
                                     "You've been added to the lottery!");
                             player.sendStringMessage(ChatColor.GREEN +
                                     "2,000 Tregs have been taken from you.");
-                            tregmine.broadcast(new TextComponent(
-                                    player.getChatName() + "" + ChatColor.DARK_GREEN +
+                            tregmine.broadcast(player.getChatName(), new TextComponent(ChatColor.DARK_GREEN +
                                     " joined the lottery!"));
                         } else {
                             player.sendStringMessage(ChatColor.RED +
@@ -115,10 +114,10 @@ public class LotteryCommand extends AbstractCommand
                         lottery.remove(player.getName());
                         wallet.add(player, 2000);
                         player.sendStringMessage(ChatColor.RED +
-                                "You are nolonger in the lottery.");
+                                "You are no longer in the lottery.");
                         player.sendStringMessage(ChatColor.RED +
                                 "You received your 2,000 Tregs back");
-                        tregmine.broadcast(new TextComponent(player.getChatName() + "" + ChatColor.RED + " withdrew themself from the lottery"/* + ChatColor.RED + " - " + ChatColor.GOLD + "Amount in lottery: " + format.format(amount) + " Tregs!" */));
+                        tregmine.broadcast(player.getChatName(), new TextComponent(ChatColor.RED + " withdrew themself from the lottery"/* + ChatColor.RED + " - " + ChatColor.GOLD + "Amount in lottery: " + format.format(amount) + " Tregs!" */));
                     }
                 }
 
@@ -135,8 +134,8 @@ public class LotteryCommand extends AbstractCommand
                             }
 
                             wallet.add(winner, amount);
-                            tregmine.broadcast(new TextComponent(
-                                    winner.getChatName() + "" + ChatColor.DARK_AQUA +
+                            tregmine.broadcast(winner.getChatName(), new TextComponent(
+                                    ChatColor.DARK_AQUA +
                                     " won the lottery! " + ChatColor.RED + " - " +
                                     ChatColor.GOLD + format.format(amount) +
                                     " Tregs!"));

@@ -109,7 +109,7 @@ public class InventoryListener implements Listener
                                 break;
                             }
                             TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
-                            TextComponent message = new TextComponent(p.getChatName() + "" + ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
+                            TextComponent message = new TextComponent(p.getChatNameNoHover() + "" + ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
                             player.sendMessage(message);
                             i++;
                         }
@@ -156,7 +156,7 @@ public class InventoryListener implements Listener
                 List<String> lore = new ArrayList<String>();
                 lore.add(Created.CREATIVE.toColorString());
                 TregminePlayer p = this.plugin.getPlayer(player.getName());
-                lore.add(ChatColor.WHITE + "by: " + p.getChatName());
+                lore.add(ChatColor.WHITE + "by: " + p.getChatNameNoHover());
                 lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC
                         + "0000" + ChatColor.RESET + ChatColor.WHITE
                         + " Treg");

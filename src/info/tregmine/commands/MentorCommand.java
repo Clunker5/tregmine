@@ -18,9 +18,15 @@ import info.tregmine.database.IMentorLogDAO;
 
 public class MentorCommand extends AbstractCommand
 {
+	
+	private static int onlineTeachers = 0;
+	private Tregmine t;
+	
     public MentorCommand(Tregmine tregmine)
     {
         super(tregmine, "mentor");
+        this.t = tregmine;
+        this.onlineTeachers = tregmine.getOnlineTeachers();
     }
 
     @Override
@@ -93,15 +99,32 @@ public class MentorCommand extends AbstractCommand
             }
         }
         else if ("complete".equalsIgnoreCase(action)) {
-            if (!player.canMentor()) {
-                player.sendStringMessage(RED + "You have not been granted mentoring abilities.");
-                return true;
-            }
-
+        	if(!player.getRank().canMentor()  && tregmine.getOnlineTeachers() >= 3){
+        		player.sendStringMessage(RED + "You do not have permission to mentor.");
+        		return true;
+        	}
             TregminePlayer student = player.getStudent();
-            if (student == null) {
+            if (student == null && tregmine.getOnlineTeachers() >= 3) {
                 player.sendStringMessage(RED + "You are not mentoring anyone right now.");
                 return true;
+            }
+            
+            if(tregmine.getOnlineTeachers() < 3){
+            	try (IContext ctx = tregmine.createContext()) {
+                    player.setRank(Rank.SETTLER);
+
+                    IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                    playerDAO.updatePlayer(player);
+                    playerDAO.updatePlayerInfo(player);
+
+                    IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                    int mentorLogId = mentorLogDAO.getMentorLogId(player, player);
+                    mentorLogDAO.updateMentorLogEvent(mentorLogId,
+                            IMentorLogDAO.MentoringEvent.SKIPPED);
+                } catch (DAOException e) {
+                    throw new RuntimeException(e);
+                }
+            	return true;
             }
 
             int timeRemaining = Math.max(60*5 - student.getPlayTime()
@@ -148,21 +171,14 @@ public class MentorCommand extends AbstractCommand
     	if(student.getRank() != Rank.UNVERIFIED && student.getRank() != Rank.TOURIST){
     		return;
     	}
-    	if(!plugin.getConfig().getBoolean("general.mentorsystem")){
-    		try (IContext ctx = plugin.createContext()) {
-                student.setRank(Rank.SETTLER);
-                IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                playerDAO.updatePlayer(student);
-                playerDAO.updatePlayerInfo(student);
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-    	}
         Queue<TregminePlayer> mentors = plugin.getMentorQueue();
         TregminePlayer mentor = mentors.poll();
         if (mentor != null) {
             startMentoring(plugin, student, mentor);
         } else {
+        	if(onlineTeachers < 3){
+        		student.sendStringMessage(RED + "As there are less than three teachers online, you can do /mentor complete to skip the mentoring process automatically.");
+        	}
             student.sendStringMessage(YELLOW + "You will now be assigned " +
                 "a mentor to show you around, as soon as one becomes available.");
 

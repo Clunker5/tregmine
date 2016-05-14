@@ -73,9 +73,8 @@ public class BanCommand extends AbstractCommand
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-
-        plugin.broadcast(new TextComponent(victim.getChatName() + "" + RED + " was banned by "
-                + player.getChatName() + "."));
+        player.getSpigot();
+        plugin.broadcast(new TextComponent(victim.getChatName() + "" + RED + " was banned by "), player.getChatName(), new TextComponent( "."));
 
         LOGGER.info(victim.getName() + " Banned by " + player.getName());
 

@@ -59,7 +59,7 @@ public class WebKickCommand extends AbstractCommand
             return true;
         }
 
-        tregmine.broadcast(new TextComponent(player.getChatName() + "" + AQUA + " webkicked "
+        tregmine.broadcast(player.getChatName(), new TextComponent(AQUA + " webkicked "
                 + victim.getChatName() + AQUA + ": " + message));
         LOGGER.info(victim.getRealName() + " was webkicked by " + player.getName());
         //victim.kickPlayer("webkicked by " + player.getName() + ": " + message);

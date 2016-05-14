@@ -53,8 +53,8 @@ public class SummonCommand extends AbstractCommand
 
         victim.teleportWithHorse(player.getLocation());
 
-        victim.sendMessage(new TextComponent(player.getChatName() + "" + AQUA + " summoned you."));
-        player.sendMessage(new TextComponent(AQUA + "You summoned " + victim.getChatName() + AQUA
+        victim.sendSpigotMessage(player.decideVS(victim), new TextComponent(AQUA + " summoned you."));
+        player.sendSpigotMessage(new TextComponent(AQUA + "You summoned "), victim.decideVS(player), new TextComponent(AQUA
                 + " to yourself."));
 
         return true;

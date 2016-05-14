@@ -227,7 +227,7 @@ public class DBInventoryDAO implements IInventoryDAO
 	                while(iterator.hasNext()){
 	                	String lore = iterator.next();
 	                	System.out.println(lore);
-	                	String v = color.reverseChatColor(lore, '#');
+	                	String v = color.reverseChatColor(lore, "#");
 	                	lores.remove(lore);
 	                	lores.add(v);
 		                iterator.remove();

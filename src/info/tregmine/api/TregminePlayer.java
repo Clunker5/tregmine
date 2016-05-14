@@ -12,6 +12,7 @@ import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.permissions.PermissionAttachment;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.encryption.BCrypt;
@@ -99,6 +100,7 @@ public class TregminePlayer extends PlayerDelegate
 	private String lastMessenger;
 	private boolean AfkKick = true;
 	private boolean CurseWarned;
+	private PermissionAttachment attachment;
 	
 	//Reports
 	private List<String[]> reports = new ArrayList<String[]>();
@@ -142,6 +144,7 @@ public class TregminePlayer extends PlayerDelegate
     
     //Nickname stats
     private boolean hasNick = false;
+	private Nickname nickname;
 
     private Tregmine plugin;
 
@@ -162,6 +165,7 @@ public class TregminePlayer extends PlayerDelegate
     public TregminePlayer(String name, Tregmine instance)
     {
         super(null);
+        
         
         this.name = name;
         this.realName = name;
@@ -213,6 +217,9 @@ public class TregminePlayer extends PlayerDelegate
     public TextComponent getChatNameStaff(){
     	TextComponent returns = new TextComponent(this.name);
     	String addon = "";
+    	if(this.hasNick){
+    		addon += "\n" + ChatColor.AQUA + "Real name: " + this.name;
+    	}
     	if(this.getTotalBans() != 0){
         	addon += "\n" + ChatColor.DARK_GRAY + "Bans: " + this.getTotalBans();
         }
@@ -233,8 +240,14 @@ public class TregminePlayer extends PlayerDelegate
         return returns;
     }
     
-    public void setHasNick(boolean a){
-    	this.hasNick = a;
+    public void setNick(Nickname n){
+    	this.nickname = n;
+    	this.hasNick = true;
+    	this.name = n.getNickname();
+    }
+    
+    public Nickname getNickname(){
+    	return this.nickname;
     }
     
     public boolean hasNick(){
@@ -291,6 +304,14 @@ public class TregminePlayer extends PlayerDelegate
     	this.hardwarns = total;
     }
     
+    public void setAttachment(PermissionAttachment ment){
+    	this.attachment = ment;
+    }
+    
+    public PermissionAttachment getAttachment(){
+    	return this.attachment;
+    }
+    
     public long getLastOnlineActivity(){
     	return lastOnlineActivity;
     }
@@ -299,12 +320,12 @@ public class TregminePlayer extends PlayerDelegate
     }
     public void checkActivity(){
     	long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
-    	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true){
+    	if(autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true && !this.getRank().bypassAFKKick()){
     		String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD + plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than " + autoafkkick + " seconds.";
     		this.lastOnlineActivity = 0;
     		this.setSilentAfk(false);
     		this.kickPlayer(this.plugin, reason);
-    		BaseComponent message = new TextComponent(ChatColor.GRAY + "" + this.getChatName() + " was kicked for idling longer than" + autoafkkick / 60 + " minutes.");
+    		TextComponent message = new TextComponent(ChatColor.GRAY + "" + this.getChatName() + " was kicked for idling longer than" + autoafkkick / 60 + " minutes.");
     		plugin.broadcast(message);
     	}
     	long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
@@ -683,15 +704,26 @@ public class TregminePlayer extends PlayerDelegate
      * @param message - The message to send the player with the notification
      * @throws IllegalArgumentException if both notif and message are null
      */
-    public void sendNotification(Notification notif, TextComponent message)
+    public void sendNotification(Notification notif, BaseComponent... message)
     {
         if (notif != null && notif != Notification.NONE) {
                 playSound(getLocation(), notif.getSound(), 2F, 1F);
-                sendMessage(message);
+                sendSpigotMessage(message);
         } else {
-                sendMessage(message);
+                sendSpigotMessage(message);
         }
     }
+    
+    public void sendNotification(Notification notif, BaseComponent message)
+    {
+        if (notif != null && notif != Notification.NONE) {
+                playSound(getLocation(), notif.getSound(), 2F, 1F);
+                sendSpigotMessage(message);
+        } else {
+                sendSpigotMessage(message);
+        }
+    }
+    
     public void sendNotification(Notification notif)
     {
             playSound(getLocation(), notif.getSound(), 2F, 1F);
@@ -1061,7 +1093,7 @@ public class TregminePlayer extends PlayerDelegate
     	}
     	if(value == true){
     		this.afk = true;
-    		BaseComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + BLUE + " is now afk.");
+    		TextComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + BLUE + " is now afk.");
     		this.plugin.broadcast(message);
 			String oldname = getChatNameNoHover();
 			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
@@ -1070,7 +1102,7 @@ public class TregminePlayer extends PlayerDelegate
     		this.setLastOnlineActivity(currentTime);
     		this.afk = false;
 			setTemporaryChatName(getNameColor() + getRealName());
-			BaseComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + GREEN + " is no longer afk.");
+			TextComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + GREEN + " is no longer afk.");
 			this.plugin.broadcast(message);
     	}else{
     		return;

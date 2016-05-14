@@ -3,15 +3,23 @@ package info.tregmine.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
+import org.bukkit.plugin.Plugin;
+
+import com.sun.istack.internal.logging.Logger;
 
 import info.tregmine.Tregmine;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_9_R1.EntityPlayer;
+import net.minecraft.server.v1_9_R1.PacketPlayOutChat;
 
 public abstract class PlayerDelegate
 {
     private org.bukkit.entity.Player delegate;
+    private org.bukkit.permissions.PermissionAttachment attachment;
 
     protected PlayerDelegate(org.bukkit.entity.Player d)
     {
@@ -34,6 +42,13 @@ public abstract class PlayerDelegate
             throw new IllegalStateException(
                 "Can't be used when delegate isn't set.");
         }
+    }
+    
+    private void checkAttachment()
+    {
+    	if(attachment == null){
+    		throw new IllegalStateException("Can't be used when attachment isn't set.");
+    	}
     }
 
     public java.net.InetSocketAddress getAddress()
@@ -1081,6 +1096,11 @@ public abstract class PlayerDelegate
         checkState();
         return delegate.hasPermission(p0);
     }
+    
+    public void setPermission(java.lang.String p0)
+    {
+    	checkState();
+    }
 
     public void removeAttachment(org.bukkit.permissions.PermissionAttachment p0)
     {
@@ -1210,23 +1230,23 @@ public abstract class PlayerDelegate
         }
 
     }
-
-    public void sendMessage(BaseComponent p0)
-    {
-        checkState();
-        Spigot spig = this.getSpigot();
-        spig.sendMessage(p0);
-        //delegate.sendMessage(p0);
-    }
     
     public void sendStringMessage(String a){
     	checkState();
     	delegate.sendMessage(a);
     }
     
-    public void sendSpigotMessage(TextComponent a){
+    public void sendSpigotMessage(BaseComponent a){
     	checkState();
-    	delegate.spigot().sendMessage(a);
+    	sendSpigotMessage(new BaseComponent[] {a});
+    }
+    
+    public void sendSpigotMessage(BaseComponent... a){
+    	checkState();
+    	if(getHandle().playerConnection == null) return;
+    	PacketPlayOutChat packet = new PacketPlayOutChat();
+    	packet.components = a;
+    	getHandle().playerConnection.sendPacket(packet);
     }
 
     public boolean isBanned()
@@ -1299,6 +1319,20 @@ public abstract class PlayerDelegate
     {
         checkState();
         delegate.sendPluginMessage(p0, p1, p2);
+    }
+    
+    public CraftPlayer craftPlayer(){
+    	checkState();
+    	return (CraftPlayer) delegate;
+    }
+    
+    public EntityPlayer getHandle(){
+    	checkState();
+    	return craftPlayer().getHandle();
+    }
+    
+    public Player.Spigot spigot(){
+    	return delegate.spigot();
     }
 
 }

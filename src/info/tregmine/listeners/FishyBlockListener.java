@@ -8,6 +8,7 @@ import info.tregmine.database.IFishyBlockDAO.TransactionType;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,10 +58,10 @@ public class FishyBlockListener implements Listener
         String text = message.trim();
         String[] textSplit = text.split(" ");
 
-        player.sendStringMessage(ChatColor.YELLOW + "[FISHY] " +
-                ChatColor.WHITE + "<" +
-                player.getChatName() +
-                ChatColor.WHITE + "> " + text);
+        player.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "[FISHY] " +
+                ChatColor.WHITE + "<"),
+                player.getChatName(), new TextComponent(
+                ChatColor.WHITE + "> " + text));
         event.setCancelled(true);
 
         if (player.getChatState() == TregminePlayer.ChatState.FISHY_SETUP) {

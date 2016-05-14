@@ -84,7 +84,7 @@ public class WhoCommand extends AbstractCommand
 
             player.sendStringMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
                     "PLAYER INFO" + DARK_GRAY + " ********************");
-            player.sendMessage(new TextComponent(GOLD + "Player: " + GRAY + whoPlayer.getChatName()));
+            player.getSpigot().sendMessage(new TextComponent(GOLD + "Player: " + GRAY), whoPlayer.getChatName());
             player.sendStringMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
             player.sendStringMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
             player.sendStringMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
@@ -147,7 +147,7 @@ public class WhoCommand extends AbstractCommand
                 continue;
             }
             sb.append(delim);
-            sb.append(online.getChatName());
+            sb.append(online.getChatNameNoHover());
             delim = ChatColor.WHITE + ", ";
         }
         String playerList = sb.toString();

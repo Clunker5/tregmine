@@ -30,7 +30,7 @@ public class MailCommand extends AbstractCommand{
     	}
     	TregminePlayer receiverUser = candidates.get(0);
     	TregminePlayer senderUser = candidates1.get(0);
-    	receiverUser.sendMessage(new TextComponent(ChatColor.AQUA + "" + senderUser.decideVS(receiverUser) + " sent you a message! Use /mail read to view it. "));
+    	receiverUser.sendSpigotMessage(senderUser.decideVS(receiverUser), new TextComponent(ChatColor.AQUA + " sent you a message! Use /mail read to view it. "));
     	return true;
     	}else{
     		//Web, even though its not implemented.

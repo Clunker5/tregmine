@@ -84,7 +84,7 @@ public class BlessedBlockListener implements Listener
                 }
                 TregminePlayer blockOwner = plugin.getPlayer(owner);
                 if(blockOwner.isOnline()){
-                    blockOwner.sendStringMessage(ChatColor.AQUA + "One of your blocks at X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + " has been unblessed by " + player.getChatName());
+                    blockOwner.sendSpigotMessage(new TextComponent(ChatColor.AQUA + "One of your blocks at X" + loc.getBlockX() + " Y" + loc.getBlockY() + " Z" + loc.getBlockZ() + " has been unblessed by "), player.getChatName());
                 }
                 IWalletDAO walletDAO = ctx.getWalletDAO();
                 walletDAO.add(blockOwner, 25000);
@@ -139,10 +139,10 @@ public class BlessedBlockListener implements Listener
                 target.sendNotification(Notification.BLESS, new TextComponent(ChatColor.AQUA
                         + "Your god blessed it in your name!"));
             }
-            player.sendMessage(plugin.buildTC(ChatColor.AQUA + "You blessed for "
-                    + target.getChatNameStaff() + "."));
+            player.sendSpigotMessage(new TextComponent(ChatColor.AQUA + "You blessed for "
+                    ), target.getChatNameStaff(), new TextComponent("."));
             Tregmine.LOGGER.info(player.getName() + " Blessed a block " + loc
-                    + " to " + target.getChatName() + ".");
+                    + " to " + target.getName() + ".");
 
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             blessedBlocks.put(loc, targetId);
@@ -169,8 +169,8 @@ public class BlessedBlockListener implements Listener
                 int id = blessedBlocks.get(loc);
                 TregminePlayer target = plugin.getPlayerOffline(id);
                 if (id != player.getId()) {
-                    player.sendStringMessage(ChatColor.YELLOW + "Blessed to: "
-                            + target.getChatName() + ".");
+                    player.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "Blessed to: "),
+                    		target.getChatName(), new TextComponent("."));
                     if (!player.getRank().canInspectInventories()) {
                         event.setCancelled(true);
                     }

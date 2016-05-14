@@ -50,10 +50,10 @@
         <delete dir="${build}"/>
     </target>
 
-    <target name="create" depends="compile">
-        <jar destfile="tregmine_unshaded.jar" basedir="${build}">
+    <target name="jar" depends="compile">
+        <jar destfile="tregmine.jar" basedir="${build}">
             <manifest>
-                <!--<attribute name="Class-Path"
+                <attribute name="Class-Path"
                     value="lib/json.jar
                            lib/quadtree.jar
                            lib/commons-dbcp-1.4.jar
@@ -62,17 +62,17 @@
                            lib/commons-pool-1.5.6.jar
                            lib/TagAPI.jar
 						   lib/activation.jar 
-                	       lib/mail.jar" />-->
+                	       lib/mail.jar" />
             </manifest>
-        </jar>
+                    </jar>
     </target>
 	
-	<target name="jar" depends="create">
+	<!--<target name="jar" depends="create">
       <zip destfile="tregmine.jar">
-          <zipgroupfileset dir="lib" includes="*.jar"/>
+          <zipgroupfileset dir="lib" includes="*.jar" excludes="**/*.RSA, **/*.SF, **/*.DSA"/>
           <zipgroupfileset dir="./" includes="tregmine_unshaded.jar"/>
       </zip>
-    </target>
+    </target>-->
 	
     <target name="finalize">
 	    <delete>

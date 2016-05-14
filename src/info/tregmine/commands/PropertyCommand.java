@@ -59,7 +59,7 @@ public class PropertyCommand extends AbstractCommand{
 		try(IContext ctx = tregmine.createContext()){
 			IPlayerDAO h = ctx.getPlayerDAO();
 			h.updateProperty(d, c[1], j);
-			d.sendMessage(new TextComponent(ChatColor.GOLD + c[1] + ChatColor.GREEN + " has been set to " + ChatColor.GOLD + j + ChatColor.GREEN + " for " + ChatColor.GOLD + d.getName()));
+			d.sendSpigotMessage(new TextComponent(ChatColor.GOLD + c[1] + ChatColor.GREEN + " has been set to " + ChatColor.GOLD + j + ChatColor.GREEN + " for " + ChatColor.GOLD + d.getName()));
 		}catch(DAOException g){
 			g.printStackTrace();
 			d.sendStringMessage(ChatColor.RED + "Something went wrong!");

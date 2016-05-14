@@ -11,6 +11,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IPlayerReportDAO;
+import net.coreprotect.CoreProtect;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.permissions.PermissionAttachment;
 
 public class PlayerLookupListener implements Listener
 {
@@ -73,23 +75,47 @@ public class PlayerLookupListener implements Listener
                 for (TregminePlayer to : plugin.getOnlinePlayers()) {
                     if (to.getRank().canSeeHiddenInfo()) {
                         if (player.getCountry() != null) {
-                            to.sendMessage(new TextComponent(
-                            		"Welcome " + player.getChatNameStaff() + " from " + player.getCountry() + "!"));
-                            to.sendMessage(this.plugin.buildTC(player.getChatNameStaff() + "" + ChatColor.DARK_AQUA + " is invisible!"));
+                            to.sendSpigotMessage(new TextComponent(
+                            		"Welcome "), player.getChatNameStaff(), new TextComponent(" from " + player.getCountry() + "!"));
+                            to.sendSpigotMessage(player.getChatNameStaff(), new TextComponent(ChatColor.DARK_AQUA + " is invisible!"));
                         } else {
-                            to.sendMessage(this.plugin.buildTC(ChatColor.DARK_AQUA + "Welcome " + player.getChatNameStaff()));
-                            to.sendMessage(this.plugin.buildTC(player.getChatNameStaff() + "" + ChatColor.DARK_AQUA + " is invisible!"));
+                            to.sendSpigotMessage(new TextComponent(ChatColor.DARK_AQUA + "Welcome "), player.getChatNameStaff());
+                            to.sendSpigotMessage(player.getChatNameStaff(), new TextComponent("" + ChatColor.DARK_AQUA + " is invisible!"));
                         }
                     }
                 }
             } else {
                 if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
-                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName() + ChatColor.DARK_AQUA + " from " + player.getCountry() + "!");
+                    plugin.broadcast(new TextComponent(ChatColor.DARK_AQUA + "Welcome "), player.getChatName(), new TextComponent(ChatColor.DARK_AQUA + " from " + player.getCountry() + "!"));
                 } else {
-                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Welcome " + player.getChatName());
+                    plugin.broadcast(new TextComponent(ChatColor.DARK_AQUA + "Welcome "), player.getChatName());
                 }
             }
         }
+        PermissionAttachment attachment = player.addAttachment(plugin);
+    	player.setAttachment(attachment);
+        if(player.getRank().canUseAllCO()){
+        	attachment.setPermission("coreprotect.*", true);
+        }
+        if(player.getRank().canInspect()){
+        	attachment.setPermission("coreprotect.inspect", true);
+        }
+        if(player.getRank().canLookup()){
+        	attachment.setPermission("coreprotect.lookup", true);
+        }
+        if(player.getRank().canRollback()){
+        	attachment.setPermission("coreprotect.rollback", true);
+        }
+        if(player.getRank().canRestore()){
+        	attachment.setPermission("coreprotect.restore", true);
+        }
+        if(player.getRank().canPurge()){
+        	attachment.setPermission("coreprotect.purge", true);
+        }
+        if(player.getRank().canReload()){
+        	attachment.setPermission("coreprotect.reload", true);
+        }
+        attachment.setPermission("coreprotect.help", true);
 
         String aliasList = null;
         try (IContext ctx = plugin.createContext()) {

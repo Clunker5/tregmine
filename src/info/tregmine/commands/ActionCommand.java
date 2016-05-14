@@ -154,13 +154,10 @@ public class ActionCommand extends AbstractCommand
             }
             if (player.getRank().canNotBeIgnored()) ignored = false;
             if (ignored == true) continue;
-            TextComponent mesg;
-            if(to.getRank().canViewPlayerStats()){
-        	mesg = new TextComponent("* " + player.getChatNameStaff() + " " + WHITE + msg);
-            }else{
-            mesg = new TextComponent("* " + player.getChatName() + " " + WHITE + msg);
-            }
-            to.sendMessage(mesg);
+            TextComponent begin = new TextComponent("* ");
+            TextComponent middle = new TextComponent(player.decideVS(to));
+            TextComponent end = new TextComponent(" " + WHITE + msg);
+            to.getSpigot().sendMessage(begin, middle, end);
         }
 
         return true;

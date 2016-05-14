@@ -38,10 +38,10 @@ public class SeenCommand extends AbstractCommand
             Date seen = logDAO.getLastSeen(target);
 
             if (seen != null) {
-                player.sendMessage(new TextComponent(ChatColor.GREEN + "" + target.getChatName() + ChatColor.YELLOW
+                player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""), target.getChatName(), new TextComponent(ChatColor.YELLOW
                         + " was last seen on: " + ChatColor.AQUA + seen));
             } else {
-                player.sendMessage(new TextComponent(ChatColor.GREEN + "" + target.getChatName() + ChatColor.YELLOW
+                player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""), target.getChatName(), new TextComponent(ChatColor.YELLOW
                         + " hasn't been seen for a while."));
             }
         } catch (DAOException e) {

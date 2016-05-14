@@ -39,21 +39,9 @@ public class ChannelCommand extends AbstractCommand
         
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldchannel.equalsIgnoreCase(players.getChatChannel())) {
-            	if(players.getRank().canViewPlayerStats()){
-                	players.sendMessage(new TextComponent(player.getChatNameStaff() + "" + ChatColor.YELLOW +
-                        " has left channel " + oldchannel));
-            	}else{
-            		players.sendMessage(new TextComponent(player.getChatName() + "" + ChatColor.YELLOW +
-                            " has left channel " + oldchannel));
-            	}
+            	players.sendSpigotMessage(player.decideVS(player), new TextComponent(ChatColor.YELLOW + " has left channel " + oldchannel));
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                if(players.getRank().canViewPlayerStats()){
-                	players.sendMessage(new TextComponent(player.getChatNameStaff() + "" + ChatColor.YELLOW +
-                            " has joined channel " + channel));
-                }else{
-                	players.sendMessage(new TextComponent(player.getChatName() + "" + ChatColor.YELLOW +
-                            " has joined channel " + channel));
-                }
+                players.sendSpigotMessage(player.decideVS(players), new TextComponent(ChatColor.YELLOW + " has joined channel " + channel));
             }
         }
 

@@ -79,16 +79,16 @@ public class ChatListener implements Listener
             if(curse == true){
             	IPlayerDAO playerdao = ctx.getPlayerDAO();
             	if(sender.isCurseWarned()){
-            	sender.sendMessage(plugin.buildTC(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account."));
+            	sender.sendSpigotMessage(new TextComponent(ChatColor.RED + "Hey! You shouldn't be cursing! " + cursetotal * 50 + " Tregs have been removed from your account."));
             	IWalletDAO wallet = ctx.getWalletDAO();
             	wallet.take(sender, cursetotal * 50);
             	}else{
             		playerdao.updateProperty(sender, "cursewarned", "true");
-            		sender.sendMessage(plugin.buildTC(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account."));
+            		sender.sendSpigotMessage(new TextComponent(ChatColor.RED + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account."));
             		sender.setCurseWarned(true);
             	}
             	if(avoided){
-            		sender.sendMessage(plugin.buildTC(ChatColor.RED + "You thought you were slick... Your chat has been cancelled."));
+            		sender.sendSpigotMessage(new TextComponent(ChatColor.RED + "You thought you were slick... Your chat has been cancelled."));
             		event.setCancelled(true);
             		plugin.addBlockedChat(event);
         			return;
@@ -114,7 +114,7 @@ public class ChatListener implements Listener
                     	if(text.toLowerCase().contains("@" + online.getRealName())){
                     		String newName = online.getChatNameNoHover();
                     		
-                        	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "" + plugin.getRankColor(online.getRank()) + "@" + online.getChatName());
+                        	text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + "" + plugin.getRankColor(online.getRank()) + "@" + online.getChatNameNoHover());
                         }else{
                         text = text.replaceAll(online.getRealName(),
                                                online.getChatNameNoHover() + txtColor);
@@ -188,9 +188,9 @@ public class ChatListener implements Listener
                     "GLOBAL".equalsIgnoreCase(senderChan) &&
                     !"GLOBAL".equalsIgnoreCase(toChan)) {
 
-                    to.sendMessage(plugin.buildTC(ChatColor.BLUE +
-                        "You were mentioned in GLOBAL by " + sender.getNameColor() +
-                        sender.getChatName()));
+                    to.sendSpigotMessage(new TextComponent(ChatColor.BLUE +
+                        "You were mentioned in GLOBAL by " + sender.getNameColor()),
+                        sender.getChatName());
                 }
                 /*
                  * if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
@@ -203,9 +203,9 @@ public class ChatListener implements Listener
         }
         
         if (event.isWebChat()) {
-            Tregmine.LOGGER.info(channel + " (" + sender.getChatName() + ") " + event.getMessage());
+            Tregmine.LOGGER.info(channel + " (" + sender.getChatNameNoHover() + ") " + event.getMessage());
         } else {
-            Tregmine.LOGGER.info(channel + " <" + sender.getChatName() + "> " + event.getMessage());
+            Tregmine.LOGGER.info(channel + " <" + sender.getChatNameNoHover() + "> " + event.getMessage());
         }
         try (IContext ctx = plugin.createContext()) {
             ILogDAO logDAO = ctx.getLogDAO();
