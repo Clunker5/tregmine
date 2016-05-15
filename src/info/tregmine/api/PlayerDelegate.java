@@ -6,13 +6,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
-import org.bukkit.plugin.Plugin;
-
-import com.sun.istack.internal.logging.Logger;
 
 import info.tregmine.Tregmine;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_9_R1.EntityPlayer;
 import net.minecraft.server.v1_9_R1.PacketPlayOutChat;
 
@@ -518,7 +514,7 @@ public abstract class PlayerDelegate
     public org.bukkit.inventory.ItemStack getItemInHand()
     {
         checkState();
-        return delegate.getItemInHand();
+        return delegate.getItemOnCursor();
     }
 
     public void setItemInHand(org.bukkit.inventory.ItemStack p0)
