@@ -8,36 +8,32 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 import info.tregmine.api.TregminePlayer;
 
-public class ScoreboardClearTask implements Runnable
-{
-    private TregminePlayer player;
+public class ScoreboardClearTask implements Runnable {
+	public static void start(Plugin plugin, TregminePlayer player) {
+		Runnable runnable = new ScoreboardClearTask(player);
 
-    private ScoreboardClearTask(TregminePlayer player)
-    {
-        this.player = player;
-    }
+		Server server = Bukkit.getServer();
+		BukkitScheduler scheduler = server.getScheduler();
+		scheduler.scheduleSyncDelayedTask(plugin, runnable, 400);
+	}
 
-    @Override
-    public void run()
-    {
-        if (!player.isOnline()) {
-            return;
-        }
+	private TregminePlayer player;
 
-        try {
-            ScoreboardManager manager = Bukkit.getScoreboardManager();
-            player.setScoreboard(manager.getNewScoreboard());
-        } catch (IllegalStateException e) {
-            // We don't really care
-        }
-    }
+	private ScoreboardClearTask(TregminePlayer player) {
+		this.player = player;
+	}
 
-    public static void start(Plugin plugin, TregminePlayer player)
-    {
-        Runnable runnable = new ScoreboardClearTask(player);
+	@Override
+	public void run() {
+		if (!player.isOnline()) {
+			return;
+		}
 
-        Server server = Bukkit.getServer();
-        BukkitScheduler scheduler = server.getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin, runnable, 400);
-    }
+		try {
+			ScoreboardManager manager = Bukkit.getScoreboardManager();
+			player.setScoreboard(manager.getNewScoreboard());
+		} catch (IllegalStateException e) {
+			// We don't really care
+		}
+	}
 }

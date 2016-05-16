@@ -9,34 +9,47 @@ import com.google.common.collect.Lists;
  * @since 12/7/2013
  * @see Account
  */
-public class Bank
-{
-    private int id;
-    private int lotId;
+public class Bank {
+	private int id;
+	private int lotId;
 
-    private List<Account> accounts;
+	private List<Account> accounts;
 
-    public Bank(int lotId)
-    {
-        this.lotId = lotId;
+	public Bank() {
+	}
 
-        accounts = Lists.newArrayList();
-    }
+	public Bank(int lotId) {
+		this.lotId = lotId;
 
-    public Bank(int id, int lotId)
-    {
-        this(lotId);
-        this.id = id;
-    }
+		accounts = Lists.newArrayList();
+	}
 
-    public Bank(){}
+	public Bank(int id, int lotId) {
+		this(lotId);
+		this.id = id;
+	}
 
-    public int getId(){ return this.id; }
-    public void setId(int id){ this.id = id; }
+	public List<Account> getAccounts() {
+		return accounts;
+	}
 
-    public int getLotId(){ return lotId; }
-    public void setLotId(int id){ this.lotId = id; }
+	public int getId() {
+		return this.id;
+	}
 
-    public List<Account> getAccounts(){ return accounts; }
-    public void setAccounts(List<Account> accounts){ this.accounts = accounts; }
+	public int getLotId() {
+		return lotId;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setLotId(int id) {
+		this.lotId = id;
+	}
 }

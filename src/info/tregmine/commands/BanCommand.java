@@ -1,83 +1,81 @@
 package info.tregmine.commands;
 
-import java.util.List;
-import java.util.Date;
+import static org.bukkit.ChatColor.DARK_AQUA;
+import static org.bukkit.ChatColor.RED;
 
-import static org.bukkit.ChatColor.*;
-import org.bukkit.Server;
+import java.util.Date;
+import java.util.List;
+
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class BanCommand extends AbstractCommand
-{
+public class BanCommand extends AbstractCommand {
 	private Tregmine plugin;
-    public BanCommand(Tregmine tregmine)
-    {
-        super(tregmine, "ban");
-        plugin = tregmine;
-    }
 
-    private String argsToMessage(String[] args)
-    {
-        StringBuffer buf = new StringBuffer();
-        for (int i = 1; i < args.length; ++i) {
-            buf.append(" ");
-            buf.append(args[i]);
-        }
+	public BanCommand(Tregmine tregmine) {
+		super(tregmine, "ban");
+		plugin = tregmine;
+	}
 
-        return buf.toString();
-    }
+	private String argsToMessage(String[] args) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 1; i < args.length; ++i) {
+			buf.append(" ");
+			buf.append(args[i]);
+		}
 
-    @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args)
-    {
-        if (!player.getRank().canBan()) {
-        	player.sendStringMessage(DARK_AQUA + "You don't have permission to do that command.");
-            return true;
-        }
-        if (args.length < 2) {
-            player.sendStringMessage(DARK_AQUA + "/ban <player> <message>");
-            return true;
-        }
+		return buf.toString();
+	}
 
-        String pattern = args[0];
-        String message = argsToMessage(args);
+	@Override
+	public boolean handlePlayer(TregminePlayer player, String[] args) {
+		if (!player.getRank().canBan()) {
+			player.sendStringMessage(DARK_AQUA + "You don't have permission to do that command.");
+			return true;
+		}
+		if (args.length < 2) {
+			player.sendStringMessage(DARK_AQUA + "/ban <player> <message>");
+			return true;
+		}
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
-        if (candidates.size() != 1) {
-            // TODO: List users
-            return true;
-        }
+		String pattern = args[0];
+		String message = argsToMessage(args);
 
-        TregminePlayer victim = candidates.get(0);
+		List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+		if (candidates.size() != 1) {
+			// TODO: List users
+			return true;
+		}
 
-        victim.kickPlayer(plugin, "Banned by " + player.getName() + ": " + message);
+		TregminePlayer victim = candidates.get(0);
 
-        try (IContext ctx = tregmine.createContext()) {
-            PlayerReport report = new PlayerReport();
-            report.setSubjectId(victim.getId());
-            report.setIssuerId(player.getId());
-            report.setAction(PlayerReport.Action.BAN);
-            report.setMessage(message);
-            // three days default
-            report.setValidUntil(new Date(
-                    System.currentTimeMillis() + 3 * 86400 * 1000l));
+		victim.kickPlayer(plugin, "Banned by " + player.getName() + ": " + message);
 
-            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
-            reportDAO.insertReport(report);
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
-        player.getSpigot();
-        plugin.broadcast(new TextComponent(victim.getChatName() + "" + RED + " was banned by "), player.getChatName(), new TextComponent( "."));
+		try (IContext ctx = tregmine.createContext()) {
+			PlayerReport report = new PlayerReport();
+			report.setSubjectId(victim.getId());
+			report.setIssuerId(player.getId());
+			report.setAction(PlayerReport.Action.BAN);
+			report.setMessage(message);
+			// three days default
+			report.setValidUntil(new Date(System.currentTimeMillis() + 3 * 86400 * 1000l));
 
-        LOGGER.info(victim.getName() + " Banned by " + player.getName());
+			IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
+			reportDAO.insertReport(report);
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
+		player.getSpigot();
+		plugin.broadcast(new TextComponent(victim.getChatName() + "" + RED + " was banned by "), player.getChatName(),
+				new TextComponent("."));
 
-        return true;
-    }
+		LOGGER.info(victim.getName() + " Banned by " + player.getName());
+
+		return true;
+	}
 }

@@ -2,102 +2,85 @@ package info.tregmine.api;
 
 import java.util.Date;
 
-public class PlayerReport
-{
-    public enum Action {
-        KICK, SOFTWARN, HARDWARN, BAN, COMMENT;
+public class PlayerReport {
+	public enum Action {
+		KICK, SOFTWARN, HARDWARN, BAN, COMMENT;
 
-        public static Action fromString(String str)
-        {
-            for (Action action : Action.values()) {
-                if (str.equalsIgnoreCase(action.toString())) {
-                    return action;
-                }
-            }
+		public static Action fromString(String str) {
+			for (Action action : Action.values()) {
+				if (str.equalsIgnoreCase(action.toString())) {
+					return action;
+				}
+			}
 
-            return null;
-        }
-    };
+			return null;
+		}
+	};
 
-    private int id = 0;
-    private int subjectId = 0;
-    private int issuerId = 0;
-    private Action action = null;
-    private String message = "";
-    private Date timestamp = new Date();
-    private Date validUntil = null;
+	private int id = 0;
+	private int subjectId = 0;
+	private int issuerId = 0;
+	private Action action = null;
+	private String message = "";
+	private Date timestamp = new Date();
+	private Date validUntil = null;
 
-    public PlayerReport()
-    {
-    }
+	public PlayerReport() {
+	}
 
-    public int getId()
-    {
-        return id;
-    }
+	public Action getAction() {
+		return action;
+	}
 
-    public void setId(int v)
-    {
-        this.id = v;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public int getSubjectId()
-    {
-        return subjectId;
-    }
+	public int getIssuerId() {
+		return issuerId;
+	}
 
-    public void setSubjectId(int v)
-    {
-        this.subjectId = v;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public int getIssuerId()
-    {
-        return issuerId;
-    }
+	public int getSubjectId() {
+		return subjectId;
+	}
 
-    public void setIssuerId(int v)
-    {
-        this.issuerId = v;
-    }
+	public Date getTimestamp() {
+		return timestamp;
+	}
 
-    public Action getAction()
-    {
-        return action;
-    }
+	public Date getValidUntil() {
+		return validUntil;
+	}
 
-    public void setAction(Action v)
-    {
-        this.action = v;
-    }
+	public void setAction(Action v) {
+		this.action = v;
+	}
 
-    public String getMessage()
-    {
-        return message;
-    }
+	public void setId(int v) {
+		this.id = v;
+	}
 
-    public void setMessage(String v)
-    {
-        this.message = v;
-    }
+	public void setIssuerId(int v) {
+		this.issuerId = v;
+	}
 
-    public Date getTimestamp()
-    {
-        return timestamp;
-    }
+	public void setMessage(String v) {
+		this.message = v;
+	}
 
-    public void setTimestamp(Date v)
-    {
-        this.timestamp = v;
-    }
+	public void setSubjectId(int v) {
+		this.subjectId = v;
+	}
 
-    public Date getValidUntil()
-    {
-        return validUntil;
-    }
+	public void setTimestamp(Date v) {
+		this.timestamp = v;
+	}
 
-    public void setValidUntil(Date v)
-    {
-        this.validUntil = v;
-    }
+	public void setValidUntil(Date v) {
+		this.validUntil = v;
+	}
 }

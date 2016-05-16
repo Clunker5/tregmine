@@ -20,9 +20,9 @@
 
 package com.maxmind.geoip;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Encapsulates metadata about the GeoIP database. The database has a date, is a
@@ -44,84 +44,76 @@ import java.text.ParseException;
  * @see com.maxmind.geoip.LookupService#getDatabaseInfo()
  * @author Matt Tucker
  */
-public class DatabaseInfo
-{
+public class DatabaseInfo {
 
-    public final static int COUNTRY_EDITION = 1;
-    public final static int REGION_EDITION_REV0 = 7;
-    public final static int REGION_EDITION_REV1 = 3;
-    public final static int CITY_EDITION_REV0 = 6;
-    public final static int CITY_EDITION_REV1 = 2;
-    public final static int ORG_EDITION = 5;
-    public final static int ISP_EDITION = 4;
-    public final static int PROXY_EDITION = 8;
-    public final static int ASNUM_EDITION = 9;
-    public final static int NETSPEED_EDITION = 10;
-    public final static int COUNTRY_EDITION_V6 = 12;
+	public final static int COUNTRY_EDITION = 1;
+	public final static int REGION_EDITION_REV0 = 7;
+	public final static int REGION_EDITION_REV1 = 3;
+	public final static int CITY_EDITION_REV0 = 6;
+	public final static int CITY_EDITION_REV1 = 2;
+	public final static int ORG_EDITION = 5;
+	public final static int ISP_EDITION = 4;
+	public final static int PROXY_EDITION = 8;
+	public final static int ASNUM_EDITION = 9;
+	public final static int NETSPEED_EDITION = 10;
+	public final static int COUNTRY_EDITION_V6 = 12;
 
-    private static SimpleDateFormat formatter =
-            new SimpleDateFormat("yyyyMMdd");
+	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
-    private String info;
+	private String info;
 
-    /**
-     * Creates a new DatabaseInfo object given the database info String.
-     * 
-     * @param info
-     */
-    public DatabaseInfo(String info)
-    {
-        this.info = info;
-    }
+	/**
+	 * Creates a new DatabaseInfo object given the database info String.
+	 * 
+	 * @param info
+	 */
+	public DatabaseInfo(String info) {
+		this.info = info;
+	}
 
-    public int getType()
-    {
-        if (info == null || info.equals("")) {
-            return COUNTRY_EDITION;
-        }
-        else {
-            // Get the type code from the database info string and then
-            // subtract 105 from the value to preserve compatability with
-            // databases from April 2003 and earlier.
-            return Integer.parseInt(info.substring(4, 7)) - 105;
-        }
-    }
+	/**
+	 * Returns the date of the database.
+	 * 
+	 * @return the date of the database.
+	 */
+	public Date getDate() {
+		for (int i = 0; i < info.length() - 9; i++) {
+			if (Character.isWhitespace(info.charAt(i))) {
+				String dateString = info.substring(i + 1, i + 9);
+				try {
+					synchronized (formatter) {
+						return formatter.parse(dateString);
+					}
+				} catch (ParseException pe) {
+				}
+				break;
+			}
+		}
+		return null;
+	}
 
-    /**
-     * Returns true if the database is the premium version.
-     * 
-     * @return true if the premium version of the database.
-     */
-    public boolean isPremium()
-    {
-        return info.indexOf("FREE") < 0;
-    }
+	public int getType() {
+		if (info == null || info.equals("")) {
+			return COUNTRY_EDITION;
+		} else {
+			// Get the type code from the database info string and then
+			// subtract 105 from the value to preserve compatability with
+			// databases from April 2003 and earlier.
+			return Integer.parseInt(info.substring(4, 7)) - 105;
+		}
+	}
 
-    /**
-     * Returns the date of the database.
-     * 
-     * @return the date of the database.
-     */
-    public Date getDate()
-    {
-        for (int i = 0; i < info.length() - 9; i++) {
-            if (Character.isWhitespace(info.charAt(i))) {
-                String dateString = info.substring(i + 1, i + 9);
-                try {
-                    synchronized (formatter) {
-                        return formatter.parse(dateString);
-                    }
-                } catch (ParseException pe) {
-                }
-                break;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Returns true if the database is the premium version.
+	 * 
+	 * @return true if the premium version of the database.
+	 */
+	public boolean isPremium() {
+		return info.indexOf("FREE") < 0;
+	}
 
-    @Override
-    public String toString()
-    {
-        return info;
-    }
+	@Override
+	public String toString() {
+		return info;
+	}
 }

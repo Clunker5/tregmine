@@ -1,11 +1,18 @@
 package info.tregmine.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.DARK_PURPLE;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
@@ -17,150 +24,154 @@ import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IWalletDAO;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.World;
-import org.bukkit.entity.Player;
+public class WhoCommand extends AbstractCommand {
+	public WhoCommand(Tregmine tregmine) {
+		super(tregmine, "who");
+	}
 
-public class WhoCommand extends AbstractCommand
-{
-    public WhoCommand(Tregmine tregmine)
-    {
-        super(tregmine, "who");
-    }
+	@Override
+	public boolean handlePlayer(TregminePlayer player, String[] args) {
+		if (args.length == 0) {
+			return who(player);
+		} else if (args.length == 1 && "world".equalsIgnoreCase(args[0])) {
+			return whoWorld(player);
+		} else if (args.length > 0) {
+			if (!player.getRank().canSeeHiddenInfo()) {
+				return true;
+			}
+			return whoPlayer(player, args);
+		}
 
-    private boolean whoPlayer(TregminePlayer player, String[] args)
-    {
-        String pattern = args[0];
+		return true;
+	}
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
-        if (candidates.size() != 1) {
-            return true;
-        }
+	private String padString(String str, int len) {
+		int diff = len - (str.length() + 2);
+		if (diff % 2 == 1) {
+			str = " " + str + "  ";
+			diff--;
+		} else {
+			str = " " + str + " ";
+		}
 
-        TregminePlayer whoPlayer = candidates.get(0);
+		int side = diff / 2;
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < side; i++) {
+			buf.append("*");
+		}
 
-        if (whoPlayer == null) {
-        	player.sendStringMessage(RED + "That player is not online right now.");
-            return true;
-        }
-        if(whoPlayer.isOnline() != true){
-        	player.sendStringMessage(RED + "That player is not online right now.");
-        	return true;
-        }
+		return DARK_GRAY + buf.toString() + str + DARK_GRAY + buf.toString();
+	}
 
-        double X = whoPlayer.getLocation().getX();
-        double Y = whoPlayer.getLocation().getY();
-        double Z = whoPlayer.getLocation().getZ();
+	private boolean who(TregminePlayer player) {
+		StringBuilder sb = new StringBuilder();
+		String delim = "";
 
-        float X2 = (float)Math.round(X);
-        float Y2 = (float)Math.round(Y);
-        float Z2 = (float)Math.round(Z);
+		List<TregminePlayer> players = tregmine.getOnlinePlayers();
+		for (TregminePlayer online : players) {
+			if (online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+				// players.remove(online);
+				continue;
+			}
+			sb.append(delim);
+			sb.append(online.getChatNameNoHover());
+			delim = ChatColor.WHITE + ", ";
+		}
+		String playerList = sb.toString();
 
-        String aliasList = null;
+		player.sendStringMessage(padString(DARK_PURPLE + "Player List", 55));
+		player.sendStringMessage(playerList);
+		player.sendStringMessage(padString(DARK_PURPLE + Integer.toString(players.size()) + " players online", 55));
+		return true;
+	}
 
-        if (player.getRank().canSeeAliases()) {
-            try (IContext ctx = tregmine.createContext()) {
+	private boolean whoPlayer(TregminePlayer player, String[] args) {
+		String pattern = args[0];
 
-                ILogDAO logDAO = ctx.getLogDAO();
-                Set<String> aliases = logDAO.getAliases(whoPlayer);
+		List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+		if (candidates.size() != 1) {
+			return true;
+		}
 
-                StringBuilder buffer = new StringBuilder();
-                String delim = "";
-                for (String name : aliases) {
-                    buffer.append(delim);
-                    buffer.append(name);
-                    delim = ", ";
-                }
+		TregminePlayer whoPlayer = candidates.get(0);
 
-                aliasList = buffer.toString();
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+		if (whoPlayer == null) {
+			player.sendStringMessage(RED + "That player is not online right now.");
+			return true;
+		}
+		if (whoPlayer.isOnline() != true) {
+			player.sendStringMessage(RED + "That player is not online right now.");
+			return true;
+		}
 
-        try (IContext ctx = tregmine.createContext()) {
-            IWalletDAO walletDAO = ctx.getWalletDAO();
+		double X = whoPlayer.getLocation().getX();
+		double Y = whoPlayer.getLocation().getY();
+		double Z = whoPlayer.getLocation().getZ();
 
-            long balance = walletDAO.balance(whoPlayer);
+		float X2 = Math.round(X);
+		float Y2 = Math.round(Y);
+		float Z2 = Math.round(Z);
 
-            player.sendStringMessage(DARK_GRAY + "******************** " + DARK_PURPLE +
-                    "PLAYER INFO" + DARK_GRAY + " ********************");
-            player.getSpigot().sendMessage(new TextComponent(GOLD + "Player: " + GRAY), whoPlayer.getChatName());
-            player.sendStringMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
-            player.sendStringMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
-            player.sendStringMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
-            player.sendStringMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
-            player.sendStringMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
-            player.sendStringMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
-            player.sendStringMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
-            player.sendStringMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
-            player.sendStringMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
-            player.sendStringMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
-            player.sendStringMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
-            if (aliasList != null) {
-                player.sendStringMessage(GOLD + "Aliases: " + aliasList);
-            }
-            if(whoPlayer.hasFlag(Flags.INVISIBLE)){
-            	if(player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN){
-            	player.sendStringMessage(BLUE + "This player is invisible.");
-            	}
-            }
-            player.sendStringMessage(DARK_GRAY + "*************************************" +
-                               "*****************");
+		String aliasList = null;
 
-            LOGGER.info(player.getName() + " used /who on player " +
-                        whoPlayer.getName());
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
+		if (player.getRank().canSeeAliases()) {
+			try (IContext ctx = tregmine.createContext()) {
 
-        return true;
-    }
+				ILogDAO logDAO = ctx.getLogDAO();
+				Set<String> aliases = logDAO.getAliases(whoPlayer);
 
-    private String padString(String str, int len)
-    {
-        int diff = len - (str.length() + 2);
-        if (diff % 2 == 1) {
-            str = " " + str + "  ";
-            diff--;
-        } else {
-            str = " " + str + " ";
-        }
+				StringBuilder buffer = new StringBuilder();
+				String delim = "";
+				for (String name : aliases) {
+					buffer.append(delim);
+					buffer.append(name);
+					delim = ", ";
+				}
 
-        int side = diff/2;
-        StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < side; i++) {
-            buf.append("*");
-        }
+				aliasList = buffer.toString();
+			} catch (DAOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 
-        return DARK_GRAY + buf.toString() + str + DARK_GRAY + buf.toString();
-    }
+		try (IContext ctx = tregmine.createContext()) {
+			IWalletDAO walletDAO = ctx.getWalletDAO();
 
-    private boolean who(TregminePlayer player)
-    {
-        StringBuilder sb = new StringBuilder();
-        String delim = "";
+			long balance = walletDAO.balance(whoPlayer);
 
-        List<TregminePlayer> players = tregmine.getOnlinePlayers();
-        for (TregminePlayer online : players) {
-            if (online.hasFlag(TregminePlayer.Flags.INVISIBLE)){
-                //players.remove(online);
-                continue;
-            }
-            sb.append(delim);
-            sb.append(online.getChatNameNoHover());
-            delim = ChatColor.WHITE + ", ";
-        }
-        String playerList = sb.toString();
+			player.sendStringMessage(DARK_GRAY + "******************** " + DARK_PURPLE + "PLAYER INFO" + DARK_GRAY
+					+ " ********************");
+			player.getSpigot().sendMessage(new TextComponent(GOLD + "Player: " + GRAY), whoPlayer.getChatName());
+			player.sendStringMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
+			player.sendStringMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
+			player.sendStringMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
+			player.sendStringMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
+			player.sendStringMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
+			player.sendStringMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
+			player.sendStringMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
+			player.sendStringMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
+			player.sendStringMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
+			player.sendStringMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
+			player.sendStringMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
+			if (aliasList != null) {
+				player.sendStringMessage(GOLD + "Aliases: " + aliasList);
+			}
+			if (whoPlayer.hasFlag(Flags.INVISIBLE)) {
+				if (player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN) {
+					player.sendStringMessage(BLUE + "This player is invisible.");
+				}
+			}
+			player.sendStringMessage(DARK_GRAY + "*************************************" + "*****************");
 
-        player.sendStringMessage(padString(DARK_PURPLE + "Player List", 55));
-        player.sendStringMessage(playerList);
-        player.sendStringMessage(padString(DARK_PURPLE +
-                    Integer.toString(players.size()) + " players online", 55));
-        return true;
-    }
+			LOGGER.info(player.getName() + " used /who on player " + whoPlayer.getName());
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
 
-	private boolean whoWorld(TregminePlayer player)
-	{
+		return true;
+	}
+
+	private boolean whoWorld(TregminePlayer player) {
 		for (World world : player.getServer().getWorlds()) {
 			if (world.getPlayers().size() > 0) {
 				StringBuilder sb = new StringBuilder();
@@ -186,23 +197,4 @@ public class WhoCommand extends AbstractCommand
 
 		return true;
 	}
-
-    @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args)
-    {
-        if (args.length == 0) {
-            return who(player);
-        }
-		else if (args.length == 1 && "world".equalsIgnoreCase(args[0])) {
-			return whoWorld(player);
-		}
-        else if (args.length > 0) {
-            if (!player.getRank().canSeeHiddenInfo()) {
-                return true;
-            }
-            return whoPlayer(player, args);
-        }
-
-        return true;
-    }
 }

@@ -1,9 +1,12 @@
 package info.tregmine.commands;
 
-import java.util.List;
-import java.util.ArrayList;
+import static org.bukkit.ChatColor.DARK_AQUA;
+import static org.bukkit.ChatColor.MAGIC;
+import static org.bukkit.ChatColor.RESET;
+import static org.bukkit.ChatColor.WHITE;
 
-import static org.bukkit.ChatColor.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,84 +18,78 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.lore.Created;
 
-public class ItemCommand extends AbstractCommand
-{
-    public ItemCommand(Tregmine tregmine)
-    {
-        super(tregmine, "item");
-    }
+public class ItemCommand extends AbstractCommand {
+	public ItemCommand(Tregmine tregmine) {
+		super(tregmine, "item");
+	}
 
-    @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args)
-    {
-    	if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+	@Override
+	public boolean handlePlayer(TregminePlayer player, String[] args) {
+		if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
 			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
-        if (args.length == 0) {
-            return false;
-        }
-        if (!player.getRank().canSpawnItems()) {
-            return false;
-        }
+		if (args.length == 0) {
+			return false;
+		}
+		if (!player.getRank().canSpawnItems()) {
+			return false;
+		}
 
-        String param = args[0].toUpperCase();
+		String param = args[0].toUpperCase();
 
-        int materialId;
-        try {
-            materialId = Integer.parseInt(param);
-        } catch (NumberFormatException e) {
-            try {
-                Material material = Material.getMaterial(param);
-                materialId = material.getId();
-            } catch (NullPointerException ne) {
-                player.sendStringMessage(DARK_AQUA
-                        + "/item <id|name> <amount> <data>.");
-                return true;
-            }
-        }
+		int materialId;
+		try {
+			materialId = Integer.parseInt(param);
+		} catch (NumberFormatException e) {
+			try {
+				Material material = Material.getMaterial(param);
+				materialId = material.getId();
+			} catch (NullPointerException ne) {
+				player.sendStringMessage(DARK_AQUA + "/item <id|name> <amount> <data>.");
+				return true;
+			}
+		}
 
-        int amount;
-        try {
-            amount = Integer.parseInt(args[1]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            amount = 1;
-        } catch (NumberFormatException e) {
-            amount = 1;
-        }
+		int amount;
+		try {
+			amount = Integer.parseInt(args[1]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			amount = 1;
+		} catch (NumberFormatException e) {
+			amount = 1;
+		}
 
-        int data;
-        try {
-            data = Integer.parseInt(args[2]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            data = 0;
-        } catch (NumberFormatException e) {
-            data = 0;
-        }
+		int data;
+		try {
+			data = Integer.parseInt(args[2]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			data = 0;
+		} catch (NumberFormatException e) {
+			data = 0;
+		}
 
-        ItemStack item = new ItemStack(materialId, amount, (byte) data);
-        if (item.getType() == Material.MONSTER_EGG || item.getType() == Material.NAME_TAG) {
-            return false;
-        }
+		ItemStack item = new ItemStack(materialId, amount, (byte) data);
+		if (item.getType() == Material.MONSTER_EGG || item.getType() == Material.NAME_TAG) {
+			return false;
+		}
 
-        ItemMeta meta = item.getItemMeta();
-        List<String> lore = new ArrayList<String>();
-        lore.add(Created.SPAWNED.toColorString());
-        lore.add(WHITE + "by: " + player.getName());
-        lore.add(WHITE + "Value: " + MAGIC + "0000" + RESET + WHITE + " Treg");
-        meta.setLore(lore);
-        item.setItemMeta(meta);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		lore.add(Created.SPAWNED.toColorString());
+		lore.add(WHITE + "by: " + player.getName());
+		lore.add(WHITE + "Value: " + MAGIC + "0000" + RESET + WHITE + " Treg");
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 
-        PlayerInventory inv = player.getInventory();
-        inv.addItem(item);
+		PlayerInventory inv = player.getInventory();
+		inv.addItem(item);
 
-        Material material = Material.getMaterial(materialId);
-        String materialName = material.toString();
-        player.sendStringMessage("You received " + amount + " of " + DARK_AQUA
-                + materialName.toLowerCase() + ".");
-        LOGGER.info(player.getName() + " SPAWNED " + amount + ":"
-                + materialName);
+		Material material = Material.getMaterial(materialId);
+		String materialName = material.toString();
+		player.sendStringMessage("You received " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + ".");
+		LOGGER.info(player.getName() + " SPAWNED " + amount + ":" + materialName);
 
-        return true;
-    }
+		return true;
+	}
 }

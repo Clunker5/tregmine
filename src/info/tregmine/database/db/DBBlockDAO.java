@@ -10,19 +10,34 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBlockDAO;
 
-public class DBBlockDAO implements IBlockDAO{
+public class DBBlockDAO implements IBlockDAO {
 	private Connection conn;
-	public DBBlockDAO(Connection conn)
-    {
-        this.conn = conn;
-    }
+
+	public DBBlockDAO(Connection conn) {
+		this.conn = conn;
+	}
+
+	@Override
+	public int blockValue(Block a) throws DAOException {
+		String sql = "SELECT * FROM item WHERE item_id = ?";
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setDouble(1, a.getTypeId());
+			stmt.execute();
+			ResultSet rs = stmt.getResultSet();
+			while (rs.next()) {
+				return rs.getInt("mine_value");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return 0;
+	}
+
 	@Override
 	public boolean isPlaced(Block a) throws DAOException {
 		Location block = a.getLocation();
@@ -31,45 +46,28 @@ public class DBBlockDAO implements IBlockDAO{
 		crc32.update(pos.getBytes());
 		long checksum = crc32.getValue();
 		String sql = "SELECT * FROM stats_blocks WHERE checksum = ? AND status = '1'";
-		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setLong(1, checksum);
-	    	stmt.execute();
-	    	ResultSet rs = stmt.getResultSet();
-	    	return rs.next();
+			stmt.execute();
+			ResultSet rs = stmt.getResultSet();
+			return rs.next();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
 	@Override
-	public int blockValue(Block a) throws DAOException {
-		String sql = "SELECT * FROM item WHERE item_id = ?";
-		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setDouble(1, a.getTypeId());
-	    	stmt.execute();
-	    	ResultSet rs = stmt.getResultSet();
-	    	while(rs.next()){
-	    		return rs.getInt("mine_value");
-	    	}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return 0;
-		}
-		return 0;
-	}
-	
-	@Override
-	public Map<Material, Integer> loadBlockMinePrices(){
+	public Map<Material, Integer> loadBlockMinePrices() {
 		Map<Material, Integer> prices = new HashMap<>();
 		String sql = "SELECT DISTINCT `item_id`,`mine_value` FROM item";
-		try(PreparedStatement stmt = conn.prepareStatement(sql)){
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.execute();
 			ResultSet rs = stmt.getResultSet();
-			while(rs.next()){
+			while (rs.next()) {
 				prices.put(Material.getMaterial(rs.getInt("item_id")), rs.getInt("mine_value"));
 			}
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return prices;

@@ -1,30 +1,29 @@
 package info.tregmine.listeners;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Item;
+import org.bukkit.Achievement;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 
-public class AchievementListener implements Listener{
+public class AchievementListener implements Listener {
 	private Tregmine t;
 
-    public AchievementListener(Tregmine instance)
-    {
-        this.t = instance;
-    }
-    
-    @EventHandler
-    public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
-        TregminePlayer achiever = t.getPlayer(event.getPlayer());
-        String alltogether = achiever.getChatName() + " won the achievement " + event.getAchievement().name();
-       
-    }
+	public AchievementListener(Tregmine instance) {
+		this.t = instance;
+	}
+
+	@EventHandler
+	public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
+		event.setCancelled(true);
+		TregminePlayer achiever = t.getPlayer(event.getPlayer());
+		Achievement achievement = event.getAchievement();
+		achiever.awardAchievement(achievement);
+		t.broadcast(achiever.getChatName(),
+				new TextComponent(ChatColor.YELLOW + " won the achievement " + event.getAchievement().name()));
+	}
 }

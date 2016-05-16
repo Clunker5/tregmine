@@ -1,137 +1,118 @@
 package info.tregmine.boxfill;
 
-import info.tregmine.Tregmine;
-
 import java.util.logging.Logger;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitScheduler;
 
-public abstract class AbstractFiller implements Runnable
-{
-    private final Logger log = Logger.getLogger("Minecraft");
-    
-    protected Tregmine plugin;
+import info.tregmine.Tregmine;
 
-    private int workSize;
+public abstract class AbstractFiller implements Runnable {
+	private final Logger log = Logger.getLogger("Minecraft");
 
-    private BukkitScheduler scheduler;
-    private int taskId;
+	protected Tregmine plugin;
 
-    private Block b1;
-    private Block b2;
+	private int workSize;
 
-    protected int x, xMin, xMax;
-    protected int y, yMin, yMax;
-    protected int z, zMin, zMax;
-    protected int totalVolume;
+	private BukkitScheduler scheduler;
+	private int taskId;
 
-    public AbstractFiller(Tregmine instance, Block block1, Block block2, int workSize)
-    {
-    	this.plugin = instance;
-        this.b1 = block1;
-        this.b2 = block2;
-        this.workSize = workSize;
+	private Block b1;
+	private Block b2;
 
-        xMax =
-                Math.max(b1.getLocation().getBlockX(), b2.getLocation()
-                        .getBlockX());
-        xMin =
-                Math.min(b1.getLocation().getBlockX(), b2.getLocation()
-                        .getBlockX());
-        x = xMin;
+	protected int x, xMin, xMax;
+	protected int y, yMin, yMax;
+	protected int z, zMin, zMax;
+	protected int totalVolume;
 
-        yMax =
-                Math.max(b1.getLocation().getBlockY(), b2.getLocation()
-                        .getBlockY());
-        yMin =
-                Math.min(b1.getLocation().getBlockY(), b2.getLocation()
-                        .getBlockY());
-        y = yMin;
+	public AbstractFiller(Tregmine instance, Block block1, Block block2, int workSize) {
+		this.plugin = instance;
+		this.b1 = block1;
+		this.b2 = block2;
+		this.workSize = workSize;
 
-        zMax =
-                Math.max(b1.getLocation().getBlockZ(), b2.getLocation()
-                        .getBlockZ());
-        zMin =
-                Math.min(b1.getLocation().getBlockZ(), b2.getLocation()
-                        .getBlockZ());
-        z = zMin;
+		xMax = Math.max(b1.getLocation().getBlockX(), b2.getLocation().getBlockX());
+		xMin = Math.min(b1.getLocation().getBlockX(), b2.getLocation().getBlockX());
+		x = xMin;
 
-        totalVolume = ((xMax - x + 1) * (yMax - y + 1) * (zMax - z + 1));
+		yMax = Math.max(b1.getLocation().getBlockY(), b2.getLocation().getBlockY());
+		yMin = Math.min(b1.getLocation().getBlockY(), b2.getLocation().getBlockY());
+		y = yMin;
 
-        log.info(String.format("Fill task starting: (%d,%d,%d)-(%d,%d,%d)", x,
-                y, z, xMax, yMax, zMax));
-        log.info(totalVolume + " blocks in total.");
-    }
+		zMax = Math.max(b1.getLocation().getBlockZ(), b2.getLocation().getBlockZ());
+		zMin = Math.min(b1.getLocation().getBlockZ(), b2.getLocation().getBlockZ());
+		z = zMin;
 
-    public int getTotalVolume()
-    {
-        return totalVolume;
-    }
+		totalVolume = ((xMax - x + 1) * (yMax - y + 1) * (zMax - z + 1));
 
-    public void setScheduleState(BukkitScheduler scheduler, int taskId)
-    {
-        this.scheduler = scheduler;
-        this.taskId = taskId;
-    }
+		log.info(String.format("Fill task starting: (%d,%d,%d)-(%d,%d,%d)", x, y, z, xMax, yMax, zMax));
+		log.info(totalVolume + " blocks in total.");
+	}
 
-    @Override
-    public void run()
-    {
-        if (b1 == null || b2 == null) {
-            return;
-        }
+	public abstract void changeBlock(Block block);
 
-        World world = b1.getWorld();
+	public void finished() {
+	}
 
-        log.info(String.format("Fill task resuming: (%d,%d,%d)", x, y, z));
+	public int getTotalVolume() {
+		return totalVolume;
+	}
 
-        int c = 0;
-        boolean partialWork = false;
-        for (; x <= xMax; x++) {
-            for (; y <= yMax; y++) {
-                for (; z <= zMax; z++) {
-                    Block block = world.getBlockAt(x, y, z);
+	@Override
+	public void run() {
+		if (b1 == null || b2 == null) {
+			return;
+		}
 
-                    if(!plugin.getBlessedBlocks().containsKey(block.getLocation())){
-                    	changeBlock(block);//in theory, should prevent blessed chests ect. from being filled away accidentally
-                    }
+		World world = b1.getWorld();
 
-                    if (++c % workSize == 0) {
-                        partialWork = true;
-                        break;
-                    }
-                }
+		log.info(String.format("Fill task resuming: (%d,%d,%d)", x, y, z));
 
-                if (partialWork) {
-                    break;
-                }
-                else {
-                    z = zMin;
-                }
-            }
+		int c = 0;
+		boolean partialWork = false;
+		for (; x <= xMax; x++) {
+			for (; y <= yMax; y++) {
+				for (; z <= zMax; z++) {
+					Block block = world.getBlockAt(x, y, z);
 
-            if (partialWork) {
-                break;
-            }
-            else {
-                y = yMin;
-            }
-        }
+					if (!plugin.getBlessedBlocks().containsKey(block.getLocation())) {
+						changeBlock(block);// in theory, should prevent blessed
+											// chests ect. from being filled
+											// away accidentally
+					}
 
-        // log.info("Finished unit of work.");
+					if (++c % workSize == 0) {
+						partialWork = true;
+						break;
+					}
+				}
 
-        if (!partialWork) {
-            log.info("Fill task ended.");
-            finished();
-            scheduler.cancelTask(taskId);
-        }
-    }
+				if (partialWork) {
+					break;
+				} else {
+					z = zMin;
+				}
+			}
 
-    public abstract void changeBlock(Block block);
+			if (partialWork) {
+				break;
+			} else {
+				y = yMin;
+			}
+		}
 
-    public void finished()
-    {
-    }
+		// log.info("Finished unit of work.");
+
+		if (!partialWork) {
+			log.info("Fill task ended.");
+			finished();
+			scheduler.cancelTask(taskId);
+		}
+	}
+
+	public void setScheduleState(BukkitScheduler scheduler, int taskId) {
+		this.scheduler = scheduler;
+		this.taskId = taskId;
+	}
 }

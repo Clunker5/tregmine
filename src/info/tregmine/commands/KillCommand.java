@@ -10,42 +10,45 @@ import org.bukkit.potion.PotionEffectType;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
-public class KillCommand extends AbstractCommand{
+public class KillCommand extends AbstractCommand {
 	Tregmine t;
-	public KillCommand(Tregmine instance){
+
+	public KillCommand(Tregmine instance) {
 		super(instance, "kill");
 		t = instance;
 	}
-	public boolean handlePlayer(TregminePlayer player, String[] args){
-		if(!player.getIsAdmin()){
+
+	@Override
+	public boolean handlePlayer(TregminePlayer player, String[] args) {
+		if (!player.getIsAdmin()) {
 			player.sendStringMessage(ChatColor.RED + "You do not have permission to use that command!");
 			return true;
 		}
-		if(player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()){
+		if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
 			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
-		if(args.length != 1){
+		if (args.length != 1) {
 			player.sendStringMessage(ChatColor.RED + "Invalid arguments - Use /kill player");
 			return true;
 		}
-		if(!player.isOp()){
+		if (!player.isOp()) {
 			player.sendStringMessage(ChatColor.RED + "You don't have permission to kill people!");
 		}
-		if(player.getWorld().getName() == "vanilla"){
+		if (player.getWorld().getName() == "vanilla") {
 			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
 		List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
-		if(candidates.size() != 1){
+		if (candidates.size() != 1) {
 			player.sendStringMessage(ChatColor.RED + "That player does not exist!");
 		}
 		TregminePlayer victim = candidates.get(0);
-		if(victim.getWorld().getName() == "vanilla"){
+		if (victim.getWorld().getName() == "vanilla") {
 			player.sendStringMessage(ChatColor.RED + "Cannot kill a player in the vanilla world!");
 			return true;
 		}
-		if(victim.getGameMode() == GameMode.CREATIVE){
+		if (victim.getGameMode() == GameMode.CREATIVE) {
 			player.sendStringMessage(ChatColor.RED + "Cannot kill someone in creative!");
 			return true;
 		}

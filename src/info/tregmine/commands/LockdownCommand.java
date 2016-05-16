@@ -5,28 +5,31 @@ import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 
-public class LockdownCommand extends AbstractCommand{
+public class LockdownCommand extends AbstractCommand {
 	Tregmine plugin;
-	public LockdownCommand(Tregmine tregmine){
+
+	public LockdownCommand(Tregmine tregmine) {
 		super(tregmine, "lockdown");
 		plugin = tregmine;
 	}
-	public boolean handlePlayer(TregminePlayer player, String[] args){
-		if(!player.getIsAdmin()){
+
+	@Override
+	public boolean handlePlayer(TregminePlayer player, String[] args) {
+		if (!player.getIsAdmin()) {
 			player.sendStringMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
 			return true;
 		}
-		if(args.length == 0){
+		if (args.length == 0) {
 			player.sendStringMessage(ChatColor.RED + "You must specify <on|off>");
 			return true;
 		}
 		System.out.println(args[0]);
 		boolean state;
-		if(args[0].equalsIgnoreCase("on")){
+		if (args[0].equalsIgnoreCase("on")) {
 			state = true;
-		}else if(args[0].equalsIgnoreCase("off")){
+		} else if (args[0].equalsIgnoreCase("off")) {
 			state = false;
-		}else{
+		} else {
 			player.sendStringMessage(ChatColor.RED + "You must specify <on|off>");
 			return true;
 		}

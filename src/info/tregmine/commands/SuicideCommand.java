@@ -6,15 +6,17 @@ import org.bukkit.potion.PotionEffectType;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Tools;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
 
-public class SuicideCommand extends AbstractCommand{
+public class SuicideCommand extends AbstractCommand {
 	Tregmine t;
-	public SuicideCommand(Tregmine inst){
+
+	public SuicideCommand(Tregmine inst) {
 		super(inst, "suicide");
 		t = inst;
 	}
-	public boolean handlePlayer(TregminePlayer player, String[] args){
+
+	@Override
+	public boolean handlePlayer(TregminePlayer player, String[] args) {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.HARM, 1, 10000));
 		player.setDeathCause("suicide");
 		Tools tools = new Tools();

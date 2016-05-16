@@ -5,97 +5,89 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.Location;
 
 import info.tregmine.api.Warp;
-import info.tregmine.database.IWarpDAO;
 import info.tregmine.database.DAOException;
+import info.tregmine.database.IWarpDAO;
 
-public class DBWarpDAO implements IWarpDAO
-{
-    private Connection conn;
+public class DBWarpDAO implements IWarpDAO {
+	private Connection conn;
 
-    public DBWarpDAO(Connection conn)
-    {
-        this.conn = conn;
-    }
+	public DBWarpDAO(Connection conn) {
+		this.conn = conn;
+	}
 
-    private World getWorld(Server server, String name)
-    {
-        for (World world : server.getWorlds()) {
-            if (name.matches(world.getName())) {
-                return world;
-            }
-        }
+	@Override
+	public Warp getWarp(String name, Server server) throws DAOException {
+		String sql = "SELECT * FROM warp WHERE warp_name = ?";
 
-        return null;
-    }
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, name);
+			stmt.execute();
 
-    @Override
-    public void insertWarp(String name, Location loc)
-    throws DAOException
-    {
-        String sql = "INSERT INTO warp (warp_name, warp_x, warp_y, warp_z, " +
-            "warp_yaw, warp_pitch, warp_world) ";
-        sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
+			try (ResultSet rs = stmt.getResultSet()) {
+				if (!rs.next()) {
+					return null;
+				}
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+				int id = rs.getInt("warp_id");
+				String warpName = rs.getString("warp_name");
+				double x = rs.getDouble("warp_x");
+				double y = rs.getDouble("warp_y");
+				double z = rs.getDouble("warp_z");
+				float pitch = rs.getFloat("warp_pitch");
+				float yaw = rs.getFloat("warp_yaw");
 
-            stmt.setString(1, name);
-            stmt.setDouble(2, loc.getX());
-            stmt.setDouble(3, loc.getY());
-            stmt.setDouble(4, loc.getZ());
-            stmt.setFloat(5, loc.getYaw());
-            stmt.setFloat(6, loc.getPitch());
-            stmt.setString(7, loc.getWorld().getName());
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
-    }
+				World world = getWorld(server, rs.getString("warp_world"));
 
-    @Override
-    public Warp getWarp(String name, Server server)
-    throws DAOException
-    {
-        String sql = "SELECT * FROM warp WHERE warp_name = ?";
+				if (world == null) {
+					return null;
+				}
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.execute();
+				Location location = new Location(world, x, y, z, yaw, pitch);
 
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    return null;
-                }
+				Warp warp = new Warp();
+				warp.setId(id);
+				warp.setName(warpName);
+				warp.setLocation(location);
 
-                int id = rs.getInt("warp_id");
-                String warpName = rs.getString("warp_name");
-                double x = rs.getDouble("warp_x");
-                double y = rs.getDouble("warp_y");
-                double z = rs.getDouble("warp_z");
-                float pitch = rs.getFloat("warp_pitch");
-                float yaw = rs.getFloat("warp_yaw");
+				return warp;
+			}
+		} catch (SQLException e) {
+			throw new DAOException(sql, e);
+		}
+	}
 
-                World world = getWorld(server, rs.getString("warp_world"));
+	private World getWorld(Server server, String name) {
+		for (World world : server.getWorlds()) {
+			if (name.matches(world.getName())) {
+				return world;
+			}
+		}
 
-                if (world == null) {
-                    return null;
-                }
+		return null;
+	}
 
-                Location location = new Location(world, x, y, z, yaw, pitch);
+	@Override
+	public void insertWarp(String name, Location loc) throws DAOException {
+		String sql = "INSERT INTO warp (warp_name, warp_x, warp_y, warp_z, " + "warp_yaw, warp_pitch, warp_world) ";
+		sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-                Warp warp = new Warp();
-                warp.setId(id);
-                warp.setName(warpName);
-                warp.setLocation(location);
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-                return warp;
-            }
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
-    }
+			stmt.setString(1, name);
+			stmt.setDouble(2, loc.getX());
+			stmt.setDouble(3, loc.getY());
+			stmt.setDouble(4, loc.getZ());
+			stmt.setFloat(5, loc.getYaw());
+			stmt.setFloat(6, loc.getPitch());
+			stmt.setString(7, loc.getWorld().getName());
+			stmt.execute();
+		} catch (SQLException e) {
+			throw new DAOException(sql, e);
+		}
+	}
 }
