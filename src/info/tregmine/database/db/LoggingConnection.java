@@ -324,7 +324,7 @@ public class LoggingConnection implements Connection {
 
 	public synchronized void updateEntry(String sql, long execTime) {
 		LogEntry logEntry;
-		if (!log.containsKey(sql)) {
+		if (log.get(sql) == null) {
 			logEntry = new LogEntry();
 			logEntry.sql = sql;
 			logEntry.invocationCount = 0;

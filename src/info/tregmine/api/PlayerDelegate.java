@@ -4,14 +4,14 @@ package info.tregmine.api;
 import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 
 import info.tregmine.Tregmine;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.minecraft.server.v1_9_R1.EntityPlayer;
-import net.minecraft.server.v1_9_R1.PacketPlayOutChat;
+import net.minecraft.server.v1_9_R2.EntityPlayer;
+import net.minecraft.server.v1_9_R2.PacketPlayOutChat;
 
 public abstract class PlayerDelegate {
 	private org.bukkit.entity.Player delegate;
@@ -267,11 +267,13 @@ public abstract class PlayerDelegate {
 		checkState();
 		return delegate.getInventory();
 	}
-
+	
 	public org.bukkit.inventory.ItemStack getItemInHand() {
 		checkState();
-		return delegate.getItemOnCursor();
+		return delegate.getEquipment().getItemInMainHand();
 	}
+	
+	
 
 	public org.bukkit.inventory.ItemStack getItemOnCursor() {
 		checkState();

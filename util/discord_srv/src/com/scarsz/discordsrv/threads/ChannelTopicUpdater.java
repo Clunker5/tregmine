@@ -29,7 +29,7 @@ public class ChannelTopicUpdater extends Thread {
     }
 
     public void run() {
-    	int rate = DiscordSRV.plugin.getConfig().getInt("ChannelTopicUpdaterRateInSeconds") * 1000;
+    	int rate = 60 * 1000;
 
 	    while (!isInterrupted())
 	    {

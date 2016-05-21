@@ -50,7 +50,7 @@ public class BlessedBlockListener implements Listener {
 		Player player = event.getPlayer();
 
 		Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
-		if (blessedBlocks.containsKey(loc)) {
+		if (blessedBlocks.get(loc) != null) {
 			player.sendMessage(ChatColor.RED + "You can't destroy a blessed item.");
 			event.setCancelled(true);
 			return;
@@ -71,8 +71,8 @@ public class BlessedBlockListener implements Listener {
 			Location loc3 = loc.add(new Vector(0, 0, 1));
 			Location loc4 = loc.subtract(new Vector(0, 0, 1));
 
-			if (blessedBlocks.containsKey(loc1) || blessedBlocks.containsKey(loc2) || blessedBlocks.containsKey(loc3)
-					|| blessedBlocks.containsKey(loc4)) {
+			if (blessedBlocks.get(loc1) != null || blessedBlocks.get(loc2) != null || blessedBlocks.get(loc3) != null
+					|| blessedBlocks.get(loc4) != null) {
 
 				player.sendMessage(ChatColor.RED + "You can't place a chest next to one that is already blessed.");
 				event.setCancelled(true);
@@ -84,7 +84,7 @@ public class BlessedBlockListener implements Listener {
 			Location loc = block.getLocation();
 			Location loc1 = loc.subtract(new Vector(0, 1, 0));
 
-			if (blessedBlocks.containsKey(loc) || blessedBlocks.containsKey(loc1)) {
+			if (blessedBlocks.get(loc) != null || blessedBlocks.get(loc1) != null) {
 
 				player.sendStringMessage(ChatColor.RED + "You can't place a hopper under a blessed chest.");
 				event.setCancelled(true);
@@ -99,7 +99,7 @@ public class BlessedBlockListener implements Listener {
 
 		Map<Location, Integer> b = plugin.getBlessedBlocks();
 
-		if (b.containsKey(l)) {
+		if (b.get(l) != null) {
 			if (e instanceof Zombie) {
 				event.setCancelled(true);
 			}
@@ -142,7 +142,6 @@ public class BlessedBlockListener implements Listener {
 		}
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.BONE
 				&& player.getRank().canBless() && ALLOWED_MATERIALS.contains(block.getType())) {
-
 			int targetId = player.getBlessTarget();
 			if (targetId == 0) {
 				player.sendStringMessage(ChatColor.RED + "Use /bless [name] first!");
@@ -200,7 +199,7 @@ public class BlessedBlockListener implements Listener {
 			Location loc = block.getLocation();
 
 			Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
-			if (blessedBlocks.containsKey(loc)) {
+			if (blessedBlocks.get(loc) != null) {
 				int id = blessedBlocks.get(loc);
 				TregminePlayer target = plugin.getPlayerOffline(id);
 				if (id != player.getId()) {

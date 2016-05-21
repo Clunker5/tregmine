@@ -9,6 +9,7 @@ import static org.bukkit.ChatColor.RESET;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
@@ -98,8 +99,44 @@ public class PromoteCommand extends AbstractCommand {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
-		this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC + user.getChatName() + RESET + GREEN
+		this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(RESET + "" + GREEN
 				+ " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!"));
+		return true;
+	}
+	
+	@Override
+	public boolean handleOther(Server server, String[] args){
+		if(args.length != 2){
+			server.getLogger().info("[PROMOTE] You must specify two arguments.");
+			return true;
+		}
+		TregminePlayer user = tregmine.getPlayer(args[0]);
+		String getrank = args[1];
+		Rank rank = user.getRank();
+		Rank oldrank = user.getRank();
+		for(Rank r : Rank.values()){
+			if(r.name().toLowerCase().equals(getrank.toLowerCase())){
+				rank = r;
+				break;
+			}
+		}
+		try (IContext ctx = tregmine.createContext()) {
+			user.setRank(rank);
+			if (rank != Rank.SENIOR_ADMIN && rank != Rank.GUARDIAN && rank != Rank.JUNIOR_ADMIN) {
+				user.setStaff(false);
+			}
+			user.setMentor(null);
+
+			IPlayerDAO playerDAO = ctx.getPlayerDAO();
+			playerDAO.updatePlayer(user);
+			playerDAO.updatePlayerInfo(user);
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
+		if(oldrank != rank){
+			this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent("" + RESET + GREEN
+				+ " has been promoted to " + RESET + BLUE + ITALIC + rank + "!"));
+		}
 		return true;
 	}
 

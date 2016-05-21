@@ -76,10 +76,13 @@ public abstract class AbstractFiller implements Runnable {
 				for (; z <= zMax; z++) {
 					Block block = world.getBlockAt(x, y, z);
 
-					if (!plugin.getBlessedBlocks().containsKey(block.getLocation())) {
+					/*if (!plugin.getBlessedBlocks().containsKey(block.getLocation())) {
 						changeBlock(block);// in theory, should prevent blessed
 											// chests ect. from being filled
 											// away accidentally
+					}*/
+					if(plugin.getBlessedBlocks().get(block.getLocation()) == null){
+						changeBlock(block);
 					}
 
 					if (++c % workSize == 0) {

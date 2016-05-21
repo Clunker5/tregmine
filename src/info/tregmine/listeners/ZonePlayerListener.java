@@ -238,6 +238,9 @@ public class ZonePlayerListener implements Listener {
 		if (player == null) {
 			return;
 		}
+		if(player.getGameMode() == GameMode.CREATIVE){
+			return;
+		}
 		ItemStack item = player.getItemInHand();
 		if (item.getType() == Material.STICK) {
 			event.setCancelled(true);

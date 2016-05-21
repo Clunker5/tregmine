@@ -198,7 +198,7 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
 
 				WebServer server = tregmine.getWebServer();
 				Map<String, TregminePlayer> authTokens = server.getAuthTokens();
-				if (!authTokens.containsKey(authToken)) {
+				if (authTokens.get(authToken) == null) {
 					Tregmine.LOGGER.info("Auth token " + authToken + " not found.");
 					socket.sendSystemMessage("Auth token not found.");
 					return;

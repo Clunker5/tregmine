@@ -70,6 +70,8 @@ public class TregmineBlockListener implements Listener {
 			}
 		} catch (DAOException e) {
 			e.printStackTrace();
+		} catch (NullPointerException e){
+			
 		}
 	}
 

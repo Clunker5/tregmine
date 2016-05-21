@@ -19,7 +19,6 @@ public class AchievementListener implements Listener {
 
 	@EventHandler
 	public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
-		event.setCancelled(true);
 		TregminePlayer achiever = t.getPlayer(event.getPlayer());
 		Achievement achievement = event.getAchievement();
 		achiever.awardAchievement(achievement);

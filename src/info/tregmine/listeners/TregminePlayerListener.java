@@ -41,6 +41,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -235,7 +236,7 @@ public class TregminePlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerClick(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) {
 			return;
 		}
 		Player player = event.getPlayer();
@@ -282,12 +283,6 @@ public class TregminePlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerFlight(PlayerToggleFlightEvent event) {
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (player.getWorld().getName() == "vanilla") {
-			event.setCancelled(true);
-			player.setFlying(false);
-			player.setFlySpeed(0);
-			player.sendStringMessage(ChatColor.RED + "You cannot fly in vanilla!");
-		}
 		if (player.getRank().canModifyZones()) {
 			return;
 		}

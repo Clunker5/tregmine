@@ -43,6 +43,10 @@ public enum Rank {
 		return this == DONATOR || this == GUARDIAN || this == BUILDER || this == CODER || this == JUNIOR_ADMIN
 				|| this == SENIOR_ADMIN;
 	}
+	
+	public boolean canGoToNewWorld() {
+		return this == GUARDIAN || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
 
 	public boolean canBreakBannedBlocks() {
 		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
@@ -198,6 +202,13 @@ public enum Rank {
 
 	public boolean canPurge() {
 		return this == SENIOR_ADMIN;
+	}
+	
+	public boolean canMute() {
+		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
+	public boolean canBeMuted() {
+		return this != GUARDIAN && this != JUNIOR_ADMIN && this != SENIOR_ADMIN;
 	}
 
 	public boolean canReload() {

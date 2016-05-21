@@ -11,126 +11,112 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-public class FireworksFactory
-{
-    private FireworkEffect.Type type = FireworkEffect.Type.BALL;
+public class FireworksFactory {
+	private FireworkEffect.Type type = FireworkEffect.Type.BALL;
 
-    private Color[] colors = new Color[19];
-    private Color fadeTo = null;
+	private Color[] colors = new Color[19];
+	private Color fadeTo = null;
 
-    private int colorCounter = 0;
-    private int duration = 1;
+	private int colorCounter = 0;
+	private int duration = 1;
 
-    public FireworksFactory()
-    {
-    }
+	public FireworksFactory() {
+	}
 
-    public void addColor(Color _color)
-    {
-        if (colorCounter > 0) {
-            for (int cc = 1; cc <= colorCounter; cc++) {
-                if (colors[cc].equals(_color)) {
-                    return;
-                }
-            }
-        }
-        colorCounter++;
-        colors[colorCounter] = _color;
-    }
+	public void addColor(Color _color) {
+		if (colorCounter > 0) {
+			for (int cc = 1; cc <= colorCounter; cc++) {
+				if (colors[cc].equals(_color)) {
+					return;
+				}
+			}
+		}
+		colorCounter++;
+		colors[colorCounter] = _color;
+	}
 
-    public String effectToString(FireworkEffect.Type type)
-    {
-        if (FireworkEffect.Type.BALL.equals(type)) {
-            return "ball";
-        }
-        else if (FireworkEffect.Type.BALL_LARGE.equals(type)) {
-            return "large ball";
-        }
-        else if (FireworkEffect.Type.STAR.equals(type)) {
-            return "star";
-        }
-        else if (FireworkEffect.Type.CREEPER.equals(type)) {
-            return "creeper";
-        }
+	public void addType(FireworkEffect.Type type) {
+		this.type = type;
+	}
 
-        return "UNKOWN";
-    }
+	public String colorToString(Color c) {
+		return c.toString().toLowerCase();
+	}
 
-    public String colorToString(Color c)
-    {
-        return c.toString().toLowerCase();
-    }
+	public void duration(int _duration) {
+		this.duration = _duration;
+	}
 
-    public void duration(int _duration)
-    {
-        this.duration = _duration;
-    }
+	public String effectToString(FireworkEffect.Type type) {
+		if (FireworkEffect.Type.BALL.equals(type)) {
+			return "ball";
+		} else if (FireworkEffect.Type.BALL_LARGE.equals(type)) {
+			return "large ball";
+		} else if (FireworkEffect.Type.STAR.equals(type)) {
+			return "star";
+		} else if (FireworkEffect.Type.CREEPER.equals(type)) {
+			return "creeper";
+		}
 
-    public String[] hasColorAsString()
-    {
+		return "UNKOWN";
+	}
 
-        String [] colorNames = new String[colorCounter];
+	public void fadeTo(Color color) {
+		this.fadeTo = color;
+	}
 
-        for (int i = 0; i >= colorCounter;i++) {
-            colorNames[i] = this.colorToString(colors[i]);
-        }
-        return colorNames;
-    }
+	public ItemStack getAsStack(int _stackSize) {
+		ItemStack item = new ItemStack(Material.FIREWORK, _stackSize);
+		FireworkEffect.Builder effect = FireworkEffect.builder();
 
-    public void fadeTo(Color color)
-    {
-        this.fadeTo = color;
-    }
+		String colorString = "";
 
-    public void addType(FireworkEffect.Type type)
-    {
-        this.type = type;
-    }
+		for (int cc = 1; cc <= colorCounter; cc++) {
+			effect.withColor(colors[cc]);
+			colorString = colorString + " " + this.colorToString(colors[cc]);
+		}
 
-    public void shot(Location location)
-    {
-        Firework firework = (Firework)location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-        FireworkEffect.Builder effect = FireworkEffect.builder();
+		FireworkMeta meta = (FireworkMeta) item.getItemMeta();
+		meta.setDisplayName("Firework: " + colorString + " " + this.effectToString(this.type));
+		effect.with(type);
 
-        for (int cc = 1; cc <= colorCounter; cc++) {
-            effect.withColor(colors[cc]);
-        }
+		if (this.fadeTo != null) {
+			effect.withFade(fadeTo);
+		}
 
-        FireworkMeta meta = firework.getFireworkMeta();
-        effect.with(type);
-        if (this.fadeTo != null) {
-            effect.withFade(fadeTo);
-        }
+		meta.setPower(this.duration);
+		meta.addEffect(effect.build());
+		item.setItemMeta(meta);
 
-        meta.setPower(this.duration);
-        meta.addEffect(effect.build());
-        firework.setFireworkMeta(meta);
-    }
+		return item;
+	}
 
-    public ItemStack getAsStack(int _stackSize)
-    {
-        ItemStack item = new ItemStack(Material.FIREWORK, _stackSize);
-        FireworkEffect.Builder effect = FireworkEffect.builder();
+	public String[] hasColorAsString() {
 
-        String colorString = "";
+		String[] colorNames = new String[colorCounter];
 
-        for (int cc = 1; cc <= colorCounter; cc++) {
-            effect.withColor(colors[cc]);
-            colorString = colorString + " " + this.colorToString(colors[cc]);
-        }
+		for (int i = 0; i >= colorCounter; i++) {
+			colorNames[i] = this.colorToString(colors[i]);
+		}
+		return colorNames;
+	}
 
-        FireworkMeta meta = (FireworkMeta) item.getItemMeta();
-        meta.setDisplayName("Firework: " + colorString + " " + this.effectToString(this.type)  );
-        effect.with(type);
+	public void shot(Location location) {
+		Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+		FireworkEffect.Builder effect = FireworkEffect.builder();
 
-        if (this.fadeTo != null) {
-            effect.withFade(fadeTo);
-        }
+		for (int cc = 1; cc <= colorCounter; cc++) {
+			effect.withColor(colors[cc]);
+		}
 
-        meta.setPower(this.duration);
-        meta.addEffect(effect.build());
-        item.setItemMeta(meta);
+		FireworkMeta meta = firework.getFireworkMeta();
+		effect.with(type);
+		if (this.fadeTo != null) {
+			effect.withFade(fadeTo);
+		}
 
-        return item;
-    }
+		meta.setPower(this.duration);
+		meta.addEffect(effect.build());
+		firework.setFireworkMeta(meta);
+	}
 }

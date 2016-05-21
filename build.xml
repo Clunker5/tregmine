@@ -66,6 +66,23 @@
             </manifest>
                     </jar>
     </target>
+    
+    <target name="debugjar" depends="compile">
+        <jar destfile="./server/plugins/tregmine.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Class-Path"
+                    value="lib/json.jar
+                           lib/quadtree.jar
+                           lib/commons-dbcp-1.4.jar
+                           lib/servlet-api.jar
+                           lib/jetty-all.jar
+                           lib/commons-pool-1.5.6.jar
+                           lib/TagAPI.jar
+						   lib/activation.jar 
+                	       lib/mail.jar" />
+            </manifest>
+                    </jar>
+    </target>
 	
 	<!--<target name="jar" depends="create">
       <zip destfile="tregmine.jar">

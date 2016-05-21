@@ -143,6 +143,7 @@ import info.tregmine.database.IZonesDAO;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.events.CallEventListener;
 import info.tregmine.events.TregmineChatEvent;
+import info.tregmine.listeners.AchievementListener;
 import info.tregmine.listeners.AfkListener;
 import info.tregmine.listeners.BankListener;
 import info.tregmine.listeners.BlessedBlockListener;
@@ -253,8 +254,12 @@ public class Tregmine extends JavaPlugin {
 
 	// End interject
 	public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr) throws PlayerBannedException {
-		if (players.containsKey(srcPlayer.getName())) {
-			return players.get(srcPlayer.getName());
+//		if (players.containsKey(srcPlayer.getName())) {
+//			return players.get(srcPlayer.getName());
+//		}
+		TregminePlayer plr = players.get(srcPlayer.getName());
+		if(plr != null){
+			return plr;
 		}
 		try (IContext ctx = contextFactory.createContext()) {
 			IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -423,8 +428,9 @@ public class Tregmine extends JavaPlugin {
 	// ============================================================================
 
 	public TregminePlayer getPlayerOffline(int id) {
-		if (playersById.containsKey(id)) {
-			return playersById.get(id);
+		TregminePlayer plr = playersById.get(id);
+		if(plr != null){
+			return plr;
 		}
 
 		try (IContext ctx = contextFactory.createContext()) {
@@ -436,8 +442,12 @@ public class Tregmine extends JavaPlugin {
 	}
 
 	public TregminePlayer getPlayerOffline(String name) {
-		if (players.containsKey(name)) {
-			return players.get(name);
+//		if (players.containsKey(name)) {
+//			return players.get(name);
+//		}
+		TregminePlayer plr = players.get(name);
+		if(plr != null){
+			return plr;
 		}
 
 		try (IContext ctx = contextFactory.createContext()) {
@@ -749,6 +759,7 @@ public class Tregmine extends JavaPlugin {
 		// Register all listeners
 		PluginManager pluginMgm = server.getPluginManager();
 		pluginMgm.registerEvents(new CraftListener(this), this);
+		pluginMgm.registerEvents(new AchievementListener(this), this);
 		pluginMgm.registerEvents(new AfkListener(this), this);
 		pluginMgm.registerEvents(new BlockStats(this), this);
 		pluginMgm.registerEvents(new BlessedBlockListener(this), this);
@@ -776,7 +787,6 @@ public class Tregmine extends JavaPlugin {
 		pluginMgm.registerEvents(new LumberListener(this), this);
 		pluginMgm.registerEvents(new VeinListener(this), this);
 		pluginMgm.registerEvents(new CallEventListener(this), this);
-		pluginMgm.registerEvents(new TregminePortalListener(this), this);
 		pluginMgm.registerEvents(new PortalListener(this), this);
 		pluginMgm.registerEvents(new BankListener(this), this);
 		pluginMgm.registerEvents(new RareDropListener(this), this);
@@ -823,7 +833,7 @@ public class Tregmine extends JavaPlugin {
 						|| player.getRank() == Rank.SENIOR_ADMIN;
 			}
 		});
-		getCommand("oldworld").setExecutor(new OWCommand(this));
+		getCommand("taxi").setExecutor(new OWCommand(this));
 		getCommand("property").setExecutor(new PropertyCommand(this));
 		getCommand("staffbook").setExecutor(new StaffHandbookCommand(this));
 		getCommand("action").setExecutor(new ActionCommand(this));

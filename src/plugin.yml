@@ -1,7 +1,7 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 4.1
-website: http://tregmine.info
+version: 4.3
+website: https://www.tregmine.com
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
 loadbefore: [BlockLog,GameMagic]
@@ -144,6 +144,9 @@ commands:
   nuke:
     description: Kill all mobs on this map (admins and guardians only)
     usage: /nuke
+  taxi:
+    description: Lets players bounce between worlds
+    usage: /taxi
   password:
     description: Set your password
     usage: /password password

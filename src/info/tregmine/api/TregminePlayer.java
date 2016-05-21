@@ -100,6 +100,8 @@ public class TregminePlayer extends PlayerDelegate {
 	private boolean AfkKick = true;
 	private boolean CurseWarned;
 	private PermissionAttachment attachment;
+	private PlayerMute mute = null;
+	private boolean muted = false;
 
 	// Reports
 	private List<String[]> reports = new ArrayList<String[]>();
@@ -975,13 +977,11 @@ public class TregminePlayer extends PlayerDelegate {
 	}
 
 	public void setAfk(boolean value) {
-		if (this.isHidden()) {
-			return;
-		}
 		if (value == true) {
 			this.afk = true;
-			TextComponent message = new TextComponent(ITALIC + "" + getChatName() + RESET + BLUE + " is now afk.");
-			this.plugin.broadcast(message);
+			if(!this.isHidden()){
+			this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(), new TextComponent(RESET + "" + BLUE + " is now afk."));
+			}
 			String oldname = getChatNameNoHover();
 			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
 		} else if (value == false) {
@@ -989,16 +989,32 @@ public class TregminePlayer extends PlayerDelegate {
 			this.setLastOnlineActivity(currentTime);
 			this.afk = false;
 			setTemporaryChatName(getNameColor() + getRealName());
+			if(!this.isHidden()){
 			TextComponent message = new TextComponent(
 					ITALIC + "" + getChatName() + RESET + GREEN + " is no longer afk.");
-			this.plugin.broadcast(message);
-		} else {
-			return;
+			this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(), new TextComponent(RESET + "" + GREEN + " is no longer afk."));
+			}
 		}
 	}
 
 	public void setAfkKick(boolean a) {
 		this.AfkKick = a;
+	}
+	
+	public void setMute(PlayerMute p0){
+		this.mute = p0;
+	}
+	
+	public void setMuted(boolean p0){
+		this.muted = p0;
+	}
+	
+	public boolean isMuted(){
+		return this.muted;
+	}
+	
+	public PlayerMute getMute(){
+		return this.mute;
 	}
 
 	public void setAlerted(boolean a) {

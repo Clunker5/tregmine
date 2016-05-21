@@ -1,10 +1,12 @@
 package info.tregmine.listeners;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -22,6 +24,9 @@ public class BoxFillBlockListener implements Listener {
 	public void onBlockDamage(BlockDamageEvent event) {
 
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+		if(player.getGameMode() == GameMode.CREATIVE){
+			return;
+		}
 		if (!player.getRank().canFill()) {
 			return;
 		}
@@ -37,6 +42,24 @@ public class BoxFillBlockListener implements Listener {
 		event.getPlayer().sendMessage("First block set");
 		player.setFillBlockCounter(1);
 	}
+	
+	@EventHandler
+    public void onBlockBreak(BlockBreakEvent event){
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canFill()) {
+            return;
+        }
+
+        if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+            return;
+        }else{
+        event.setCancelled(true);
+        }
+        Block block = event.getBlock();
+    	player.setFillBlock1(block);
+        event.getPlayer().sendMessage("First block set");
+        player.setFillBlockCounter(1);
+    }
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {

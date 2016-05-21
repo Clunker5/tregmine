@@ -38,6 +38,11 @@ public class ChatListener implements Listener {
 	@EventHandler
 	public void onTregmineChat(TregmineChatEvent event) {
 		TregminePlayer sender = event.getPlayer();
+		if(sender.isMuted() && !sender.getMute().isExpired() && !sender.getMute().isCancelled()){
+			sender.sendStringMessage(ChatColor.YELLOW + "You have been muted; Your mute will expire in " + sender.getMute().secondsLeft() + " seconds.");
+			event.setCancelled(true);
+			return;
+		}
 		String channel = sender.getChatChannel();
 		if (event.getMessage().contains("%cancel%")) {
 			event.setCancelled(true);
@@ -187,9 +192,9 @@ public class ChatListener implements Listener {
 		}
 
 		if (event.isWebChat()) {
-			Tregmine.LOGGER.info(channel + " (" + sender.getChatNameNoHover() + ") " + event.getMessage());
+			Tregmine.LOGGER.info(channel + " (" + sender.getName() + ") " + event.getMessage());
 		} else {
-			Tregmine.LOGGER.info(channel + " <" + sender.getChatNameNoHover() + "> " + event.getMessage());
+			Tregmine.LOGGER.info(channel + " <" + sender.getPlayer().getName() + "> " + event.getMessage());
 		}
 		try (IContext ctx = plugin.createContext()) {
 			ILogDAO logDAO = ctx.getLogDAO();
@@ -199,19 +204,19 @@ public class ChatListener implements Listener {
 		}
 
 		// event.setCancelled(true);
-		WebServer server = plugin.getWebServer();
-		server.executeChatAction(new WebServer.ChatMessage(sender, channel, event.getMessage()));
-		if (plugin.getConfig().getString("general.life-log") == "true") {
-			ListStore lifeChat = new ListStore(new File(plugin.getPluginFolder() + File.separator + "life-log.txt"));
-			lifeChat.load();
-			Date now = new Date();
-			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-			String chatTimeStamp = format.format(now);
-			String userName = event.getPlayer().getName();
-			String message = event.getMessage();
-			String logChat = "[" + chatTimeStamp + "] <" + userName + "> " + message;
-			lifeChat.add(logChat);
-			lifeChat.save();
-		}
+		//WebServer server = plugin.getWebServer();
+		//server.executeChatAction(new WebServer.ChatMessage(sender, channel, event.getMessage()));
+//		if (plugin.getConfig().getString("general.life-log") == "true") {
+//			ListStore lifeChat = new ListStore(new File(plugin.getPluginFolder() + File.separator + "life-log.txt"));
+//			lifeChat.load();
+//			Date now = new Date();
+//			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+//			String chatTimeStamp = format.format(now);
+//			String userName = event.getPlayer().getName();
+//			String message = event.getMessage();
+//			String logChat = "[" + chatTimeStamp + "] <" + userName + "> " + message;
+//			lifeChat.add(logChat);
+//			lifeChat.save();
+//		}
 	}
 }

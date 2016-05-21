@@ -1,32 +1,22 @@
 package info.tregmine.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
 
-public class TregminePortalListener implements Listener {
+public class TregminePortalListener{
 	private Tregmine plugin;
 
-	World vanillaWorld = Bukkit.getWorld("vanilla");
-
-	World vanillaEndWorld = Bukkit.getWorld("vanilla_the_end");
-	World vanillaNether = Bukkit.getWorld("vanilla_nether");
-	World mainWorld = Bukkit.getWorld("world");
-	World mainWorldNether = Bukkit.getWorld("world_nether");
-	World mainWorldEnd = Bukkit.getWorld("world_the_end");
+//	World vanillaWorld = Bukkit.getWorld("vanilla");
+//
+//	World vanillaEndWorld = Bukkit.getWorld("vanilla_the_end");
+//	World vanillaNether = Bukkit.getWorld("vanilla_nether");
+//	World mainWorld = Bukkit.getWorld("world");
+//	World mainWorldNether = Bukkit.getWorld("world_nether");
+//	World mainWorldEnd = Bukkit.getWorld("world_the_end");
 	public TregminePortalListener(Tregmine instance) {
 		this.plugin = instance;
 	}
 
-	@EventHandler
+	/* @EventHandler
 	public void portalHandler(PlayerPortalEvent event) {
 
 		TeleportCause cause = event.getCause();
@@ -168,4 +158,6 @@ public class TregminePortalListener implements Listener {
 	// return false;
 	// }
 	// }
+	 * 
+	 */
 }
