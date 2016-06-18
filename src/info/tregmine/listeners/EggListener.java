@@ -12,7 +12,6 @@ public class EggListener implements Listener {
 
 	public EggListener(Tregmine instance) {
 		this.plugin = instance;
-		this.plugin.getLogger().info("Egg Listener is online!");
 	}
 
 	@EventHandler

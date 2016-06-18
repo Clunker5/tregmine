@@ -22,11 +22,14 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -405,9 +408,9 @@ public class TregminePlayerListener implements Listener {
 					String username = singleNews.getUsername();
 					String text = singleNews.getText();
 					long timestamp = singleNews.getDate();
-					player.sendStringMessage("%CHAT%" + ChatColor.GREEN + "There is a message from " + ChatColor.RESET
+					player.sendStringMessage(ChatColor.GREEN + "There is a message from " + ChatColor.RESET
 							+ ChatColor.BLUE + username);
-					player.sendStringMessage("%CHAT%" + ChatColor.GOLD + text);
+					player.sendStringMessage(ChatColor.GOLD + text);
 				}
 			}
 		}
@@ -495,7 +498,6 @@ public class TregminePlayerListener implements Listener {
 				player.setAllowFlight(false);
 			}
 		} else {
-			player.sendStringMessage("no-z-cheat");
 			player.sendStringMessage("You are NOT allowed to fly");
 			player.setAllowFlight(false);
 		}
@@ -575,6 +577,18 @@ public class TregminePlayerListener implements Listener {
 
 		if (rank == Rank.DONATOR && !player.hasBadge(Badge.PHILANTROPIST)) {
 			player.awardBadgeLevel(Badge.PHILANTROPIST, "For being a Tregmine donator!");
+		}
+	}
+	
+	@EventHandler
+	public void onEntityDamage(EntityDamageEvent event){
+		Entity e = event.getEntity();
+		if(e instanceof Player){
+			if(event.getCause() == DamageCause.HOT_FLOOR){
+				event.setCancelled(true);
+			}
+		}else{
+			return;
 		}
 	}
 

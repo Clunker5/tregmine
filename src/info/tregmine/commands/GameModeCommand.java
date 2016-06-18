@@ -25,6 +25,7 @@ public class GameModeCommand extends AbstractCommand {
 			return true;
 		}
 		if (!player.getRank().canUseCreative()) {
+			this.insufficientPerms(player);
 			return true;
 		}
 		player.setGameMode(mode);

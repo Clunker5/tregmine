@@ -26,6 +26,15 @@ public abstract class AbstractCommand implements CommandExecutor {
 	public String getName() {
 		return command;
 	}
+	
+	public void invalidArguments(TregminePlayer player, String arguments){
+		player.sendStringMessage(ChatColor.RED + "Invalid arguments passed for /" + this.command + ".");
+		player.sendStringMessage(ChatColor.RED + "The proper syntax is: " + ChatColor.GOLD + arguments);
+	}
+	
+	public void insufficientPerms(TregminePlayer player){
+		player.sendStringMessage(ChatColor.DARK_RED + "You have insufficient permissions for /" + this.command + ".");
+	}
 
 	public boolean handleOther(Server server, String[] args) {
 		return false;

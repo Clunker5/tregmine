@@ -28,11 +28,14 @@ public class StaffNewsCommand extends AbstractCommand {
 
 	@Override
 	public boolean handlePlayer(TregminePlayer player, String[] args) {
-		if (!player.getIsStaff()) {
-			player.sendStringMessage(ChatColor.RED + "Nothing is so urgent that you need to put it on the news board!");
+		if(!player.getRank().canUseStaffNews()){
+			this.insufficientPerms(player);
 			return true;
 		}
-
+		if(args.length < 3){
+			player.sendStringMessage(ChatColor.RED + "Please provide three or more words.");
+			return true;
+		}
 		String message = argsToMessage(args);
 		LOGGER.info(player.getRealName() + " has added the following message to the staff news board: " + message);
 		try (IContext ctx = tregmine.createContext()) {

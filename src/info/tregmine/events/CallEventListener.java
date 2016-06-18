@@ -55,7 +55,7 @@ public class CallEventListener implements Listener {
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
 		if (player == null) {
-			event.getPlayer().kickPlayer("Something went wrong!");
+			event.getPlayer().kickPlayer(ChatColor.RED + "Something went wrong!");
 			Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found in players map (PlayerMoveEvent).");
 			return;
 		}

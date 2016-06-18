@@ -65,6 +65,7 @@ import info.tregmine.commands.ForceCommand;
 import info.tregmine.commands.ForceShieldCommand;
 import info.tregmine.commands.FreezeCommand;
 import info.tregmine.commands.GameModeCommand;
+import info.tregmine.commands.GameModeLegacyCommand;
 import info.tregmine.commands.GiveCommand;
 import info.tregmine.commands.HeadCommand;
 import info.tregmine.commands.HideCommand;
@@ -719,8 +720,6 @@ public class Tregmine extends JavaPlugin {
 				}
 			}
 			LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
-		} else {
-			LOGGER.info("Loaded 0 extra world(s).");
 		}
 
 		try (IContext ctx = contextFactory.createContext()) {
@@ -742,10 +741,10 @@ public class Tregmine extends JavaPlugin {
 			this.quitMessages = miscDAO.loadQuitMessages();
 			this.bannedWords = miscDAO.loadBannedWords();
 			if (insults.size() == 0) {
-				insults.add(0, "NO DEATH MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO");
+				insults.add(0, "This is a generic death message, hardcoded into the plugin as a safeguard.");
 			}
 			if (quitMessages.size() == 0) {
-				quitMessages.add(0, "NO QUIT MESSAGES IN DATABASE. SEE TREGMINE WIKI FOR INFO.");
+				quitMessages.add(0, "This is a generic quit message, hardcoded into the plugin as a safeguard.");
 			}
 			LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
 		} catch (DAOException e) {
@@ -925,13 +924,13 @@ public class Tregmine extends JavaPlugin {
 		getCommand("vanilla").setExecutor(new VanillaCommand(this));
 		getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 		getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
+		getCommand("gamemode").setExecutor(new GameModeLegacyCommand(this));
 		ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool
 														// recipes
 
-		// for (TregminePlayer player : getOnlinePlayers()) {
-		// player.sendMessage(ChatColor.AQUA + "Tregmine successfully loaded.
-		// Version " + getDescription().getVersion());
-		// }
+		 for (TregminePlayer player : getOnlinePlayers()) {
+		 player.sendStringMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
+		}
 
 		BukkitScheduler scheduler = getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable() {

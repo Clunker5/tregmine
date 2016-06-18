@@ -22,6 +22,14 @@ public enum Rank {
 		return this == SETTLER || this == RESIDENT || this == DONATOR || this == CODER || this == GUARDIAN
 				|| this == BUILDER;
 	}
+	
+	public boolean canUseStaffNews() {
+		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
+	
+	public boolean canReadStaffNews() {
+		return this == GUARDIAN || this == CODER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
 
 	public boolean bypassAFKKick() {
 		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;

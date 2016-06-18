@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 4.3
+version: 4.3.1
 website: https://www.tregmine.com
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -92,6 +92,9 @@ commands:
   freeze:
     description: Freeze a specified player
     usage: /freeze <player>
+  gamemode:
+    description: Change a players gamemode (admin only)
+    usage: /gamemode <mode>
   give:
     description: Give a user an item (admin only)
     usage: /give player item amount data

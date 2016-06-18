@@ -4,14 +4,14 @@ package info.tregmine.api;
 import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
 
 import info.tregmine.Tregmine;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.minecraft.server.v1_9_R2.EntityPlayer;
-import net.minecraft.server.v1_9_R2.PacketPlayOutChat;
+import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 
 public abstract class PlayerDelegate {
 	private org.bukkit.entity.Player delegate;
@@ -809,17 +809,11 @@ public abstract class PlayerDelegate {
 		if (p0.startsWith("%internal%")) {
 			String message = p0.replace("%internal%", "");
 			delegate.sendMessage(color + "[Internal]" + ChatColor.RESET + " > " + message);
-		} else if (p0.startsWith("%CHAT%")) {
-			String message = p0.replace("%CHAT%", "");
-			delegate.sendMessage(message);
-		} else if (p0.startsWith("%chat")) {
-			String message = p0.replace("%chat", "");
-			delegate.sendMessage(message);
 		} else if (p0.startsWith("%warning%")) {
 			String message = p0.replace("%warning%", "");
 			delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
 		} else {
-			delegate.sendMessage(p0.replace(ChatColor.GOLD + "[Tregmine]" + ChatColor.RESET + " > ", ""));
+			delegate.sendMessage(p0);
 		}
 
 	}

@@ -72,6 +72,7 @@ public class TregminePlayer extends PlayerDelegate {
 	private int guardianRank = 0;
 	private int playTime = 0;
 	private Set<Flags> flags;
+	private Set<CommandStatus> commandstatus;
 	private Set<Property> properties;
 	private Map<Badge, Integer> badges;
 	private Location lastpos = null;
@@ -154,6 +155,7 @@ public class TregminePlayer extends PlayerDelegate {
 		this.loginTime = new Date();
 
 		this.flags = EnumSet.noneOf(Flags.class);
+		this.commandstatus = EnumSet.noneOf(CommandStatus.class);
 		this.properties = EnumSet.noneOf(Property.class);
 		this.badges = new EnumMap<Badge, Integer>(Badge.class);
 		this.plugin = instance;
@@ -165,6 +167,7 @@ public class TregminePlayer extends PlayerDelegate {
 		this.name = name;
 		this.realName = name;
 		this.flags = EnumSet.noneOf(Flags.class);
+		this.commandstatus = EnumSet.noneOf(CommandStatus.class);
 		this.properties = EnumSet.noneOf(Property.class);
 		this.badges = new EnumMap<Badge, Integer>(Badge.class);
 		this.plugin = instance;
@@ -265,6 +268,18 @@ public class TregminePlayer extends PlayerDelegate {
 		}
 
 		return getRank().canMentor();
+	}
+	
+	public void setCommandStatus(CommandStatus status){
+		this.commandstatus.add(status);
+	}
+	
+	public boolean hasCommandStatus(CommandStatus status){
+		return this.commandstatus.contains(status);
+	}
+	
+	public void removeCommandStatus(CommandStatus status){
+		this.commandstatus.remove(status);
 	}
 
 	public boolean canVS() {
