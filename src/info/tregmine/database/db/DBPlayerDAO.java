@@ -130,10 +130,13 @@ public class DBPlayerDAO implements IPlayerDAO {
 			try (ResultSet rs = stmt.getResultSet()) {
 				if (!rs.next())
 					return null;
-
+				String[] strings;
 				String stringofignored = rs.getString("player_ignore");
-				String[] strings = stringofignored.split(",");
-
+				if(stringofignored == null){
+				strings = new String[0];
+				}else{
+				strings = stringofignored.split(",");
+				}
 				List<String> playerignore = new ArrayList<String>();
 				for (String i : strings) {
 					if ("".equalsIgnoreCase(i))
