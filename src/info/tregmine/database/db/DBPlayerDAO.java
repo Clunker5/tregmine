@@ -291,7 +291,6 @@ public class DBPlayerDAO implements IPlayerDAO {
 
 		loadSettings(player);
 		loadReports(player);
-
 		return player;
 	}
 

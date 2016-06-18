@@ -84,8 +84,11 @@ public class IgnoreCommand extends AbstractCommand {
 				player.sendStringMessage(ChatColor.RED + "Can not ignore this player!");
 				return true;
 			}
-
-			ignoredPeople.add(target.getDisplayName());
+			if(target.getDelegate() == null){
+				ignoredPeople.add(args[1]);
+			}else{
+				ignoredPeople.add(target.getDisplayName());
+			}
 
 			try (IContext ctx = tregmine.createContext()) {
 				IPlayerDAO playerDAO = ctx.getPlayerDAO();
