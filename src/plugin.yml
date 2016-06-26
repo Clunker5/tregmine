@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 4.3.1
+version: 4.4.0
 website: https://www.tregmine.com
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -253,9 +253,9 @@ commands:
   tp:
     description: Teleport to a player
     usage: /tp player
-  tps:
-    description: Get the TPS of the server
-    usage: /tps
+  ttps:
+    description: Get the T-TPS of the server
+    usage: /ttps
   tpshield:
     description: Prevent players from teleporting to you (donators only)
     usage: /tpshield
