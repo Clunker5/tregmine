@@ -8,7 +8,7 @@ import info.tregmine.api.TregminePlayer;
 
 public class TpsCommand extends AbstractCommand {
 	public TpsCommand(Tregmine tregmine) {
-		super(tregmine, "tps");
+		super(tregmine, "ttps");
 	}
 
 	@Override
