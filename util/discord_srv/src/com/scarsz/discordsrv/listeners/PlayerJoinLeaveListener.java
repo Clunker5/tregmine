@@ -65,7 +65,7 @@ public class PlayerJoinLeaveListener implements Listener {
         // No quit message, user shouldn't have one from permission
         if (Bukkit.getPluginManager().isPluginEnabled("VanishNoPacket") && event.getPlayer().hasPermission("vanish.silentquit")) return;
 
-        TregminePlayer player = plugin.getPlayerOffline(event.getPlayer().getName());
+        TregminePlayer player = plugin.getPlayerOffline(event.getPlayer());
         if(player.hasFlag(Flags.INVISIBLE)){
         	return;
         }
