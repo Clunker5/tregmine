@@ -23,10 +23,6 @@ public interface IPlayerDAO {
 
 	public TregminePlayer getPlayer(Player player) throws DAOException;
 
-	public TregminePlayer getPlayer(String name) throws DAOException;
-
-	public TregminePlayer getPlayer(String name, Player wrap) throws DAOException;
-
 	public void updateBadges(TregminePlayer player) throws DAOException;
 
 	public void updateIgnore(TregminePlayer player, List<String> update) throws DAOException;

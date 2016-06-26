@@ -172,11 +172,11 @@ public class MentorCommand extends AbstractCommand {
 
 			if (tregmine.getOnlineTeachers() < 3) {
 				try (IContext ctx = tregmine.createContext()) {
-					player.setRank(Rank.SETTLER);
+					student.setRank(Rank.SETTLER);
 
 					IPlayerDAO playerDAO = ctx.getPlayerDAO();
-					playerDAO.updatePlayer(player);
-					playerDAO.updatePlayerInfo(player);
+					playerDAO.updatePlayer(student);
+					playerDAO.updatePlayerInfo(student);
 
 					IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
 					int mentorLogId = mentorLogDAO.getMentorLogId(player, player);

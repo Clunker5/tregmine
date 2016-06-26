@@ -228,28 +228,18 @@ public class DBPlayerDAO implements IPlayerDAO {
 	}
 
 	@Override
-	public TregminePlayer getPlayer(Player player) throws DAOException {
-		return getPlayer(player.getName(), player);
-	}
-
-	@Override
-	public TregminePlayer getPlayer(String name) throws DAOException {
-		return getPlayer(name, null);
-	}
-
-	@Override
-	public TregminePlayer getPlayer(String name, Player wrap) throws DAOException {
-		String sql = "SELECT * FROM player WHERE player_name = ?";
+	public TregminePlayer getPlayer(Player wrap) throws DAOException {
+		String sql = "SELECT * FROM player WHERE player_uuid = ?";
 
 		TregminePlayer player;
 		if (wrap != null) {
 			player = new TregminePlayer(wrap, plugin);
-		} else {
-			player = new TregminePlayer(name, plugin);
+		}else{
+			return null;
 		}
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, name);
+			stmt.setString(1, wrap.getUniqueId().toString());
 			stmt.execute();
 
 			try (ResultSet rs = stmt.getResultSet()) {
@@ -257,15 +247,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				}
 
-				UUID uniqueId = null;
-				if (wrap != null) {
-					uniqueId = wrap.getUniqueId();
-				} else {
-					String uniqueIdStr = rs.getString("player_uuid");
-					if (uniqueIdStr != null) {
-						player.setStoredUuid(UUID.fromString(uniqueIdStr));
-					}
-				}
+				UUID uniqueId = wrap.getUniqueId();
 
 				player.setId(rs.getInt("player_id"));
 				player.setStoredUuid(uniqueId);
