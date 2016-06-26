@@ -255,7 +255,7 @@ public class Tregmine extends JavaPlugin {
 	
 	private DiscordSRV dsv;
 	
-	private Lag lag;
+	private Lag lag = new Lag();
 
 	public void addBlockedChat(TregmineChatEvent e) {
 		this.blockedChats.add(e);
@@ -426,7 +426,7 @@ public class Tregmine extends JavaPlugin {
 
 	public TregminePlayer getPlayer(Player player){
 		try {
-			return players.get(UUIDFetcher.getUUIDOf(player.getName()));
+			return players.get(player.getUniqueId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

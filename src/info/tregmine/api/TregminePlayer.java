@@ -81,6 +81,8 @@ public class TregminePlayer extends PlayerDelegate {
 
 	// Discord values
 	private boolean alertedAfk;
+	
+	private QuitCause causeofquit = null;
 
 	// One-time state
 	private String chatChannel = "GLOBAL";
@@ -302,6 +304,7 @@ public class TregminePlayer extends PlayerDelegate {
 			String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD
 					+ plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than "
 					+ autoafkkick + " seconds.";
+			this.causeofquit = QuitCause.AFK;
 			this.lastOnlineActivity = 0;
 			this.setSilentAfk(false);
 			this.kickPlayer(this.plugin, reason);
@@ -321,6 +324,14 @@ public class TregminePlayer extends PlayerDelegate {
 		} else {
 			return this.getChatName();
 		}
+	}
+	
+	public QuitCause getQuitCause(){
+		return this.causeofquit;
+	}
+	
+	public void setQuitCause(QuitCause q){
+		this.causeofquit = q;
 	}
 
 	// java.lang.Object overrides

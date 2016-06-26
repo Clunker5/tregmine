@@ -57,6 +57,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
 import info.tregmine.api.PlayerBannedException;
+import info.tregmine.api.QuitCause;
 import info.tregmine.api.Rank;
 import info.tregmine.api.StaffNews;
 import info.tregmine.api.TregminePlayer;
@@ -725,7 +726,7 @@ public class TregminePlayerListener implements Listener {
 		player.saveInventory(player.getCurrentInventory());
 		event.setQuitMessage(null);
 
-		if (!player.isOp()) {
+		if (!player.isOp() && player.getQuitCause() != QuitCause.AFK) {
 			if (player.getQuitMessage() != null) {
 				plugin.broadcast(player.getChatName(),
 						new TextComponent(" quit: " + ChatColor.YELLOW + player.getQuitMessage()));
