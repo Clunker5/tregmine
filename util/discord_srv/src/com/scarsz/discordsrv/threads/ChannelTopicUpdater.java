@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.scarsz.discordsrv.DiscordSRV;
-import com.scarsz.discordsrv.Lag;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -80,7 +79,7 @@ public class ChannelTopicUpdater extends Thread {
     			.replace("%usedmemory%", Long.toString((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1024/1024))
     			.replace("%totalmemory%", Long.toString((Runtime.getRuntime().totalMemory())/1024/1024))
     			.replace("%maxmemory%", Long.toString((Runtime.getRuntime().maxMemory())/1024/1024))
-    			.replace("%tps%", Lag.getTPSString())
+    			.replace("%tps%", Double.toString(this.plugin.getLag().getTPS()))
     	;
     	
 
