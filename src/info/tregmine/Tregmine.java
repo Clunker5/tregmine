@@ -29,11 +29,13 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
+import com.scarsz.discordsrv.DiscordSRV;
 
 import info.tregmine.api.BlockStats;
 import info.tregmine.api.FishyBlock;
@@ -250,6 +252,8 @@ public class Tregmine extends JavaPlugin {
 	private int onlineJuniors = 0;
 	private int onlineSeniors = 0;
 	private int onlineTeachers = 0;
+	
+	private DiscordSRV dsv;
 
 	public void addBlockedChat(TregmineChatEvent e) {
 		this.blockedChats.add(e);
@@ -678,6 +682,8 @@ public class Tregmine extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		
+		
 		this.server = getServer();
 		plugin = this;
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
@@ -993,6 +999,13 @@ public class Tregmine extends JavaPlugin {
 				}
 			}
 		}, 20L, 20L);
+		PluginManager mgr = Bukkit.getPluginManager();
+		Plugin d = mgr.getPlugin("DiscordSRV");
+		if(d != null){
+			this.dsv = (DiscordSRV) d;
+		}else{
+			this.dsv = null;
+		}
 	}
 
 	@Override
@@ -1039,6 +1052,24 @@ public class Tregmine extends JavaPlugin {
 		} catch (IOException e) {
 			Tregmine.LOGGER.warning("GeoIPCity.dat was not found! ");
 		}
+	}
+	
+	public void reloadDSV(){
+		PluginManager mgr = Bukkit.getPluginManager();
+		Plugin d = mgr.getPlugin("DiscordSRV");
+		if(d != null){
+			this.dsv = (DiscordSRV) d;
+		}else{
+			this.dsv = null;
+		}
+	}
+	
+	public DiscordSRV getDiscordSRV(){
+		return this.dsv;
+	}
+	
+	public boolean dsvEnabled(){
+		return this.dsv != null;
 	}
 
 	public FileConfiguration plConfig() {
