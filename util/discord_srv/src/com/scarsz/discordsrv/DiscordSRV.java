@@ -261,7 +261,6 @@ public class DiscordSRV extends JavaPlugin {
             }
 
         // start TPS poller
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
     }
     public void onDisable() {
         // kill server log watcher & helper
