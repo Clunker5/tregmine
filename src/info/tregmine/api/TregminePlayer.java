@@ -305,9 +305,8 @@ public class TregminePlayer extends PlayerDelegate {
 			this.lastOnlineActivity = 0;
 			this.setSilentAfk(false);
 			this.kickPlayer(this.plugin, reason);
-			TextComponent message = new TextComponent(ChatColor.GRAY + "" + this.getChatName()
-					+ " was kicked for idling longer than" + autoafkkick / 60 + " minutes.");
-			plugin.broadcast(message);
+			plugin.broadcast(new TextComponent(ChatColor.GRAY + ""), this.getChatName(),
+					new TextComponent(ChatColor.GRAY + " was kicked for idling longer than " + autoafkkick / 60 + " minutes."));
 		}
 		long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
 		if (!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()) {
