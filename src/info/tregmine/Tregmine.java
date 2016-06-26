@@ -254,6 +254,8 @@ public class Tregmine extends JavaPlugin {
 	private int onlineTeachers = 0;
 	
 	private DiscordSRV dsv;
+	
+	private Lag lag;
 
 	public void addBlockedChat(TregmineChatEvent e) {
 		this.blockedChats.add(e);
@@ -686,7 +688,8 @@ public class Tregmine extends JavaPlugin {
 		
 		this.server = getServer();
 		plugin = this;
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
+		
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.lag, 100L, 1L);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Timer(this), 100L, 1L);
 		List<?> configWorlds = getConfig().getList("worlds.names");
 		if (getConfig().getString("worlds.vanillaworld") == "true") {
@@ -949,7 +952,7 @@ public class Tregmine extends JavaPlugin {
 		getCommand("tool").setExecutor(new ToolSpawnCommand(this));
 		getCommand("town").setExecutor(new ZoneCommand(this, "town"));
 		getCommand("tp").setExecutor(new TeleportCommand(this));
-		getCommand("tps").setExecutor(new TpsCommand(this));
+		getCommand("ttps").setExecutor(new TpsCommand(this));
 		getCommand("tpshield").setExecutor(new TeleportShieldCommand(this));
 		getCommand("tpto").setExecutor(new TeleportToCommand(this));
 		getCommand("trade").setExecutor(new TradeCommand(this));
@@ -1006,6 +1009,10 @@ public class Tregmine extends JavaPlugin {
 		}else{
 			this.dsv = null;
 		}
+	}
+	
+	public Lag getLag(){
+		return this.lag;
 	}
 
 	@Override
