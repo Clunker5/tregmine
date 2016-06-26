@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class BadgeCommand extends AbstractCommand {
@@ -34,7 +35,14 @@ public class BadgeCommand extends AbstractCommand {
 				return true;
 			}
 
-			TregminePlayer target = tregmine.getPlayerOffline(args[0]);
+			TregminePlayer target;
+			try {
+				target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[0]));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				target = null;
+			}
 
 			if (target == null) {
 				player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
@@ -56,7 +64,14 @@ public class BadgeCommand extends AbstractCommand {
 			if (!player.getRank().canGiveBadges()) {
 				return true;
 			}
-			TregminePlayer target = tregmine.getPlayerOffline(args[1]);
+			TregminePlayer target;
+			try {
+				target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[1]));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				target = null;
+			}
 			if (target == null) {
 				player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
 				return true;

@@ -10,6 +10,7 @@ import info.tregmine.Tregmine;
 import info.tregmine.WebServer;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -45,7 +46,7 @@ public class WebKickCommand extends AbstractCommand {
 		String pattern = args[0];
 		String message = argsToMessage(args);
 
-		TregminePlayer victim = tregmine.getPlayerOffline(pattern);
+		TregminePlayer victim = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(pattern));
 		if (victim == null) {
 			// TODO: error message
 			return true;

@@ -1,6 +1,7 @@
 package info.tregmine.listeners;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
@@ -27,7 +29,7 @@ public class DonationSigns implements Listener {
 	}
 
 	@EventHandler
-	public void donate(PlayerInteractEvent event) {
+	public void donate(PlayerInteractEvent event) throws IndexOutOfBoundsException, Exception {
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
 		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -64,7 +66,7 @@ public class DonationSigns implements Listener {
 			IWalletDAO wallet = ctx.getWalletDAO();
 			Integer amount = Integer.parseInt(sign.getLine(1).trim());
 			NumberFormat format = NumberFormat.getNumberInstance();
-			TregminePlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
+			TregminePlayer receiver = plugin.getPlayerOffline(UUIDFetcher.getUUIDOf(sign.getLine(3).trim()));
 			if (receiver == null) {
 				player.sendStringMessage(ChatColor.RED + "The player on the sign does not exist!");
 				return;

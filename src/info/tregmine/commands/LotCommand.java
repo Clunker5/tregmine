@@ -13,6 +13,7 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.Bank;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
@@ -54,7 +55,7 @@ public class LotCommand extends AbstractCommand {
 
 		String playerName = args[2];
 
-		TregminePlayer victim = tregmine.getPlayerOffline(playerName);
+		TregminePlayer victim = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(playerName));
 		if (victim == null) {
 			player.sendStringMessage(RED + "Player " + playerName + " was not found.");
 			return;
@@ -320,7 +321,7 @@ public class LotCommand extends AbstractCommand {
 		TregminePlayer candidate = null;
 		if (candidates.size() != 1) {
 			// try exact matching
-			candidate = tregmine.getPlayerOffline(args[2]);
+			candidate = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[2]));
 			if (candidate == null) {
 				// give up
 				player.sendStringMessage(RED + "Player " + args[2] + " was not found.");

@@ -7,15 +7,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IMailDAO;
 
 public class DBMailDAO implements IMailDAO {
 	private Connection conn;
+	private Tregmine tregmine;
 
-	public DBMailDAO(Connection v) {
+	public DBMailDAO(Connection v, Tregmine x) {
 		conn = v;
+		this.tregmine = x;
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public class DBMailDAO implements IMailDAO {
 	public boolean sendMail(TregminePlayer player, String sendTo, String message) throws DAOException {
 		String username = player.getName();
 		DBPlayerDAO playerdao = new DBPlayerDAO(conn);
-		TregminePlayer receiver = playerdao.getPlayer(sendTo);
+		TregminePlayer receiver = this.tregmine.getPlayer(sendTo);
 		if (receiver == null) {
 			return false;
 		}

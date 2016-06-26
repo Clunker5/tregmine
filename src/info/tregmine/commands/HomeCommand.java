@@ -12,6 +12,7 @@ import org.bukkit.World;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IHomeDAO;
@@ -103,7 +104,7 @@ public class HomeCommand extends AbstractCommand {
 				return true;
 			}
 
-			target = tregmine.getPlayerOffline(playerName);
+			target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(playerName));
 			if (target == null) {
 				player.sendStringMessage(RED + playerName + " was not found in database.");
 				return true;
@@ -206,7 +207,7 @@ public class HomeCommand extends AbstractCommand {
 			player.sendStringMessage(RED + "You can't teleport to other player's homes");
 		}
 
-		TregminePlayer target = tregmine.getPlayerOffline(playerName);
+		TregminePlayer target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(playerName));
 		if (target == null) {
 			player.sendStringMessage(RED + playerName + " was not found in database.");
 			return true;

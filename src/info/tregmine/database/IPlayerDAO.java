@@ -2,6 +2,7 @@ package info.tregmine.database;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -38,4 +39,6 @@ public interface IPlayerDAO {
 	public void updatePlayTime(TregminePlayer player) throws DAOException;
 
 	public void updateProperty(TregminePlayer player, String key, String value) throws DAOException;
+
+	public TregminePlayer getPlayer(UUID id) throws DAOException;
 }

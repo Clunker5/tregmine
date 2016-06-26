@@ -102,7 +102,7 @@ public class DBContext implements IContext {
 
 	@Override
 	public IMailDAO getMailDAO() {
-		return new DBMailDAO(conn);
+		return new DBMailDAO(conn, this.plugin);
 	}
 
 	@Override

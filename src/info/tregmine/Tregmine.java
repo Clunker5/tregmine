@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -42,6 +44,7 @@ import info.tregmine.api.Rank;
 import info.tregmine.api.Timer;
 import info.tregmine.api.Tools;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.commands.ActionCommand;
 import info.tregmine.commands.AfkCommand;
 import info.tregmine.commands.AlertCommand;
@@ -170,7 +173,6 @@ import info.tregmine.listeners.TabListener;
 import info.tregmine.listeners.TauntListener;
 import info.tregmine.listeners.TregmineBlockListener;
 import info.tregmine.listeners.TregminePlayerListener;
-import info.tregmine.listeners.TregminePortalListener;
 import info.tregmine.listeners.ZoneBlockListener;
 import info.tregmine.listeners.ZoneEntityListener;
 import info.tregmine.listeners.ZonePlayerListener;
@@ -207,7 +209,7 @@ public class Tregmine extends JavaPlugin {
 	private Server server;
 	private WebServer webServer;
 
-	private Map<String, TregminePlayer> players;
+	private Map<UUID, TregminePlayer> players;
 	private Map<Integer, TregminePlayer> playersById;
 	private Map<Location, Integer> blessedBlocks;
 	private Map<Location, FishyBlock> fishyBlocks;
@@ -322,7 +324,7 @@ public class Tregmine extends JavaPlugin {
 
 			player.setTemporaryChatName(player.getNameColor() + player.getName());
 
-			players.put(player.getName(), player);
+			players.put(player.getUniqueId(), player);
 			playersById.put(player.getId(), player);
 
 			return player;
@@ -416,12 +418,25 @@ public class Tregmine extends JavaPlugin {
 		return playersById.get(id);
 	}
 
-	public TregminePlayer getPlayer(Player player) {
-		return players.get(player.getName());
+	public TregminePlayer getPlayer(Player player){
+		try {
+			return players.get(UUIDFetcher.getUUIDOf(player.getName()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	public TregminePlayer getPlayer(String name) {
-		return players.get(name);
+	public TregminePlayer getPlayer(String name){
+		try {
+			return players.get(UUIDFetcher.getUUIDOf(name));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	// ============================================================================
@@ -441,19 +456,34 @@ public class Tregmine extends JavaPlugin {
 			throw new RuntimeException(e);
 		}
 	}
-
-	public TregminePlayer getPlayerOffline(String name) {
-//		if (players.containsKey(name)) {
-//			return players.get(name);
-//		}
-		TregminePlayer plr = players.get(name);
+	
+	public TregminePlayer getPlayerOffline(OfflinePlayer player){
+		TregminePlayer plr = players.get(player.getUniqueId());
 		if(plr != null){
 			return plr;
 		}
 
 		try (IContext ctx = contextFactory.createContext()) {
 			IPlayerDAO playerDAO = ctx.getPlayerDAO();
-			return playerDAO.getPlayer(name);
+			return playerDAO.getPlayer(player.getUniqueId());
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+	public TregminePlayer getPlayerOffline(UUID uuid) {
+//		if (players.containsKey(name)) {
+//			return players.get(name);
+//		}
+		TregminePlayer plr = players.get(uuid);
+		if(plr != null){
+			return plr;
+		}
+
+		try (IContext ctx = contextFactory.createContext()) {
+			IPlayerDAO playerDAO = ctx.getPlayerDAO();
+			return playerDAO.getPlayer(uuid);
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
@@ -627,11 +657,16 @@ public class Tregmine extends JavaPlugin {
 		server.getScheduler().cancelTasks(this);
 
 		// Add a record of logout to db for all players
-		for (TregminePlayer player : getOnlinePlayers()) {
-			player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA
-					+ " may be shutting down soon! Please prepare to be kicked."));
-			player.saveInventory(player.getCurrentInventory());
-			removePlayer(player);
+		try {
+			for (TregminePlayer player : getOnlinePlayers()) {
+				player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA
+						+ " may be shutting down soon! Please prepare to be kicked."));
+				player.saveInventory(player.getCurrentInventory());
+				removePlayer(player);
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		try {
@@ -928,23 +963,33 @@ public class Tregmine extends JavaPlugin {
 		ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool
 														// recipes
 
-		 for (TregminePlayer player : getOnlinePlayers()) {
-		 player.sendStringMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
+		 try {
+			for (TregminePlayer player : getOnlinePlayers()) {
+			 player.sendStringMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		BukkitScheduler scheduler = getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
 			@Override
 			public void run() {
-				for (TregminePlayer player : getOnlinePlayers()) {
-					if (player.getCombatLog() > 0) {
-						player.setCombatLog(player.getCombatLog() - 1);
+				try {
+					for (TregminePlayer player : getOnlinePlayers()) {
+						if (player.getCombatLog() > 0) {
+							player.setCombatLog(player.getCombatLog() - 1);
 
-						if (player.getCombatLog() == 0) {
-							player.sendSpigotMessage(
-									new TextComponent(ChatColor.GREEN + "Combat log has warn off... Safe to log off!"));
+							if (player.getCombatLog() == 0) {
+								player.sendSpigotMessage(
+										new TextComponent(ChatColor.GREEN + "Combat log has warn off... Safe to log off!"));
+							}
 						}
 					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}, 20L, 20L);
@@ -1052,7 +1097,7 @@ public class Tregmine extends JavaPlugin {
 		this.lockdown = v;
 	}
 
-	public void updateStatistics() {
+	public void updateStatistics(){
 		int g = 0;
 		int j = 0;
 		int s = 0;

@@ -17,6 +17,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -249,7 +250,7 @@ public class TregminePlayerListener implements Listener {
 			if (!skull.getSkullType().equals(SkullType.PLAYER)) {
 				return;
 			}
-			String owner = skull.getOwner();
+			OfflinePlayer owner = skull.getOwningPlayer();
 			TregminePlayer skullowner = plugin.getPlayerOffline(owner);
 			if (skullowner != null) {
 				ChatColor C = skullowner.getNameColor();

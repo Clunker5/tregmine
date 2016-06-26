@@ -7,6 +7,7 @@ import org.bukkit.Server;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -24,7 +25,7 @@ public class SeenCommand extends AbstractCommand {
 			return false;
 		}
 
-		TregminePlayer target = tregmine.getPlayerOffline(args[0]);
+		TregminePlayer target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[0]));
 		if (target == null) {
 			server.getConsoleSender().sendMessage("Could not find player: " + args[0]);
 			return true;
@@ -48,7 +49,7 @@ public class SeenCommand extends AbstractCommand {
 			return false;
 		}
 
-		TregminePlayer target = tregmine.getPlayerOffline(args[0]);
+		TregminePlayer target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[0]));
 		if (target == null) {
 			player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
 			return true;

@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -160,12 +162,14 @@ public class TregminePlayer extends PlayerDelegate {
 		this.badges = new EnumMap<Badge, Integer>(Badge.class);
 		this.plugin = instance;
 	}
-
-	public TregminePlayer(String name, Tregmine instance) {
+	
+	public TregminePlayer(UUID uuid, Tregmine instance) {
 		super(null);
+		OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
+		this.name = player.getName();
+		this.realName = player.getName();
+		this.loginTime = new Date();
 
-		this.name = name;
-		this.realName = name;
 		this.flags = EnumSet.noneOf(Flags.class);
 		this.commandstatus = EnumSet.noneOf(CommandStatus.class);
 		this.properties = EnumSet.noneOf(Property.class);

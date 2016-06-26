@@ -195,7 +195,54 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				}
 
-				player = new TregminePlayer(rs.getString("player_name"), plugin);
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin);
+				player.setId(rs.getInt("player_id"));
+
+				String uniqueIdStr = rs.getString("player_uuid");
+				if (uniqueIdStr != null) {
+					player.setStoredUuid(UUID.fromString(uniqueIdStr));
+				}
+				player.setPasswordHash(rs.getString("player_password"));
+				player.setRank(Rank.fromString(rs.getString("player_rank")));
+
+				if (rs.getString("player_inventory") == null) {
+					player.setCurrentInventory("survival");
+				} else {
+					player.setCurrentInventory(rs.getString("player_inventory"));
+				}
+
+				int flags = rs.getInt("player_flags");
+				for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+					if ((flags & (1 << flag.ordinal())) != 0) {
+						player.setFlag(flag);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			throw new DAOException(sql, e);
+		}
+
+		loadSettings(player);
+
+		return player;
+	}
+	
+	@Override
+	public TregminePlayer getPlayer(UUID id) throws DAOException {
+		String sql = "SELECT * FROM player WHERE player_uuid = ?";
+
+		TregminePlayer player = null;
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, id.toString());
+			stmt.execute();
+
+			try (ResultSet rs = stmt.getResultSet()) {
+				if (!rs.next()) {
+					return null;
+				}
+
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin);
 				player.setId(rs.getInt("player_id"));
 
 				String uniqueIdStr = rs.getString("player_uuid");
@@ -230,7 +277,14 @@ public class DBPlayerDAO implements IPlayerDAO {
 	@Override
 	public TregminePlayer getPlayer(Player wrap) throws DAOException {
 		String sql = "SELECT * FROM player WHERE player_uuid = ?";
-
+		String sql1 = "UPDATE `player` SET player_name = ? WHERE player_uuid = ?";
+		try(PreparedStatement stmt1 = conn.prepareStatement(sql1)){
+			stmt1.setString(1, wrap.getName());
+			stmt1.setString(2, wrap.getUniqueId().toString());
+			stmt1.execute();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		TregminePlayer player;
 		if (wrap != null) {
 			player = new TregminePlayer(wrap, plugin);
@@ -245,6 +299,10 @@ public class DBPlayerDAO implements IPlayerDAO {
 			try (ResultSet rs = stmt.getResultSet()) {
 				if (!rs.next()) {
 					return null;
+				}
+				if(rs.getString("player_name") != wrap.getName()){
+					//Name change! Call 911!
+					
 				}
 
 				UUID uniqueId = wrap.getUniqueId();

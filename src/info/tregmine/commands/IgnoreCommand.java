@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -48,7 +49,7 @@ public class IgnoreCommand extends AbstractCommand {
 			if (!player.getRank().canViewIgnored())
 				return false;
 
-			TregminePlayer target = tregmine.getPlayerOffline(args[1]);
+			TregminePlayer target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[1]));
 
 			if (target == null) {
 				player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[1]);
@@ -73,7 +74,7 @@ public class IgnoreCommand extends AbstractCommand {
 			return true;
 		} else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
 
-			TregminePlayer target = tregmine.getPlayerOffline(args[1]);
+			TregminePlayer target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[1]));
 
 			if (target == null) {
 				player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[1]);
