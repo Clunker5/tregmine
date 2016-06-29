@@ -25,7 +25,7 @@ public class BackCommand extends AbstractCommand {
 			return true;
 		}
 		if (player.getLastPos() == null) {
-			player.sendStringMessage("%warning%" + ChatColor.RED + "You don't have a last location!");
+			player.sendStringMessage(ChatColor.RED + "You don't have a last location!");
 			return true;
 		}
 		boolean success = player.teleport(player.getLastPos());

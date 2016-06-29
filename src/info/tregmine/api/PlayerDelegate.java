@@ -806,15 +806,7 @@ public abstract class PlayerDelegate {
 		} else {
 			color = ChatColor.GOLD;
 		}
-		if (p0.startsWith("%internal%")) {
-			String message = p0.replace("%internal%", "");
-			delegate.sendMessage(color + "[Internal]" + ChatColor.RESET + " > " + message);
-		} else if (p0.startsWith("%warning%")) {
-			String message = p0.replace("%warning%", "");
-			delegate.sendMessage(ChatColor.RED + "[Warning]" + ChatColor.RESET + " > " + message);
-		} else {
-			delegate.sendMessage(p0);
-		}
+		delegate.sendMessage(p0);
 
 	}
 
