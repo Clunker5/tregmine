@@ -9,9 +9,11 @@ import info.tregmine.api.TregminePlayer;
 
 public final class TregminePortalEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
+
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 	private boolean cancelled;
 	private World from;
 	private World to;

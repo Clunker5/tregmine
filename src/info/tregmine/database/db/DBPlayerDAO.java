@@ -132,10 +132,10 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				String[] strings;
 				String stringofignored = rs.getString("player_ignore");
-				if(stringofignored == null){
-				strings = new String[0];
-				}else{
-				strings = stringofignored.split(",");
+				if (stringofignored == null) {
+					strings = new String[0];
+				} else {
+					strings = stringofignored.split(",");
 				}
 				List<String> playerignore = new ArrayList<String>();
 				for (String i : strings) {
@@ -226,7 +226,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 
 		return player;
 	}
-	
+
 	@Override
 	public TregminePlayer getPlayer(UUID id) throws DAOException {
 		String sql = "SELECT * FROM player WHERE player_uuid = ?";
@@ -278,7 +278,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 	public TregminePlayer getPlayer(Player wrap) throws DAOException {
 		String sql = "SELECT * FROM player WHERE player_uuid = ?";
 		String sql1 = "UPDATE `player` SET player_name = ? WHERE player_uuid = ?";
-		try(PreparedStatement stmt1 = conn.prepareStatement(sql1)){
+		try (PreparedStatement stmt1 = conn.prepareStatement(sql1)) {
 			stmt1.setString(1, wrap.getName());
 			stmt1.setString(2, wrap.getUniqueId().toString());
 			stmt1.execute();
@@ -288,7 +288,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 		TregminePlayer player;
 		if (wrap != null) {
 			player = new TregminePlayer(wrap, plugin);
-		}else{
+		} else {
 			return null;
 		}
 
@@ -300,9 +300,9 @@ public class DBPlayerDAO implements IPlayerDAO {
 				if (!rs.next()) {
 					return null;
 				}
-				if(rs.getString("player_name") != wrap.getName()){
-					//Name change! Call 911!
-					
+				if (rs.getString("player_name") != wrap.getName()) {
+					// Name change! Call 911!
+
 				}
 
 				UUID uniqueId = wrap.getUniqueId();

@@ -22,6 +22,7 @@ public class RemItemsCommand extends AbstractCommand {
 	public RemItemsCommand(Tregmine tregmine) {
 		super(tregmine, "remitems");
 	}
+
 	@Override
 	public boolean handlePlayer(final TregminePlayer p, String[] args) {
 		if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {

@@ -85,13 +85,11 @@ public class MailCommand extends AbstractCommand {
 				messages = mail.getAllMail(player.getName());
 
 				if (messages.size() == 0) {
-					player.sendStringMessage( ChatColor.AQUA + "You haven't received any messages.");
+					player.sendStringMessage(ChatColor.AQUA + "You haven't received any messages.");
 				} else if (messages.size() == 1) {
-					player.sendStringMessage(
-							 ChatColor.AQUA + "You have " + messages.size() + " message.");
+					player.sendStringMessage(ChatColor.AQUA + "You have " + messages.size() + " message.");
 				} else {
-					player.sendStringMessage(
-							 ChatColor.AQUA + "You have " + messages.size() + " messages.");
+					player.sendStringMessage(ChatColor.AQUA + "You have " + messages.size() + " messages.");
 				}
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
@@ -100,7 +98,7 @@ public class MailCommand extends AbstractCommand {
 		} else if (args[0].contains("tbt")) {
 			if (player.getIsStaff()) {
 				if (getArgs(args) < 2) {
-					player.sendStringMessage( ChatColor.RED + "You must provide a player");
+					player.sendStringMessage(ChatColor.RED + "You must provide a player");
 				} else {
 					try (IContext ctx = tregmine.createContext()) {
 						IMailDAO mail = ctx.getMailDAO();
@@ -111,8 +109,8 @@ public class MailCommand extends AbstractCommand {
 						} else {
 							suffix = "letters";
 						}
-						player.sendStringMessage( ChatColor.AQUA + args[1] + " has received " + amount
-								+ " " + suffix + " during their time on Tregmine.");
+						player.sendStringMessage(ChatColor.AQUA + args[1] + " has received " + amount + " " + suffix
+								+ " during their time on Tregmine.");
 					} catch (DAOException e) {
 						throw new RuntimeException(e);
 					}
@@ -127,8 +125,8 @@ public class MailCommand extends AbstractCommand {
 					} else {
 						suffix = "letters";
 					}
-					player.sendStringMessage( ChatColor.AQUA + "You have received " + amount + " "
-							+ suffix + " during your time on Tregmine.");
+					player.sendStringMessage(ChatColor.AQUA + "You have received " + amount + " " + suffix
+							+ " during your time on Tregmine.");
 				} catch (DAOException e) {
 					throw new RuntimeException(e);
 				}
@@ -140,12 +138,12 @@ public class MailCommand extends AbstractCommand {
 				IMailDAO mail = ctx.getMailDAO();
 				messages = mail.getAllMail(player.getName());
 				for (String[] message : messages) {
-					player.sendStringMessage( ChatColor.AQUA + "You have a message from " + message[0]
-							+ " [ID " + message[4] + "]");
-					player.sendStringMessage( ChatColor.AQUA + "\"" + message[3].trim() + "\"");
+					player.sendStringMessage(
+							ChatColor.AQUA + "You have a message from " + message[0] + " [ID " + message[4] + "]");
+					player.sendStringMessage(ChatColor.AQUA + "\"" + message[3].trim() + "\"");
 				}
 				if (messages.size() == 0) {
-					player.sendStringMessage( ChatColor.AQUA + "You haven't received any messages.");
+					player.sendStringMessage(ChatColor.AQUA + "You haven't received any messages.");
 				}
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
@@ -159,20 +157,17 @@ public class MailCommand extends AbstractCommand {
 
 	public void sendHelp(TregminePlayer player) {
 		String[] help = new String[6];
-		help[0] =  ChatColor.AQUA + "****Tregmine Internal****";
-		help[1] =  ChatColor.AQUA + "To send a message, type " + ChatColor.GRAY
-				+ "/mail send <player> <message>";
-		help[2] =  ChatColor.AQUA + "To delete a message, type " + ChatColor.GRAY
-				+ "/mail delete <mail_id>";
-		help[3] =  ChatColor.AQUA + "To get your total messages, type " + ChatColor.GRAY + "/mail total";
-		help[4] =  ChatColor.AQUA + "****Nostalgia Center****";
+		help[0] = ChatColor.AQUA + "****Tregmine Internal****";
+		help[1] = ChatColor.AQUA + "To send a message, type " + ChatColor.GRAY + "/mail send <player> <message>";
+		help[2] = ChatColor.AQUA + "To delete a message, type " + ChatColor.GRAY + "/mail delete <mail_id>";
+		help[3] = ChatColor.AQUA + "To get your total messages, type " + ChatColor.GRAY + "/mail total";
+		help[4] = ChatColor.AQUA + "****Nostalgia Center****";
 		if (player.getIsStaff()) {
-			help[5] =  ChatColor.AQUA
-					+ "To get the total messages you or another player has received, type " + ChatColor.GRAY
-					+ "/mail tbt <player>";
+			help[5] = ChatColor.AQUA + "To get the total messages you or another player has received, type "
+					+ ChatColor.GRAY + "/mail tbt <player>";
 		} else {
-			help[5] =  ChatColor.AQUA + "To get the total messages you have received, type "
-					+ ChatColor.GRAY + "/mail tbt";
+			help[5] = ChatColor.AQUA + "To get the total messages you have received, type " + ChatColor.GRAY
+					+ "/mail tbt";
 		}
 		for (String msg : help) {
 			player.sendStringMessage(msg);

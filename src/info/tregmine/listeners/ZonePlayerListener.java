@@ -238,7 +238,7 @@ public class ZonePlayerListener implements Listener {
 		if (player == null) {
 			return;
 		}
-		if(player.getGameMode() == GameMode.CREATIVE){
+		if (player.getGameMode() == GameMode.CREATIVE) {
 			return;
 		}
 		ItemStack item = player.getItemInHand();

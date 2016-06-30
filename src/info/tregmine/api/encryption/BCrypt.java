@@ -217,6 +217,7 @@ public class BCrypt {
 			return -1;
 		return index_64[x];
 	}
+
 	/**
 	 * Check that a plaintext password matches a previously hashed one
 	 * 

@@ -410,8 +410,8 @@ public class TregminePlayerListener implements Listener {
 					String username = singleNews.getUsername();
 					String text = singleNews.getText();
 					long timestamp = singleNews.getDate();
-					player.sendStringMessage(ChatColor.GREEN + "There is a message from " + ChatColor.RESET
-							+ ChatColor.BLUE + username);
+					player.sendStringMessage(
+							ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
 					player.sendStringMessage(ChatColor.GOLD + text);
 				}
 			}
@@ -426,8 +426,8 @@ public class TregminePlayerListener implements Listener {
 				} else {
 					suffix = "messages";
 				}
-				player.sendStringMessage(ChatColor.AQUA + "You have " + total + " " + suffix
-						+ " -- Type /mail read to view them.");
+				player.sendStringMessage(
+						ChatColor.AQUA + "You have " + total + " " + suffix + " -- Type /mail read to view them.");
 			}
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
@@ -581,15 +581,15 @@ public class TregminePlayerListener implements Listener {
 			player.awardBadgeLevel(Badge.PHILANTROPIST, "For being a Tregmine donator!");
 		}
 	}
-	
+
 	@EventHandler
-	public void onEntityDamage(EntityDamageEvent event){
+	public void onEntityDamage(EntityDamageEvent event) {
 		Entity e = event.getEntity();
-		if(e instanceof Player){
-			if(event.getCause() == DamageCause.HOT_FLOOR){
+		if (e instanceof Player) {
+			if (event.getCause() == DamageCause.HOT_FLOOR) {
 				event.setCancelled(true);
 			}
-		}else{
+		} else {
 			return;
 		}
 	}

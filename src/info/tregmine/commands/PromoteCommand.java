@@ -99,14 +99,14 @@ public class PromoteCommand extends AbstractCommand {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
-		this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(RESET + "" + GREEN
-				+ " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!"));
+		this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(
+				RESET + "" + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + sayrank + "!"));
 		return true;
 	}
-	
+
 	@Override
-	public boolean handleOther(Server server, String[] args){
-		if(args.length != 2){
+	public boolean handleOther(Server server, String[] args) {
+		if (args.length != 2) {
 			server.getLogger().info("[PROMOTE] You must specify two arguments.");
 			return true;
 		}
@@ -114,8 +114,8 @@ public class PromoteCommand extends AbstractCommand {
 		String getrank = args[1];
 		Rank rank = user.getRank();
 		Rank oldrank = user.getRank();
-		for(Rank r : Rank.values()){
-			if(r.name().toLowerCase().equals(getrank.toLowerCase())){
+		for (Rank r : Rank.values()) {
+			if (r.name().toLowerCase().equals(getrank.toLowerCase())) {
 				rank = r;
 				break;
 			}
@@ -133,9 +133,9 @@ public class PromoteCommand extends AbstractCommand {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
-		if(oldrank != rank){
-			this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent("" + RESET + GREEN
-				+ " has been promoted to " + RESET + BLUE + ITALIC + rank + "!"));
+		if (oldrank != rank) {
+			this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(
+					"" + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + rank + "!"));
 		}
 		return true;
 	}

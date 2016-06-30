@@ -31,6 +31,7 @@ public class ToolsRegistry {
 	public final static Set<Material> AreaOfEffectAllowed = EnumSet.of(Material.WOOD_PICKAXE, Material.STONE_PICKAXE,
 			Material.IRON_PICKAXE, Material.GOLD_PICKAXE, Material.DIAMOND_PICKAXE, Material.WOOD_SPADE,
 			Material.STONE_SPADE, Material.IRON_SPADE, Material.GOLD_SPADE, Material.DIAMOND_SPADE);
+
 	/**
 	 * Creates and returns an ItemStack for the token which will create an Area
 	 * of Effect tool
@@ -96,6 +97,7 @@ public class ToolsRegistry {
 		Lumberaxe.setItemMeta(meta);
 		return Lumberaxe;
 	}
+
 	/**
 	 * Creates and returns an ItemStack for the token which will create a vein
 	 * mining tool

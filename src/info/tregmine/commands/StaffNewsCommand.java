@@ -28,11 +28,11 @@ public class StaffNewsCommand extends AbstractCommand {
 
 	@Override
 	public boolean handlePlayer(TregminePlayer player, String[] args) {
-		if(!player.getRank().canUseStaffNews()){
+		if (!player.getRank().canUseStaffNews()) {
 			this.insufficientPerms(player);
 			return true;
 		}
-		if(args.length < 3){
+		if (args.length < 3) {
 			player.sendStringMessage(ChatColor.RED + "Please provide three or more words.");
 			return true;
 		}

@@ -19,6 +19,7 @@ public class SetBiomeCommand extends AbstractCommand {
 	protected int x, minX, maxX;
 
 	protected int z, minZ, maxZ;
+
 	public SetBiomeCommand(Tregmine tregmine) {
 		super(tregmine, "setbiome");
 	}

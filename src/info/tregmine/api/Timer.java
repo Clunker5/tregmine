@@ -68,10 +68,10 @@ public class Timer implements Runnable {
 				t.getLogger().log(Level.WARNING, "Timer Exception", e);
 			}
 		}
-//		try {
-//			Thread.sleep(30 * 1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// Thread.sleep(30 * 1000);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
 	}
 }

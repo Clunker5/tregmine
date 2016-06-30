@@ -51,6 +51,7 @@ public class Zone {
 
 			return null;
 		}
+
 		private String addedConfirmation;
 		private String addedNotification;
 		private String delConfirmation;

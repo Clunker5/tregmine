@@ -23,7 +23,7 @@ public class AchievementListener implements Listener {
 		TregminePlayer achiever = t.getPlayer(event.getPlayer());
 		Achievement achievement = event.getAchievement();
 		achiever.awardAchievement(achievement);
-		t.broadcast(achiever.getChatName(),
-				new TextComponent(ChatColor.YELLOW + " won the achievement " + ChatColor.AQUA + event.getAchievement().name()));
+		t.broadcast(achiever.getChatName(), new TextComponent(
+				ChatColor.YELLOW + " won the achievement " + ChatColor.AQUA + event.getAchievement().name()));
 	}
 }

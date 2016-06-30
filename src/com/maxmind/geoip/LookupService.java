@@ -23,7 +23,6 @@ package com.maxmind.geoip;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -170,6 +169,7 @@ public class LookupService {
 			hashmapcountryNametoindex.put(countryName[i], Integer.valueOf(i));
 		}
 	}
+
 	/**
 	 * Returns the long version of an IP address given an InetAddress object.
 	 * 
@@ -188,6 +188,7 @@ public class LookupService {
 		}
 		return ipnum;
 	}
+
 	private static int unsignedByteToInt(byte b) {
 		return b & 0xFF;
 	}

@@ -267,13 +267,11 @@ public abstract class PlayerDelegate {
 		checkState();
 		return delegate.getInventory();
 	}
-	
+
 	public org.bukkit.inventory.ItemStack getItemInHand() {
 		checkState();
 		return delegate.getEquipment().getItemInMainHand();
 	}
-	
-	
 
 	public org.bukkit.inventory.ItemStack getItemOnCursor() {
 		checkState();

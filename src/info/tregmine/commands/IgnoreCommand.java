@@ -85,9 +85,9 @@ public class IgnoreCommand extends AbstractCommand {
 				player.sendStringMessage(ChatColor.RED + "Can not ignore this player!");
 				return true;
 			}
-			if(target.getDelegate() == null){
+			if (target.getDelegate() == null) {
 				ignoredPeople.add(args[1]);
-			}else{
+			} else {
 				ignoredPeople.add(target.getDisplayName());
 			}
 

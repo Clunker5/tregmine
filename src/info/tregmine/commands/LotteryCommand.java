@@ -103,27 +103,27 @@ public class LotteryCommand extends AbstractCommand {
 						wallet.add(player, 2000);
 						player.sendStringMessage(ChatColor.RED + "You are no longer in the lottery.");
 						player.sendStringMessage(ChatColor.RED + "You received your 2,000 Tregs back");
-						tregmine.broadcast(player.getChatName(), new TextComponent(ChatColor.RED
-								+ " withdrew themself from the lottery"/*
-																		 * +
-																		 * ChatColor
-																		 * .RED
-																		 * +
-																		 * " - "
-																		 * +
-																		 * ChatColor
-																		 * .GOLD
-																		 * +
-																		 * "Amount in lottery: "
-																		 * +
-																		 * format
-																		 * .
-																		 * format
-																		 * (
-																		 * amount)
-																		 * +
-																		 * " Tregs!"
-																		 */));
+						tregmine.broadcast(player.getChatName(),
+								new TextComponent(ChatColor.RED + " withdrew themself from the lottery"/*
+																										 * +
+																										 * ChatColor
+																										 * .RED
+																										 * +
+																										 * " - "
+																										 * +
+																										 * ChatColor
+																										 * .GOLD
+																										 * +
+																										 * "Amount in lottery: "
+																										 * +
+																										 * format
+																										 * .
+																										 * format
+																										 * (
+																										 * amount)
+																										 * +
+																										 * " Tregs!"
+																										 */));
 					}
 				}
 

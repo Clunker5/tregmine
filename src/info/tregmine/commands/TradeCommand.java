@@ -43,9 +43,11 @@ public class TradeCommand extends AbstractCommand implements Listener {
 		TradeState state;
 		int bid;
 	}
+
 	private enum TradeState {
 		ITEM_SELECT, BID, CONSIDER_BID;
 	}
+
 	String tradePre = YELLOW + "[Trade] ";
 
 	String type = "";;

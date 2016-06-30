@@ -81,7 +81,7 @@ public class TregminePlayer extends PlayerDelegate {
 
 	// Discord values
 	private boolean alertedAfk;
-	
+
 	private QuitCause causeofquit = null;
 
 	// One-time state
@@ -164,7 +164,7 @@ public class TregminePlayer extends PlayerDelegate {
 		this.badges = new EnumMap<Badge, Integer>(Badge.class);
 		this.plugin = instance;
 	}
-	
+
 	public TregminePlayer(UUID uuid, Tregmine instance) {
 		super(null);
 		OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
@@ -275,16 +275,16 @@ public class TregminePlayer extends PlayerDelegate {
 
 		return getRank().canMentor();
 	}
-	
-	public void setCommandStatus(CommandStatus status){
+
+	public void setCommandStatus(CommandStatus status) {
 		this.commandstatus.add(status);
 	}
-	
-	public boolean hasCommandStatus(CommandStatus status){
+
+	public boolean hasCommandStatus(CommandStatus status) {
 		return this.commandstatus.contains(status);
 	}
-	
-	public void removeCommandStatus(CommandStatus status){
+
+	public void removeCommandStatus(CommandStatus status) {
 		this.commandstatus.remove(status);
 	}
 
@@ -308,8 +308,8 @@ public class TregminePlayer extends PlayerDelegate {
 			this.lastOnlineActivity = 0;
 			this.setSilentAfk(false);
 			this.kickPlayer(this.plugin, reason);
-			plugin.broadcast(new TextComponent(ChatColor.GRAY + ""), this.getChatName(),
-					new TextComponent(ChatColor.GRAY + " was kicked for idling longer than " + autoafkkick / 60 + " minutes."));
+			plugin.broadcast(new TextComponent(ChatColor.GRAY + ""), this.getChatName(), new TextComponent(
+					ChatColor.GRAY + " was kicked for idling longer than " + autoafkkick / 60 + " minutes."));
 		}
 		long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
 		if (!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()) {
@@ -325,12 +325,12 @@ public class TregminePlayer extends PlayerDelegate {
 			return this.getChatName();
 		}
 	}
-	
-	public QuitCause getQuitCause(){
+
+	public QuitCause getQuitCause() {
 		return this.causeofquit;
 	}
-	
-	public void setQuitCause(QuitCause q){
+
+	public void setQuitCause(QuitCause q) {
 		this.causeofquit = q;
 	}
 
@@ -1008,8 +1008,9 @@ public class TregminePlayer extends PlayerDelegate {
 	public void setAfk(boolean value) {
 		if (value == true) {
 			this.afk = true;
-			if(!this.isHidden()){
-			this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(), new TextComponent(RESET + "" + BLUE + " is now afk."));
+			if (!this.isHidden()) {
+				this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
+						new TextComponent(RESET + "" + BLUE + " is now afk."));
 			}
 			String oldname = getChatNameNoHover();
 			setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
@@ -1018,10 +1019,11 @@ public class TregminePlayer extends PlayerDelegate {
 			this.setLastOnlineActivity(currentTime);
 			this.afk = false;
 			setTemporaryChatName(getNameColor() + getRealName());
-			if(!this.isHidden()){
-			TextComponent message = new TextComponent(
-					ITALIC + "" + getChatName() + RESET + GREEN + " is no longer afk.");
-			this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(), new TextComponent(RESET + "" + GREEN + " is no longer afk."));
+			if (!this.isHidden()) {
+				TextComponent message = new TextComponent(
+						ITALIC + "" + getChatName() + RESET + GREEN + " is no longer afk.");
+				this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
+						new TextComponent(RESET + "" + GREEN + " is no longer afk."));
 			}
 		}
 	}
@@ -1029,20 +1031,20 @@ public class TregminePlayer extends PlayerDelegate {
 	public void setAfkKick(boolean a) {
 		this.AfkKick = a;
 	}
-	
-	public void setMute(PlayerMute p0){
+
+	public void setMute(PlayerMute p0) {
 		this.mute = p0;
 	}
-	
-	public void setMuted(boolean p0){
+
+	public void setMuted(boolean p0) {
 		this.muted = p0;
 	}
-	
-	public boolean isMuted(){
+
+	public boolean isMuted() {
 		return this.muted;
 	}
-	
-	public PlayerMute getMute(){
+
+	public PlayerMute getMute() {
 		return this.mute;
 	}
 

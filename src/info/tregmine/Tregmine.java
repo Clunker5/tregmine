@@ -252,9 +252,9 @@ public class Tregmine extends JavaPlugin {
 	private int onlineJuniors = 0;
 	private int onlineSeniors = 0;
 	private int onlineTeachers = 0;
-	
+
 	private DiscordSRV dsv;
-	
+
 	private Lag lag = new Lag();
 
 	public void addBlockedChat(TregmineChatEvent e) {
@@ -263,11 +263,11 @@ public class Tregmine extends JavaPlugin {
 
 	// End interject
 	public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr) throws PlayerBannedException {
-//		if (players.containsKey(srcPlayer.getName())) {
-//			return players.get(srcPlayer.getName());
-//		}
+		// if (players.containsKey(srcPlayer.getName())) {
+		// return players.get(srcPlayer.getName());
+		// }
 		TregminePlayer plr = players.get(srcPlayer.getName());
-		if(plr != null){
+		if (plr != null) {
 			return plr;
 		}
 		try (IContext ctx = contextFactory.createContext()) {
@@ -424,7 +424,7 @@ public class Tregmine extends JavaPlugin {
 		return playersById.get(id);
 	}
 
-	public TregminePlayer getPlayer(Player player){
+	public TregminePlayer getPlayer(Player player) {
 		try {
 			return players.get(player.getUniqueId());
 		} catch (Exception e) {
@@ -434,12 +434,12 @@ public class Tregmine extends JavaPlugin {
 		}
 	}
 
-	public TregminePlayer getPlayer(String name){
+	public TregminePlayer getPlayer(String name) {
 		try {
 			return players.get(UUIDFetcher.getUUIDOf(name));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 			return null;
 		}
@@ -451,7 +451,7 @@ public class Tregmine extends JavaPlugin {
 
 	public TregminePlayer getPlayerOffline(int id) {
 		TregminePlayer plr = playersById.get(id);
-		if(plr != null){
+		if (plr != null) {
 			return plr;
 		}
 
@@ -462,10 +462,10 @@ public class Tregmine extends JavaPlugin {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	public TregminePlayer getPlayerOffline(OfflinePlayer player){
+
+	public TregminePlayer getPlayerOffline(OfflinePlayer player) {
 		TregminePlayer plr = players.get(player.getUniqueId());
-		if(plr != null){
+		if (plr != null) {
 			return plr;
 		}
 
@@ -476,14 +476,13 @@ public class Tregmine extends JavaPlugin {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	
+
 	public TregminePlayer getPlayerOffline(UUID uuid) {
-//		if (players.containsKey(name)) {
-//			return players.get(name);
-//		}
+		// if (players.containsKey(name)) {
+		// return players.get(name);
+		// }
 		TregminePlayer plr = players.get(uuid);
-		if(plr != null){
+		if (plr != null) {
 			return plr;
 		}
 
@@ -684,11 +683,10 @@ public class Tregmine extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		
-		
+
 		this.server = getServer();
 		plugin = this;
-		
+
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.lag, 100L, 1L);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Timer(this), 100L, 1L);
 		List<?> configWorlds = getConfig().getList("worlds.names");
@@ -972,9 +970,9 @@ public class Tregmine extends JavaPlugin {
 		ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool
 														// recipes
 
-		 try {
+		try {
 			for (TregminePlayer player : getOnlinePlayers()) {
-			 player.sendStringMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
+				player.sendStringMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -991,8 +989,8 @@ public class Tregmine extends JavaPlugin {
 							player.setCombatLog(player.getCombatLog() - 1);
 
 							if (player.getCombatLog() == 0) {
-								player.sendSpigotMessage(
-										new TextComponent(ChatColor.GREEN + "Combat log has warn off... Safe to log off!"));
+								player.sendSpigotMessage(new TextComponent(
+										ChatColor.GREEN + "Combat log has warn off... Safe to log off!"));
 							}
 						}
 					}
@@ -1004,14 +1002,14 @@ public class Tregmine extends JavaPlugin {
 		}, 20L, 20L);
 		PluginManager mgr = Bukkit.getPluginManager();
 		Plugin d = mgr.getPlugin("DiscordSRV");
-		if(d != null){
+		if (d != null) {
 			this.dsv = (DiscordSRV) d;
-		}else{
+		} else {
 			this.dsv = null;
 		}
 	}
-	
-	public Lag getLag(){
+
+	public Lag getLag() {
 		return this.lag;
 	}
 
@@ -1060,22 +1058,22 @@ public class Tregmine extends JavaPlugin {
 			Tregmine.LOGGER.warning("GeoIPCity.dat was not found! ");
 		}
 	}
-	
-	public void reloadDSV(){
+
+	public void reloadDSV() {
 		PluginManager mgr = Bukkit.getPluginManager();
 		Plugin d = mgr.getPlugin("DiscordSRV");
-		if(d != null){
+		if (d != null) {
 			this.dsv = (DiscordSRV) d;
-		}else{
+		} else {
 			this.dsv = null;
 		}
 	}
-	
-	public DiscordSRV getDiscordSRV(){
+
+	public DiscordSRV getDiscordSRV() {
 		return this.dsv;
 	}
-	
-	public boolean dsvEnabled(){
+
+	public boolean dsvEnabled() {
 		return this.dsv != null;
 	}
 
@@ -1135,7 +1133,7 @@ public class Tregmine extends JavaPlugin {
 		this.lockdown = v;
 	}
 
-	public void updateStatistics(){
+	public void updateStatistics() {
 		int g = 0;
 		int j = 0;
 		int s = 0;

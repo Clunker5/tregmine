@@ -1,7 +1,6 @@
 package info.tregmine.listeners;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

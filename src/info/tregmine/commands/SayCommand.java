@@ -8,12 +8,11 @@ import static org.bukkit.ChatColor.WHITE;
 
 import java.util.Collection;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
+
+import com.scarsz.discordsrv.DiscordSRV;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
@@ -41,11 +40,12 @@ public class SayCommand extends AbstractCommand {
 
 		server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
 		LOGGER.info("CONSOLE: <GOD> " + msg);
-		if(!this.tregmine.dsvEnabled()){
+		if (!this.tregmine.dsvEnabled()) {
 			this.tregmine.reloadDSV();
 		}
-		if(this.tregmine.dsvEnabled()){
-			this.tregmine.getDiscordSRV().sendMessageToChatChannel("<GOD> " + msg);
+		if (this.tregmine.dsvEnabled()) {
+			this.tregmine.getDiscordSRV();
+			DiscordSRV.sendMessageToChatChannel("<GOD> " + msg);
 		}
 		return true;
 	}

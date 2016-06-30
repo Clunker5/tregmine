@@ -19,16 +19,16 @@ public class OWCommand extends AbstractCommand {
 			player.sendStringMessage(ChatColor.RED + "There's no old world on this server!");
 			return true;
 		}
-		if(tregmine.getConfig().getBoolean("worlds.special.restrictnewworldtostaff")){
-			if(!player.getRank().canGoToNewWorld()){
+		if (tregmine.getConfig().getBoolean("worlds.special.restrictnewworldtostaff")) {
+			if (!player.getRank().canGoToNewWorld()) {
 				player.sendStringMessage(ChatColor.RED + "The new world isn't ready yet!");
 				return true;
 			}
 		}
 		if (player.getWorld() == tregmine.getSWorld()) {
 			player.gotoWorld(player.getPlayer(), tregmine.getServer().getWorld("world").getSpawnLocation(),
-					ChatColor.YELLOW + "[TAXI-R-US] Welcome back to the main world!",
-					ChatColor.RED + "[TAXI-R-US] Something bad happened; Try again or contact an admin for assistance.");
+					ChatColor.YELLOW + "[TAXI-R-US] Welcome back to the main world!", ChatColor.RED
+							+ "[TAXI-R-US] Something bad happened; Try again or contact an admin for assistance.");
 		} else if (player.getWorld() == tregmine.getServer().getWorld("world")) {
 			player.gotoWorld(player.getPlayer(), tregmine.getSWorld().getSpawnLocation(),
 					ChatColor.YELLOW + "[TAXI-R-US] Welcome to the new world!", ChatColor.YELLOW

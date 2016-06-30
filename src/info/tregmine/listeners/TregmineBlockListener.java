@@ -30,17 +30,17 @@ public class TregmineBlockListener implements Listener {
 	public TregmineBlockListener(Tregmine instance) {
 		this.plugin = instance;
 	}
-	
+
 	@EventHandler
-	public void onBlockFromTo(BlockFromToEvent event){
-		if(event.getToBlock().getType() == Material.NETHER_WART_BLOCK){
+	public void onBlockFromTo(BlockFromToEvent event) {
+		if (event.getToBlock().getType() == Material.NETHER_WART_BLOCK) {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
-		
+
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
 		Block block = event.getBlock();
 		Material material = block.getType();
@@ -72,8 +72,8 @@ public class TregmineBlockListener implements Listener {
 			}
 		} catch (DAOException e) {
 			e.printStackTrace();
-		} catch (NullPointerException e){
-			
+		} catch (NullPointerException e) {
+
 		}
 	}
 

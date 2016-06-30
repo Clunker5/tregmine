@@ -10,9 +10,11 @@ import info.tregmine.zones.Lot;
 
 public final class PlayerLotChangeEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
+
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
+
 	private boolean cancelled;
 	private Location from;
 	private Location to;

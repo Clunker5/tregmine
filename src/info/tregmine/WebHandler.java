@@ -89,6 +89,7 @@ public class WebHandler extends AbstractHandler implements Listener {
 
 		return Base64.encode(result);
 	}
+
 	private Tregmine tregmine;
 
 	private PluginManager pluginMgr;
