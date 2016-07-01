@@ -1,14 +1,11 @@
 package info.tregmine.bungee.chat;
 
-import java.util.Collection;
-import java.util.List;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class IRCListener extends ListenerAdapter implements Listener {
 	private TregBungee plugin;

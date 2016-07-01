@@ -11,25 +11,27 @@ import net.dv8tion.jda.JDA;
 
 public class AchievementListener implements Listener {
 
-    JDA api;
+	JDA api;
 
-    public AchievementListener(JDA api) {
-        this.api = api;
-    }
+	public AchievementListener(JDA api) {
+		this.api = api;
+	}
 
-    @EventHandler
-    public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
-        // return if achievement messages are disabled
-        if (!DiscordSRV.plugin.getConfig().getBoolean("MinecraftPlayerAchievementMessagesEnabled")) return;
+	@EventHandler
+	public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
+		// return if achievement messages are disabled
+		if (!DiscordSRV.plugin.getConfig().getBoolean("MinecraftPlayerAchievementMessagesEnabled"))
+			return;
 
-        // return if achievement or player objects are fucking knackered
-        if (event == null || event.getAchievement() == null || event.getPlayer() == null) return;
+		// return if achievement or player objects are fucking knackered
+		if (event == null || event.getAchievement() == null || event.getPlayer() == null)
+			return;
 
-        DiscordSRV.sendMessage(DiscordSRV.chatChannel, ChatColor.stripColor(DiscordSRV.plugin.getConfig().getString("MinecraftPlayerAchievementMessagesFormat")
-            .replace("%username%", event.getPlayer().getName())
-            .replace("%displayname%", event.getPlayer().getDisplayName())
-            .replace("%world%", event.getPlayer().getWorld().getName())
-            .replace("%achievement%", event.getAchievement().toString())
-        ));
-    }
+		DiscordSRV.sendMessage(DiscordSRV.chatChannel,
+				ChatColor.stripColor(DiscordSRV.plugin.getConfig().getString("MinecraftPlayerAchievementMessagesFormat")
+						.replace("%username%", event.getPlayer().getName())
+						.replace("%displayname%", event.getPlayer().getDisplayName())
+						.replace("%world%", event.getPlayer().getWorld().getName())
+						.replace("%achievement%", event.getAchievement().toString())));
+	}
 }

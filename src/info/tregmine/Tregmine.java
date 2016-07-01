@@ -1,5 +1,7 @@
 package info.tregmine;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -686,7 +688,7 @@ public class Tregmine extends JavaPlugin {
 
 		this.server = getServer();
 		plugin = this;
-
+		
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.lag, 100L, 1L);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Timer(this), 100L, 1L);
 		List<?> configWorlds = getConfig().getList("worlds.names");
@@ -1002,11 +1004,13 @@ public class Tregmine extends JavaPlugin {
 		}, 20L, 20L);
 		PluginManager mgr = Bukkit.getPluginManager();
 		Plugin d = mgr.getPlugin("DiscordSRV");
+		
 		if (d != null) {
 			this.dsv = (DiscordSRV) d;
 		} else {
 			this.dsv = null;
 		}
+		
 	}
 
 	public Lag getLag() {

@@ -1,18 +1,19 @@
 package info.tregmine.bungee.chat;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.pircbotx.PircBotX;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-
-import java.util.ArrayList;
-import java.util.List;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import org.pircbotx.PircBotX;
 
 public class BungeeListener extends Command implements Listener {
 

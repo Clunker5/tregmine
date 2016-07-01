@@ -1,12 +1,13 @@
 package info.tregmine.bungee.chat;
 
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.plugin.Plugin;
+import java.util.logging.Level;
+
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 
-import java.util.logging.Level;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
 
 public class TregBungee extends Plugin
 implements Listener {

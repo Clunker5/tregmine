@@ -12,13 +12,14 @@ import com.scarsz.discordsrv.DiscordSRV;
 import net.dv8tion.jda.JDA;
 
 public class ServerLogWatcher extends Thread {
-	
-	JDA api;
-	
-    public ServerLogWatcher(JDA api) {
-        this.api = api;
-    }
 
+	JDA api;
+
+	public ServerLogWatcher(JDA api) {
+		this.api = api;
+	}
+
+	@Override
 	public void run() {
 		int rate = DiscordSRV.plugin.getConfig().getInt("DiscordConsoleChannelLogRefreshRate");
 		String message = "";
@@ -29,65 +30,77 @@ public class ServerLogWatcher extends Thread {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	    BufferedReader br = new BufferedReader(fr);
+		BufferedReader br = new BufferedReader(fr);
 
-	    Boolean done = false;
-	    while (!done)
-	    {
-	    	String line = null;
+		Boolean done = false;
+		while (!done) {
+			String line = null;
 			try {
 				line = br.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if (line == null) done = true;
-	    }
+			if (line == null)
+				done = true;
+		}
 
-		while (!isInterrupted())
-	    {
-	    	try {
-			    if (DiscordSRV.consoleChannel == null) return;
+		while (!isInterrupted()) {
+			try {
+				if (DiscordSRV.consoleChannel == null)
+					return;
 
-		    	String line = null;
+				String line = null;
 				try {
 					line = br.readLine();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-		    	if (line == null) {
-		    		if (message.length() > 0) {
-		    			if (message.length() > 2000) message = message.substring(0, 1999);
-		    			sendMessage(message);
-			    		message = "";
+				if (line == null) {
+					if (message.length() > 0) {
+						if (message.length() > 2000)
+							message = message.substring(0, 1999);
+						sendMessage(message);
+						message = "";
 					}
-		    		try { Thread.sleep(rate); } catch (InterruptedException e) {}
-		    		continue;
-		    	} else {
-		    		for (String phrase : (List<String>) DiscordSRV.plugin.getConfig().getList("DiscordConsoleChannelDoNotSendPhrases")) if (line.toLowerCase().contains(phrase.toLowerCase())) continue;
-		    		if (message.length() + line.length() + 2 <= 2000 && line.length() > 0) {
-                        if (lineIsOk(applyRegex(line))) message += line + "\n";
-		    		} else {
-		    			sendMessage(message);
-                        if (lineIsOk(applyRegex(line))) message = line + "\n";
-		    		}
-		    	}
-	    	} catch (Exception e) {
-	    		e.printStackTrace();
-	    	}
-	    }
+					try {
+						Thread.sleep(rate);
+					} catch (InterruptedException e) {
+					}
+					continue;
+				} else {
+					for (String phrase : (List<String>) DiscordSRV.plugin.getConfig()
+							.getList("DiscordConsoleChannelDoNotSendPhrases"))
+						if (line.toLowerCase().contains(phrase.toLowerCase()))
+							continue;
+					if (message.length() + line.length() + 2 <= 2000 && line.length() > 0) {
+						if (lineIsOk(applyRegex(line)))
+							message += line + "\n";
+					} else {
+						sendMessage(message);
+						if (lineIsOk(applyRegex(line)))
+							message = line + "\n";
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-    private Boolean lineIsOk(String input) {
-        return !input.replace(" ", "").replace("\n", "").isEmpty();
-    }
+	private Boolean lineIsOk(String input) {
+		return !input.replace(" ", "").replace("\n", "").isEmpty();
+	}
+
 	private void sendMessage(String input) {
 		input = applyRegex(input);
 
 		if (!input.replace(" ", "").replace("\n", "").isEmpty())
 			DiscordSRV.sendMessage(DiscordSRV.consoleChannel, input);
 	}
+
 	private String applyRegex(String input) {
-		return input.replaceAll(DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelRegexFilter"), DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelRegexReplacement"));
+		return input.replaceAll(DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelRegexFilter"),
+				DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelRegexReplacement"));
 	}
 
 }
