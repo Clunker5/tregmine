@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+
 import info.tregmine.Tregmine;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -64,6 +66,10 @@ public class DBContextFactory implements IContextFactory {
 			}
 
 			return new DBContext(new LoggingConnection(conn, queryLog), plugin);
+		} catch (CommunicationsException e){
+			this.plugin.getLogger().severe("Database connection error, shutting down server.");
+			this.plugin.getServer().shutdown();
+			return null;
 		} catch (SQLException e) {
 			throw new DAOException(e);
 		}
