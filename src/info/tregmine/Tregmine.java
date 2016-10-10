@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -37,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import com.scarsz.discordsrv.DiscordSRV;
 
 import info.tregmine.api.BlockStats;
@@ -334,7 +336,6 @@ public class Tregmine extends JavaPlugin {
 
 			players.put(player.getUniqueId(), player);
 			playersById.put(player.getId(), player);
-
 			return player;
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
@@ -502,6 +503,18 @@ public class Tregmine extends JavaPlugin {
 
 	public List<String> getQuitMessages() {
 		return quitMessages;
+	}
+	
+	public void resetDAO(){
+		//Resets the database connection to prevent expiration.
+		try {
+			this.contextFactory.getDataSource().close();
+			this.contextFactory.getDataSource().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	public ChatColor getRankColor(Rank rank) {

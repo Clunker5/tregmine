@@ -20,6 +20,11 @@ public class DBContextFactory implements IContextFactory {
 	private BasicDataSource ds;
 	private Map<String, LoggingConnection.LogEntry> queryLog;
 	private Tregmine plugin;
+	
+	private String driver;
+	private String url;
+	private String user;
+	private String password;
 
 	public DBContextFactory(FileConfiguration config, Tregmine instance) {
 		queryLog = new HashMap<>();
@@ -51,8 +56,17 @@ public class DBContextFactory implements IContextFactory {
 		ds.setMaxActive(5);
 		ds.setMaxIdle(5);
 		ds.setDefaultAutoCommit(true);
+		
+		this.driver = driver;
+		this.url = url;
+		this.user = user;
+		this.password = password;
 
 		this.plugin = instance;
+	}
+	
+	public BasicDataSource getDataSource(){
+		return this.ds;
 	}
 
 	@Override
@@ -60,16 +74,21 @@ public class DBContextFactory implements IContextFactory {
 		try {
 			// It's the responsibility of the context to make sure that the
 			// connection is correctly closed
+			ds.close();
+			ds = new BasicDataSource();
+			ds.setDriverClassName(this.driver);
+			ds.setUrl(this.url);
+			ds.setUsername(this.user);
+			ds.setPassword(this.password);
+			ds.setMaxActive(5);
+			ds.setMaxIdle(5);
+			ds.setDefaultAutoCommit(true);
 			Connection conn = ds.getConnection();
 			try (Statement stmt = conn.createStatement()) {
 				stmt.execute("SET NAMES latin1");
 			}
 
 			return new DBContext(new LoggingConnection(conn, queryLog), plugin);
-		} catch (CommunicationsException e){
-			this.plugin.getLogger().severe("Database connection error, shutting down server.");
-			this.plugin.getServer().shutdown();
-			return null;
 		} catch (SQLException e) {
 			throw new DAOException(e);
 		}

@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 4.4.2
+version: 4.4.3
 website: https://www.tregmine.com
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -204,7 +204,7 @@ commands:
     usage: /sendto player world
   setbiome:
     description: Set the selected area's biome
-    usage: /setbiome biome 
+    usage: /setbiome biome
   setspawner:
     description: Change a mob spawners type (admins only)
     usage: /setspawner
