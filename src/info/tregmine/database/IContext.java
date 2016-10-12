@@ -45,4 +45,6 @@ public interface IContext extends AutoCloseable {
 	public IWarpDAO getWarpDAO();
 
 	public IZonesDAO getZonesDAO();
+	
+	public IInviteDAO getInviteDAO();
 }

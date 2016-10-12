@@ -13,6 +13,7 @@ import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.IHandbookDAO;
 import info.tregmine.database.IHomeDAO;
 import info.tregmine.database.IInventoryDAO;
+import info.tregmine.database.IInviteDAO;
 import info.tregmine.database.IItemDAO;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IMailDAO;
@@ -153,5 +154,10 @@ public class DBContext implements IContext {
 	@Override
 	public IZonesDAO getZonesDAO() {
 		return new DBZonesDAO(conn);
+	}
+
+	@Override
+	public IInviteDAO getInviteDAO() {
+		return new DBInviteDAO(conn, plugin);
 	}
 }

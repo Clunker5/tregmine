@@ -392,7 +392,7 @@ public class TregminePlayerListener implements Listener {
 			event.getPlayer().kickPlayer("error loading profile!");
 			return;
 		}
-		player.sendSpigotMessage(new TextComponent("Your referral code is: " + player.getReferralCode()));
+		player.sendSpigotMessage(new TextComponent("Your referral code is: " + player.getId()));
 		Rank rank = player.getRank();
 		if (player.getIsStaff()) {
 			List<StaffNews> news = null;

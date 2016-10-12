@@ -451,14 +451,6 @@ public class TregminePlayer extends PlayerDelegate {
 	public Block getFillBlock1() {
 		return fillBlock1;
 	}
-	
-	public void setReferralCode(String code){
-		this.referralCode = code;
-	}
-	
-	public String getReferralCode(){
-		return this.referralCode;
-	}
 
 	public Block getFillBlock2() {
 		return fillBlock2;
