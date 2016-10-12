@@ -1,5 +1,6 @@
 package info.tregmine.database.db;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -204,7 +205,12 @@ public class DBPlayerDAO implements IPlayerDAO {
 				}
 				player.setPasswordHash(rs.getString("player_password"));
 				player.setRank(Rank.fromString(rs.getString("player_rank")));
-
+				if(rs.getString("player_referralcode") == null){
+					player.setReferralCode(generateReferralCode(player));
+				}else{
+					player.setReferralCode(rs.getString("player_referralcode"));
+				}
+				
 				if (rs.getString("player_inventory") == null) {
 					player.setCurrentInventory("survival");
 				} else {
@@ -251,7 +257,11 @@ public class DBPlayerDAO implements IPlayerDAO {
 				}
 				player.setPasswordHash(rs.getString("player_password"));
 				player.setRank(Rank.fromString(rs.getString("player_rank")));
-
+				if(rs.getString("player_referralcode") == null){
+					player.setReferralCode(generateReferralCode(player));
+				}else{
+					player.setReferralCode(rs.getString("player_referralcode"));
+				}
 				if (rs.getString("player_inventory") == null) {
 					player.setCurrentInventory("survival");
 				} else {
@@ -311,7 +321,11 @@ public class DBPlayerDAO implements IPlayerDAO {
 				player.setStoredUuid(uniqueId);
 				player.setPasswordHash(rs.getString("player_password"));
 				player.setRank(Rank.fromString(rs.getString("player_rank")));
-
+				if(rs.getString("player_referralcode") == null){
+					player.setReferralCode(generateReferralCode(player));
+				}else{
+					player.setReferralCode(rs.getString("player_referralcode"));
+				}
 				if (rs.getString("player_inventory") == null) {
 					player.setCurrentInventory("survival");
 				} else {
@@ -392,6 +406,21 @@ public class DBPlayerDAO implements IPlayerDAO {
 		} catch (SQLException e) {
 			throw new DAOException(sql, e);
 		}
+	}
+	
+	@Override
+	public String generateReferralCode(TregminePlayer source) throws DAOException {
+		//Generate a six-character securely randomized string, to be used as a referral code.
+		String referralCode = new BigInteger(130, this.plugin.getSecureRandom()).toString(32).substring(0, 6);
+		String sql = "UPDATE player SET player_referralcode = ? WHERE player_id = ?";
+		try(PreparedStatement stmt = conn.prepareStatement(sql)){
+			stmt.setString(1, referralCode);
+			stmt.setInt(2, source.getId());
+			stmt.execute();
+		}catch(SQLException e){
+			throw new DAOException(sql, e);
+		}
+		return referralCode;
 	}
 
 	@Override

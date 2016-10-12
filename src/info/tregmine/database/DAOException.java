@@ -2,6 +2,7 @@ package info.tregmine.database;
 
 public class DAOException extends Exception {
 	private String query = null;
+	private Throwable cause = null;
 
 	public DAOException(String message, String query) {
 		super(message);
@@ -11,7 +12,7 @@ public class DAOException extends Exception {
 
 	public DAOException(String query, Throwable e) {
 		super(e);
-
+		this.cause = e;
 		this.query = query;
 	}
 
@@ -21,5 +22,9 @@ public class DAOException extends Exception {
 
 	public String getQuery() {
 		return query;
+	}
+	
+	public Throwable getCause(){
+		return this.cause;
 	}
 }

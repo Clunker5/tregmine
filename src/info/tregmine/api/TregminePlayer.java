@@ -78,6 +78,7 @@ public class TregminePlayer extends PlayerDelegate {
 	private Set<Property> properties;
 	private Map<Badge, Integer> badges;
 	private Location lastpos = null;
+	private String referralCode = null;
 
 	// Discord values
 	private boolean alertedAfk;
@@ -449,6 +450,14 @@ public class TregminePlayer extends PlayerDelegate {
 
 	public Block getFillBlock1() {
 		return fillBlock1;
+	}
+	
+	public void setReferralCode(String code){
+		this.referralCode = code;
+	}
+	
+	public String getReferralCode(){
+		return this.referralCode;
 	}
 
 	public Block getFillBlock2() {

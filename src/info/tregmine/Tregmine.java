@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -233,6 +234,8 @@ public class Tregmine extends JavaPlugin {
 	private Queue<TregminePlayer> mentors;
 	private Queue<TregminePlayer> students;
 	private boolean lockdown = false;
+	
+	private SecureRandom random = new SecureRandom();
 
 	private LookupService cl = null;
 	private boolean keywordsEnabled;
@@ -364,6 +367,10 @@ public class Tregmine extends JavaPlugin {
 
 	public List<String> getBannedWords() {
 		return bannedWords;
+	}
+	
+	public SecureRandom getSecureRandom(){
+		return this.random;
 	}
 
 	public Map<Location, Integer> getBlessedBlocks() {

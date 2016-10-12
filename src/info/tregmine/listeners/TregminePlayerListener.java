@@ -388,11 +388,11 @@ public class TregminePlayerListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		event.setJoinMessage(null);
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-
 		if (player == null) {
 			event.getPlayer().kickPlayer("error loading profile!");
 			return;
 		}
+		player.sendSpigotMessage(new TextComponent("Your referral code is: " + player.getReferralCode()));
 		Rank rank = player.getRank();
 		if (player.getIsStaff()) {
 			List<StaffNews> news = null;
