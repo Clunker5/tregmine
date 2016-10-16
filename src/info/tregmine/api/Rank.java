@@ -34,6 +34,10 @@ public enum Rank {
 	public boolean bypassAFKKick() {
 		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
+	
+	public boolean canHaveReferralCode() {
+		return this != UNVERIFIED;
+	}
 
 	public boolean canBan() {
 		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;

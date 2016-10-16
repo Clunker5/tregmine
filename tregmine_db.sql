@@ -2,10 +2,10 @@
 -- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 16, 2016 at 01:40 AM
--- Server version: 5.7.11-log
--- PHP Version: 5.6.15
+-- Host: localhost
+-- Generation Time: Oct 16, 2016 at 04:12 AM
+-- Server version: 5.7.12-log
+-- PHP Version: 7.0.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `tregmine_temp`
+-- Database: `tregmine_db`
 --
 
 -- --------------------------------------------------------
@@ -68,7 +68,6 @@ CREATE TABLE `bank_transaction` (
 --
 
 CREATE TABLE `banned_words` (
-  `id` int(11) NOT NULL,
   `word` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -284,7 +283,7 @@ CREATE TABLE `item` (
   `enchantable` enum('no','yes') NOT NULL DEFAULT 'no',
   `sellable` enum('no','yes') NOT NULL DEFAULT 'no',
   `item_value` int(255) NOT NULL DEFAULT '0',
-  `mine_value` int(8) NOT NULL DEFAULT '0',
+  `mine_value` int(8) DEFAULT NULL,
   `auctionable` enum('no','yes') NOT NULL DEFAULT 'no',
   `link` varchar(255) NOT NULL,
   `round` enum('no','yes') NOT NULL DEFAULT 'no',
@@ -346,7 +345,7 @@ CREATE TABLE `player` (
   `player_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `player_confirmed` enum('0','1') COLLATE utf8_unicode_ci DEFAULT '0',
   `player_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `player_wallet` bigint(20) DEFAULT '50000',
+  `player_wallet` bigint(20) DEFAULT '15000',
   `player_rank` enum('unverified','tourist','settler','resident','donator','guardian','builder','coder','junior_admin','senior_admin') COLLATE utf8_unicode_ci DEFAULT 'unverified',
   `player_flags` int(10) UNSIGNED DEFAULT NULL,
   `player_keywords` text COLLATE utf8_unicode_ci NOT NULL,
@@ -511,6 +510,17 @@ CREATE TABLE `player_property` (
   `property_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `property_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `player_referlog`
+--
+
+CREATE TABLE `player_referlog` (
+  `inviter_id` int(12) NOT NULL,
+  `invitee_id` int(12) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -682,6 +692,18 @@ CREATE TABLE `warp_log` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xf_map`
+--
+
+CREATE TABLE `xf_map` (
+  `playerid` int(11) NOT NULL,
+  `ign` varchar(32) NOT NULL,
+  `xfname` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `zone`
 --
 
@@ -799,12 +821,6 @@ ALTER TABLE `bank_transaction`
   ADD PRIMARY KEY (`transaction_id`),
   ADD KEY `idx_account` (`account_id`,`transaction_timestamp`),
   ADD KEY `idx_player` (`player_id`,`transaction_timestamp`);
-  
---
--- Indexes for table `banned_words`
---
-ALTER TABLE `banned_words`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `blessedblock`
@@ -1055,6 +1071,12 @@ ALTER TABLE `warp_log`
   ADD KEY `idx_warp` (`warp_id`,`log_timestamp`);
 
 --
+-- Indexes for table `xf_map`
+--
+ALTER TABLE `xf_map`
+  ADD PRIMARY KEY (`playerid`);
+
+--
 -- Indexes for table `zone`
 --
 ALTER TABLE `zone`
@@ -1101,69 +1123,62 @@ ALTER TABLE `zone_user`
 -- AUTO_INCREMENT for table `bank`
 --
 ALTER TABLE `bank`
-  MODIFY `bank_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `bank_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `bank_account`
 --
 ALTER TABLE `bank_account`
-  MODIFY `account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `bank_transaction`
 --
 ALTER TABLE `bank_transaction`
-  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-  
---
--- AUTO_INCREMENT for table `banned_words`
---
-ALTER TABLE `banned_words`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
-  
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `blessedblock`
 --
 ALTER TABLE `blessedblock`
-  MODIFY `blessedblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `blessedblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35809;
 --
 -- AUTO_INCREMENT for table `donation`
 --
 ALTER TABLE `donation`
-  MODIFY `donation_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `donation_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 --
 -- AUTO_INCREMENT for table `fishyblock`
 --
 ALTER TABLE `fishyblock`
-  MODIFY `fishyblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `fishyblock_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3782;
 --
 -- AUTO_INCREMENT for table `fishyblock_costlog`
 --
 ALTER TABLE `fishyblock_costlog`
-  MODIFY `costlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `costlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1691;
 --
 -- AUTO_INCREMENT for table `fishyblock_transaction`
 --
 ALTER TABLE `fishyblock_transaction`
-  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76313;
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inventory_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3354;
+  MODIFY `inventory_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98464;
 --
 -- AUTO_INCREMENT for table `inventory_accesslog`
 --
 ALTER TABLE `inventory_accesslog`
-  MODIFY `accesslog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9175;
+  MODIFY `accesslog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50589;
 --
 -- AUTO_INCREMENT for table `inventory_changelog`
 --
 ALTER TABLE `inventory_changelog`
-  MODIFY `changelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9255;
+  MODIFY `changelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72022;
 --
 -- AUTO_INCREMENT for table `inventory_item`
 --
 ALTER TABLE `inventory_item`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75488;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19918481;
 --
 -- AUTO_INCREMENT for table `item`
 --
@@ -1173,32 +1188,32 @@ ALTER TABLE `item`
 -- AUTO_INCREMENT for table `mentorlog`
 --
 ALTER TABLE `mentorlog`
-  MODIFY `mentorlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `mentorlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1021;
 --
 -- AUTO_INCREMENT for table `misc_message`
 --
 ALTER TABLE `misc_message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
 --
 -- AUTO_INCREMENT for table `motd`
 --
 ALTER TABLE `motd`
-  MODIFY `motd_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `motd_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `player`
 --
 ALTER TABLE `player`
-  MODIFY `player_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `player_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46326;
 --
 -- AUTO_INCREMENT for table `playerinventory`
 --
 ALTER TABLE `playerinventory`
-  MODIFY `playerinventory_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9245;
+  MODIFY `playerinventory_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=354002;
 --
 -- AUTO_INCREMENT for table `playerinventory_item`
 --
 ALTER TABLE `playerinventory_item`
-  MODIFY `item_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=498587;
+  MODIFY `item_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45495531;
 --
 -- AUTO_INCREMENT for table `player_badge`
 --
@@ -1208,52 +1223,52 @@ ALTER TABLE `player_badge`
 -- AUTO_INCREMENT for table `player_chatlog`
 --
 ALTER TABLE `player_chatlog`
-  MODIFY `chatlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12020;
+  MODIFY `chatlog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39416;
 --
 -- AUTO_INCREMENT for table `player_givelog`
 --
 ALTER TABLE `player_givelog`
-  MODIFY `givelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `givelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79627;
 --
 -- AUTO_INCREMENT for table `player_home`
 --
 ALTER TABLE `player_home`
-  MODIFY `home_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `home_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38046;
 --
 -- AUTO_INCREMENT for table `player_login`
 --
 ALTER TABLE `player_login`
-  MODIFY `login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1604;
+  MODIFY `login_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246884;
 --
 -- AUTO_INCREMENT for table `player_mail`
 --
 ALTER TABLE `player_mail`
-  MODIFY `mail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `mail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `player_orelog`
 --
 ALTER TABLE `player_orelog`
-  MODIFY `orelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1827;
+  MODIFY `orelog_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20468;
 --
 -- AUTO_INCREMENT for table `player_report`
 --
 ALTER TABLE `player_report`
-  MODIFY `report_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `report_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4975;
 --
 -- AUTO_INCREMENT for table `player_transaction`
 --
 ALTER TABLE `player_transaction`
-  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `transaction_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36274;
 --
 -- AUTO_INCREMENT for table `player_webcookie`
 --
 ALTER TABLE `player_webcookie`
-  MODIFY `webcookie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `webcookie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=492;
 --
 -- AUTO_INCREMENT for table `shorturl`
 --
 ALTER TABLE `shorturl`
-  MODIFY `urlID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `urlID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2610;
 --
 -- AUTO_INCREMENT for table `staffnews`
 --
@@ -1263,37 +1278,37 @@ ALTER TABLE `staffnews`
 -- AUTO_INCREMENT for table `trade`
 --
 ALTER TABLE `trade`
-  MODIFY `trade_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `trade_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18295;
 --
 -- AUTO_INCREMENT for table `trade_item`
 --
 ALTER TABLE `trade_item`
-  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125770;
 --
 -- AUTO_INCREMENT for table `version`
 --
 ALTER TABLE `version`
-  MODIFY `version_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `version_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `warp`
 --
 ALTER TABLE `warp`
-  MODIFY `warp_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
+  MODIFY `warp_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1039;
 --
 -- AUTO_INCREMENT for table `warp_log`
 --
 ALTER TABLE `warp_log`
-  MODIFY `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1135;
+  MODIFY `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=166522;
 --
 -- AUTO_INCREMENT for table `zone`
 --
 ALTER TABLE `zone`
-  MODIFY `zone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1039;
+  MODIFY `zone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1043;
 --
 -- AUTO_INCREMENT for table `zone_lot`
 --
 ALTER TABLE `zone_lot`
-  MODIFY `lot_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13140;
+  MODIFY `lot_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13156;
 --
 -- AUTO_INCREMENT for table `zone_profile`
 --
@@ -1303,7 +1318,7 @@ ALTER TABLE `zone_profile`
 -- AUTO_INCREMENT for table `zone_rect`
 --
 ALTER TABLE `zone_rect`
-  MODIFY `rect_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1036;
+  MODIFY `rect_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1040;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -1,7 +1,5 @@
 package info.tregmine;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -39,7 +37,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import com.scarsz.discordsrv.DiscordSRV;
 
 import info.tregmine.api.BlockStats;
@@ -103,6 +100,7 @@ import info.tregmine.commands.PositionCommand;
 import info.tregmine.commands.PromoteCommand;
 import info.tregmine.commands.PropertyCommand;
 import info.tregmine.commands.QuitMessageCommand;
+import info.tregmine.commands.ReferralCodeCommand;
 import info.tregmine.commands.RegenerateChunkCommand;
 import info.tregmine.commands.RemItemsCommand;
 import info.tregmine.commands.ReplyCommand;
@@ -989,6 +987,8 @@ public class Tregmine extends JavaPlugin {
 		getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 		getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
 		getCommand("gamemode").setExecutor(new GameModeLegacyCommand(this));
+		getCommand("rcode").setExecutor(new ReferralCodeCommand(this, "rcode"));
+		getCommand("referralcode").setExecutor(new ReferralCodeCommand(this, "referralcode"));
 		ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool
 														// recipes
 

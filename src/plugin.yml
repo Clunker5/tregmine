@@ -165,6 +165,10 @@ commands:
   quitmessage:
     description: Set a quit message (donators only)
     usage: /quitmessage <message>
+  referralcode:
+    description: Provides the players unique referral code.
+    usage: /referralcode
+    aliases: [rcode]
   regeneratechunk:
     description: Regenerate the current chunk (admin only)
     usage: /regeneratechunk

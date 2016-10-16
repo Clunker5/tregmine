@@ -13,6 +13,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.database.IPlayerDAO;
+import net.md_5.bungee.api.ChatColor;
 
 public class MentorCommand extends AbstractCommand {
 
@@ -172,15 +173,17 @@ public class MentorCommand extends AbstractCommand {
 
 			if (tregmine.getOnlineTeachers() < 3) {
 				try (IContext ctx = tregmine.createContext()) {
-					student.setRank(Rank.SETTLER);
+					player.setRank(Rank.SETTLER);
 
 					IPlayerDAO playerDAO = ctx.getPlayerDAO();
-					playerDAO.updatePlayer(student);
-					playerDAO.updatePlayerInfo(student);
+					playerDAO.updatePlayer(player);
+					playerDAO.updatePlayerInfo(player);
 
 					IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
 					int mentorLogId = mentorLogDAO.getMentorLogId(player, player);
+					
 					mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.SKIPPED);
+					player.sendStringMessage(ChatColor.GREEN + "You have been elevated to settler status.");
 				} catch (DAOException e) {
 					throw new RuntimeException(e);
 				}

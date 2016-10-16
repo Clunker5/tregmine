@@ -59,14 +59,12 @@ public class SetupListener implements Listener {
 						invdao.addInvite(inviterPlayer, player);
 						IWalletDAO waldao = ctx.getWalletDAO();
 						waldao.add(inviterPlayer, 10000);
+						waldao.insertTransaction(0, inviterPlayer.getId(), 10000);
+						player.sendStringMessage(ChatColor.GREEN + inviterPlayer.getChatNameNoColor() + " has recieved their reward.");
 						player.sendStringMessage(ChatColor.GREEN + "You have now joined Tregmine "
 								+ "and can talk with other players! Say Hi! :)");
 						player.setChatState(TregminePlayer.ChatState.CHAT);
 						Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " joined the server.");
-						Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " joined the server.");
-
-						 this.plugin.getServer().broadcastMessage(ChatColor.GREEN + "Welcome to Tregmine, " +
-						 player.getChatName() + ChatColor.GREEN + "!");
 						plugin.broadcast(new TextComponent(ChatColor.GREEN + "Welcome to Tregmine, "), player.getChatName(),
 								new TextComponent(ChatColor.GREEN + "!"));
 
