@@ -81,7 +81,7 @@ public class DBBlockDAO implements IBlockDAO {
 		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
 		crc32.update(pos.getBytes());
 		long checksum = crc32.getValue();
-		String sql = "INSERT INTO stats_blocks (checksum, player, x, y, z, time, status, blocktype, world) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO stats_blocks (checksum, player, x, y, z, time, status, blocktype, world) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setLong(1, checksum);
 			stmt.setInt(2, player.getId());
@@ -94,7 +94,7 @@ public class DBBlockDAO implements IBlockDAO {
 			stmt.setString(9, a.getWorld().getName().toUpperCase());
 			stmt.execute();
 		} catch (SQLException e){
-			throw new DAOException(e);
+			e.printStackTrace();
 		}
 		
 	}
