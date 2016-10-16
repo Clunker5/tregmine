@@ -170,6 +170,11 @@ public class WalletCommand extends AbstractCommand {
 			}
 
 			return give(player, target, amount);
+		} else {
+			player.sendStringMessage(AQUA + "/wallet tell <player>");
+			player.sendStringMessage(AQUA + "/wallet balance");
+			player.sendStringMessage(AQUA + "/wallet donate <player> <amount>");
+			player.sendStringMessage(AQUA + "/wallet give <player> <amount>");
 		}
 
 		return false;
