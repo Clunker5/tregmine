@@ -171,7 +171,7 @@ public class MentorCommand extends AbstractCommand {
 				return true;
 			}
 
-			if (tregmine.getOnlineTeachers() < 3) {
+			if (tregmine.getOnlineTeachers() < 3 && student == null) {
 				try (IContext ctx = tregmine.createContext()) {
 					player.setRank(Rank.SETTLER);
 
@@ -184,6 +184,23 @@ public class MentorCommand extends AbstractCommand {
 					
 					mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.SKIPPED);
 					player.sendStringMessage(ChatColor.GREEN + "You have been elevated to settler status.");
+				} catch (DAOException e) {
+					throw new RuntimeException(e);
+				}
+				return true;
+			}else if(student != null){
+				try (IContext ctx = tregmine.createContext()) {
+					student.setRank(Rank.SETTLER);
+
+					IPlayerDAO playerDAO = ctx.getPlayerDAO();
+					playerDAO.updatePlayer(student);
+					playerDAO.updatePlayerInfo(student);
+
+					IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+					int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+					
+					mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.COMPLETED);
+					student.sendStringMessage(ChatColor.GREEN + "You have been elevated to settler status.");
 				} catch (DAOException e) {
 					throw new RuntimeException(e);
 				}
