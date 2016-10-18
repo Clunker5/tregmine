@@ -41,6 +41,8 @@ public interface IPlayerDAO {
 	public void updateProperty(TregminePlayer player, String key, String value) throws DAOException;
 
 	public TregminePlayer getPlayer(UUID id) throws DAOException;
+
+	TregminePlayer getPlayer(String username) throws DAOException;
 	
 //	public String generateReferralCode(TregminePlayer source) throws DAOException;
 }
