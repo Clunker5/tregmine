@@ -74,15 +74,6 @@ public class DBContextFactory implements IContextFactory {
 		try {
 			// It's the responsibility of the context to make sure that the
 			// connection is correctly closed
-			ds.close();
-			ds = new BasicDataSource();
-			ds.setDriverClassName(this.driver);
-			ds.setUrl(this.url);
-			ds.setUsername(this.user);
-			ds.setPassword(this.password);
-			ds.setMaxActive(5);
-			ds.setMaxIdle(5);
-			ds.setDefaultAutoCommit(true);
 			Connection conn = ds.getConnection();
 			try (Statement stmt = conn.createStatement()) {
 				stmt.execute("SET NAMES latin1");
