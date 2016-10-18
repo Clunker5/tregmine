@@ -1,15 +1,14 @@
 Tregmine 2
 ========
 
-This is the rabil.org [Tregmine 2] tregmine plugin. Pull requests are appreciated :-)
-Don't ask why the plugin version is 3.X but its called Tregmine 2.
+This is the tregmine.com [Tregmine 2] tregmine plugin. Pull requests are appreciated :-)
+Don't ask why the plugin version is 4.X but its called Tregmine 2.
 Index
 -----
 
 The main plugin is in the src directory. In addition, there are a few utilities
 and tools in this repository:
 
- * blocklog - Logs changes to blocks, the log can be accessed with paper
  * delegate_gen - Generates a class from an interface that can be extended.
  * eventdebug - Development tool for when Bukkit events get triggered.
  * gamemagic - Stuff specific to the main tregmine world
@@ -31,7 +30,7 @@ Current Coders
 -------
  * Robby Catron <rcatron10@gmail.com> - Current maintainer
  * Eric Rabil <ericjrabil@gmail.com> - Current maintainer
- 
+
 Special Thanks To
 ------------
  * Ein Andersson - Original author
