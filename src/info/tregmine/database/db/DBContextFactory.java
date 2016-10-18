@@ -9,12 +9,12 @@ import java.util.Map;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
-
 import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IContextFactory;
+import net.md_5.bungee.api.ChatColor;
 
 public class DBContextFactory implements IContextFactory {
 	private BasicDataSource ds;
@@ -25,6 +25,8 @@ public class DBContextFactory implements IContextFactory {
 	private String url;
 	private String user;
 	private String password;
+	
+	private long createTime;
 
 	public DBContextFactory(FileConfiguration config, Tregmine instance) {
 		queryLog = new HashMap<>();
@@ -47,7 +49,7 @@ public class DBContextFactory implements IContextFactory {
 		String user = config.getString("db.user");
 		String password = config.getString("db.password");
 		String url = config.getString("db.url");
-
+		
 		ds = new BasicDataSource();
 		ds.setDriverClassName(driver);
 		ds.setUrl(url);
@@ -56,12 +58,13 @@ public class DBContextFactory implements IContextFactory {
 		ds.setMaxActive(5);
 		ds.setMaxIdle(5);
 		ds.setDefaultAutoCommit(true);
+		createTime = System.currentTimeMillis();
 		
 		this.driver = driver;
 		this.url = url;
 		this.user = user;
 		this.password = password;
-
+		
 		this.plugin = instance;
 	}
 	
