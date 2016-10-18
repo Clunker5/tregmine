@@ -166,11 +166,11 @@ public class TregminePlayer extends PlayerDelegate {
 		this.plugin = instance;
 	}
 
-	public TregminePlayer(UUID uuid, Tregmine instance) {
+	public TregminePlayer(UUID uuid, Tregmine instance, String uname) {
 		super(null);
 		OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
-		this.name = player.getName();
-		this.realName = player.getName();
+		this.name = uname;
+		this.realName = uname;
 		this.loginTime = new Date();
 
 		this.flags = EnumSet.noneOf(Flags.class);
