@@ -69,7 +69,7 @@ public class ZoneCommand extends AbstractCommand {
 			return;
 		}
 
-		TregminePlayer victim = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(userName));
+		TregminePlayer victim = tregmine.getPlayerOffline(userName);
 		if (victim == null) {
 			player.sendStringMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
 			return;
@@ -299,7 +299,7 @@ public class ZoneCommand extends AbstractCommand {
 			return;
 		}
 
-		TregminePlayer victim = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(userName));
+		TregminePlayer victim = tregmine.getPlayerOffline(userName);
 		if (victim == null) {
 			player.sendStringMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
 			return;

@@ -55,7 +55,7 @@ public class LotCommand extends AbstractCommand {
 
 		String playerName = args[2];
 
-		TregminePlayer victim = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(playerName));
+		TregminePlayer victim = tregmine.getPlayerOffline(playerName);
 		if (victim == null) {
 			player.sendStringMessage(RED + "Player " + playerName + " was not found.");
 			return;
@@ -321,7 +321,7 @@ public class LotCommand extends AbstractCommand {
 		TregminePlayer candidate = null;
 		if (candidates.size() != 1) {
 			// try exact matching
-			candidate = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[2]));
+			candidate = tregmine.getPlayerOffline(args[2]);
 			if (candidate == null) {
 				// give up
 				player.sendStringMessage(RED + "Player " + args[2] + " was not found.");

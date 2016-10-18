@@ -37,7 +37,7 @@ public class BadgeCommand extends AbstractCommand {
 
 			TregminePlayer target;
 			try {
-				target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[0]));
+				target = tregmine.getPlayerOffline(args[0]);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,7 +66,7 @@ public class BadgeCommand extends AbstractCommand {
 			}
 			TregminePlayer target;
 			try {
-				target = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(args[1]));
+				target = tregmine.getPlayerOffline(args[1]);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

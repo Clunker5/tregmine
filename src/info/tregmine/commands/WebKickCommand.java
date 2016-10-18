@@ -46,7 +46,7 @@ public class WebKickCommand extends AbstractCommand {
 		String pattern = args[0];
 		String message = argsToMessage(args);
 
-		TregminePlayer victim = tregmine.getPlayerOffline(UUIDFetcher.getUUIDOf(pattern));
+		TregminePlayer victim = tregmine.getPlayerOffline(pattern);
 		if (victim == null) {
 			// TODO: error message
 			return true;
