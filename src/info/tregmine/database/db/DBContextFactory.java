@@ -95,6 +95,26 @@ public class DBContextFactory implements IContextFactory {
 
 			return new DBContext(new LoggingConnection(conn, queryLog), plugin);
 		} catch (SQLException e) {
+			if(e.getMessage().toLowerCase().contains("communications link failure")){
+				this.plugin.setReconnecting(true);
+				System.out.println(this.plugin.kickAll(ChatColor.RED + "Connection to the database was lost!\nPlease reconnect in a few moments.") + " players were ejected from the server.");
+				regenerate();
+				Connection conn;
+				try {
+					conn = ds.getConnection();
+				
+				try (Statement stmt = conn.createStatement()) {
+					stmt.execute("SET NAMES latin1");
+				}
+				this.plugin.setReconnecting(false);
+				return new DBContext(new LoggingConnection(conn, queryLog), plugin);
+				} catch (SQLException e1) {
+					// Giving up re-attempts.
+					e1.printStackTrace();
+					System.out.println("Two failed attempts to connect to the server. Whatever.");
+					return null;
+				}
+			}
 			throw new DAOException(e);
 		}
 	}
