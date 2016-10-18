@@ -65,7 +65,7 @@ public class DonationSigns implements Listener {
 			IWalletDAO wallet = ctx.getWalletDAO();
 			Integer amount = Integer.parseInt(sign.getLine(1).trim());
 			NumberFormat format = NumberFormat.getNumberInstance();
-			TregminePlayer receiver = plugin.getPlayerOffline(UUIDFetcher.getUUIDOf(sign.getLine(3).trim()));
+			TregminePlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
 			if (receiver == null) {
 				player.sendStringMessage(ChatColor.RED + "The player on the sign does not exist!");
 				return;
