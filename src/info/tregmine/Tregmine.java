@@ -1156,6 +1156,17 @@ public class Tregmine extends JavaPlugin {
 		}
 		this.lockdown = v;
 	}
+	
+	public void setReconnecting(boolean v) {
+		if (v) {
+			Bukkit.broadcastMessage(
+					ChatColor.RED + "The server lost connection to the database. Nobody will be able to join until a connection is restored.");
+		} else {
+			Bukkit.broadcastMessage(ChatColor.GREEN + "Connection has been restored! Players can now re-connect.");
+		}
+		this.lockdown = v;
+	}
+	
 
 	public void updateStatistics() {
 		int g = 0;
