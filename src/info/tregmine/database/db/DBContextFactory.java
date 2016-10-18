@@ -65,8 +65,22 @@ public class DBContextFactory implements IContextFactory {
 		this.plugin = instance;
 	}
 	
-	public BasicDataSource getDataSource(){
-		return this.ds;
+	public void regenerate() throws DAOException{
+		try{
+		ds.close();
+		ds = null;
+		ds = new BasicDataSource();
+		ds.setDriverClassName(driver);
+		ds.setUrl(url);
+		ds.setUsername(user);
+		ds.setPassword(password);
+		ds.setMaxActive(5);
+		ds.setMaxIdle(5);
+		ds.setDefaultAutoCommit(true);
+		createTime = System.currentTimeMillis();
+		}catch(SQLException e){
+			throw new DAOException(e);
+		}
 	}
 
 	@Override
