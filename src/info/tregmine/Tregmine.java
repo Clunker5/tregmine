@@ -48,7 +48,6 @@ import info.tregmine.api.Rank;
 import info.tregmine.api.Timer;
 import info.tregmine.api.Tools;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.UUIDFetcher;
 import info.tregmine.commands.ActionCommand;
 import info.tregmine.commands.AfkCommand;
 import info.tregmine.commands.AlertCommand;
@@ -444,7 +443,7 @@ public class Tregmine extends JavaPlugin {
 
 	public TregminePlayer getPlayer(String name) {
 		try {
-			return players.get(UUIDFetcher.getUUIDOf(name));
+			return players.get(name);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 
