@@ -196,7 +196,59 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				}
 
-				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin);
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin, rs.getString("player_name"));
+				player.setId(rs.getInt("player_id"));
+
+				String uniqueIdStr = rs.getString("player_uuid");
+				if (uniqueIdStr != null) {
+					player.setStoredUuid(UUID.fromString(uniqueIdStr));
+				}
+				player.setPasswordHash(rs.getString("player_password"));
+				player.setRank(Rank.fromString(rs.getString("player_rank")));
+//				if(rs.getString("player_referralcode") == null){
+//					player.setReferralCode(generateReferralCode(player));
+//				}else{
+//					player.setReferralCode(rs.getString("player_referralcode"));
+//				}
+				
+				if (rs.getString("player_inventory") == null) {
+					player.setCurrentInventory("survival");
+				} else {
+					player.setCurrentInventory(rs.getString("player_inventory"));
+				}
+
+				int flags = rs.getInt("player_flags");
+				for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+					if ((flags & (1 << flag.ordinal())) != 0) {
+						player.setFlag(flag);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			throw new DAOException(sql, e);
+		}
+
+		loadSettings(player);
+
+		return player;
+	}
+	
+	@Override
+	public TregminePlayer getPlayer(String username) throws DAOException {
+		String sql = "SELECT * FROM player WHERE player_name = ?";
+
+		TregminePlayer player = null;
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, username);
+			stmt.execute();
+
+			try (ResultSet rs = stmt.getResultSet()) {
+				if (!rs.next()) {
+					return null;
+				}
+
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin, rs.getString("player_name"));
 				player.setId(rs.getInt("player_id"));
 
 				String uniqueIdStr = rs.getString("player_uuid");
@@ -248,7 +300,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				}
 
-				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin);
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin, rs.getString("player_name"));
 				player.setId(rs.getInt("player_id"));
 
 				String uniqueIdStr = rs.getString("player_uuid");
