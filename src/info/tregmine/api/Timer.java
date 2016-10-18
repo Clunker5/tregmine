@@ -63,6 +63,7 @@ public class Timer implements Runnable {
 					}
 				}
 				player.checkActivity();
+				
 
 			} catch (Exception e) {
 				t.getLogger().log(Level.WARNING, "Timer Exception", e);
