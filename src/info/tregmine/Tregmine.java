@@ -523,18 +523,6 @@ public class Tregmine extends JavaPlugin {
 	public List<String> getQuitMessages() {
 		return quitMessages;
 	}
-	
-	public void resetDAO(){
-		//Resets the database connection to prevent expiration.
-		try {
-			this.contextFactory.getDataSource().close();
-			this.contextFactory.getDataSource().getConnection();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 
 	public ChatColor getRankColor(Rank rank) {
 		if (this.rankcolors[0] == null) {
