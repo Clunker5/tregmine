@@ -1169,6 +1169,17 @@ public class Tregmine extends JavaPlugin {
 		this.lockdown = v;
 	}
 	
+	public int kickAll(String message){
+		Player[] plrs = this.getServer().getOnlinePlayers().toArray(new Player[this.getServer().getOnlinePlayers().size()]);
+		Bukkit.getScheduler().runTask(this, new Runnable() {
+			public void run(){
+				for(Player player : plrs){
+					player.kickPlayer(message);
+				}
+			}
+		});
+		return 0;
+	}
 
 	public void updateStatistics() {
 		int g = 0;
