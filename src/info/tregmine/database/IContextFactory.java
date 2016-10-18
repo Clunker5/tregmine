@@ -4,5 +4,5 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 public interface IContextFactory {
 	public IContext createContext() throws DAOException;
-	public BasicDataSource getDataSource();
+	public void regenerate() throws DAOException;
 }
