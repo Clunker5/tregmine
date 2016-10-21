@@ -18,13 +18,13 @@ import net.md_5.bungee.api.chat.TextComponent;
  * @author Joe Notaro (notaro1997)
  */
 public class LotteryCommand extends AbstractCommand {
-	public List<String> lottery;
+	public List<TregminePlayer> lottery;
 	public int jackpot = 0;
 
 	public LotteryCommand(Tregmine tregmine) {
 		super(tregmine, "lottery");
 
-		lottery = new ArrayList<String>();
+		lottery = new ArrayList<TregminePlayer>();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class LotteryCommand extends AbstractCommand {
 			enough = false;
 		}
 
-		if (!lottery.contains(player.getName())) {
+		if (!lottery.contains(player)) {
 			joined = false;
 		}
 
@@ -82,9 +82,9 @@ public class LotteryCommand extends AbstractCommand {
 				IWalletDAO wallet = ctx.getWalletDAO();
 
 				if (args[0].equalsIgnoreCase("join")) {
-					if (!lottery.contains(player.getName())) {
+					if (!lottery.contains(player)) {
 						if (wallet.take(player, 2000)) {
-							lottery.add(player.getName());
+							lottery.add(player);
 							player.sendStringMessage(ChatColor.GREEN + "You've been added to the lottery!");
 							player.sendStringMessage(ChatColor.GREEN + "2,000 Tregs have been taken from you.");
 							tregmine.broadcast(player.getChatName(),
@@ -98,8 +98,8 @@ public class LotteryCommand extends AbstractCommand {
 				}
 
 				if (args[0].equalsIgnoreCase("quit")) {
-					if (lottery.contains(player.getName())) {
-						lottery.remove(player.getName());
+					if (lottery.contains(player)) {
+						lottery.remove(player);
 						wallet.add(player, 2000);
 						player.sendStringMessage(ChatColor.RED + "You are no longer in the lottery.");
 						player.sendStringMessage(ChatColor.RED + "You received your 2,000 Tregs back");
@@ -131,10 +131,9 @@ public class LotteryCommand extends AbstractCommand {
 					if (player.getRank().canChooseLottery()) {
 						if (size >= 2) {
 							Random random = new Random();
-							String randomPlayer = lottery.get(random.nextInt(size));
-							TregminePlayer winner = tregmine.getPlayer(randomPlayer);
-							if (winner == null) {
-								player.sendStringMessage(ChatColor.RED + randomPlayer + " won, "
+							TregminePlayer winner = lottery.get(random.nextInt(size));
+							if (!winner.isOnline()) {
+								player.sendStringMessage(ChatColor.RED + winner.getChatNameNoHover() + " won, "
 										+ "but is no longer online. Try again.");
 								return true;
 							}
