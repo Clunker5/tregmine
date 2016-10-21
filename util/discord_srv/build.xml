@@ -42,9 +42,19 @@
     </target>
 
     <target name="jar" depends="compile">
-        <jar destfile="tregmine_discord_unshaded.jar" basedir="${build}">
+        <jar destfile="tregmine_discord.jar" basedir="${build}">
             <manifest>
-                <attribute name="Class-Path" value="tregmine.jar" />
+                <attribute name="Class-Path" value="tregmine.jar
+                  lib/commons-io-2.5.jar
+                  lib/commons-logging-1.2.jar
+                  lib/httpasyncclient-4.1.1.jar
+                  lib/httpclient-4.5.2.jar
+                  lib/httpcore-4.4.4.jar
+                  lib/httpcore-nio-4.4.4.jar
+                  lib/java-json.jar
+                  lib/JDA-2.0.0_242.jar
+                  lib/nv-websocket-client-1.6.jar
+                  lib/unirest-java-1.4.9.jar" />
             </manifest>
         </jar>
     </target>
