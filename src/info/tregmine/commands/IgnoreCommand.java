@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -88,13 +87,13 @@ public class IgnoreCommand extends AbstractCommand {
 			if (target.getDelegate() == null) {
 				ignoredPeople.add(args[1]);
 			} else {
-				ignoredPeople.add(target.getDisplayName());
+				ignoredPeople.add(target.getChatNameNoHover());
 			}
 
 			try (IContext ctx = tregmine.createContext()) {
 				IPlayerDAO playerDAO = ctx.getPlayerDAO();
 				playerDAO.updateIgnore(player, ignoredPeople);
-				player.sendStringMessage(ChatColor.AQUA + "Now ignoring the player: " + target.getDisplayName());
+				player.sendStringMessage(ChatColor.AQUA + "Now ignoring the player: " + target.getChatNameNoHover());
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
 			}
