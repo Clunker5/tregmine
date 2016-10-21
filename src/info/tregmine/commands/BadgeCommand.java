@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.UUIDFetcher;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class BadgeCommand extends AbstractCommand {
