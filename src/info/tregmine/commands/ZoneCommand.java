@@ -10,7 +10,6 @@ import org.bukkit.block.Block;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IZonesDAO;
