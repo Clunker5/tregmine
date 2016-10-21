@@ -655,7 +655,7 @@ public class TregminePlayerListener implements Listener {
 				Tregmine.LOGGER.warning(player.getName() + " keyword :: success");
 			} else {
 				Tregmine.LOGGER.warning(player.getName() + " keyword :: faild");
-				event.disallow(Result.KICK_BANNED, ChatColor.RED + "Wrong keyword!");
+				event.disallow(Result.KICK_BANNED, ChatColor.RED + "Wrong keyword!\nIf you have forgotten your keyword, contact a senior admin via Discord.\nhttp://tinyurl.com/TregmineDiscord");
 			}
 		} else {
 			Tregmine.LOGGER.warning(player.getName() + " keyword :: notset");
