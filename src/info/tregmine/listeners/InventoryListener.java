@@ -70,8 +70,7 @@ public class InventoryListener implements Listener {
 					ItemMeta meta = item.getItemMeta();
 					List<String> lore = new ArrayList<String>();
 					lore.add(Created.CREATIVE.toColorString());
-					TregminePlayer p = this.plugin.getPlayer(player.getName());
-					lore.add(ChatColor.WHITE + "by: " + p.getChatNameNoHover());
+					lore.add(ChatColor.WHITE + "by: " + player.getName());
 					lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE
 							+ " Treg");
 					meta.setLore(lore);
