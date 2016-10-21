@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.AQUA;
 
 import java.io.PrintWriter;
 
+import org.bukkit.ChatColor;
 import org.eclipse.jetty.server.Request;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -84,11 +85,11 @@ public class PlayerKickAction implements WebHandler.Action {
 			issuer = tregmine.getPlayerOffline(issuerId);
 		}
 
-		subject.kickPlayer(tregmine, "Kicked by " + issuer.getChatName() + ": " + message);
+		subject.kickPlayer(tregmine, "Kicked by " + issuer.getChatNameNoHover() + ChatColor.WHITE + ": " + message);
 
 		Tregmine.LOGGER.info(subject.getChatName() + " was kicked by " + issuer.getChatName() + " (from web)");
 		tregmine.broadcast(new TextComponent(
-				issuer.getChatName() + "" + AQUA + " kicked " + subject.getChatName() + AQUA + ": " + message));
+				issuer.getChatNameNoHover() + "" + AQUA + " kicked " + subject.getChatNameNoHover() + AQUA + ": " + message));
 
 		if (status) {
 			try (IContext ctx = tregmine.createContext()) {
