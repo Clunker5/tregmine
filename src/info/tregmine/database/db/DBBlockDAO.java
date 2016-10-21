@@ -23,6 +23,47 @@ public class DBBlockDAO implements IBlockDAO {
 	}
 
 	@Override
+	public void addPlaced(Block a, TregminePlayer player) throws DAOException {
+		Location block = a.getLocation();
+		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
+		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
+		crc32.update(pos.getBytes());
+		long checksum = crc32.getValue();
+		String sql = "INSERT INTO stats_blocks (checksum, player, x, y, z, time, status, blocktype, world) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setLong(1, checksum);
+			stmt.setInt(2, player.getId());
+			stmt.setDouble(3, block.getX());
+			stmt.setDouble(4, block.getY());
+			stmt.setDouble(5, block.getZ());
+			stmt.setDouble(6, System.currentTimeMillis());
+			stmt.setDouble(7, 1);
+			stmt.setString(8, a.getType().name().toUpperCase());
+			stmt.setString(9, a.getWorld().getName().toUpperCase());
+			stmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void blockDestroyed(Block a) throws DAOException {
+		Location block = a.getLocation();
+		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
+		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
+		crc32.update(pos.getBytes());
+		long checksum = crc32.getValue();
+		String sql = "UPDATE stats_blocks SET status = 0 WHERE checksum = ?";
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setLong(1, checksum);
+			stmt.execute();
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		}
+	}
+
+	@Override
 	public int blockValue(Block a) throws DAOException {
 		String sql = "SELECT * FROM item WHERE item_id = ?";
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -56,47 +97,6 @@ public class DBBlockDAO implements IBlockDAO {
 			e.printStackTrace();
 		}
 		return false;
-	}
-	
-	@Override
-	public void blockDestroyed(Block a) throws DAOException {
-		Location block = a.getLocation();
-		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
-		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
-		crc32.update(pos.getBytes());
-		long checksum = crc32.getValue();
-		String sql = "UPDATE stats_blocks SET status = 0 WHERE checksum = ?";
-		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setLong(1, checksum);
-			stmt.execute();
-		}catch(SQLException e){
-			throw new DAOException(e);
-		}
-	}
-	
-	@Override
-	public void addPlaced(Block a, TregminePlayer player) throws DAOException {
-		Location block = a.getLocation();
-		java.util.zip.CRC32 crc32 = new java.util.zip.CRC32();
-		String pos = block.getX() + "," + block.getY() + "," + block.getZ();
-		crc32.update(pos.getBytes());
-		long checksum = crc32.getValue();
-		String sql = "INSERT INTO stats_blocks (checksum, player, x, y, z, time, status, blocktype, world) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setLong(1, checksum);
-			stmt.setInt(2, player.getId());
-			stmt.setDouble(3, block.getX());
-			stmt.setDouble(4, block.getY());
-			stmt.setDouble(5, block.getZ());
-			stmt.setDouble(6, System.currentTimeMillis());
-			stmt.setDouble(7, 1);
-			stmt.setString(8, a.getType().name().toUpperCase());
-			stmt.setString(9, a.getWorld().getName().toUpperCase());
-			stmt.execute();
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
-		
 	}
 
 	@Override
