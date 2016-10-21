@@ -16,6 +16,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class KickCommand extends AbstractCommand {
@@ -83,7 +84,7 @@ public class KickCommand extends AbstractCommand {
 		plugin.broadcast(new TextComponent(player.getChatName(), new TextComponent(AQUA + " kicked "),
 				victim.getChatName(), new TextComponent(AQUA + ": " + message)));
 		LOGGER.info(victim.getName() + " kicked by " + player.getName());
-		victim.kickPlayer(plugin, "kicked by " + player.getName() + ": " + message);
+		victim.kickPlayer(plugin, "kicked by " + player.getChatNameNoHover() + ChatColor.WHITE + ": " + message);
 
 		try (IContext ctx = tregmine.createContext()) {
 			PlayerReport report = new PlayerReport();
