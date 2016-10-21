@@ -485,21 +485,21 @@ public class Tregmine extends JavaPlugin {
 
 		try (IContext ctx = contextFactory.createContext()) {
 			IPlayerDAO playerDAO = ctx.getPlayerDAO();
-			return playerDAO.getPlayer(username);
+			return playerDAO.getPlayer(player.getUniqueId());
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public TregminePlayer getPlayerOffline(OfflinePlayer player) {
-		TregminePlayer plr = players.get(player.getUniqueId());
+	public TregminePlayer getPlayerOffline(String username) {
+		TregminePlayer plr = players.get(username);
 		if (plr != null) {
 			return plr;
 		}
 
 		try (IContext ctx = contextFactory.createContext()) {
 			IPlayerDAO playerDAO = ctx.getPlayerDAO();
-			return playerDAO.getPlayer(player.getUniqueId());
+			return playerDAO.getPlayer(username);
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
