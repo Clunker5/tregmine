@@ -186,7 +186,7 @@ commands:
     description: Adds a report to the players record
     usage: /report player message
   resetlore:
-    description: Reset a lore for an item accidentally flagged as creative or spawned [IM_NOT_ERIC OR OPS ONLY]
+    description: Reset a lore for an item accidentally flagged as creative or spawned
     usage: /resetlore
   rname:
     description: Resets the players nickname
