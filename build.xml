@@ -61,12 +61,12 @@
                            lib/jetty-all.jar
                            lib/commons-pool-1.5.6.jar
                            lib/TagAPI.jar
-						   lib/activation.jar 
+						   lib/activation.jar
                 	       lib/mail.jar" />
             </manifest>
                     </jar>
     </target>
-    
+
     <target name="debugjar" depends="compile">
         <jar destfile="./server/plugins/tregmine.jar" basedir="${build}">
             <manifest>
@@ -78,24 +78,24 @@
                            lib/jetty-all.jar
                            lib/commons-pool-1.5.6.jar
                            lib/TagAPI.jar
-						   lib/activation.jar 
+						   lib/activation.jar
                 	       lib/mail.jar" />
             </manifest>
                     </jar>
     </target>
-	
+
 	<!--<target name="jar" depends="create">
       <zip destfile="tregmine.jar">
           <zipgroupfileset dir="lib" includes="*.jar" excludes="**/*.RSA, **/*.SF, **/*.DSA"/>
           <zipgroupfileset dir="./" includes="tregmine_unshaded.jar"/>
       </zip>
     </target>-->
-	
+
     <target name="finalize">
 	    <delete>
 		   <fileset dir="plugins_final">
 		      <include name="*"/>
-			  <include name="*/**"/>
+			    <include name="*/**"/>
 		   </fileset>
 		</delete>
 		<copy todir="plugins_final">
@@ -103,11 +103,17 @@
 		      <include name="*"/>
 			  <include name="**/*"/>
 		   </fileset>
+       <fileset dir="util/discord_srv">
+         <include name="tregmine_discord.jar"/>
+       </fileset>
+       <fileset dir="./">
+       <include name="tregmine_db.sql"/>
+     </fileset>
 		   <fileset dir="./">
 		      <include name="tregmine.jar"/>
 		   </fileset>
 		</copy>
-			  
+
         <zip destfile="tregmine.zip">
             <zipfileset dir="plugins_final" includes="*"/>
 			<zipfileset dir="plugins_final" includes="*/*"/>
