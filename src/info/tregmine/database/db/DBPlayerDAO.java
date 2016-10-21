@@ -1,6 +1,5 @@
 package info.tregmine.database.db;
 
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -198,7 +197,8 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				}
 
-				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin, rs.getString("player_name"));
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin,
+						rs.getString("player_name"));
 				player.setId(rs.getInt("player_id"));
 
 				String uniqueIdStr = rs.getString("player_uuid");
@@ -207,12 +207,12 @@ public class DBPlayerDAO implements IPlayerDAO {
 				}
 				player.setPasswordHash(rs.getString("player_password"));
 				player.setRank(Rank.fromString(rs.getString("player_rank")));
-//				if(rs.getString("player_referralcode") == null){
-//					player.setReferralCode(generateReferralCode(player));
-//				}else{
-//					player.setReferralCode(rs.getString("player_referralcode"));
-//				}
-				
+				// if(rs.getString("player_referralcode") == null){
+				// player.setReferralCode(generateReferralCode(player));
+				// }else{
+				// player.setReferralCode(rs.getString("player_referralcode"));
+				// }
+
 				if (rs.getString("player_inventory") == null) {
 					player.setCurrentInventory("survival");
 				} else {
@@ -283,13 +283,13 @@ public class DBPlayerDAO implements IPlayerDAO {
 		}
 
 		loadSettings(player);
-
+		loadReports(player);
 		return player;
 	}
 
 	@Override
-	public TregminePlayer getPlayer(UUID id) throws DAOException {
-		String sql = "SELECT * FROM player WHERE player_uuid = ?";
+	public TregminePlayer getPlayer(String username) throws DAOException {
+		String sql = "SELECT * FROM player WHERE player_name = ?";
 
 		TregminePlayer player = null;
 
@@ -302,7 +302,8 @@ public class DBPlayerDAO implements IPlayerDAO {
 					return null;
 				}
 
-				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin, rs.getString("player_name"));
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin,
+						rs.getString("player_name"));
 				player.setId(rs.getInt("player_id"));
 
 				String uniqueIdStr = rs.getString("player_uuid");
@@ -364,22 +365,22 @@ public class DBPlayerDAO implements IPlayerDAO {
 				if (!rs.next()) {
 					return null;
 				}
-				if (rs.getString("player_name") != wrap.getName()) {
-					// Name change! Call 911!
 
-				}
-
-				UUID uniqueId = wrap.getUniqueId();
-
+				player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin,
+						rs.getString("player_name"));
 				player.setId(rs.getInt("player_id"));
-				player.setStoredUuid(uniqueId);
+
+				String uniqueIdStr = rs.getString("player_uuid");
+				if (uniqueIdStr != null) {
+					player.setStoredUuid(UUID.fromString(uniqueIdStr));
+				}
 				player.setPasswordHash(rs.getString("player_password"));
 				player.setRank(Rank.fromString(rs.getString("player_rank")));
-//				if(rs.getString("player_referralcode") == null){
-//					player.setReferralCode(generateReferralCode(player));
-//				}else{
-//					player.setReferralCode(rs.getString("player_referralcode"));
-//				}
+				// if(rs.getString("player_referralcode") == null){
+				// player.setReferralCode(generateReferralCode(player));
+				// }else{
+				// player.setReferralCode(rs.getString("player_referralcode"));
+				// }
 				if (rs.getString("player_inventory") == null) {
 					player.setCurrentInventory("survival");
 				} else {
@@ -398,7 +399,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 		}
 
 		loadSettings(player);
-		loadReports(player);
+
 		return player;
 	}
 
@@ -461,20 +462,24 @@ public class DBPlayerDAO implements IPlayerDAO {
 			throw new DAOException(sql, e);
 		}
 	}
-	
-//	public String generateReferralCode(TregminePlayer source) throws DAOException {
-//		//Generate a six-character securely randomized string, to be used as a referral code.
-//		String referralCode = new BigInteger(130, this.plugin.getSecureRandom()).toString(32).substring(0, 6);
-//		String sql = "UPDATE player SET player_referralcode = ? WHERE player_id = ?";
-//		try(PreparedStatement stmt = conn.prepareStatement(sql)){
-//			stmt.setString(1, referralCode);
-//			stmt.setInt(2, source.getId());
-//			stmt.execute();
-//		}catch(SQLException e){
-//			throw new DAOException(sql, e);
-//		}
-//		return referralCode;
-//	}
+
+	// public String generateReferralCode(TregminePlayer source) throws
+	// DAOException {
+	// //Generate a six-character securely randomized string, to be used as a
+	// referral code.
+	// String referralCode = new BigInteger(130,
+	// this.plugin.getSecureRandom()).toString(32).substring(0, 6);
+	// String sql = "UPDATE player SET player_referralcode = ? WHERE player_id =
+	// ?";
+	// try(PreparedStatement stmt = conn.prepareStatement(sql)){
+	// stmt.setString(1, referralCode);
+	// stmt.setInt(2, source.getId());
+	// stmt.execute();
+	// }catch(SQLException e){
+	// throw new DAOException(sql, e);
+	// }
+	// return referralCode;
+	// }
 
 	@Override
 	public void updateBadges(TregminePlayer player) throws DAOException {
