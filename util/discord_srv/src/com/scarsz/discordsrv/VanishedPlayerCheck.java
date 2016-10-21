@@ -1,14 +1,15 @@
 package com.scarsz.discordsrv;
 
+import org.bukkit.entity.Player;
+
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.Flags;
 
 public class VanishedPlayerCheck {
 
-	public static boolean checkPlayerIsVanished(String player, Tregmine plugin) {
+	public static boolean checkPlayerIsVanished(Player player, Tregmine plugin) {
 		Boolean isVanished = false;
-
 		TregminePlayer check = plugin.getPlayer(player);
 		if (check.hasFlag(Flags.INVISIBLE))
 			isVanished = true;
