@@ -23,20 +23,8 @@ public enum Rank {
 				|| this == BUILDER;
 	}
 
-	public boolean canUseStaffNews() {
-		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
-	}
-
-	public boolean canReadStaffNews() {
-		return this == GUARDIAN || this == CODER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
-	}
-
 	public boolean bypassAFKKick() {
 		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
-	}
-	
-	public boolean canHaveReferralCode() {
-		return this != UNVERIFIED;
 	}
 
 	public boolean canBan() {
@@ -47,6 +35,10 @@ public enum Rank {
 		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
 
+	public boolean canBeMuted() {
+		return this != GUARDIAN && this != JUNIOR_ADMIN && this != SENIOR_ADMIN;
+	}
+
 	public boolean canBless() {
 		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
@@ -54,10 +46,6 @@ public enum Rank {
 	public boolean canBottleXP() {
 		return this == DONATOR || this == GUARDIAN || this == BUILDER || this == CODER || this == JUNIOR_ADMIN
 				|| this == SENIOR_ADMIN;
-	}
-
-	public boolean canGoToNewWorld() {
-		return this == GUARDIAN || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
 
 	public boolean canBreakBannedBlocks() {
@@ -93,10 +81,6 @@ public enum Rank {
 		return (this == JUNIOR_ADMIN || this == SENIOR_ADMIN);
 	}
 
-	/*
-	 * CoreProtect permissions
-	 */
-
 	public boolean canChooseLottery() {
 		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN || this == GUARDIAN || this == CODER;
 	}
@@ -109,6 +93,10 @@ public enum Rank {
 	public boolean canCreateWarps() {
 		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
+
+	/*
+	 * CoreProtect permissions
+	 */
 
 	public boolean canDoHiddenTeleport() {
 		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
@@ -153,6 +141,10 @@ public enum Rank {
 		return this == SENIOR_ADMIN;
 	}
 
+	public boolean canGoToNewWorld() {
+		return this == GUARDIAN || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
+
 	public boolean canGoToVanilla() {
 		return this == DONATOR || this == GUARDIAN || this == CODER || this == BUILDER || this == JUNIOR_ADMIN
 				|| this == SENIOR_ADMIN;
@@ -160,6 +152,10 @@ public enum Rank {
 
 	public boolean canHaveHiddenNickname() {
 		return this == SENIOR_ADMIN;
+	}
+
+	public boolean canHaveReferralCode() {
+		return this != UNVERIFIED;
 	}
 
 	public boolean canInspect() {
@@ -185,6 +181,10 @@ public enum Rank {
 
 	public boolean canModifyZones() {
 		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
+
+	public boolean canMute() {
+		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
 
 	public boolean canNotBeIgnored() {
@@ -216,12 +216,8 @@ public enum Rank {
 		return this == SENIOR_ADMIN;
 	}
 
-	public boolean canMute() {
-		return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
-	}
-
-	public boolean canBeMuted() {
-		return this != GUARDIAN && this != JUNIOR_ADMIN && this != SENIOR_ADMIN;
+	public boolean canReadStaffNews() {
+		return this == GUARDIAN || this == CODER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
 
 	public boolean canReload() {
@@ -355,6 +351,10 @@ public enum Rank {
 
 	public boolean canUseEnhancedCompass() {
 		return this == GUARDIAN || this == CODER || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
+
+	public boolean canUseStaffNews() {
+		return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
 	}
 
 	public boolean canUseTools() {

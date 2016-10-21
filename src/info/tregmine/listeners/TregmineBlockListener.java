@@ -33,13 +33,6 @@ public class TregmineBlockListener implements Listener {
 	}
 
 	@EventHandler
-	public void onBlockFromTo(BlockFromToEvent event) {
-		if (event.getToBlock().getType() == Material.NETHER_WART_BLOCK) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
@@ -56,7 +49,7 @@ public class TregmineBlockListener implements Listener {
 		}
 
 		try (IContext ctx = plugin.createContext()) {
-			if(player.getGameMode() != GameMode.SURVIVAL){
+			if (player.getGameMode() != GameMode.SURVIVAL) {
 				return;
 			}
 			IBlockDAO blockDAO = ctx.getBlockDAO();
@@ -89,12 +82,19 @@ public class TregmineBlockListener implements Listener {
 	}
 
 	@EventHandler
+	public void onBlockFromTo(BlockFromToEvent event) {
+		if (event.getToBlock().getType() == Material.NETHER_WART_BLOCK) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		try(IContext ctx= plugin.createContext()){
+		try (IContext ctx = plugin.createContext()) {
 			IBlockDAO blockDAO = ctx.getBlockDAO();
 			blockDAO.addPlaced(event.getBlock(), player);
-		}catch(DAOException e){
+		} catch (DAOException e) {
 			e.printStackTrace();
 		}
 		if (event.getBlock().getType().equals(Material.LAVA)) {

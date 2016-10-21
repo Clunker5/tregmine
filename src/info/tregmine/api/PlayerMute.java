@@ -8,6 +8,13 @@ public class PlayerMute {
 	private TregminePlayer mutee;
 	private boolean isEnforced = true;
 
+	public PlayerMute(TregminePlayer p0, TregminePlayer p1) {
+		this.muter = p0;
+		this.mutee = p1;
+		this.duration = -1;
+		this.expires = false;
+	}
+
 	public PlayerMute(TregminePlayer p0, TregminePlayer p1, int p2) {
 		this.duration = p2 * 1000;
 		this.muter = p0;
@@ -19,37 +26,20 @@ public class PlayerMute {
 		}
 	}
 
-	public PlayerMute(TregminePlayer p0, TregminePlayer p1) {
-		this.muter = p0;
-		this.mutee = p1;
-		this.duration = -1;
-		this.expires = false;
-	}
-
-	public void setCancelled(boolean p0) {
-		this.isEnforced = p0;
-	}
-
-	public boolean isCancelled() {
-		return this.isEnforced;
-	}
-
-	public boolean isIndefinite() {
-		return this.duration == -1;
-	}
-
 	public int getDuration() {
 		return this.duration;
 	}
 
-	public void setDuration(int p0) {
-		this.duration = p0 * 1000;
+	public TregminePlayer getMutee() {
+		return this.mutee;
 	}
 
-	public void renewExpiration() {
-		if (!this.expires)
-			return;
-		expiration = System.currentTimeMillis() + duration;
+	public TregminePlayer getMuter() {
+		return this.muter;
+	}
+
+	public boolean isCancelled() {
+		return this.isEnforced;
 	}
 
 	public boolean isExpired() {
@@ -60,15 +50,25 @@ public class PlayerMute {
 		}
 	}
 
+	public boolean isIndefinite() {
+		return this.duration == -1;
+	}
+
+	public void renewExpiration() {
+		if (!this.expires)
+			return;
+		expiration = System.currentTimeMillis() + duration;
+	}
+
 	public long secondsLeft() {
 		return this.expiration - System.currentTimeMillis() / 1000;
 	}
 
-	public TregminePlayer getMuter() {
-		return this.muter;
+	public void setCancelled(boolean p0) {
+		this.isEnforced = p0;
 	}
 
-	public TregminePlayer getMutee() {
-		return this.mutee;
+	public void setDuration(int p0) {
+		this.duration = p0 * 1000;
 	}
 }

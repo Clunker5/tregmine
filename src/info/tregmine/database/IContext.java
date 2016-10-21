@@ -20,6 +20,8 @@ public interface IContext extends AutoCloseable {
 
 	public IInventoryDAO getInventoryDAO();
 
+	public IInviteDAO getInviteDAO();
+
 	public IItemDAO getItemDAO();
 
 	public ILogDAO getLogDAO();
@@ -45,6 +47,4 @@ public interface IContext extends AutoCloseable {
 	public IWarpDAO getWarpDAO();
 
 	public IZonesDAO getZonesDAO();
-	
-	public IInviteDAO getInviteDAO();
 }

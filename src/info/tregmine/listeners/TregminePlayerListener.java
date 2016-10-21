@@ -228,6 +228,18 @@ public class TregminePlayerListener implements Listener {
 	}
 
 	@EventHandler
+	public void onEntityDamage(EntityDamageEvent event) {
+		Entity e = event.getEntity();
+		if (e instanceof Player) {
+			if (event.getCause() == DamageCause.HOT_FLOOR) {
+				event.setCancelled(true);
+			}
+		} else {
+			return;
+		}
+	}
+
+	@EventHandler
 	public void onPlayerBlockMove(PlayerMoveBlockEvent event) {
 		TregminePlayer player = event.getPlayer();
 
@@ -392,11 +404,15 @@ public class TregminePlayerListener implements Listener {
 			event.getPlayer().kickPlayer("error loading profile!");
 			return;
 		}
-		if(player.getRank().canHaveReferralCode()){
-		player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + "Tregmine has a new referral system! For every player"));
-		player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + "you invite friends onto the server, you earn 10000 tregs."));
-		player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + "When your friends join the server, have them give the"));
-		player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + "following code so that you get your tregs: `" + player.getId() + "`"));
+		if (player.getRank().canHaveReferralCode()) {
+			player.sendSpigotMessage(
+					new TextComponent(ChatColor.GOLD + "Tregmine has a new referral system! For every player"));
+			player.sendSpigotMessage(
+					new TextComponent(ChatColor.GOLD + "you invite friends onto the server, you earn 10000 tregs."));
+			player.sendSpigotMessage(
+					new TextComponent(ChatColor.GOLD + "When your friends join the server, have them give the"));
+			player.sendSpigotMessage(new TextComponent(
+					ChatColor.GOLD + "following code so that you get your tregs: `" + player.getId() + "`"));
 		}
 		Rank rank = player.getRank();
 		if (player.getIsStaff()) {
@@ -584,18 +600,6 @@ public class TregminePlayerListener implements Listener {
 
 		if (rank == Rank.DONATOR && !player.hasBadge(Badge.PHILANTROPIST)) {
 			player.awardBadgeLevel(Badge.PHILANTROPIST, "For being a Tregmine donator!");
-		}
-	}
-
-	@EventHandler
-	public void onEntityDamage(EntityDamageEvent event) {
-		Entity e = event.getEntity();
-		if (e instanceof Player) {
-			if (event.getCause() == DamageCause.HOT_FLOOR) {
-				event.setCancelled(true);
-			}
-		} else {
-			return;
 		}
 	}
 

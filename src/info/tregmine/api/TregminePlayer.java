@@ -277,18 +277,6 @@ public class TregminePlayer extends PlayerDelegate {
 		return getRank().canMentor();
 	}
 
-	public void setCommandStatus(CommandStatus status) {
-		this.commandstatus.add(status);
-	}
-
-	public boolean hasCommandStatus(CommandStatus status) {
-		return this.commandstatus.contains(status);
-	}
-
-	public void removeCommandStatus(CommandStatus status) {
-		this.commandstatus.remove(status);
-	}
-
 	public boolean canVS() {
 		return this.getRank().canViewPlayerStats();
 	}
@@ -298,20 +286,21 @@ public class TregminePlayer extends PlayerDelegate {
 	}
 
 	public void checkActivity() {
-		/**long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
-		if (autoafkkick > 0 && lastOnlineActivity > 0
-				&& (lastOnlineActivity + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick == true
-				&& !this.getRank().bypassAFKKick()) {
-			String reason = ChatColor.RED + "You were kicked from " + ChatColor.GOLD
-					+ plugin.getConfig().getString("general.servername") + ChatColor.RED + " for idling longer than "
-					+ autoafkkick + " seconds.";
-			this.causeofquit = QuitCause.AFK;
-			this.lastOnlineActivity = 0;
-			this.setSilentAfk(false);
-			this.kickPlayer(this.plugin, reason);
-			plugin.broadcast(new TextComponent(ChatColor.GRAY + ""), this.getChatName(), new TextComponent(
-					ChatColor.GRAY + " was kicked for idling longer than " + autoafkkick / 60 + " minutes."));
-		}*/
+		/**
+		 * long autoafkkick = plugin.getConfig().getInt("general.afk.timeout");
+		 * if (autoafkkick > 0 && lastOnlineActivity > 0 && (lastOnlineActivity
+		 * + (autoafkkick * 1000)) < System.currentTimeMillis() && this.AfkKick
+		 * == true && !this.getRank().bypassAFKKick()) { String reason =
+		 * ChatColor.RED + "You were kicked from " + ChatColor.GOLD +
+		 * plugin.getConfig().getString("general.servername") + ChatColor.RED +
+		 * " for idling longer than " + autoafkkick + " seconds.";
+		 * this.causeofquit = QuitCause.AFK; this.lastOnlineActivity = 0;
+		 * this.setSilentAfk(false); this.kickPlayer(this.plugin, reason);
+		 * plugin.broadcast(new TextComponent(ChatColor.GRAY + ""),
+		 * this.getChatName(), new TextComponent( ChatColor.GRAY +
+		 * " was kicked for idling longer than " + autoafkkick / 60 +
+		 * " minutes.")); }
+		 */
 		long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
 		if (!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()) {
 			setAfk(true);
@@ -325,14 +314,6 @@ public class TregminePlayer extends PlayerDelegate {
 		} else {
 			return this.getChatName();
 		}
-	}
-
-	public QuitCause getQuitCause() {
-		return this.causeofquit;
-	}
-
-	public void setQuitCause(QuitCause q) {
-		this.causeofquit = q;
 	}
 
 	// java.lang.Object overrides
@@ -520,6 +501,10 @@ public class TregminePlayer extends PlayerDelegate {
 		return mentor;
 	}
 
+	public PlayerMute getMute() {
+		return this.mute;
+	}
+
 	public ChatColor getNameColor() {
 		if (hasFlag(Flags.SOFTWARNED)) {
 			return ChatColor.GRAY;
@@ -567,6 +552,10 @@ public class TregminePlayer extends PlayerDelegate {
 
 	public Tregmine getPlugin() {
 		return plugin;
+	}
+
+	public QuitCause getQuitCause() {
+		return this.causeofquit;
 	}
 
 	public String getQuitMessage() {
@@ -766,11 +755,13 @@ public class TregminePlayer extends PlayerDelegate {
 		return false; // If they don't fit into any of that. Return false
 	}
 
+	public boolean hasCommandStatus(CommandStatus status) {
+		return this.commandstatus.contains(status);
+	}
+
 	public boolean hasFlag(Flags flag) {
 		return flags.contains(flag);
 	}
-
-	// non-persistent state methods
 
 	@Override
 	public int hashCode() {
@@ -780,6 +771,8 @@ public class TregminePlayer extends PlayerDelegate {
 	public boolean hasNick() {
 		return this.hasNick;
 	}
+
+	// non-persistent state methods
 
 	public boolean hasProperty(Property prop) {
 		return properties.contains(prop);
@@ -817,6 +810,10 @@ public class TregminePlayer extends PlayerDelegate {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean isMuted() {
+		return this.muted;
 	}
 
 	@Override
@@ -904,6 +901,10 @@ public class TregminePlayer extends PlayerDelegate {
 			return ChatColor.GRAY;
 		}
 
+	}
+
+	public void removeCommandStatus(CommandStatus status) {
+		this.commandstatus.remove(status);
 	}
 
 	public void removeFlag(Flags flag) {
@@ -1033,22 +1034,6 @@ public class TregminePlayer extends PlayerDelegate {
 		this.AfkKick = a;
 	}
 
-	public void setMute(PlayerMute p0) {
-		this.mute = p0;
-	}
-
-	public void setMuted(boolean p0) {
-		this.muted = p0;
-	}
-
-	public boolean isMuted() {
-		return this.muted;
-	}
-
-	public PlayerMute getMute() {
-		return this.mute;
-	}
-
 	public void setAlerted(boolean a) {
 		this.alertedAfk = a;
 	}
@@ -1079,6 +1064,10 @@ public class TregminePlayer extends PlayerDelegate {
 
 	public void setCombatLog(int value) {
 		this.combatLog = value;
+	}
+
+	public void setCommandStatus(CommandStatus status) {
+		this.commandstatus.add(status);
 	}
 
 	public void setCountry(String v) {
@@ -1182,6 +1171,14 @@ public class TregminePlayer extends PlayerDelegate {
 		this.mentor = v;
 	}
 
+	public void setMute(PlayerMute p0) {
+		this.mute = p0;
+	}
+
+	public void setMuted(boolean p0) {
+		this.muted = p0;
+	}
+
 	public void setNewChunk(boolean value) {
 		this.newChunk = value;
 	}
@@ -1211,6 +1208,10 @@ public class TregminePlayer extends PlayerDelegate {
 
 	public void setProperty(Property prop) {
 		properties.add(prop);
+	}
+
+	public void setQuitCause(QuitCause q) {
+		this.causeofquit = q;
 	}
 
 	public void setQuitMessage(String v) {

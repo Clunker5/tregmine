@@ -20,11 +20,12 @@ public class DAOException extends Exception {
 		super(e);
 	}
 
+	@Override
+	public Throwable getCause() {
+		return this.cause;
+	}
+
 	public String getQuery() {
 		return query;
-	}
-	
-	public Throwable getCause(){
-		return this.cause;
 	}
 }

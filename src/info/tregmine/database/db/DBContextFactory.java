@@ -10,7 +10,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IContextFactory;
@@ -20,12 +19,12 @@ public class DBContextFactory implements IContextFactory {
 	private BasicDataSource ds;
 	private Map<String, LoggingConnection.LogEntry> queryLog;
 	private Tregmine plugin;
-	
+
 	private String driver;
 	private String url;
 	private String user;
 	private String password;
-	
+
 	private long createTime;
 
 	public DBContextFactory(FileConfiguration config, Tregmine instance) {
@@ -49,7 +48,7 @@ public class DBContextFactory implements IContextFactory {
 		String user = config.getString("db.user");
 		String password = config.getString("db.password");
 		String url = config.getString("db.url");
-		
+
 		ds = new BasicDataSource();
 		ds.setDriverClassName(driver);
 		ds.setUrl(url);
@@ -59,31 +58,13 @@ public class DBContextFactory implements IContextFactory {
 		ds.setMaxIdle(5);
 		ds.setDefaultAutoCommit(true);
 		createTime = System.currentTimeMillis();
-		
+
 		this.driver = driver;
 		this.url = url;
 		this.user = user;
 		this.password = password;
-		
+
 		this.plugin = instance;
-	}
-	
-	public void regenerate() throws DAOException{
-		try{
-		ds.close();
-		ds = null;
-		ds = new BasicDataSource();
-		ds.setDriverClassName(driver);
-		ds.setUrl(url);
-		ds.setUsername(user);
-		ds.setPassword(password);
-		ds.setMaxActive(5);
-		ds.setMaxIdle(5);
-		ds.setDefaultAutoCommit(true);
-		createTime = System.currentTimeMillis();
-		}catch(SQLException e){
-			throw new DAOException(e);
-		}
 	}
 
 	@Override
@@ -98,19 +79,21 @@ public class DBContextFactory implements IContextFactory {
 
 			return new DBContext(new LoggingConnection(conn, queryLog), plugin);
 		} catch (SQLException e) {
-			if(e.getMessage().toLowerCase().contains("communications link failure")){
+			if (e.getMessage().toLowerCase().contains("communications link failure")) {
 				this.plugin.setReconnecting(true);
-				System.out.println(this.plugin.kickAll(ChatColor.RED + "Connection to the database was lost!\nPlease reconnect in a few moments.") + " players were ejected from the server.");
+				System.out.println(this.plugin.kickAll(
+						ChatColor.RED + "Connection to the database was lost!\nPlease reconnect in a few moments.")
+						+ " players were ejected from the server.");
 				regenerate();
 				Connection conn;
 				try {
 					conn = ds.getConnection();
-				
-				try (Statement stmt = conn.createStatement()) {
-					stmt.execute("SET NAMES latin1");
-				}
-				this.plugin.setReconnecting(false);
-				return new DBContext(new LoggingConnection(conn, queryLog), plugin);
+
+					try (Statement stmt = conn.createStatement()) {
+						stmt.execute("SET NAMES latin1");
+					}
+					this.plugin.setReconnecting(false);
+					return new DBContext(new LoggingConnection(conn, queryLog), plugin);
 				} catch (SQLException e1) {
 					// Giving up re-attempts.
 					e1.printStackTrace();
@@ -124,5 +107,24 @@ public class DBContextFactory implements IContextFactory {
 
 	public Map<String, LoggingConnection.LogEntry> getLog() {
 		return queryLog;
+	}
+
+	@Override
+	public void regenerate() throws DAOException {
+		try {
+			ds.close();
+			ds = null;
+			ds = new BasicDataSource();
+			ds.setDriverClassName(driver);
+			ds.setUrl(url);
+			ds.setUsername(user);
+			ds.setPassword(password);
+			ds.setMaxActive(5);
+			ds.setMaxIdle(5);
+			ds.setDefaultAutoCommit(true);
+			createTime = System.currentTimeMillis();
+		} catch (SQLException e) {
+			throw new DAOException(e);
+		}
 	}
 }

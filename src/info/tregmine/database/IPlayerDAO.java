@@ -23,7 +23,11 @@ public interface IPlayerDAO {
 	public TregminePlayer getPlayer(int id) throws DAOException;
 
 	public TregminePlayer getPlayer(Player player) throws DAOException;
-	
+
+	TregminePlayer getPlayer(String username) throws DAOException;
+
+	public TregminePlayer getPlayer(UUID id) throws DAOException;
+
 	public void updateBadges(TregminePlayer player) throws DAOException;
 
 	public void updateIgnore(TregminePlayer player, List<String> update) throws DAOException;
@@ -40,9 +44,6 @@ public interface IPlayerDAO {
 
 	public void updateProperty(TregminePlayer player, String key, String value) throws DAOException;
 
-	public TregminePlayer getPlayer(UUID id) throws DAOException;
-
-	TregminePlayer getPlayer(String username) throws DAOException;
-	
-//	public String generateReferralCode(TregminePlayer source) throws DAOException;
+	// public String generateReferralCode(TregminePlayer source) throws
+	// DAOException;
 }

@@ -21,6 +21,24 @@ public class BoxFillBlockListener implements Listener {
 	}
 
 	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+		if (!player.getRank().canFill()) {
+			return;
+		}
+
+		if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+			return;
+		} else {
+			event.setCancelled(true);
+		}
+		Block block = event.getBlock();
+		player.setFillBlock1(block);
+		event.getPlayer().sendMessage("First block set");
+		player.setFillBlockCounter(1);
+	}
+
+	@EventHandler
 	public void onBlockDamage(BlockDamageEvent event) {
 
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
@@ -38,24 +56,6 @@ public class BoxFillBlockListener implements Listener {
 		}
 		Block block = event.getBlock();
 
-		player.setFillBlock1(block);
-		event.getPlayer().sendMessage("First block set");
-		player.setFillBlockCounter(1);
-	}
-
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event) {
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (!player.getRank().canFill()) {
-			return;
-		}
-
-		if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
-			return;
-		} else {
-			event.setCancelled(true);
-		}
-		Block block = event.getBlock();
 		player.setFillBlock1(block);
 		event.getPlayer().sendMessage("First block set");
 		player.setFillBlockCounter(1);

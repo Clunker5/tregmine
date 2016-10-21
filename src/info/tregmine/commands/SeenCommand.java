@@ -7,7 +7,6 @@ import org.bukkit.Server;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.UUIDFetcher;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -48,11 +47,13 @@ public class SeenCommand extends AbstractCommand {
 		if (args.length != 1) {
 			return false;
 		}
-		TregminePlayer target = null;;
-		try{
-		target = tregmine.getPlayerOffline(args[0]);
-		}catch(NullPointerException e){
-			player.sendSpigotMessage(new TextComponent(ChatColor.RED + "That player was not found, check the spelling and try again."));
+		TregminePlayer target = null;
+		;
+		try {
+			target = tregmine.getPlayerOffline(args[0]);
+		} catch (NullPointerException e) {
+			player.sendSpigotMessage(
+					new TextComponent(ChatColor.RED + "That player was not found, check the spelling and try again."));
 			return true;
 		}
 		if (target == null) {
@@ -65,10 +66,12 @@ public class SeenCommand extends AbstractCommand {
 			Date seen = logDAO.getLastSeen(target);
 
 			if (seen != null) {
-				player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""), new TextComponent(target.getChatName()),
+				player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""),
+						new TextComponent(target.getChatName()),
 						new TextComponent(ChatColor.YELLOW + " was last seen on: " + ChatColor.AQUA + seen));
 			} else {
-				player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""), new TextComponent(target.getChatName()),
+				player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""),
+						new TextComponent(target.getChatName()),
 						new TextComponent(ChatColor.YELLOW + " hasn't been seen for a while."));
 			}
 		} catch (DAOException e) {

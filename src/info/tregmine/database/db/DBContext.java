@@ -92,6 +92,11 @@ public class DBContext implements IContext {
 	}
 
 	@Override
+	public IInviteDAO getInviteDAO() {
+		return new DBInviteDAO(conn, plugin);
+	}
+
+	@Override
 	public IItemDAO getItemDAO() {
 		return new DBItemDAO(conn);
 	}
@@ -154,10 +159,5 @@ public class DBContext implements IContext {
 	@Override
 	public IZonesDAO getZonesDAO() {
 		return new DBZonesDAO(conn);
-	}
-
-	@Override
-	public IInviteDAO getInviteDAO() {
-		return new DBInviteDAO(conn, plugin);
 	}
 }

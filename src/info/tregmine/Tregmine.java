@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -231,7 +230,7 @@ public class Tregmine extends JavaPlugin {
 	private Queue<TregminePlayer> mentors;
 	private Queue<TregminePlayer> students;
 	private boolean lockdown = false;
-	
+
 	private SecureRandom random = new SecureRandom();
 
 	private LookupService cl = null;
@@ -362,12 +361,12 @@ public class Tregmine extends JavaPlugin {
 		return contextFactory.createContext();
 	}
 
+	public boolean dsvEnabled() {
+		return this.dsv != null;
+	}
+
 	public List<String> getBannedWords() {
 		return bannedWords;
-	}
-	
-	public SecureRandom getSecureRandom(){
-		return this.random;
 	}
 
 	public Map<Location, Integer> getBlessedBlocks() {
@@ -382,12 +381,20 @@ public class Tregmine extends JavaPlugin {
 		return contextFactory;
 	}
 
+	public DiscordSRV getDiscordSRV() {
+		return this.dsv;
+	}
+
 	public Map<Location, FishyBlock> getFishyBlocks() {
 		return fishyBlocks;
 	}
 
 	public List<String> getInsults() {
 		return insults;
+	}
+
+	public Lag getLag() {
+		return this.lag;
 	}
 
 	public boolean getLockdown() {
@@ -431,6 +438,10 @@ public class Tregmine extends JavaPlugin {
 		return playersById.get(id);
 	}
 
+	// ============================================================================
+	// Data structure accessors
+	// ============================================================================
+
 	public TregminePlayer getPlayer(Player player) {
 		try {
 			return players.get(player.getUniqueId());
@@ -452,10 +463,6 @@ public class Tregmine extends JavaPlugin {
 		}
 	}
 
-	// ============================================================================
-	// Data structure accessors
-	// ============================================================================
-
 	public TregminePlayer getPlayerOffline(int id) {
 		TregminePlayer plr = playersById.get(id);
 		if (plr != null) {
@@ -469,9 +476,9 @@ public class Tregmine extends JavaPlugin {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	public TregminePlayer getPlayerOffline(String username) {
-		TregminePlayer plr = players.get(username);
+
+	public TregminePlayer getPlayerOffline(OfflinePlayer player) {
+		TregminePlayer plr = players.get(player.getUniqueId());
 		if (plr != null) {
 			return plr;
 		}
@@ -559,9 +566,17 @@ public class Tregmine extends JavaPlugin {
 		}
 	}
 
+	public SecureRandom getSecureRandom() {
+		return this.random;
+	}
+
 	public Queue<TregminePlayer> getStudentQueue() {
 		return students;
 	}
+
+	// ============================================================================
+	// Player methods
+	// ============================================================================
 
 	public World getSWorld() {
 		return this.world2;
@@ -575,9 +590,7 @@ public class Tregmine extends JavaPlugin {
 		return this.world2nether;
 	}
 
-	// ============================================================================
-	// Player methods
-	// ============================================================================
+	// Interjection point for other stuff
 
 	public Tregmine getTregmine() {
 		return plugin;
@@ -590,8 +603,6 @@ public class Tregmine extends JavaPlugin {
 	public World getVanillaNether() {
 		return vanillaNetherWorld;
 	}
-
-	// Interjection point for other stuff
 
 	public World getVanillaWorld() {
 		return vanillaWorld;
@@ -659,6 +670,20 @@ public class Tregmine extends JavaPlugin {
 		return keywordsEnabled;
 	}
 
+	public int kickAll(String message) {
+		Player[] plrs = this.getServer().getOnlinePlayers()
+				.toArray(new Player[this.getServer().getOnlinePlayers().size()]);
+		Bukkit.getScheduler().runTask(this, new Runnable() {
+			@Override
+			public void run() {
+				for (Player player : plrs) {
+					player.kickPlayer(message);
+				}
+			}
+		});
+		return 0;
+	}
+
 	public List<TregminePlayer> matchPlayer(String pattern) {
 		List<Player> matches = server.matchPlayer(pattern);
 		if (matches.size() == 0) {
@@ -707,7 +732,7 @@ public class Tregmine extends JavaPlugin {
 
 		this.server = getServer();
 		plugin = this;
-		
+
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.lag, 100L, 1L);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Timer(this), 100L, 1L);
 		List<?> configWorlds = getConfig().getList("worlds.names");
@@ -1025,17 +1050,13 @@ public class Tregmine extends JavaPlugin {
 		}, 20L, 20L);
 		PluginManager mgr = Bukkit.getPluginManager();
 		Plugin d = mgr.getPlugin("DiscordSRV");
-		
+
 		if (d != null) {
 			this.dsv = (DiscordSRV) d;
 		} else {
 			this.dsv = null;
 		}
-		
-	}
 
-	public Lag getLag() {
-		return this.lag;
 	}
 
 	@Override
@@ -1084,6 +1105,10 @@ public class Tregmine extends JavaPlugin {
 		}
 	}
 
+	public FileConfiguration plConfig() {
+		return this.config;
+	}
+
 	public void reloadDSV() {
 		PluginManager mgr = Bukkit.getPluginManager();
 		Plugin d = mgr.getPlugin("DiscordSRV");
@@ -1094,18 +1119,6 @@ public class Tregmine extends JavaPlugin {
 		}
 	}
 
-	public DiscordSRV getDiscordSRV() {
-		return this.dsv;
-	}
-
-	public boolean dsvEnabled() {
-		return this.dsv != null;
-	}
-
-	public FileConfiguration plConfig() {
-		return this.config;
-	}
-
 	public void reloadPlayer(TregminePlayer player) {
 		try {
 			addPlayer(player.getDelegate(), player.getAddress().getAddress());
@@ -1113,6 +1126,10 @@ public class Tregmine extends JavaPlugin {
 			player.kickPlayer(plugin, e.getMessage());
 		}
 	}
+
+	// ============================================================================
+	// Zone methods
+	// ============================================================================
 
 	public void removePlayer(TregminePlayer player) {
 		try (IContext ctx = contextFactory.createContext()) {
@@ -1140,10 +1157,6 @@ public class Tregmine extends JavaPlugin {
 		students.remove(player);
 	}
 
-	// ============================================================================
-	// Zone methods
-	// ============================================================================
-
 	public String serverName() {
 		return this.serverName;
 	}
@@ -1157,27 +1170,15 @@ public class Tregmine extends JavaPlugin {
 		}
 		this.lockdown = v;
 	}
-	
+
 	public void setReconnecting(boolean v) {
 		if (v) {
-			Bukkit.broadcastMessage(
-					ChatColor.RED + "The server lost connection to the database. Nobody will be able to join until a connection is restored.");
+			Bukkit.broadcastMessage(ChatColor.RED
+					+ "The server lost connection to the database. Nobody will be able to join until a connection is restored.");
 		} else {
 			Bukkit.broadcastMessage(ChatColor.GREEN + "Connection has been restored! Players can now re-connect.");
 		}
 		this.lockdown = v;
-	}
-	
-	public int kickAll(String message){
-		Player[] plrs = this.getServer().getOnlinePlayers().toArray(new Player[this.getServer().getOnlinePlayers().size()]);
-		Bukkit.getScheduler().runTask(this, new Runnable() {
-			public void run(){
-				for(Player player : plrs){
-					player.kickPlayer(message);
-				}
-			}
-		});
-		return 0;
 	}
 
 	public void updateStatistics() {
