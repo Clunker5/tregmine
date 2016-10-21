@@ -26,6 +26,7 @@ import org.bukkit.plugin.PluginManager;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.TregminePlayer.ChatState;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -138,13 +139,24 @@ public class TradeCommand extends AbstractCommand implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		TregminePlayer player = tregmine.getPlayer((Player) event.getPlayer());
 		TradeContext ctx = activeTrades.get(player);
+		
 		if (ctx == null) {
 			return;
 		}
-
+		
+		if(ctx.inventory.getContents().length == 0){
+			ctx.firstPlayer.sendStringMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
+			ctx.secondPlayer.sendStringMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
+			ctx.firstPlayer.setChatState(ChatState.CHAT);
+			ctx.secondPlayer.setChatState(ChatState.CHAT);
+			activeTrades.remove(ctx.firstPlayer);
+			activeTrades.remove(ctx.secondPlayer);
+			return;
+		}
 		TregminePlayer target = ctx.secondPlayer;
 
 		target.sendStringMessage(tradePre + player.getName() + " " + YELLOW + " is offering: ");
+		
 		player.sendStringMessage("[Trade] You are offering: ");
 
 		ItemStack[] contents = ctx.inventory.getContents();
