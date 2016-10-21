@@ -9,7 +9,6 @@ import org.json.JSONWriter;
 
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
-import info.tregmine.api.Notification;
 import info.tregmine.api.TregminePlayer;
 
 public class PushNotificationAction implements WebHandler.Action {
@@ -20,10 +19,10 @@ public class PushNotificationAction implements WebHandler.Action {
 		@Override
 		public WebHandler.Action createAction(Request request) throws WebHandler.WebException {
 			try {
-				int pushtofrom = Integer.parseInt(request.getParameter("pushTo"));
-				int pushfromfrom = Integer.parseInt(request.getParameter("pushFrom"));
-				String typefrom = request.getParameter("type");
-				return new PushNotificationAction(pushtofrom, pushfromfrom, typefrom);
+				int sendTo = Integer.parseInt(request.getParameter("pushTo"));
+				int sentFrom = Integer.parseInt(request.getParameter("pushFrom"));
+				String message = request.getParameter("type");
+				return new PushNotificationAction(sendTo, sentFrom, message);
 			} catch (NullPointerException e) {
 				throw new WebHandler.WebException(e);
 			} catch (NumberFormatException e) {
@@ -37,17 +36,17 @@ public class PushNotificationAction implements WebHandler.Action {
 		}
 	}
 
-	private int pushto;
-	private int pushfrom;
+	private int sendTo;
+	private int sentFrom;
 	private String type;
 
 	private boolean status;
 	private String error;
 
-	public PushNotificationAction(int pushtoget, int pushfromget, String typeget) {
-		this.pushto = pushtoget;
-		this.pushfrom = pushfromget;
-		this.type = typeget;
+	public PushNotificationAction(int sendTo, int sentFrom, String type) {
+		this.sendTo = sendTo;
+		this.sentFrom = sentFrom;
+		this.type = type;
 
 		this.status = true;
 		this.error = null;
@@ -67,23 +66,25 @@ public class PushNotificationAction implements WebHandler.Action {
 
 	@Override
 	public void queryGameState(Tregmine tregmine) {
-		TregminePlayer subject = tregmine.getPlayer(pushto);
+		TregminePlayer subject = tregmine.getPlayer(sendTo);
 		if (subject == null) {
 			status = false;
-			this.error = "Player is offline";
+			error = "Subject not found.";
+			System.out.println("PNA-WEB-ERR: " + error);
 			return;
 		}
-
-		TregminePlayer issuer = tregmine.getPlayer(pushfrom);
+		TregminePlayer issuer = tregmine.getPlayer(sentFrom);
 		if (issuer == null) {
-			issuer = tregmine.getPlayerOffline(pushfrom);
+			issuer = tregmine.getPlayerOffline(sentFrom);
 		}
-		if (type == "mail") {
-			subject.sendStringMessage(
-					ChatColor.AQUA + "You got an e-mail from " + issuer.getName() + "! Type /mail read to view it.");
-			subject.sendNotification(Notification.MAIL);
-			Tregmine.LOGGER.info(subject.getChatName() + " got an e-mail from " + issuer.getName());
+		String message;
+		if(type.trim().equalsIgnoreCase("mail")){
+			message = ChatColor.AQUA + "You have a message from " + issuer.getChatNameNoHover() + ChatColor.AQUA + "! Do /mail read to view it.";
+		}else{
+			message = "Generic push notification from " + issuer.getChatNameNoHover() + ChatColor.WHITE + ".";
 		}
-
+		
+		subject.sendStringMessage(message);
+		Tregmine.LOGGER.info("Push notification issued by " + issuer.getName() + "; sent to " + subject.getName() + "; type=" + type);
 	}
 }
