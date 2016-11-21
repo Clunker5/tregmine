@@ -190,10 +190,10 @@ public class WebServer implements Runnable {
 
 			ServerConnector connector = new ServerConnector(webServer);
 			connector.setPort(apiPort);
+			connector.setHost("localhost");
 			connector.setReuseAddress(true);
 			connector.setSoLingerTime(-1);
 			webServer.addConnector(connector);
-
 			webServer.setHandler(handlers);
 		} catch (Exception e) {
 			Tregmine.LOGGER.log(Level.WARNING, "Failed to start web server!", e);
