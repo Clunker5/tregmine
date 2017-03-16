@@ -30,19 +30,19 @@ public class SetupListener implements Listener {
 		if (player.getChatState() == TregminePlayer.ChatState.SETUP && player.getRank() == Rank.TOURIST) {
 			// Player is on second stage.
 			String text = event.getMessage();
+			event.setCancelled(true);
 			if ("no".equalsIgnoreCase(text)) {
 				player.sendStringMessage(ChatColor.GREEN + "You have now joined Tregmine "
 						+ "and can talk with other players! Say Hi! :)");
+				event.setMessage("%cancel%");
 				player.setChatState(TregminePlayer.ChatState.CHAT);
-				Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " joined the server.");
-				Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " joined the server.");
+				Tregmine.LOGGER.info("[SETUP] " + player.getChatName().getText() + " joined the server.");
 
-				this.plugin.getServer().broadcastMessage(
-						ChatColor.GREEN + "Welcome to Tregmine, " + player.getChatName() + ChatColor.GREEN + "!");
 				plugin.broadcast(new TextComponent(ChatColor.GREEN + "Welcome to Tregmine, "), player.getChatName(),
 						new TextComponent(ChatColor.GREEN + "!"));
 
 				MentorCommand.findMentor(plugin, player);
+				return;
 			} else {
 				try {
 					Integer inviter = Integer.parseInt(text);
@@ -66,7 +66,7 @@ public class SetupListener implements Listener {
 						player.sendStringMessage(ChatColor.GREEN + "You have now joined Tregmine "
 								+ "and can talk with other players! Say Hi! :)");
 						player.setChatState(TregminePlayer.ChatState.CHAT);
-						Tregmine.LOGGER.info("[SETUP] " + player.getChatName() + " joined the server.");
+						Tregmine.LOGGER.info("[SETUP] " + player.getChatName().getText() + " joined the server.");
 						plugin.broadcast(new TextComponent(ChatColor.GREEN + "Welcome to Tregmine, "),
 								player.getChatName(), new TextComponent(ChatColor.GREEN + "!"));
 
