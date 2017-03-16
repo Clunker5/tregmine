@@ -38,6 +38,7 @@ public class PlayerListAction implements WebHandler.Action {
 			JSONWriter json = new JSONWriter(writer);
 			json.array();
 			for (TregminePlayer player : players) {
+				Tregmine.LOGGER.info("Web: " + player.getName() + " - ID: " + player.getId());
 				json.object().key("id").value(player.getId()).key("name").value(player.getName()).key("rank")
 						.value(player.getRank().toString()).key("softwarned")
 						.value(player.hasFlag(TregminePlayer.Flags.SOFTWARNED)).key("hardwarned")

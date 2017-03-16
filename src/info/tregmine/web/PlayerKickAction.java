@@ -77,6 +77,7 @@ public class PlayerKickAction implements WebHandler.Action {
 		if (subject == null) {
 			status = false;
 			error = "Subject not found.";
+			Tregmine.LOGGER.info("Web: PlayerKickAction - Subject not found: " + subjectId);
 			return;
 		}
 

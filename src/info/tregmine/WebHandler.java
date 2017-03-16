@@ -147,8 +147,10 @@ public class WebHandler extends AbstractHandler implements Listener {
 			ActionFactory factory = actions.get(baseRequest.getPathInfo());
 			if (factory == null) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				Tregmine.LOGGER.info("Web: " + signingStr + " NOT FOUND");
 				return;
 			}
+			Tregmine.LOGGER.info("Web: " + signingStr + " Linked to: " + factory.getName());
 
 			// Create an action
 			Action action = factory.createAction(baseRequest);
@@ -177,6 +179,7 @@ public class WebHandler extends AbstractHandler implements Listener {
 
 		// Execute action, safely
 		try {
+			Tregmine.LOGGER.info("Web: Querying game state for web action.");
 			action.queryGameState(tregmine);
 		} catch (Throwable e) {
 			Tregmine.LOGGER.log(Level.WARNING, "Querying game state failed", e);
