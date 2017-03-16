@@ -87,7 +87,7 @@ public class PlayerKickAction implements WebHandler.Action {
 
 		subject.kickPlayer(tregmine, "Kicked by " + issuer.getChatNameNoHover() + ChatColor.WHITE + ": " + message);
 
-		Tregmine.LOGGER.info(subject.getChatName() + " was kicked by " + issuer.getChatName() + " (from web)");
+		Tregmine.LOGGER.info(subject.getChatName() + " was kicked by " + issuer.getName() + " (from web)");
 		tregmine.broadcast(new TextComponent(
 				issuer.getChatNameNoHover() + "" + AQUA + " kicked " + subject.getChatNameNoHover() + AQUA + ": " + message));
 
