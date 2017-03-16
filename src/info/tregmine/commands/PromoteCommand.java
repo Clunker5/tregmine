@@ -68,6 +68,7 @@ public class PromoteCommand extends AbstractCommand {
 		if (oldrank != rank) {
 			this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(
 					"" + RESET + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + rank + "!"));
+			Tregmine.LOGGER.info(user.getName() + " has been promoted to " + rank);
 		}
 		return true;
 	}
