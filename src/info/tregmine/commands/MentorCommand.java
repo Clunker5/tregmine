@@ -30,11 +30,11 @@ public class MentorCommand extends AbstractCommand {
 		} else {
 			if (onlineTeachers < 3) {
 				student.sendStringMessage(RED
-						+ "As there are less than three teachers online, you can do /mentor complete to skip the mentoring process automatically.");
-			}
+						+ "As there are less than three teachers online, you can do /mentor complete to skip the mentoring process automatically. Alternatively, you can wait for a mentor to be assigned to you.");
+			}else{
 			student.sendStringMessage(YELLOW + "You will now be assigned "
 					+ "a mentor to show you around, as soon as one becomes available.");
-
+			}
 			Queue<TregminePlayer> students = plugin.getStudentQueue();
 			students.offer(student);
 
