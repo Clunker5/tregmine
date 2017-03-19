@@ -1,6 +1,6 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 4.5.1 Beta 2
+version: 1.0 Beta 1
 website: https://www.tregmine.com
 author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine Plugin
@@ -34,6 +34,9 @@ commands:
   creative:
     description: Switch to creative mode (admins and builders only)
     usage: /creative
+  discord:
+    description: Interact with discord.
+    usage: /discord [link|verify|unlink] [discordID|confcode]
   survival:
     description: Switch to survival mode (admins and builders only)
     usage: /survival
