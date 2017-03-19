@@ -106,9 +106,6 @@
 		      <include name="*"/>
 			  <include name="**/*"/>
 		   </fileset>
-       <fileset dir="util/discord_srv">
-         <include name="tregmine_discord.jar"/>
-       </fileset>
        <fileset dir="./">
        <include name="tregmine_db.sql"/>
      </fileset>
