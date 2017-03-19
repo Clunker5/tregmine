@@ -10,6 +10,27 @@
     <property name="lib" value="lib" />
     <property name="build.compiler" value="modern" />
 
+    <pathconvert property="libs.project" pathsep=" ">
+    <mapper>
+      <chainedmapper>
+
+        <!-- remove absolute path -->
+        <flattenmapper />
+
+        <!-- add lib/ prefix -->
+        <globmapper from="*" to="lib/*" />
+      </chainedmapper>
+    </mapper>
+
+    <path>
+
+      <!-- lib.home contains all jar files, in several subdirectories -->
+      <fileset dir="${lib}">
+        <include name="**/*.jar" />
+      </fileset>
+    </path>
+  </pathconvert>
+
     <target name="init">
         <tstamp />
         <mkdir dir="${build}" />
@@ -53,16 +74,7 @@
     <target name="jar" depends="compile">
         <jar destfile="tregmine.jar" basedir="${build}">
             <manifest>
-                <attribute name="Class-Path"
-                    value="lib/json.jar
-                           lib/quadtree.jar
-                           lib/commons-dbcp-1.4.jar
-                           lib/servlet-api.jar
-                           lib/jetty-all.jar
-                           lib/commons-pool-1.5.6.jar
-                           lib/TagAPI.jar
-						   lib/activation.jar
-                	       lib/mail.jar" />
+                <attribute name="Class-Path" value="${libs.project}" />
             </manifest>
                     </jar>
     </target>
@@ -70,16 +82,7 @@
     <target name="debugjar" depends="compile">
         <jar destfile="./server/plugins/tregmine.jar" basedir="${build}">
             <manifest>
-                <attribute name="Class-Path"
-                    value="lib/json.jar
-                           lib/quadtree.jar
-                           lib/commons-dbcp-1.4.jar
-                           lib/servlet-api.jar
-                           lib/jetty-all.jar
-                           lib/commons-pool-1.5.6.jar
-                           lib/TagAPI.jar
-						   lib/activation.jar
-                	       lib/mail.jar" />
+                <attribute name="Class-Path" value="${libs.project}" />
             </manifest>
                     </jar>
     </target>
