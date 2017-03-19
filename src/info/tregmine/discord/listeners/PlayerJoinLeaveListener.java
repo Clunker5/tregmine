@@ -20,12 +20,12 @@ public class PlayerJoinLeaveListener implements Listener {
 	private Tregmine plugin;
 	private DiscordSRV srv;
 
+	Map<Player, Boolean> playerStatusIsOnline = new HashMap<Player, Boolean>();
+
 	public PlayerJoinLeaveListener(DiscordSRV srv) {
 		this.srv = srv;
 		this.plugin = this.srv.getPlugin();
 	}
-
-	Map<Player, Boolean> playerStatusIsOnline = new HashMap<Player, Boolean>();
 
 	@EventHandler
 	public void PlayerJoinEvent(PlayerJoinEvent event) {

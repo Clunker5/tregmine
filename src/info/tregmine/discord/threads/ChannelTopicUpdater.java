@@ -28,46 +28,6 @@ public class ChannelTopicUpdater extends Thread {
 		this.plugin = this.srv.getPlugin();
 	}
 
-	@Override
-	public void run() {
-		int rate = 60 * 1000;
-
-		while (!isInterrupted()) {
-			try {
-				String chatTopic = applyFormatters(
-						this.plugin.getConfig().getString("discord.topic-updater.chat-format"));
-				String consoleTopic = applyFormatters(
-						this.plugin.getConfig().getString("discord.topic-updater.console-format"));
-
-				if ((this.srv.getChatChannel() == null && this.srv.getConsoleChannel() == null)
-						|| (chatTopic.isEmpty() && consoleTopic.isEmpty()))
-					interrupt();
-				if (this.api == null || (this.api != null && this.api.getSelfUser() == null))
-					continue;
-
-				if (!chatTopic.isEmpty() && this.srv.getChatChannel() != null && !PermissionUtil.checkPermission(this.srv.getChatChannel(), 
-						this.srv.getSelfMember(), Permission.MANAGE_CHANNEL))
-					Tregmine.LOGGER
-							.warning("Unable to update chat channel; no permission to manage channel");
-				if (!consoleTopic.isEmpty() && this.srv.getConsoleChannel() != null && !PermissionUtil.checkPermission(this.srv.getConsoleChannel(), 
-						this.srv.getSelfMember(), Permission.MANAGE_CHANNEL))
-					Tregmine.LOGGER
-							.warning("Unable to update console channel; no permission to manage channel");
-
-				if (!chatTopic.isEmpty() && this.srv.getChatChannel() != null && PermissionUtil.checkPermission(this.srv.getChatChannel(), 
-						this.srv.getSelfMember(), Permission.MANAGE_CHANNEL))
-					this.srv.getChatChannel().getManager().setTopic(chatTopic).complete();
-				if (!consoleTopic.isEmpty() && this.srv.getConsoleChannel() != null && PermissionUtil.checkPermission(this.srv.getConsoleChannel(), 
-						this.srv.getSelfMember(), Permission.MANAGE_CHANNEL))
-					this.srv.getConsoleChannel().getManager().setTopic(consoleTopic).complete();
-
-				Thread.sleep(rate);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private String applyFormatters(String input) {
 		if (this.plugin.getConfig().getBoolean("discord.debug.misc.print-timing"))
 			Tregmine.LOGGER.info("Format start: " + input);
@@ -108,5 +68,45 @@ public class ChannelTopicUpdater extends Thread {
 					"Format done in " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms: " + input);
 
 		return input;
+	}
+
+	@Override
+	public void run() {
+		int rate = 60 * 1000;
+
+		while (!isInterrupted()) {
+			try {
+				String chatTopic = applyFormatters(
+						this.plugin.getConfig().getString("discord.topic-updater.chat-format"));
+				String consoleTopic = applyFormatters(
+						this.plugin.getConfig().getString("discord.topic-updater.console-format"));
+
+				if ((this.srv.getChatChannel() == null && this.srv.getConsoleChannel() == null)
+						|| (chatTopic.isEmpty() && consoleTopic.isEmpty()))
+					interrupt();
+				if (this.api == null || (this.api != null && this.api.getSelfUser() == null))
+					continue;
+
+				if (!chatTopic.isEmpty() && this.srv.getChatChannel() != null
+						&& !PermissionUtil.checkPermission(this.srv.getChatChannel(), this.srv.getSelfMember(),
+								Permission.MANAGE_CHANNEL))
+					Tregmine.LOGGER.warning("Unable to update chat channel; no permission to manage channel");
+				if (!consoleTopic.isEmpty() && this.srv.getConsoleChannel() != null
+						&& !PermissionUtil.checkPermission(this.srv.getConsoleChannel(), this.srv.getSelfMember(),
+								Permission.MANAGE_CHANNEL))
+					Tregmine.LOGGER.warning("Unable to update console channel; no permission to manage channel");
+
+				if (!chatTopic.isEmpty() && this.srv.getChatChannel() != null && PermissionUtil.checkPermission(
+						this.srv.getChatChannel(), this.srv.getSelfMember(), Permission.MANAGE_CHANNEL))
+					this.srv.getChatChannel().getManager().setTopic(chatTopic).complete();
+				if (!consoleTopic.isEmpty() && this.srv.getConsoleChannel() != null && PermissionUtil.checkPermission(
+						this.srv.getConsoleChannel(), this.srv.getSelfMember(), Permission.MANAGE_CHANNEL))
+					this.srv.getConsoleChannel().getManager().setTopic(consoleTopic).complete();
+
+				Thread.sleep(rate);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

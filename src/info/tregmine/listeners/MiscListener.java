@@ -1,10 +1,6 @@
 package info.tregmine.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldSaveEvent;
 
 import info.tregmine.Tregmine;
 
@@ -16,15 +12,12 @@ public class MiscListener implements Listener {
 	}
 
 	/*
-	@EventHandler
-	public void autoSave(WorldSaveEvent event) {
-		if ("world".equals(event.getWorld().getName())) {
-			String n = plugin.getConfig().getString("general.servername");
-			Bukkit.broadcastMessage(
-					ChatColor.GOLD + n + ChatColor.DARK_RED + " is saving, You may experience some slowness.");
-		}
-	}
-	*/
+	 * @EventHandler public void autoSave(WorldSaveEvent event) { if
+	 * ("world".equals(event.getWorld().getName())) { String n =
+	 * plugin.getConfig().getString("general.servername");
+	 * Bukkit.broadcastMessage( ChatColor.GOLD + n + ChatColor.DARK_RED +
+	 * " is saving, You may experience some slowness."); } }
+	 */
 
 	/*
 	 * @EventHandler public void onUnloadChunk(ChunkUnloadEvent event) { Chunk

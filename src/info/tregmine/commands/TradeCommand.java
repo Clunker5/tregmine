@@ -139,12 +139,12 @@ public class TradeCommand extends AbstractCommand implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		TregminePlayer player = tregmine.getPlayer((Player) event.getPlayer());
 		TradeContext ctx = activeTrades.get(player);
-		
+
 		if (ctx == null) {
 			return;
 		}
-		
-		if(ctx.inventory.getContents().length == 0){
+
+		if (ctx.inventory.getContents().length == 0) {
 			ctx.firstPlayer.sendStringMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
 			ctx.secondPlayer.sendStringMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
 			ctx.firstPlayer.setChatState(ChatState.CHAT);
@@ -156,7 +156,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
 		TregminePlayer target = ctx.secondPlayer;
 
 		target.sendStringMessage(tradePre + player.getName() + " " + YELLOW + " is offering: ");
-		
+
 		player.sendStringMessage("[Trade] You are offering: ");
 
 		ItemStack[] contents = ctx.inventory.getContents();

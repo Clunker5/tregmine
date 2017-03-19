@@ -31,9 +31,9 @@ public class MentorCommand extends AbstractCommand {
 			if (onlineTeachers < 3) {
 				student.sendStringMessage(RED
 						+ "As there are less than three teachers online, you can do /mentor complete to skip the mentoring process automatically. Alternatively, you can wait for a mentor to be assigned to you.");
-			}else{
-			student.sendStringMessage(YELLOW + "You will now be assigned "
-					+ "a mentor to show you around, as soon as one becomes available.");
+			} else {
+				student.sendStringMessage(YELLOW + "You will now be assigned "
+						+ "a mentor to show you around, as soon as one becomes available.");
 			}
 			Queue<TregminePlayer> students = plugin.getStudentQueue();
 			students.offer(student);
@@ -201,7 +201,8 @@ public class MentorCommand extends AbstractCommand {
 
 					mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.COMPLETED);
 					student.sendStringMessage(ChatColor.GREEN + "You have been elevated to settler status.");
-					player.sendStringMessage(ChatColor.GREEN + student.getName() + " has been elevated to settler status :)");
+					player.sendStringMessage(
+							ChatColor.GREEN + student.getName() + " has been elevated to settler status :)");
 				} catch (DAOException e) {
 					throw new RuntimeException(e);
 				}

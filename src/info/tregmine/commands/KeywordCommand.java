@@ -8,7 +8,6 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
-import net.md_5.bungee.api.ChatColor;
 
 public class KeywordCommand extends AbstractCommand {
 	public KeywordCommand(Tregmine tregmine) {

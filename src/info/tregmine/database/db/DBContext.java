@@ -66,7 +66,7 @@ public class DBContext implements IContext {
 	public Connection getConnection() {
 		return conn;
 	}
-	
+
 	@Override
 	public IDiscordDAO getDiscordDAO() {
 		return new DBDiscordDAO(conn);

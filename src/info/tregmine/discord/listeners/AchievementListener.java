@@ -26,10 +26,11 @@ public class AchievementListener implements Listener {
 			return;
 
 		this.srv.sendMessage(this.srv.getChatChannel(),
-				ChatColor.stripColor(this.srv.getPlugin().getConfig().getString("discord.bridge-functionality.achievements.format")
-						.replace("%username%", event.getPlayer().getName())
-						.replace("%displayname%", event.getPlayer().getDisplayName())
-						.replace("%world%", event.getPlayer().getWorld().getName())
-						.replace("%achievement%", event.getAchievement().toString())));
+				ChatColor.stripColor(
+						this.srv.getPlugin().getConfig().getString("discord.bridge-functionality.achievements.format")
+								.replace("%username%", event.getPlayer().getName())
+								.replace("%displayname%", event.getPlayer().getDisplayName())
+								.replace("%world%", event.getPlayer().getWorld().getName())
+								.replace("%achievement%", event.getAchievement().toString())));
 	}
 }

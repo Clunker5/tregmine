@@ -297,9 +297,8 @@ public class TregminePlayer extends PlayerDelegate {
 		 * this.causeofquit = QuitCause.AFK; this.lastOnlineActivity = 0;
 		 * this.setSilentAfk(false); this.kickPlayer(this.plugin, reason);
 		 * plugin.broadcast(new TextComponent(ChatColor.GRAY + ""),
-		 * this.getChatName(), new TextComponent( ChatColor.GRAY +
-		 * " was kicked for idling longer than " + autoafkkick / 60 +
-		 * " minutes.")); }
+		 * this.getChatName(), new TextComponent( ChatColor.GRAY + " was kicked
+		 * for idling longer than " + autoafkkick / 60 + " minutes.")); }
 		 */
 		long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
 		if (!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()) {
@@ -389,11 +388,9 @@ public class TregminePlayer extends PlayerDelegate {
 			addon += "\n" + ChatColor.GRAY + "Soft-Warns " + this.getTotalSofts();
 		}
 		if (this.hasFlag(Flags.CHILD)) {
-			returns.setHoverEvent(
-					new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder(
-									this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD" + addon)
-											.create()));
+			returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+					new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD" + addon)
+							.create()));
 		} else {
 			returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 					new ComponentBuilder(this.getRank().getName(plugin) + addon).create()));

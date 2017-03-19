@@ -33,7 +33,8 @@ public class ChatListener implements Listener {
 			Tregmine.LOGGER.info("Chat message received, canceled: " + event.isCancelled());
 
 		// return if event canceled
-		if (this.plugin.getConfig().getBoolean("discord.debug.chat.dont-send-cancelled-chat-events") && event.isCancelled())
+		if (this.plugin.getConfig().getBoolean("discord.debug.chat.dont-send-cancelled-chat-events")
+				&& event.isCancelled())
 			return;
 
 		// return if should not send in-game chat

@@ -1,8 +1,8 @@
 package info.tregmine.database.db;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Connection;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;

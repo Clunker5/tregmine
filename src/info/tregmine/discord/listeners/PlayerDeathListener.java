@@ -11,10 +11,10 @@ import info.tregmine.api.TregminePlayer.Flags;
 import info.tregmine.discord.DiscordSRV;
 
 public class PlayerDeathListener implements Listener {
-	
+
 	Tregmine plugin;
 	private DiscordSRV srv;
-	
+
 	public PlayerDeathListener(DiscordSRV srv) {
 		this.srv = srv;
 		this.plugin = this.srv.getPlugin();

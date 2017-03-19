@@ -13,10 +13,19 @@ public class ServerLogWatcher extends Thread {
 
 	private Tregmine plugin;
 	private DiscordSRV srv;
-	
+
 	public ServerLogWatcher(DiscordSRV srv) {
 		this.srv = srv;
 		this.plugin = this.srv.getPlugin();
+	}
+
+	private String applyRegex(String input) {
+		return input.replaceAll(this.plugin.getConfig().getString("discord.console-functionality.regex.filter"),
+				this.plugin.getConfig().getString("discord.console-functionality.regex.replacement"));
+	}
+
+	private Boolean lineIsOk(String input) {
+		return !input.replace(" ", "").replace("\n", "").isEmpty();
 	}
 
 	@Override
@@ -87,20 +96,11 @@ public class ServerLogWatcher extends Thread {
 		}
 	}
 
-	private Boolean lineIsOk(String input) {
-		return !input.replace(" ", "").replace("\n", "").isEmpty();
-	}
-
 	private void sendMessage(String input) {
 		input = applyRegex(input);
 
 		if (!input.replace(" ", "").replace("\n", "").isEmpty())
 			this.srv.sendMessage(this.srv.getConsoleChannel(), input);
-	}
-
-	private String applyRegex(String input) {
-		return input.replaceAll(this.plugin.getConfig().getString("discord.console-functionality.regex.filter"),
-				this.plugin.getConfig().getString("discord.console-functionality.regex.replacement"));
 	}
 
 }

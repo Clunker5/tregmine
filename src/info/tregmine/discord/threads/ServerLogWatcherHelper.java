@@ -5,10 +5,10 @@ import java.io.File;
 import info.tregmine.discord.DiscordSRV;
 
 public class ServerLogWatcherHelper extends Thread {
-	
+
 	private DiscordSRV srv;
-	
-	public ServerLogWatcherHelper(DiscordSRV discord){
+
+	public ServerLogWatcherHelper(DiscordSRV discord) {
 		this.srv = discord;
 	}
 

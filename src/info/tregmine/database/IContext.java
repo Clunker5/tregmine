@@ -9,7 +9,7 @@ public interface IContext extends AutoCloseable {
 	public IBlessedBlockDAO getBlessedBlockDAO();
 
 	public IBlockDAO getBlockDAO();
-	
+
 	public IDiscordDAO getDiscordDAO();
 
 	public IEnchantmentDAO getEnchantmentDAO();

@@ -24,66 +24,18 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-
 public class DiscordListener extends ListenerAdapter {
 
 	private Server server;
 	private DiscordSRV srv;
 	private Tregmine plugin;
-	
+
+	String lastMessageSent = "";
+
 	public DiscordListener(DiscordSRV srv) {
 		this.srv = srv;
 		this.plugin = this.srv.getPlugin();
 		this.server = this.plugin.getServer();
-	}
-
-	String lastMessageSent = "";
-
-	@Override
-	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event != null && event.getAuthor().getId() != null && event.getJDA().getSelfUser().getId() != null
-				&& event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId()))
-			return;
-		// if (!event.getTextChannel().equals(DiscordSRV.chatChannel) &&
-		// !event.getTextChannel().equals(DiscordSRV.consoleChannel))
-
-		if (event.isFromType(ChannelType.PRIVATE) && event.getAuthor().getId().equals("95088531931672576")
-				&& event.getMessage().getRawContent().equalsIgnoreCase("debug")) // broken
-																					// lol
-			handleDebug(event);
-		if (event.getTextChannel().equals(this.srv.getChatChannel()))
-			handleChat(event);
-		if (event.getTextChannel().equals(this.srv.getConsoleChannel()))
-			handleConsole(event);
-	}
-
-	private void handleDebug(MessageReceivedEvent event) {
-		String message = event.getMessage().getContent();
-		List<String> guildRoles = new ArrayList<String>();
-		for (Role role : event.getGuild().getRoles())
-			guildRoles.add(role.getName());
-		List<String> guildTextChannels = new ArrayList<String>();
-		for (TextChannel channel : event.getGuild().getTextChannels())
-			guildTextChannels.add(channel.getName());
-		List<String> guildVoiceChannels = new ArrayList<String>();
-		for (VoiceChannel channel : event.getGuild().getVoiceChannels())
-			guildVoiceChannels.add(channel.getName());
-		message += "```\n";
-
-		message += "GuildAfkChannelId: " + event.getGuild().getAfkChannel().getId() + "\n";
-		message += "GuildAfkTimeout: " + event.getGuild().getAfkTimeout() + "\n";
-		message += "GuildIconId: " + event.getGuild().getIconId() + "\n";
-		message += "GuildIconUrl: " + event.getGuild().getIconUrl() + "\n";
-		message += "GuildId: " + event.getGuild().getId() + "\n";
-		message += "GuildName: " + event.getGuild().getName() + "\n";
-		message += "GuildOwnerId: " + event.getGuild().getOwner().getUser().getId() + "\n";
-		message += "GuildRegion: " + event.getGuild().getRegion().getName() + "\n";
-		message += "GuildRoles: " + String.join(", ", guildRoles) + "\n";
-		message += "GuildTextChannels: " + guildTextChannels + "\n";
-		message += "GuildVoiceChannels: " + guildVoiceChannels + "\n";
-
-		message += "```";
-		sendMessage(event.getAuthor().getPrivateChannel(), message);
 	}
 
 	private void handleChat(MessageReceivedEvent event) {
@@ -134,8 +86,10 @@ public class DiscordListener extends ListenerAdapter {
 			this.srv.sendMessage((TextChannel) event.getChannel(), playerlistMessage);
 			return;
 		}
-		if (message.length() > this.plugin.getConfig().getInt("discord.bridge-functionality.discord-to-minecraft-max-char"))
-			message = message.substring(0, this.plugin.getConfig().getInt("discord.bridge-functionality.discord-to-minecraft-max-char"));
+		if (message.length() > this.plugin.getConfig()
+				.getInt("discord.bridge-functionality.discord-to-minecraft-max-char"))
+			message = message.substring(0,
+					this.plugin.getConfig().getInt("discord.bridge-functionality.discord-to-minecraft-max-char"));
 
 		List<String> rolesAllowedToColor = this.plugin.getConfig()
 				.getStringList("discord.bridge-functionality.roles-with-color-perm");
@@ -157,11 +111,11 @@ public class DiscordListener extends ListenerAdapter {
 				.replace("%toprole%", this.srv.getRoleName(this.srv.getTopRole(event)))
 				.replace("%toprolecolor%", this.srv.convertRoleToMinecraftColor(this.srv.getTopRole(event)))
 				.replace("%allroles%", this.srv.getAllRoles(event)).replace("\\~", "~") // get
-																							// rid
-																							// of
-																							// badly
-																							// escaped
-																							// characters
+																						// rid
+																						// of
+																						// badly
+																						// escaped
+																						// characters
 				.replace("\\*", "") // get rid of badly escaped characters
 				.replace("\\_", "_"); // get rid of badly escaped characters
 
@@ -211,10 +165,11 @@ public class DiscordListener extends ListenerAdapter {
 
 		// log command to console log file, if this fails the command is not
 		// executed for safety reasons unless this is turned off
-		try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
-				new File(new File(".").getAbsolutePath() + "/./"
-						+ this.plugin.getConfig().getString("discord.console-functionality.logging.log")).getAbsolutePath(),
-				true)))) {
+		try (PrintWriter out = new PrintWriter(
+				new BufferedWriter(new FileWriter(new File(new File(".").getAbsolutePath() + "/./"
+						+ this.plugin.getConfig().getString("discord.console-functionality.logging.log"))
+								.getAbsolutePath(),
+						true)))) {
 			out.println("[" + new Date() + " | ID " + event.getAuthor().getId() + "] " + event.getAuthor().getName()
 					+ ": " + event.getMessage().getContent());
 		} catch (IOException e) {
@@ -235,6 +190,53 @@ public class DiscordListener extends ListenerAdapter {
 			});
 		else
 			server.dispatchCommand(server.getConsoleSender(), event.getMessage().getContent());
+	}
+
+	private void handleDebug(MessageReceivedEvent event) {
+		String message = event.getMessage().getContent();
+		List<String> guildRoles = new ArrayList<String>();
+		for (Role role : event.getGuild().getRoles())
+			guildRoles.add(role.getName());
+		List<String> guildTextChannels = new ArrayList<String>();
+		for (TextChannel channel : event.getGuild().getTextChannels())
+			guildTextChannels.add(channel.getName());
+		List<String> guildVoiceChannels = new ArrayList<String>();
+		for (VoiceChannel channel : event.getGuild().getVoiceChannels())
+			guildVoiceChannels.add(channel.getName());
+		message += "```\n";
+
+		message += "GuildAfkChannelId: " + event.getGuild().getAfkChannel().getId() + "\n";
+		message += "GuildAfkTimeout: " + event.getGuild().getAfkTimeout() + "\n";
+		message += "GuildIconId: " + event.getGuild().getIconId() + "\n";
+		message += "GuildIconUrl: " + event.getGuild().getIconUrl() + "\n";
+		message += "GuildId: " + event.getGuild().getId() + "\n";
+		message += "GuildName: " + event.getGuild().getName() + "\n";
+		message += "GuildOwnerId: " + event.getGuild().getOwner().getUser().getId() + "\n";
+		message += "GuildRegion: " + event.getGuild().getRegion().getName() + "\n";
+		message += "GuildRoles: " + String.join(", ", guildRoles) + "\n";
+		message += "GuildTextChannels: " + guildTextChannels + "\n";
+		message += "GuildVoiceChannels: " + guildVoiceChannels + "\n";
+
+		message += "```";
+		sendMessage(event.getAuthor().getPrivateChannel(), message);
+	}
+
+	@Override
+	public void onMessageReceived(MessageReceivedEvent event) {
+		if (event != null && event.getAuthor().getId() != null && event.getJDA().getSelfUser().getId() != null
+				&& event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId()))
+			return;
+		// if (!event.getTextChannel().equals(DiscordSRV.chatChannel) &&
+		// !event.getTextChannel().equals(DiscordSRV.consoleChannel))
+
+		if (event.isFromType(ChannelType.PRIVATE) && event.getAuthor().getId().equals("95088531931672576")
+				&& event.getMessage().getRawContent().equalsIgnoreCase("debug")) // broken
+																					// lol
+			handleDebug(event);
+		if (event.getTextChannel().equals(this.srv.getChatChannel()))
+			handleChat(event);
+		if (event.getTextChannel().equals(this.srv.getConsoleChannel()))
+			handleConsole(event);
 	}
 
 	private void sendMessage(PrivateChannel channel, String message) {

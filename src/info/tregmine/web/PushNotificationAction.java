@@ -78,13 +78,15 @@ public class PushNotificationAction implements WebHandler.Action {
 			issuer = tregmine.getPlayerOffline(sentFrom);
 		}
 		String message;
-		if(type.trim().equalsIgnoreCase("mail")){
-			message = ChatColor.AQUA + "You have a message from " + issuer.getChatNameNoHover() + ChatColor.AQUA + "! Do /mail read to view it.";
-		}else{
+		if (type.trim().equalsIgnoreCase("mail")) {
+			message = ChatColor.AQUA + "You have a message from " + issuer.getChatNameNoHover() + ChatColor.AQUA
+					+ "! Do /mail read to view it.";
+		} else {
 			message = "Generic push notification from " + issuer.getChatNameNoHover() + ChatColor.WHITE + ".";
 		}
-		
+
 		subject.sendStringMessage(message);
-		Tregmine.LOGGER.info("Push notification issued by " + issuer.getName() + "; sent to " + subject.getName() + "; type=" + type);
+		Tregmine.LOGGER.info("Push notification issued by " + issuer.getName() + "; sent to " + subject.getName()
+				+ "; type=" + type);
 	}
 }

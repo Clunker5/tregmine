@@ -49,13 +49,11 @@ import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.impl.MemberImpl;
-import net.dv8tion.jda.core.entities.impl.MessageImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.utils.PermissionUtil;
@@ -78,7 +76,7 @@ public class DiscordSRV {
 
 	private Member selfMember;
 
-	public DiscordSRV(Tregmine tregmine) throws JDAFailedException{
+	public DiscordSRV(Tregmine tregmine) throws JDAFailedException {
 		this.plugin = tregmine;
 		// login to discord
 		this.buildJda();
@@ -101,7 +99,8 @@ public class DiscordSRV {
 		// check & get location info
 		guild = api.getGuildById(this.plugin.getConfig().getString("discord.guild-info.guild-id"));
 		chatChannel = api.getTextChannelById(this.plugin.getConfig().getString("discord.guild-info.channels.chat-id"));
-		consoleChannel = api.getTextChannelById(this.plugin.getConfig().getString("discord.guild-info.channels.console-id"));
+		consoleChannel = api
+				.getTextChannelById(this.plugin.getConfig().getString("discord.guild-info.channels.console-id"));
 		if (guild == null) {
 			throw new JDAFailedException("The Guild ID specified does not exist.");
 		}
@@ -116,9 +115,12 @@ public class DiscordSRV {
 		selfMember = new MemberImpl(guild, api.getUserById(api.getSelfUser().getId()));
 
 		// send startup message if enabled
-		if (plugin.getConfig().getBoolean("discord.bridge-functionality.start-stop.startup.enabled")){
+		if (plugin.getConfig().getBoolean("discord.bridge-functionality.start-stop.startup.enabled")) {
 			TregmineEmbedBuilder builder = new TregmineEmbedBuilder();
-			this.sendMessage(this.chatChannel, builder.createEmbed(EmbedAlertType.STATUS_UPDATE, plugin.getConfig().getString("discord.bridge-functionality.start-stop.startup.message"), Color.GREEN));
+			this.sendMessage(this.chatChannel,
+					builder.createEmbed(EmbedAlertType.STATUS_UPDATE,
+							plugin.getConfig().getString("discord.bridge-functionality.start-stop.startup.message"),
+							Color.GREEN));
 		}
 
 		// in-game chat events
@@ -174,7 +176,9 @@ public class DiscordSRV {
 		// load unsubscribed users
 		if (new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").exists())
 			try {
-				for (String id : FileUtils.readFileToString(new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt")).split("\n"))
+				for (String id : FileUtils
+						.readFileToString(new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt"))
+						.split("\n"))
 					unsubscribedPlayers.add(id);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -182,65 +186,13 @@ public class DiscordSRV {
 
 	}
 
-	public void onDisable() {
-		// kill server log watcher & helper
-		if (serverLogWatcher != null && !serverLogWatcher.isInterrupted())
-			serverLogWatcher.interrupt();
-		serverLogWatcher = null;
-		if (serverLogWatcherHelper != null && !serverLogWatcherHelper.isInterrupted())
-			serverLogWatcherHelper.interrupt();
-		serverLogWatcherHelper = null;
-
-		// server shutdown message
-		if (chatChannel != null && this.plugin.getConfig().getBoolean("discord.bridge-functionality.start-stop.shutdown.enabled"))
-			sendMessage(this.chatChannel, new TregmineEmbedBuilder().createEmbed(EmbedAlertType.STATUS_UPDATE, plugin.getConfig().getString("discord.bridge-functionality.start-stop.shutdown.message"), Color.RED));
-
-		// disconnect from discord
-		try {
-			api.shutdown(false);
-		} catch (Exception e) {
-			Tregmine.LOGGER.info("Discord shutting down before logged in");
-		}
-		api = null;
-
-		// save unsubscribed users
-		if (new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").exists())
-			new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").delete();
-		String players = "";
-		for (String id : unsubscribedPlayers)
-			players += id + "\n";
-		if (players.length() > 0) {
-			players = players.substring(0, players.length() - 1);
-			try {
-				FileUtils.writeStringToFile(new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt"), players);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public JDA getAPI(){
-		return this.api;
-	}
-	
-	public Map<Integer, User> getConfCodes(){
-		return this.confCodes;
+	public void broadcastMessageToMinecraftServer(String message) {
+		for (Player player : Bukkit.getOnlinePlayers())
+			if (getSubscribed(player.getUniqueId()))
+				player.sendMessage(message);
 	}
 
-
-	public void startServerLogWatcher() {
-		// kill server log watcher if it's already started
-		if (serverLogWatcher != null && !serverLogWatcher.isInterrupted())
-			serverLogWatcher.interrupt();
-		serverLogWatcher = null;
-
-		if (consoleChannel != null) {
-			serverLogWatcher = new ServerLogWatcher(this);
-			serverLogWatcher.start();
-		}
-	}
-
-	private void buildJda() throws JDAFailedException{
+	private void buildJda() throws JDAFailedException {
 		// shutdown if already started
 		if (this.api != null)
 			try {
@@ -260,197 +212,38 @@ public class DiscordSRV {
 		// game status
 		if (!this.plugin.getConfig().getString("discord.bot-appearance.game-status").isEmpty())
 
-			api.getPresence().setGame(new TregmineGame(this.plugin.getConfig().getString("discord.bot-appearance.game-status"), GameType.DEFAULT));
+			api.getPresence().setGame(new TregmineGame(
+					this.plugin.getConfig().getString("discord.bot-appearance.game-status"), GameType.DEFAULT));
 	}
 
-	private String requestHttp(String requestUrl) {
-		String sourceLine = null;
+	public boolean checkPlayerIsVanished(Player player) {
+		Boolean isVanished = false;
+		TregminePlayer check = plugin.getPlayer(player);
+		if (check.hasFlag(Flags.INVISIBLE))
+			isVanished = true;
+		if (this.plugin.getConfig().getBoolean("discord.debug.events.player-vanish-lookup-reporting"))
+			this.plugin.getLogger().info("Looking up vanish status for " + player + ": " + isVanished);
+		return isVanished;
+	}
 
-		URL address = null;
-		try {
-			address = new URL(requestUrl);
-		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
+	public String convertMentionsFromNames(String message) {
+		if (!message.contains("@"))
+			return message;
+		List<String> splitMessage = Arrays.asList(message.split("@| "));
+		for (Member member : chatChannel.getMembers()) {
+			User user = member.getUser();
+			for (String segment : splitMessage)
+				if (user.getName().equals(segment))
+					splitMessage.set(splitMessage.indexOf(segment), user.getAsMention());
 		}
 
-		InputStreamReader pageInput = null;
-		try {
-			pageInput = new InputStreamReader(address.openStream());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		BufferedReader source = new BufferedReader(pageInput);
+		String newMessage = String.join(" ", splitMessage);
 
-		try {
-			sourceLine = source.readLine();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		return sourceLine;
-	}
-
-	private Boolean testChannel(TextChannel channel) {
-		return channel != null;
-	}
-
-	public void sendMessage(TextChannel channel, String message) {
-		sendMessage(channel, message, true);
-	}
-
-	public void sendMessage(TextChannel channel, String message, boolean editMessage) {
-		if (api == null || channel == null
-				|| (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
-						|| !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))){
-			Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
-			return;
-		}
-
-		message = ChatColor.stripColor(message).replaceAll("[&§][0-9a-fklmnor]", "") // removing
-																						// &'s
-																						// with
-																						// addition
-																						// of
-																						// non-caught
-																						// §'s
-																						// if
-																						// they
-																						// get
-																						// through
-																						// somehow
-				.replaceAll("\\[[0-9]{1,2};[0-9]{1,2};[0-9]{1,2}m", "").replaceAll("\\[[0-9]{1,3}m", "")
-				.replace("[m", "");
-
-		if (editMessage)
-			for (String phrase : this.plugin.getConfig().getStringList("discord.bridge-functionality.censor-phrases"))
-				message = message.replace(phrase, "");
-
-		String overflow = null;
-		if (message.length() > 2000) {
-			Tregmine.LOGGER.warning("Tried sending message with length of " + message.length() + " ("
-					+ (message.length() - 2000) + " over limit)");
-			overflow = message.substring(1999);
-			message = message.substring(0, 1999);
-		}
-
-		channel.sendMessage(message).complete();
-		if (overflow != null)
-			sendMessage(channel, overflow, editMessage);
-	}
-	
-	public void sendMessage(TextChannel channel, MessageEmbed embed){
-		if (api == null || channel == null
-				|| (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
-						|| !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))){
-			Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
-			return;
-		}
-		channel.sendMessage(embed).complete();
-	}
-
-	public void sendMessageToChatChannel(String message) {
-		sendMessage(chatChannel, message);
-	}
-
-	public void sendMessageToConsoleChannel(String message) {
-		sendMessage(consoleChannel, message);
-	}
-
-	private void verboseWait(long time) {
-		if (plugin.getConfig().getBoolean("RateLimitSleepVerbose")) {
-			long intervals = time / 4;
-			while (time > intervals) {
-				System.out.println("Waiting " + time + " ms");
-				try {
-					Thread.sleep(intervals);
-				} catch (InterruptedException e) {
-				}
-				;
-				time = time - intervals;
-			}
-			System.out.println("Waiting " + time + " ms");
-		} else
-			try {
-				Thread.sleep(time);
-			} catch (InterruptedException e) {
-			}
-		;
-	}
-
-	public String getPrimaryGroup(Player player) {
-		// Begin Tregmine interjection
-		TregminePlayer sender = this.plugin.getPlayer(player);
-		if (sender.getRank().getsDiscordRank()) {
-			return sender.getRank().getProperDiscordName();
-		} else {
-			return "";
-		}
-	}
-
-	public String getAllRoles(MessageReceivedEvent event) {
-		String roles = "";
-		for (Role role : event.getGuild().getMember(event.getAuthor()).getRoles()) {
-			roles += role.getName() + this.plugin.getConfig().getString("discord.bridge-functionality.formatting.from-discord.multiple-role-separator");
-		}
-		if (!roles.isEmpty())
-			roles = roles.substring(0, roles.length()
-					- this.plugin.getConfig().getString("discord.bridge-functionality.formatting.from-discord.multiple-role-separator").length());
-		return roles;
-	}
-
-	public Role getTopRole(MessageReceivedEvent event) {
-		Role highestRole = null;
-		for (Role role : event.getGuild().getMember(event.getAuthor()).getRoles()) {
-			if (highestRole == null)
-				highestRole = role;
-			else if (highestRole.getPosition() < role.getPosition())
-				highestRole = role;
-		}
-		return highestRole;
-	}
-
-	public String getRoleName(Role role) {
-		return role == null ? "" : role.getName();
-	}
-
-	public List<Player> getOnlinePlayers() {
-		List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-		List<Player> playersToRemove = new ArrayList<>();
-		for (Player player : players) {
-			if (this.checkPlayerIsVanished(player))
-				playersToRemove.add(player);
-		}
-		players.removeAll(playersToRemove);
-		return players;
-	}
-
-	public boolean getSubscribed(UUID uniqueId) {
-		return !unsubscribedPlayers.contains(uniqueId.toString());
-	}
-
-	public void setSubscribed(UUID uniqueId, boolean subscribed) {
-		if (subscribed && unsubscribedPlayers.contains(uniqueId.toString()))
-			unsubscribedPlayers.remove(uniqueId.toString());
-		if (!subscribed && !unsubscribedPlayers.contains(uniqueId.toString()))
-			unsubscribedPlayers.add(uniqueId.toString());
-	}
-	
-	public TextChannel getChatChannel(){
-		return this.chatChannel;
-	}
-	
-	public TextChannel getConsoleChannel(){
-		return this.consoleChannel;
-	}
-
-	public void broadcastMessageToMinecraftServer(String message) {
-		for (Player player : Bukkit.getOnlinePlayers())
-			if (getSubscribed(player.getUniqueId()))
-				player.sendMessage(message);
+		return newMessage;
 	}
 
 	public String convertRoleToMinecraftColor(Role role) {
-		if (role == null){
+		if (role == null) {
 			return "";
 		}
 		String before = String.format("%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
@@ -500,20 +293,163 @@ public class DiscordSRV {
 		return "";
 	}
 
-	public String convertMentionsFromNames(String message) {
-		if (!message.contains("@"))
-			return message;
-		List<String> splitMessage = Arrays.asList(message.split("@| "));
-		for (Member member : chatChannel.getMembers()) {
-			User user = member.getUser();
-			for (String segment : splitMessage)
-				if (user.getName().equals(segment))
-					splitMessage.set(splitMessage.indexOf(segment), user.getAsMention());
+	public String getAllRoles(MessageReceivedEvent event) {
+		String roles = "";
+		for (Role role : event.getGuild().getMember(event.getAuthor()).getRoles()) {
+			roles += role.getName() + this.plugin.getConfig()
+					.getString("discord.bridge-functionality.formatting.from-discord.multiple-role-separator");
+		}
+		if (!roles.isEmpty())
+			roles = roles.substring(0,
+					roles.length() - this.plugin.getConfig()
+							.getString("discord.bridge-functionality.formatting.from-discord.multiple-role-separator")
+							.length());
+		return roles;
+	}
+
+	public JDA getAPI() {
+		return this.api;
+	}
+
+	public TextChannel getChatChannel() {
+		return this.chatChannel;
+	}
+
+	public Map<Integer, User> getConfCodes() {
+		return this.confCodes;
+	}
+
+	public TextChannel getConsoleChannel() {
+		return this.consoleChannel;
+	}
+
+	public long getDiscordIDAndDeregisterCode(int confcode) {
+		if (!confCodes.containsKey(confcode)) {
+			return -1;
+		}
+		User usr = confCodes.get(confcode);
+		confCodes.remove(confcode);
+		return Long.parseLong(usr.getId());
+	}
+
+	public List<Player> getOnlinePlayers() {
+		List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+		List<Player> playersToRemove = new ArrayList<>();
+		for (Player player : players) {
+			if (this.checkPlayerIsVanished(player))
+				playersToRemove.add(player);
+		}
+		players.removeAll(playersToRemove);
+		return players;
+	}
+
+	public Tregmine getPlugin() {
+		return this.plugin;
+	}
+
+	public String getPrimaryGroup(Player player) {
+		// Begin Tregmine interjection
+		TregminePlayer sender = this.plugin.getPlayer(player);
+		if (sender.getRank().getsDiscordRank()) {
+			return sender.getRank().getProperDiscordName();
+		} else {
+			return "";
+		}
+	}
+
+	public String getRoleName(Role role) {
+		return role == null ? "" : role.getName();
+	}
+
+	public Member getSelfMember() {
+		return this.selfMember;
+	}
+
+	public long getStartTime() {
+		return this.startTime;
+	}
+
+	public boolean getSubscribed(UUID uniqueId) {
+		return !unsubscribedPlayers.contains(uniqueId.toString());
+	}
+
+	public Role getTopRole(MessageReceivedEvent event) {
+		Role highestRole = null;
+		for (Role role : event.getGuild().getMember(event.getAuthor()).getRoles()) {
+			if (highestRole == null)
+				highestRole = role;
+			else if (highestRole.getPosition() < role.getPosition())
+				highestRole = role;
+		}
+		return highestRole;
+	}
+
+	public void onDisable() {
+		// kill server log watcher & helper
+		if (serverLogWatcher != null && !serverLogWatcher.isInterrupted())
+			serverLogWatcher.interrupt();
+		serverLogWatcher = null;
+		if (serverLogWatcherHelper != null && !serverLogWatcherHelper.isInterrupted())
+			serverLogWatcherHelper.interrupt();
+		serverLogWatcherHelper = null;
+
+		// server shutdown message
+		if (chatChannel != null
+				&& this.plugin.getConfig().getBoolean("discord.bridge-functionality.start-stop.shutdown.enabled"))
+			sendMessage(this.chatChannel,
+					new TregmineEmbedBuilder().createEmbed(EmbedAlertType.STATUS_UPDATE,
+							plugin.getConfig().getString("discord.bridge-functionality.start-stop.shutdown.message"),
+							Color.RED));
+
+		// disconnect from discord
+		try {
+			api.shutdown(false);
+		} catch (Exception e) {
+			Tregmine.LOGGER.info("Discord shutting down before logged in");
+		}
+		api = null;
+
+		// save unsubscribed users
+		if (new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").exists())
+			new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").delete();
+		String players = "";
+		for (String id : unsubscribedPlayers)
+			players += id + "\n";
+		if (players.length() > 0) {
+			players = players.substring(0, players.length() - 1);
+			try {
+				FileUtils.writeStringToFile(new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt"), players);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private String requestHttp(String requestUrl) {
+		String sourceLine = null;
+
+		URL address = null;
+		try {
+			address = new URL(requestUrl);
+		} catch (MalformedURLException ex) {
+			ex.printStackTrace();
 		}
 
-		String newMessage = String.join(" ", splitMessage);
+		InputStreamReader pageInput = null;
+		try {
+			pageInput = new InputStreamReader(address.openStream());
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		BufferedReader source = new BufferedReader(pageInput);
 
-		return newMessage;
+		try {
+			sourceLine = source.readLine();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		return sourceLine;
 	}
 
 	public int sendConfirmationCode(String discordID) {
@@ -536,39 +472,115 @@ public class DiscordSRV {
 			int n = 100000 + rnd.nextInt(900000);
 			confCodes.put(n, usr);
 			Tregmine.LOGGER.info("DSV: Dispatching confirmation code " + n + " to Discord user " + usr.getName());
-			usr.openPrivateChannel().complete().sendMessage(new TregmineEmbedBuilder().createEmbed(EmbedAlertType.CONF_CODE, "/discord verify " + n, Color.BLUE)).complete();
+			usr.openPrivateChannel().complete().sendMessage(new TregmineEmbedBuilder()
+					.createEmbed(EmbedAlertType.CONF_CODE, "/discord verify " + n, Color.BLUE)).complete();
 			return n;
 		}
 	}
 
-	public long getDiscordIDAndDeregisterCode(int confcode) {
-		if (!confCodes.containsKey(confcode)) {
-			return -1;
+	public void sendMessage(TextChannel channel, MessageEmbed embed) {
+		if (api == null || channel == null
+				|| (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
+						|| !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))) {
+			Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
+			return;
 		}
-		User usr = confCodes.get(confcode);
-		confCodes.remove(confcode);
-		return Long.parseLong(usr.getId());
+		channel.sendMessage(embed).complete();
 	}
-	
-	public boolean checkPlayerIsVanished(Player player) {
-		Boolean isVanished = false;
-		TregminePlayer check = plugin.getPlayer(player);
-		if (check.hasFlag(Flags.INVISIBLE))
-			isVanished = true;
-		if (this.plugin.getConfig().getBoolean("discord.debug.events.player-vanish-lookup-reporting"))
-			this.plugin.getLogger().info("Looking up vanish status for " + player + ": " + isVanished);
-		return isVanished;
+
+	public void sendMessage(TextChannel channel, String message) {
+		sendMessage(channel, message, true);
 	}
-	
-	public Member getSelfMember(){
-		return this.selfMember;
+
+	public void sendMessage(TextChannel channel, String message, boolean editMessage) {
+		if (api == null || channel == null
+				|| (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
+						|| !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))) {
+			Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
+			return;
+		}
+
+		message = ChatColor.stripColor(message).replaceAll("[&§][0-9a-fklmnor]", "") // removing
+																						// &'s
+																						// with
+																						// addition
+																						// of
+																						// non-caught
+																						// §'s
+																						// if
+																						// they
+																						// get
+																						// through
+																						// somehow
+				.replaceAll("\\[[0-9]{1,2};[0-9]{1,2};[0-9]{1,2}m", "").replaceAll("\\[[0-9]{1,3}m", "")
+				.replace("[m", "");
+
+		if (editMessage)
+			for (String phrase : this.plugin.getConfig().getStringList("discord.bridge-functionality.censor-phrases"))
+				message = message.replace(phrase, "");
+
+		String overflow = null;
+		if (message.length() > 2000) {
+			Tregmine.LOGGER.warning("Tried sending message with length of " + message.length() + " ("
+					+ (message.length() - 2000) + " over limit)");
+			overflow = message.substring(1999);
+			message = message.substring(0, 1999);
+		}
+
+		channel.sendMessage(message).complete();
+		if (overflow != null)
+			sendMessage(channel, overflow, editMessage);
 	}
-	
-	public long getStartTime(){
-		return this.startTime;
+
+	public void sendMessageToChatChannel(String message) {
+		sendMessage(chatChannel, message);
 	}
-	
-	public Tregmine getPlugin(){
-		return this.plugin;
+
+	public void sendMessageToConsoleChannel(String message) {
+		sendMessage(consoleChannel, message);
+	}
+
+	public void setSubscribed(UUID uniqueId, boolean subscribed) {
+		if (subscribed && unsubscribedPlayers.contains(uniqueId.toString()))
+			unsubscribedPlayers.remove(uniqueId.toString());
+		if (!subscribed && !unsubscribedPlayers.contains(uniqueId.toString()))
+			unsubscribedPlayers.add(uniqueId.toString());
+	}
+
+	public void startServerLogWatcher() {
+		// kill server log watcher if it's already started
+		if (serverLogWatcher != null && !serverLogWatcher.isInterrupted())
+			serverLogWatcher.interrupt();
+		serverLogWatcher = null;
+
+		if (consoleChannel != null) {
+			serverLogWatcher = new ServerLogWatcher(this);
+			serverLogWatcher.start();
+		}
+	}
+
+	private Boolean testChannel(TextChannel channel) {
+		return channel != null;
+	}
+
+	private void verboseWait(long time) {
+		if (plugin.getConfig().getBoolean("RateLimitSleepVerbose")) {
+			long intervals = time / 4;
+			while (time > intervals) {
+				System.out.println("Waiting " + time + " ms");
+				try {
+					Thread.sleep(intervals);
+				} catch (InterruptedException e) {
+				}
+				;
+				time = time - intervals;
+			}
+			System.out.println("Waiting " + time + " ms");
+		} else
+			try {
+				Thread.sleep(time);
+			} catch (InterruptedException e) {
+			}
+		;
 	}
 }

@@ -42,7 +42,8 @@ public class SayCommand extends AbstractCommand {
 		server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
 		LOGGER.info("CONSOLE: <GOD> " + msg);
 		if (this.tregmine.dsvEnabled()) {
-			this.tregmine.getDiscordSRV().sendMessage(this.tregmine.getDiscordSRV().getChatChannel(), new TregmineEmbedBuilder().createEmbed(EmbedAlertType.SAY, msg, Color.YELLOW));
+			this.tregmine.getDiscordSRV().sendMessage(this.tregmine.getDiscordSRV().getChatChannel(),
+					new TregmineEmbedBuilder().createEmbed(EmbedAlertType.SAY, msg, Color.YELLOW));
 		}
 		return true;
 	}
@@ -62,11 +63,12 @@ public class SayCommand extends AbstractCommand {
 		server.broadcastMessage("<" + RED + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
 
 		LOGGER.info(player.getName() + ": <GOD> " + msg);
-		
+
 		if (this.tregmine.dsvEnabled()) {
-			this.tregmine.getDiscordSRV().sendMessage(this.tregmine.getDiscordSRV().getChatChannel(), new TregmineEmbedBuilder().createEmbed(EmbedAlertType.SAY, msg, Color.YELLOW));
+			this.tregmine.getDiscordSRV().sendMessage(this.tregmine.getDiscordSRV().getChatChannel(),
+					new TregmineEmbedBuilder().createEmbed(EmbedAlertType.SAY, msg, Color.YELLOW));
 		}
-		
+
 		Collection<? extends Player> players = server.getOnlinePlayers();
 		for (Player p : players) {
 			TregminePlayer current = tregmine.getPlayer(p);

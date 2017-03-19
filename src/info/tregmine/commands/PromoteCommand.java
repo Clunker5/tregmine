@@ -21,9 +21,9 @@ import info.tregmine.database.IPlayerDAO;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class PromoteCommand extends AbstractCommand {
-	
+
 	private Tregmine tregmine;
-	
+
 	public PromoteCommand(Tregmine tregmine) {
 		super(tregmine, "promote");
 		this.tregmine = tregmine;
@@ -41,9 +41,9 @@ public class PromoteCommand extends AbstractCommand {
 			return true;
 		}
 		TregminePlayer user = candidate.get(0);
-		
+
 		String getrank = args[1];
-		
+
 		Rank rank = user.getRank();
 		Rank oldrank = user.getRank();
 		for (Rank r : Rank.values()) {

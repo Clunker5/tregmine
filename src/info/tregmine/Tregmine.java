@@ -709,7 +709,7 @@ public class Tregmine extends JavaPlugin {
 		server.getScheduler().cancelTasks(this);
 		this.dsv.onDisable();
 		// Add a record of logout to db for all players
-		
+
 		try {
 			for (TregminePlayer player : getOnlinePlayers()) {
 				player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA

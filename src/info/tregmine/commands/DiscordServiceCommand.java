@@ -21,17 +21,17 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import net.dv8tion.jda.core.entities.Icon;
 
-public class DiscordServiceCommand extends AbstractCommand{
+public class DiscordServiceCommand extends AbstractCommand {
 
 	private Tregmine plugin;
-	
+
 	public DiscordServiceCommand(Tregmine tregmine) {
 		super(tregmine, "discordservice");
 		this.plugin = tregmine;
 	}
-	
+
 	@Override
-	public boolean handlePlayer(TregminePlayer sender, String[] args){
+	public boolean handlePlayer(TregminePlayer sender, String[] args) {
 		if (args.length == 0) {
 			if (!sender.isOp())
 				sender.sendStringMessage("/discordsrv toggle/subscribe/unsubscribe");
@@ -51,7 +51,8 @@ public class DiscordServiceCommand extends AbstractCommand{
 			try {
 				sender.sendStringMessage("Downloading picture...");
 				ReadableByteChannel in = Channels.newChannel(new URL(args[1]).openStream());
-				FileChannel out = new FileOutputStream(this.plugin.getDataFolder().getAbsolutePath() + "/picture.jpg").getChannel();
+				FileChannel out = new FileOutputStream(this.plugin.getDataFolder().getAbsolutePath() + "/picture.jpg")
+						.getChannel();
 				out.transferFrom(in, 0, Long.MAX_VALUE);
 			} catch (IOException e) {
 				sender.sendStringMessage("Download failed: " + e.getMessage());
@@ -59,7 +60,8 @@ public class DiscordServiceCommand extends AbstractCommand{
 			}
 			try {
 				this.plugin.getDiscordSRV().getAPI().getSelfUser().getManager()
-						.setAvatar(Icon.from(new File(this.plugin.getDataFolder().getAbsolutePath() + "/picture.jpg"))).complete();
+						.setAvatar(Icon.from(new File(this.plugin.getDataFolder().getAbsolutePath() + "/picture.jpg")))
+						.complete();
 				sender.sendStringMessage("Picture updated successfully");
 			} catch (IOException e) {
 				sender.sendStringMessage("Error setting picture as avatar: " + e.getMessage());
@@ -119,7 +121,8 @@ public class DiscordServiceCommand extends AbstractCommand{
 			Boolean subscribed = this.plugin.getDiscordSRV().getSubscribed(senderPlayer.getUniqueId());
 			this.plugin.getDiscordSRV().setSubscribed(senderPlayer.getUniqueId(), !subscribed);
 
-			String subscribedMessage = this.plugin.getDiscordSRV().getSubscribed(senderPlayer.getUniqueId()) ? "subscribed" : "unsubscribed";
+			String subscribedMessage = this.plugin.getDiscordSRV().getSubscribed(senderPlayer.getUniqueId())
+					? "subscribed" : "unsubscribed";
 			sender.sendStringMessage(ChatColor.AQUA + "You have been " + subscribedMessage + " to Discord messages.");
 		}
 		if (args[0].equalsIgnoreCase("subscribe")) {
