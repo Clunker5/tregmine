@@ -15,6 +15,7 @@ public class MiscListener implements Listener {
 		this.plugin = instance;
 	}
 
+	/*
 	@EventHandler
 	public void autoSave(WorldSaveEvent event) {
 		if ("world".equals(event.getWorld().getName())) {
@@ -23,6 +24,7 @@ public class MiscListener implements Listener {
 					ChatColor.GOLD + n + ChatColor.DARK_RED + " is saving, You may experience some slowness.");
 		}
 	}
+	*/
 
 	/*
 	 * @EventHandler public void onUnloadChunk(ChunkUnloadEvent event) { Chunk

@@ -1,7 +1,9 @@
 general:
   motd:
-    lineone: "#6#nTregmine!"
-    linetwo: "#c#lTregmine?"
+    lineoneauto: false
+    lineone: "#r< #6MC #r> #aTregmine 1.10#r < #6mc.tregmine.com#r >"
+    #Line two will always be used, line one will only be used if lineoneauto is set to false.
+    linetwo: "#r< #6Running #bMinecraft 1.10#6 just for you! #r>"
     maxplayers: 64
   life-log: true
   servername: Tregmine
@@ -12,28 +14,29 @@ general:
   economy:
     #Disable to use the /sell command instead
     minefortregs: true
-  #DO NOT put a / at the end of the domain
-  url: http://domain.lan
+  url: https://www.tregmine.com
 api:
-  signing-key: your-strong-random-key-here
+  signing-key: your-crazy-signing-key-here
   port: 9192
 db:
-  url: jdbc:mysql://10.10.0.5:3306/tregmine_test?autoReconnect=true
-  user: server
-  password: server
+  url: jdbc:mysql://localhost:3306/tregmine_db?autoReconnect=true
+  user: tregmine_db
+  password: your-crazy-password-here
 support:
-  user: tregmine.info@gmail.com
-  password: will message you
+  user: tregmine.mc@gmail.com
+  password: your-crazy-password-here
   to:
-    - email@emil.athisemail
-#Worlds
+    - your-crazy@email.here
+donotevertouch:
+#Possible types: re ; be ; te ; bl ; gm
+  type: re
+#Worlds -- DO NOT ADD THE FOLLOWING: world, world_nether, world_the_end -- You have been warned.
 worlds:
-# Set enabled to true to run the worlds API
-# Vanilla world is independent of the worlds API - Enable it to disable most of Tregmines features in a specialized vanilla world.
+# Set enabled to true to run the worlds API -- If its true and theres no worlds in names, it will crash.
   vanillaworld: false
   special:
     # Before setting to true, move world to world_2 as with the nether and end
-    newworld: false
+    newworld: true
     restrictnewworldtostaff: true
   enabled: false
   names:
@@ -49,3 +52,123 @@ ranks:
     builder: "#e"
     junior: "#c"
     senior: "#4"
+discord:
+  bot-token: "your-crazy-bot-token-here"
+  guild-info:
+    guild-id: "your-crazy-guild-id-here"
+    channels:
+      chat-id: "your-crazy-chat-id-here"
+      console-id: ""
+  bot-appearance:
+    game-status: "Tregmine!"
+  bridge-functionality:
+    join-leave:
+      # %displayname% = display name from things like nicknames
+      # %username% = raw player username
+      enabled: true
+      join:
+        enabled: true
+        format: "Welcome %displayname%!"
+      leave:
+        enabled: true
+        format: "QUIT - %displayname%"
+    death-message: true
+    forward-unsubscribed: false
+    achievements:
+      # %achievement% = message content
+      # %displayname% = display name from things like nicknames
+      # %username% = raw player username
+      # %world% = the name of the user's primary group
+      enabled: false
+      format: "**%displayname% earned achievement %achievement%!**"
+    formatting:
+      from-discord:
+        # %allroles% = all of the person's roles combined with DiscordToMinecraftAllRolesSeperator between them all
+        # %message% = message content
+        # %toprole% = person's highest ranking role
+        # %toprolecolor% = approximate color of person's highest ranking role
+        # %username% = person's name on Discord
+        with-role: "(%toprolecolor%%username%&r) %message%"
+        no-role: "(%username%) %message%"
+        multiple-role-separator: " | "
+      # %displayname% = display name from things like nicknames
+      # %message% = message content
+      # %primarygroup% = the name of the user's primary group
+      # %username% = raw player username
+      # %date% = date of message like "Fri Apr 01 12:00:00 PDT 2016"
+      from-minecraft: "<%displayname%> %message%"
+    discord-to-minecraft: true
+    minecraft-to-discord: true
+    discord-to-minecraft-max-char: 100
+    roles-with-color-perm:
+      - "Senior Admin"
+      - "Junior Admin"
+      - "Coder"
+      - "Guardian"
+      - "Donator"
+    start-stop:
+      startup:
+        enabled: true
+        message: "The server is online!"
+      shutdown:
+        enabled: true
+        message: "The server has shut down."
+    commands:
+      list:
+        enabled: true
+        command: "minecraft:list"
+        format:
+          online: "Online players (%playercount%):"
+          offline: "**No online players**"
+    do-not-send-phrases:
+      - "Online players ("
+      - "**No online players**"
+      - "%cancel%"
+    censor-phrases:
+      - "@everyone"
+  console-functionality:
+    logging:
+      refresh-rate: 5000
+      log: "DiscordConsole.log"
+    blacklist:
+      is-whitelist: false
+      commands:
+        - "?"
+        - "op"
+        - "deop"
+      do-not-send:
+        - "Async Chat Thread"
+      regex:
+        filter: ""
+        replacement: ""
+  topic-updater:
+    # %playercount% = current player count
+    # %playermax% = maximum player count
+    # %date% = current date
+    # %totalplayers% = total amount of players to ever join the main world
+    # %uptimemins% = amount of minutes since DiscordSRV has started
+    # %uptimehours% = amount of hours since DiscordSRV has started
+    # %motd% = motto of the day of the server
+    # %serverversion% = server version such as Spigot-1.9
+    # %freememory% = free memory of the JVM in MB
+    # %usedmemory% = used memory of the JVM in MB
+    # %totalmemory% = total memory of the JVM in MB
+    # %maxmemory% = max memory of the JVM in MB
+    # %tps% = average TPS of the server
+    chat-format: "%playercount%/%playermax% players online | %totalplayers% unique players ever joined | Server online for %uptimemins% minutes | Last update: %date%"
+    console-format: "TPS: %tps% | Mem: %usedmemory%MB used/%freememory%MB free/%totalmemory%MB total/%maxmemory%MB max | %serverversion%"
+    update-rate: 5
+  debug:
+    console:
+      commands:
+        cancel-if-log-failed: true
+        old-command-sender: false
+    chat:
+      dont-send-cancelled-chat-events: false
+      report-cancelled-chat-events: false
+    events:
+      debug: false
+      player-vanish-lookup-reporting: false
+    misc:
+      print-timing: false
+      rate-limit-sleep-verbose: false
