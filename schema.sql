@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 19, 2016 at 12:55 AM
--- Server version: 5.7.12-log
--- PHP Version: 7.0.6
+-- Generation Time: Mar 19, 2017 at 04:12 AM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,18 @@ SET time_zone = "+00:00";
 --
 -- Database: `tregmine_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `archived_import_log`
+--
+
+CREATE TABLE `archived_import_log` (
+  `content_type` varbinary(25) NOT NULL,
+  `old_id` varbinary(50) NOT NULL,
+  `new_id` varbinary(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -415,6 +427,17 @@ CREATE TABLE `player_chatlog` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `player_discord`
+--
+
+CREATE TABLE `player_discord` (
+  `player_id` int(11) NOT NULL,
+  `discord_id` bigint(24) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `player_givelog`
 --
 
@@ -692,18 +715,6 @@ CREATE TABLE `warp_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xf_map`
---
-
-CREATE TABLE `xf_map` (
-  `playerid` int(11) NOT NULL,
-  `ign` varchar(32) NOT NULL,
-  `xfname` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `zone`
 --
 
@@ -798,6 +809,12 @@ CREATE TABLE `zone_user` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `archived_import_log`
+--
+ALTER TABLE `archived_import_log`
+  ADD PRIMARY KEY (`content_type`,`old_id`);
 
 --
 -- Indexes for table `bank`
@@ -953,6 +970,13 @@ ALTER TABLE `player_chatlog`
   ADD PRIMARY KEY (`chatlog_id`);
 
 --
+-- Indexes for table `player_discord`
+--
+ALTER TABLE `player_discord`
+  ADD PRIMARY KEY (`player_id`),
+  ADD UNIQUE KEY `discord_id` (`discord_id`);
+
+--
 -- Indexes for table `player_givelog`
 --
 ALTER TABLE `player_givelog`
@@ -1069,12 +1093,6 @@ ALTER TABLE `warp`
 ALTER TABLE `warp_log`
   ADD PRIMARY KEY (`log_id`),
   ADD KEY `idx_warp` (`warp_id`,`log_timestamp`);
-
---
--- Indexes for table `xf_map`
---
-ALTER TABLE `xf_map`
-  ADD PRIMARY KEY (`playerid`);
 
 --
 -- Indexes for table `zone`
