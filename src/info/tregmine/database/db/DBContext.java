@@ -8,6 +8,7 @@ import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IBlockDAO;
 import info.tregmine.database.IContext;
+import info.tregmine.database.IDiscordDAO;
 import info.tregmine.database.IEnchantmentDAO;
 import info.tregmine.database.IFishyBlockDAO;
 import info.tregmine.database.IHandbookDAO;
@@ -64,6 +65,11 @@ public class DBContext implements IContext {
 
 	public Connection getConnection() {
 		return conn;
+	}
+	
+	@Override
+	public IDiscordDAO getDiscordDAO() {
+		return new DBDiscordDAO(conn);
 	}
 
 	@Override

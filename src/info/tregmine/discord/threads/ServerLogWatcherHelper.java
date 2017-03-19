@@ -1,10 +1,16 @@
-package com.scarsz.discordsrv.threads;
+package info.tregmine.discord.threads;
 
 import java.io.File;
 
-import com.scarsz.discordsrv.DiscordSRV;
+import info.tregmine.discord.DiscordSRV;
 
 public class ServerLogWatcherHelper extends Thread {
+	
+	private DiscordSRV srv;
+	
+	public ServerLogWatcherHelper(DiscordSRV discord){
+		this.srv = discord;
+	}
 
 	@Override
 	public void run() {
@@ -15,7 +21,7 @@ public class ServerLogWatcherHelper extends Thread {
 			File logFile = new File(new File(new File(".").getAbsolutePath() + "/logs/latest.log").getAbsolutePath());
 
 			if (logFile.getTotalSpace() < currentSize)
-				DiscordSRV.startServerLogWatcher();
+				this.srv.startServerLogWatcher();
 			else
 				currentSize = logFile.getTotalSpace();
 

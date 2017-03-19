@@ -1,4 +1,4 @@
-package com.scarsz.discordsrv.listeners;
+package info.tregmine.discord.listeners;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,43 +14,46 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.scarsz.discordsrv.DiscordSRV;
+import info.tregmine.Tregmine;
+import info.tregmine.discord.DiscordSRV;
+import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import net.dv8tion.jda.entities.PrivateChannel;
-import net.dv8tion.jda.entities.Role;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.VoiceChannel;
-import net.dv8tion.jda.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.hooks.ListenerAdapter;
 
 public class DiscordListener extends ListenerAdapter {
 
-	Server server;
-	DiscordSRV discordsrv;
-
-	public DiscordListener(Server server, DiscordSRV srv) {
-		this.server = server;
-		this.discordsrv = srv;
+	private Server server;
+	private DiscordSRV srv;
+	private Tregmine plugin;
+	
+	public DiscordListener(DiscordSRV srv) {
+		this.srv = srv;
+		this.plugin = this.srv.getPlugin();
+		this.server = this.plugin.getServer();
 	}
 
 	String lastMessageSent = "";
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event != null && event.getAuthor().getId() != null && event.getJDA().getSelfInfo().getId() != null
-				&& event.getAuthor().getId().equals(event.getJDA().getSelfInfo().getId()))
+		if (event != null && event.getAuthor().getId() != null && event.getJDA().getSelfUser().getId() != null
+				&& event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId()))
 			return;
 		// if (!event.getTextChannel().equals(DiscordSRV.chatChannel) &&
 		// !event.getTextChannel().equals(DiscordSRV.consoleChannel))
 
-		if (event.isPrivate() && event.getAuthor().getId().equals("95088531931672576")
+		if (event.isFromType(ChannelType.PRIVATE) && event.getAuthor().getId().equals("95088531931672576")
 				&& event.getMessage().getRawContent().equalsIgnoreCase("debug")) // broken
 																					// lol
 			handleDebug(event);
-		if (DiscordSRV.plugin.getConfig().getBoolean("DiscordChatChannelDiscordToMinecraft")
-				&& event.getTextChannel().equals(DiscordSRV.chatChannel))
+		if (event.getTextChannel().equals(this.srv.getChatChannel()))
 			handleChat(event);
-		if (event.getTextChannel().equals(DiscordSRV.consoleChannel))
+		if (event.getTextChannel().equals(this.srv.getConsoleChannel()))
 			handleConsole(event);
 	}
 
@@ -67,13 +70,13 @@ public class DiscordListener extends ListenerAdapter {
 			guildVoiceChannels.add(channel.getName());
 		message += "```\n";
 
-		message += "GuildAfkChannelId: " + event.getGuild().getAfkChannelId() + "\n";
+		message += "GuildAfkChannelId: " + event.getGuild().getAfkChannel().getId() + "\n";
 		message += "GuildAfkTimeout: " + event.getGuild().getAfkTimeout() + "\n";
 		message += "GuildIconId: " + event.getGuild().getIconId() + "\n";
 		message += "GuildIconUrl: " + event.getGuild().getIconUrl() + "\n";
 		message += "GuildId: " + event.getGuild().getId() + "\n";
 		message += "GuildName: " + event.getGuild().getName() + "\n";
-		message += "GuildOwnerId: " + event.getGuild().getOwnerId() + "\n";
+		message += "GuildOwnerId: " + event.getGuild().getOwner().getUser().getId() + "\n";
 		message += "GuildRegion: " + event.getGuild().getRegion().getName() + "\n";
 		message += "GuildRoles: " + String.join(", ", guildRoles) + "\n";
 		message += "GuildTextChannels: " + guildTextChannels + "\n";
@@ -84,11 +87,8 @@ public class DiscordListener extends ListenerAdapter {
 	}
 
 	private void handleChat(MessageReceivedEvent event) {
-		// return if should not send discord chat
-		if (!DiscordSRV.plugin.getConfig().getBoolean("DiscordChatChannelDiscordToMinecraft"))
-			return;
 
-		for (String phrase : (List<String>) DiscordSRV.plugin.getConfig().getList("DiscordChatChannelBlockedPhrases"))
+		for (String phrase : this.plugin.getConfig().getStringList("discord.bridge-functionality.do-not-send-phrases"))
 			if (event.getMessage().getContent().contains(phrase))
 				return;
 
@@ -102,17 +102,17 @@ public class DiscordListener extends ListenerAdapter {
 		String message = event.getMessage().getStrippedContent();
 		if (message.length() == 0)
 			return;
-		if (DiscordSRV.plugin.getConfig().getBoolean("DiscordChatChannelListCommandEnabled")
-				&& message.toLowerCase().startsWith(DiscordSRV.plugin.getConfig()
-						.getString("DiscordChatChannelListCommandMessage").toLowerCase())) {
+		if (this.plugin.getConfig().getBoolean("discord.bridge-functionality.commands.list.enabled")
+				&& message.toLowerCase().startsWith(this.plugin.getConfig()
+						.getString("discord.bridge-functionality.commands.list.command").toLowerCase())) {
 			String playerlistMessage = "`"
-					+ DiscordSRV.plugin.getConfig().getString("DiscordChatChannelListCommandFormatOnlinePlayers")
-							.replace("%playercount%", Integer.toString(discordsrv.getOnlinePlayers().size()) + "/"
+					+ this.plugin.getConfig().getString("discord.bridge-functionality.commands.list.format.online")
+							.replace("%playercount%", Integer.toString(this.srv.getOnlinePlayers().size()) + "/"
 									+ Integer.toString(Bukkit.getMaxPlayers()))
 					+ "\n";
-			if (discordsrv.getOnlinePlayers().size() == 0) {
+			if (this.srv.getOnlinePlayers().size() == 0) {
 				event.getChannel().sendMessage(
-						DiscordSRV.plugin.getConfig().getString("DiscordChatChannelListCommandFormatNoOnlinePlayers"));
+						this.plugin.getConfig().getString("discord.bridge-functionality.commands.list.format.offline"));
 				return;
 			}
 			if (!Bukkit.getPluginManager().isPluginEnabled("VanishNoPacket"))
@@ -121,7 +121,7 @@ public class DiscordListener extends ListenerAdapter {
 						playerlistMessage += ChatColor.stripColor(playerNoVanish.getDisplayName()) + ", ";
 				}
 			else
-				for (Player playerVanish : discordsrv.getOnlinePlayers()) {
+				for (Player playerVanish : this.srv.getOnlinePlayers()) {
 					if (playerlistMessage.length() < 2000)
 						playerlistMessage += ChatColor.stripColor(playerVanish.getDisplayName()) + ", ";
 				}
@@ -131,21 +131,21 @@ public class DiscordListener extends ListenerAdapter {
 			if (playerlistMessage.length() + 1 > 2000)
 				playerlistMessage = playerlistMessage.substring(0, 2000);
 			playerlistMessage += "`";
-			DiscordSRV.sendMessage((TextChannel) event.getChannel(), playerlistMessage);
+			this.srv.sendMessage((TextChannel) event.getChannel(), playerlistMessage);
 			return;
 		}
-		if (message.length() > DiscordSRV.plugin.getConfig().getInt("DiscordChatChannelTruncateLength"))
-			message = message.substring(0, DiscordSRV.plugin.getConfig().getInt("DiscordChatChannelTruncateLength"));
+		if (message.length() > this.plugin.getConfig().getInt("discord.bridge-functionality.discord-to-minecraft-max-char"))
+			message = message.substring(0, this.plugin.getConfig().getInt("discord.bridge-functionality.discord-to-minecraft-max-char"));
 
-		List<String> rolesAllowedToColor = (List<String>) DiscordSRV.plugin.getConfig()
-				.getList("DiscordChatChannelRolesAllowedToUseColorCodesInChat");
+		List<String> rolesAllowedToColor = this.plugin.getConfig()
+				.getStringList("discord.bridge-functionality.roles-with-color-perm");
 
-		String formatMessage = event.getGuild().getRolesForUser(event.getAuthor()).isEmpty()
-				? DiscordSRV.plugin.getConfig().getString("DiscordToMinecraftChatMessageFormatNoRole")
-				: DiscordSRV.plugin.getConfig().getString("DiscordToMinecraftChatMessageFormat");
+		String formatMessage = event.getGuild().getMember(event.getAuthor()).getRoles().isEmpty()
+				? this.plugin.getConfig().getString("discord.bridge-functionality.formatting.from-discord.no-role")
+				: this.plugin.getConfig().getString("discord.bridge-functionality.formatting.from-discord.with-role");
 
 		Boolean shouldStripColors = true;
-		for (Role role : event.getGuild().getRolesForUser(event.getAuthor()))
+		for (Role role : event.getGuild().getMember(event.getAuthor()).getRoles())
 			if (rolesAllowedToColor.contains(role.getName()))
 				shouldStripColors = false;
 		if (shouldStripColors)
@@ -153,10 +153,10 @@ public class DiscordListener extends ListenerAdapter {
 																// stripping
 
 		formatMessage = formatMessage.replace("%message%", message)
-				.replace("%username%", event.getMessage().getAuthor().getUsername())
-				.replace("%toprole%", DiscordSRV.getRoleName(DiscordSRV.getTopRole(event)))
-				.replace("%toprolecolor%", DiscordSRV.convertRoleToMinecraftColor(DiscordSRV.getTopRole(event)))
-				.replace("%allroles%", DiscordSRV.getAllRoles(event)).replace("\\~", "~") // get
+				.replace("%username%", event.getMessage().getAuthor().getName())
+				.replace("%toprole%", this.srv.getRoleName(this.srv.getTopRole(event)))
+				.replace("%toprolecolor%", this.srv.convertRoleToMinecraftColor(this.srv.getTopRole(event)))
+				.replace("%allroles%", this.srv.getAllRoles(event)).replace("\\~", "~") // get
 																							// rid
 																							// of
 																							// badly
@@ -166,18 +166,19 @@ public class DiscordListener extends ListenerAdapter {
 				.replace("\\_", "_"); // get rid of badly escaped characters
 
 		formatMessage = formatMessage.replaceAll("&([0-9a-z])", "\u00A7$1");
-		DiscordSRV.broadcastMessageToMinecraftServer(formatMessage);
+		this.srv.broadcastMessageToMinecraftServer(formatMessage);
+		Tregmine.LOGGER.info("DSV: " + ChatColor.stripColor(formatMessage));
 	}
 
 	private void handleConsole(MessageReceivedEvent event) {
 		// general boolean for if command should be allowed
 		Boolean allowed = false;
 		// get if blacklist acts as whitelist
-		Boolean DiscordConsoleChannelBlacklistActsAsWhitelist = DiscordSRV.plugin.getConfig()
-				.getBoolean("DiscordConsoleChannelBlacklistActsAsWhitelist");
+		Boolean DiscordConsoleChannelBlacklistActsAsWhitelist = this.plugin.getConfig()
+				.getBoolean("discord.console-functionality.blacklist.is-whitelist");
 		// get banned commands
-		List<String> DiscordConsoleChannelBlacklistedCommands = (List<String>) DiscordSRV.plugin.getConfig()
-				.getList("DiscordConsoleChannelBlacklistedCommands");
+		List<String> DiscordConsoleChannelBlacklistedCommands = this.plugin.getConfig()
+				.getStringList("discord.console-functionality.blacklist.commands");
 		// convert to all lower case
 		for (int i = 0; i < DiscordConsoleChannelBlacklistedCommands.size(); i++)
 			DiscordConsoleChannelBlacklistedCommands.set(i,
@@ -212,21 +213,21 @@ public class DiscordListener extends ListenerAdapter {
 		// executed for safety reasons unless this is turned off
 		try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
 				new File(new File(".").getAbsolutePath() + "/./"
-						+ DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelUsageLog")).getAbsolutePath(),
+						+ this.plugin.getConfig().getString("discord.console-functionality.logging.log")).getAbsolutePath(),
 				true)))) {
-			out.println("[" + new Date() + " | ID " + event.getAuthor().getId() + "] " + event.getAuthor().getUsername()
+			out.println("[" + new Date() + " | ID " + event.getAuthor().getId() + "] " + event.getAuthor().getName()
 					+ ": " + event.getMessage().getContent());
 		} catch (IOException e) {
-			DiscordSRV.plugin.getLogger().warning("Error logging console action to "
-					+ DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelUsageLog"));
-			if (DiscordSRV.plugin.getConfig().getBoolean("CancelConsoleCommandIfLoggingFailed"))
+			Tregmine.LOGGER.warning("Error logging console action to "
+					+ this.plugin.getConfig().getString("discord.console-functionality.logging.log"));
+			if (this.plugin.getConfig().getBoolean("discord.debug.console.commands.cancel-if-log-failed"))
 				return;
 		}
 
 		// if server is running paper spigot it has to have it's own little
 		// section of code because it whines about timing issues
-		if (!DiscordSRV.plugin.getConfig().getBoolean("UseOldConsoleCommandSender"))
-			Bukkit.getScheduler().runTask(DiscordSRV.plugin, new Runnable() {
+		if (!this.plugin.getConfig().getBoolean("discord.debug.console.commands.old-command-sender"))
+			Bukkit.getScheduler().runTask(this.plugin, new Runnable() {
 				@Override
 				public void run() {
 					server.dispatchCommand(server.getConsoleSender(), event.getMessage().getContent());

@@ -1,34 +1,32 @@
-package com.scarsz.discordsrv.listeners;
+package info.tregmine.discord.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 
-import com.scarsz.discordsrv.DiscordSRV;
-
-import net.dv8tion.jda.JDA;
+import info.tregmine.discord.DiscordSRV;
 
 public class AchievementListener implements Listener {
 
-	JDA api;
+	private DiscordSRV srv;
 
-	public AchievementListener(JDA api) {
-		this.api = api;
+	public AchievementListener(DiscordSRV srv) {
+		this.srv = srv;
 	}
 
 	@EventHandler
 	public void PlayerAchievementAwardedEvent(PlayerAchievementAwardedEvent event) {
 		// return if achievement messages are disabled
-		if (!DiscordSRV.plugin.getConfig().getBoolean("MinecraftPlayerAchievementMessagesEnabled"))
+		if (!this.srv.getPlugin().getConfig().getBoolean("discord.bridge-functionality.achievements.enabled"))
 			return;
 
 		// return if achievement or player objects are fucking knackered
 		if (event == null || event.getAchievement() == null || event.getPlayer() == null)
 			return;
 
-		DiscordSRV.sendMessage(DiscordSRV.chatChannel,
-				ChatColor.stripColor(DiscordSRV.plugin.getConfig().getString("MinecraftPlayerAchievementMessagesFormat")
+		this.srv.sendMessage(this.srv.getChatChannel(),
+				ChatColor.stripColor(this.srv.getPlugin().getConfig().getString("discord.bridge-functionality.achievements.format")
 						.replace("%username%", event.getPlayer().getName())
 						.replace("%displayname%", event.getPlayer().getDisplayName())
 						.replace("%world%", event.getPlayer().getWorld().getName())

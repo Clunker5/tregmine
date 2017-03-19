@@ -1,4 +1,4 @@
-package com.scarsz.discordsrv.listeners;
+package info.tregmine.discord.listeners;
 
 import java.util.Date;
 
@@ -8,12 +8,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import com.scarsz.discordsrv.DiscordSRV;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.ChatState;
-import net.dv8tion.jda.JDA;
+import info.tregmine.discord.DiscordSRV;
+import net.dv8tion.jda.core.JDA;
 
 public class ChatListener implements Listener {
 
@@ -21,34 +20,30 @@ public class ChatListener implements Listener {
 	Tregmine plugin;
 	DiscordSRV srv;
 
-	public ChatListener(JDA api, Tregmine tregmine, DiscordSRV discordsrv) {
-		this.api = api;
-		this.plugin = tregmine;
-		this.srv = discordsrv;
+	public ChatListener(DiscordSRV srv) {
+		this.srv = srv;
+		this.api = this.srv.getAPI();
+		this.plugin = this.srv.getPlugin();
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void AsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
 		// ReportCanceledChatEvents debug message
-		if (DiscordSRV.plugin.getConfig().getBoolean("ReportCanceledChatEvents"))
-			DiscordSRV.plugin.getLogger().info("Chat message received, canceled: " + event.isCancelled());
+		if (this.plugin.getConfig().getBoolean("discord.debug.chat.report-cancelled-chat-events"))
+			Tregmine.LOGGER.info("Chat message received, canceled: " + event.isCancelled());
 
 		// return if event canceled
-		if (DiscordSRV.plugin.getConfig().getBoolean("DontSendCanceledChatEvents") && event.isCancelled())
+		if (this.plugin.getConfig().getBoolean("discord.debug.chat.dont-send-cancelled-chat-events") && event.isCancelled())
 			return;
 
 		// return if should not send in-game chat
-		if (!DiscordSRV.plugin.getConfig().getBoolean("DiscordChatChannelMinecraftToDiscord"))
+		if (!this.plugin.getConfig().getBoolean("discord.bridge-functionality.minecraft-to-discord"))
 			return;
 
 		// return if user is unsubscribed from Discord and config says don't
 		// send those peoples' messages
-		if (!DiscordSRV.getSubscribed(event.getPlayer().getUniqueId())
-				&& !DiscordSRV.plugin.getConfig().getBoolean("MinecraftUnsubscribedMessageForwarding"))
-			return;
-
-		// return if doesn't match prefix filter
-		if (!event.getMessage().startsWith(DiscordSRV.plugin.getConfig().getString("DiscordChatChannelPrefix")))
+		if (!this.srv.getSubscribed(event.getPlayer().getUniqueId())
+				&& !this.plugin.getConfig().getBoolean("discord.bridge-functionality.forward-unsubscribed"))
 			return;
 
 		TregminePlayer sender = plugin.getPlayer(event.getPlayer());
@@ -72,13 +67,13 @@ public class ChatListener implements Listener {
 		} else {
 			name = sender.getChatNameNoColor();
 		}
-		String message = DiscordSRV.plugin.getConfig().getString("MinecraftChatToDiscordMessageFormat")
+		String message = this.plugin.getConfig().getString("discord.bridge-functionality.formatting.from-minecraft")
 				.replaceAll("&([0-9a-qs-z])", "").replace("%message%", ChatColor.stripColor(event.getMessage()))
 				.replace("%primarygroup%", srv.getPrimaryGroup(event.getPlayer())).replace("%displayname%", name)
 				.replace("%username%", ChatColor.stripColor(event.getPlayer().getName()))
 				.replace("%time%", new Date().toString());
 
-		message = DiscordSRV.convertMentionsFromNames(message);
-		DiscordSRV.sendMessage(DiscordSRV.chatChannel, message);
+		message = this.srv.convertMentionsFromNames(message);
+		this.srv.sendMessage(this.srv.getChatChannel(), message);
 	}
 }

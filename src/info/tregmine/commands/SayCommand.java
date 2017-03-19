@@ -6,16 +6,17 @@ import static org.bukkit.ChatColor.LIGHT_PURPLE;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
+import java.awt.Color;
 import java.util.Collection;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.scarsz.discordsrv.DiscordSRV;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
+import info.tregmine.discord.entities.EmbedAlertType;
+import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class SayCommand extends AbstractCommand {
@@ -40,12 +41,8 @@ public class SayCommand extends AbstractCommand {
 
 		server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
 		LOGGER.info("CONSOLE: <GOD> " + msg);
-		if (!this.tregmine.dsvEnabled()) {
-			this.tregmine.reloadDSV();
-		}
 		if (this.tregmine.dsvEnabled()) {
-			this.tregmine.getDiscordSRV();
-			DiscordSRV.sendMessageToChatChannel("<GOD> " + msg);
+			this.tregmine.getDiscordSRV().sendMessage(this.tregmine.getDiscordSRV().getChatChannel(), new TregmineEmbedBuilder().createEmbed(EmbedAlertType.SAY, msg, Color.YELLOW));
 		}
 		return true;
 	}
@@ -65,10 +62,14 @@ public class SayCommand extends AbstractCommand {
 		server.broadcastMessage("<" + RED + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
 
 		LOGGER.info(player.getName() + ": <GOD> " + msg);
-
+		
+		if (this.tregmine.dsvEnabled()) {
+			this.tregmine.getDiscordSRV().sendMessage(this.tregmine.getDiscordSRV().getChatChannel(), new TregmineEmbedBuilder().createEmbed(EmbedAlertType.SAY, msg, Color.YELLOW));
+		}
+		
 		Collection<? extends Player> players = server.getOnlinePlayers();
 		for (Player p : players) {
-			TregminePlayer current = tregmine.getPlayer((p.getName()));
+			TregminePlayer current = tregmine.getPlayer(p);
 			if (current.getRank().canBeGod()) {
 				current.sendSpigotMessage(new TextComponent(DARK_AQUA + "/say used by: "), player.getChatName());
 			}

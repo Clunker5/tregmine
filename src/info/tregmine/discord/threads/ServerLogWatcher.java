@@ -1,27 +1,27 @@
-package com.scarsz.discordsrv.threads;
+package info.tregmine.discord.threads;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
-import com.scarsz.discordsrv.DiscordSRV;
-
-import net.dv8tion.jda.JDA;
+import info.tregmine.Tregmine;
+import info.tregmine.discord.DiscordSRV;
 
 public class ServerLogWatcher extends Thread {
 
-	JDA api;
-
-	public ServerLogWatcher(JDA api) {
-		this.api = api;
+	private Tregmine plugin;
+	private DiscordSRV srv;
+	
+	public ServerLogWatcher(DiscordSRV srv) {
+		this.srv = srv;
+		this.plugin = this.srv.getPlugin();
 	}
 
 	@Override
 	public void run() {
-		int rate = DiscordSRV.plugin.getConfig().getInt("DiscordConsoleChannelLogRefreshRate");
+		int rate = this.plugin.getConfig().getInt("discord.console-functionality.logging.refresh-rate");
 		String message = "";
 
 		FileReader fr = null;
@@ -46,7 +46,7 @@ public class ServerLogWatcher extends Thread {
 
 		while (!isInterrupted()) {
 			try {
-				if (DiscordSRV.consoleChannel == null)
+				if (this.srv.getConsoleChannel() == null)
 					return;
 
 				String line = null;
@@ -68,8 +68,8 @@ public class ServerLogWatcher extends Thread {
 					}
 					continue;
 				} else {
-					for (String phrase : (List<String>) DiscordSRV.plugin.getConfig()
-							.getList("DiscordConsoleChannelDoNotSendPhrases"))
+					for (String phrase : this.plugin.getConfig()
+							.getStringList("discord.console-functionality.blacklist.do-not-send"))
 						if (line.toLowerCase().contains(phrase.toLowerCase()))
 							continue;
 					if (message.length() + line.length() + 2 <= 2000 && line.length() > 0) {
@@ -95,12 +95,12 @@ public class ServerLogWatcher extends Thread {
 		input = applyRegex(input);
 
 		if (!input.replace(" ", "").replace("\n", "").isEmpty())
-			DiscordSRV.sendMessage(DiscordSRV.consoleChannel, input);
+			this.srv.sendMessage(this.srv.getConsoleChannel(), input);
 	}
 
 	private String applyRegex(String input) {
-		return input.replaceAll(DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelRegexFilter"),
-				DiscordSRV.plugin.getConfig().getString("DiscordConsoleChannelRegexReplacement"));
+		return input.replaceAll(this.plugin.getConfig().getString("discord.console-functionality.regex.filter"),
+				this.plugin.getConfig().getString("discord.console-functionality.regex.replacement"));
 	}
 
 }

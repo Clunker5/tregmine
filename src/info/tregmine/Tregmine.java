@@ -30,13 +30,11 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.maxmind.geoip.LookupService;
-import com.scarsz.discordsrv.DiscordSRV;
 
 import info.tregmine.api.BlockStats;
 import info.tregmine.api.FishyBlock;
@@ -64,6 +62,7 @@ import info.tregmine.commands.ChunkCountCommand;
 import info.tregmine.commands.CleanInventoryCommand;
 import info.tregmine.commands.CreateMobCommand;
 import info.tregmine.commands.CreateWarpCommand;
+import info.tregmine.commands.DiscordCommand;
 import info.tregmine.commands.FillCommand;
 import info.tregmine.commands.FlyCommand;
 import info.tregmine.commands.ForceCommand;
@@ -148,6 +147,8 @@ import info.tregmine.database.IPlayerDAO;
 import info.tregmine.database.IPlayerReportDAO;
 import info.tregmine.database.IZonesDAO;
 import info.tregmine.database.db.DBContextFactory;
+import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.exception.JDAFailedException;
 import info.tregmine.events.CallEventListener;
 import info.tregmine.events.TregmineChatEvent;
 import info.tregmine.listeners.AchievementListener;
@@ -706,7 +707,7 @@ public class Tregmine extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		server.getScheduler().cancelTasks(this);
-
+		this.dsv.onDisable();
 		// Add a record of logout to db for all players
 		
 		try {
@@ -941,6 +942,7 @@ public class Tregmine extends JavaPlugin {
 		getCommand("cname").setExecutor(new ChangeNameCommand(this));
 		getCommand("createmob").setExecutor(new CreateMobCommand(this));
 		getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
+		getCommand("discord").setExecutor(new DiscordCommand(this));
 		getCommand("creative").setExecutor(new GameModeCommand(this, "creative", GameMode.CREATIVE));
 		getCommand("fill").setExecutor(new FillCommand(this, "fill"));
 		getCommand("suicide").setExecutor(new SuicideCommand(this));
@@ -1049,13 +1051,10 @@ public class Tregmine extends JavaPlugin {
 				}
 			}
 		}, 20L, 20L);
-		PluginManager mgr = Bukkit.getPluginManager();
-		Plugin d = mgr.getPlugin("DiscordSRV");
-
-		if (d != null) {
-			this.dsv = (DiscordSRV) d;
-		} else {
-			this.dsv = null;
+		try {
+			this.dsv = new info.tregmine.discord.DiscordSRV(this);
+		} catch (JDAFailedException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -1108,16 +1107,6 @@ public class Tregmine extends JavaPlugin {
 
 	public FileConfiguration plConfig() {
 		return this.config;
-	}
-
-	public void reloadDSV() {
-		PluginManager mgr = Bukkit.getPluginManager();
-		Plugin d = mgr.getPlugin("DiscordSRV");
-		if (d != null) {
-			this.dsv = (DiscordSRV) d;
-		} else {
-			this.dsv = null;
-		}
 	}
 
 	public void reloadPlayer(TregminePlayer player) {
