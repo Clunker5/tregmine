@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.discord.commands.CommandHandler;
 import info.tregmine.discord.entities.EmbedAlertType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import info.tregmine.discord.exception.JDAFailedException;
@@ -127,6 +128,8 @@ public class DiscordSRV {
 		this.plugin.getServer().getPluginManager().registerEvents(new ChatListener(this), this.plugin);
 		this.plugin.getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this.plugin);
 
+		new CommandHandler(this);
+		
 		// console streaming thread & helper
 		startServerLogWatcher();
 		serverLogWatcherHelper = new ServerLogWatcherHelper(this);
