@@ -226,12 +226,7 @@ public class DiscordListener extends ListenerAdapter {
 		if (event != null && event.getAuthor().getId() != null && event.getJDA().getSelfUser().getId() != null
 				&& event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId()))
 			return;
-		// if (!event.getTextChannel().equals(DiscordSRV.chatChannel) &&
-		// !event.getTextChannel().equals(DiscordSRV.consoleChannel))
-
-		if (event.isFromType(ChannelType.PRIVATE) && event.getAuthor().getId().equals("95088531931672576")
-				&& event.getMessage().getRawContent().equalsIgnoreCase("debug")) // broken
-																					// lol
+		
 			handleDebug(event);
 		if (event.getTextChannel().equals(this.srv.getChatChannel()))
 			handleChat(event);
