@@ -27,6 +27,7 @@ public class CommandHandler extends ListenerAdapter{
 		this.plugin = this.srv.getPlugin();
 		
 		executors.addExecutor(new PingCommand(this.plugin));
+		executors.addExecutor(new PurgeCommand(this.plugin));
 	}
 	
 	@Override
