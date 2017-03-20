@@ -26,6 +26,7 @@ public class CommandHandler extends ListenerAdapter{
 		this.srv.getAPI().addEventListener(this);
 		this.plugin = this.srv.getPlugin();
 		
+		executors.addExecutor(new PingCommand(this.plugin));
 	}
 	
 	@Override
