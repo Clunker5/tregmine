@@ -12,4 +12,7 @@ tregmine.jar
 /misc
 /bin
 /dist
+/.gradle
 build.bat
+/.idea
+/build
