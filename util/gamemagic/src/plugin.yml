@@ -1,7 +1,0 @@
-name: GameMagic
-main: info.tregmine.gamemagic.GameMagic
-version: 1.0.1
-website: https://www.tregmine.com
-author: Ein Andersson, Emil Hernvall, Eric Rabil
-description: Tregmine
-depends: tregmine

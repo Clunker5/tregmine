@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+	id 'maven'
+	id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+repositories {
+	jcenter()
+    mavenCentral()
+    maven {
+    	url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+    	url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
+
+dependencies {
+    compile "net.dv8tion:JDA:3.0.BETA2_154"
+    compile "net.md-5:bungeecord-api:1.11-SNAPSHOT"
+    compile "commons-dbcp:commons-dbcp:1.4"
+	compile files('lib/spigot.jar')
+	compile files('lib/coreprotect.jar')
+    compile "org.eclipse.jetty:jetty-server:9.4.0.RC3"
+    compile "javax.mail:mail:1.4.7"
+    compile "org.eclipse.jetty.websocket:websocket-server:9.4.0.RC3"
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+}
+
+jar {
+	baseName = "tregmine"
+	from('src/main/java') {
+   	include 'plugin.yml'
+   	}
+}
+
+shadowJar {
+    classifier = "withDependencies"
+    from('src/main/java') {
+   	include 'plugin.yml'
+   	}
+}
+
+build {
+	dependsOn clean
+	dependsOn jar
+	dependsOn shadowJar
+	
+	jar.mustRunAfter clean
+	shadowJar.mustRunAfter jar
+}
