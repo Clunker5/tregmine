@@ -616,7 +616,9 @@ public class Tregmine extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		server.getScheduler().cancelTasks(this);
-		this.dsv.onDisable();
+		if(this.dsv != null){
+			this.dsv.onDisable();
+		}
 		// Add a record of logout to db for all players
 
 		try {
@@ -949,10 +951,12 @@ public class Tregmine extends JavaPlugin {
 				}
 			}
 		}, 20L, 20L);
-		try {
-			this.dsv = new info.tregmine.discord.DiscordSRV(this);
-		} catch (JDAFailedException e) {
-			e.printStackTrace();
+		if(this.getConfig().getBoolean("discord.enabled")){
+			try {
+				this.dsv = new info.tregmine.discord.DiscordSRV(this);
+			} catch (JDAFailedException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
