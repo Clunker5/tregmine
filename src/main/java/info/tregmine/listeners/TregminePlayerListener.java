@@ -337,7 +337,7 @@ public class TregminePlayerListener implements Listener {
 			if (player.getItemInHand().getType() == Material.BOOK) {
 
 				player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + block.getType().toString() + " ("
-						+ ChatColor.BLUE + block.getType().getId() + ChatColor.DARK_AQUA + ")");
+						+ ChatColor.BLUE + block.getType().toString() + ChatColor.DARK_AQUA + ")");
 				player.sendMessage(ChatColor.DARK_AQUA + "Data: " + ChatColor.AQUA + (int) block.getData());
 				player.sendMessage(ChatColor.RED + "X" + ChatColor.WHITE + ", " + ChatColor.GREEN + "Y"
 						+ ChatColor.WHITE + ", " + ChatColor.BLUE + "Z" + ChatColor.WHITE + ": " + ChatColor.RED

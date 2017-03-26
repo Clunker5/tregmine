@@ -38,17 +38,13 @@ public class ItemCommand extends AbstractCommand {
 
 		String param = args[0].toUpperCase();
 
-		int materialId;
+		Material material;
+
 		try {
-			materialId = Integer.parseInt(param);
-		} catch (NumberFormatException e) {
-			try {
-				Material material = Material.getMaterial(param);
-				materialId = material.getId();
-			} catch (NullPointerException ne) {
-				player.sendStringMessage(DARK_AQUA + "/item <id|name> <amount> <data>.");
-				return true;
-			}
+			material = Material.getMaterial(param);
+		} catch (NullPointerException ne) {
+			player.sendStringMessage(DARK_AQUA + "/item <name> <amount> <data>.");
+			return true;
 		}
 
 		int amount;
@@ -69,7 +65,7 @@ public class ItemCommand extends AbstractCommand {
 			data = 0;
 		}
 
-		ItemStack item = new ItemStack(materialId, amount, (byte) data);
+		ItemStack item = new ItemStack(material, amount, (byte) data);
 		if (item.getType() == Material.MONSTER_EGG || item.getType() == Material.NAME_TAG) {
 			return false;
 		}
@@ -85,7 +81,6 @@ public class ItemCommand extends AbstractCommand {
 		PlayerInventory inv = player.getInventory();
 		inv.addItem(item);
 
-		Material material = Material.getMaterial(materialId);
 		String materialName = material.toString();
 		player.sendStringMessage("You received " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + ".");
 		LOGGER.info(player.getName() + " SPAWNED " + amount + ":" + materialName);

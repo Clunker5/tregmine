@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -92,7 +93,7 @@ public class DBLogDAO implements ILogDAO {
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, sender.getId());
 			stmt.setInt(2, recipient.getId());
-			stmt.setInt(3, stack.getTypeId());
+			stmt.setString(3, stack.getType().name());
 			stmt.setInt(4, stack.getData().getData());
 			if (stack.hasItemMeta()) {
 				YamlConfiguration config = new YamlConfiguration();
@@ -129,14 +130,14 @@ public class DBLogDAO implements ILogDAO {
 	}
 
 	@Override
-	public void insertOreLog(TregminePlayer player, Location loc, int material) throws DAOException {
+	public void insertOreLog(TregminePlayer player, Location loc, Material material) throws DAOException {
 		String sql = "INSERT INTO player_orelog (player_id, orelog_material, "
 				+ "orelog_timestamp, orelog_x, orelog_y, orelog_z, orelog_world) ";
 		sql += "VALUES (?, ?, unix_timestamp(), ?, ?, ?, ?)";
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, player.getId());
-			stmt.setInt(2, material);
+			stmt.setString(2, material.name());
 			stmt.setInt(3, loc.getBlockX());
 			stmt.setInt(4, loc.getBlockY());
 			stmt.setInt(5, loc.getBlockZ());

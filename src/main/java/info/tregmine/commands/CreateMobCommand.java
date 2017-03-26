@@ -30,7 +30,7 @@ public class CreateMobCommand extends AbstractCommand {
 		EntityType mobType;
 		try {
 			String mobName = args[0];
-			mobType = EntityType.fromName(mobName);
+			mobType = EntityType.valueOf(mobName.toUpperCase());
 		} catch (Exception e) {
 			player.sendStringMessage(RED + "Sorry, that mob doesn't exist.");
 			return true;
@@ -52,7 +52,7 @@ public class CreateMobCommand extends AbstractCommand {
 			for (EntityType mob : EntityType.values()) {
 				if (mob.isSpawnable() && mob.isAlive()) {
 					buf.append(delim);
-					buf.append(mob.getName());
+					buf.append(mob.toString());
 					delim = ", ";
 				}
 			}
@@ -81,8 +81,8 @@ public class CreateMobCommand extends AbstractCommand {
 			}
 		}
 
-		player.sendStringMessage(YELLOW + "You created " + amount + " " + mobType.getName() + ".");
-		LOGGER.info(player.getName() + " created " + amount + " " + mobType.getName());
+		player.sendStringMessage(YELLOW + "You created " + amount + " " + mobType.toString() + ".");
+		LOGGER.info(player.getName() + " created " + amount + " " + mobType.toString());
 
 		return true;
 	}

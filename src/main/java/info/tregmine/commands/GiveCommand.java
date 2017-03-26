@@ -46,17 +46,12 @@ public class GiveCommand extends AbstractCommand {
 			player.sendStringMessage(ChatColor.RED + "That player is in the vanilla world!");
 			return true;
 		}
-		int materialId;
+		Material material;
 		try {
-			materialId = Integer.parseInt(param);
-		} catch (NumberFormatException e) {
-			try {
-				Material material = Material.getMaterial(param);
-				materialId = material.getId();
-			} catch (NullPointerException ne) {
-				player.sendStringMessage(DARK_AQUA + "/item <id|name> <amount> <data>.");
-				return true;
-			}
+			material = Material.getMaterial(param);
+		} catch (NullPointerException ne) {
+			player.sendStringMessage(DARK_AQUA + "/give <name> <amount> <data>.");
+			return true;
 		}
 
 		int amount;
@@ -77,7 +72,7 @@ public class GiveCommand extends AbstractCommand {
 			data = 0;
 		}
 
-		ItemStack item = new ItemStack(materialId, amount, (byte) data);
+		ItemStack item = new ItemStack(material, amount, (byte) data);
 		if (item.getType() == Material.MONSTER_EGG || item.getType() == Material.NAME_TAG) {
 			return false;
 		}
@@ -89,8 +84,7 @@ public class GiveCommand extends AbstractCommand {
 
 		inv.addItem(item);
 
-		Material material = Material.getMaterial(materialId);
-		String materialName = material.toString();
+		String materialName = material.name();
 
 		player.sendStringMessage("You gave " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + " to "
 				+ target.getName() + ".");

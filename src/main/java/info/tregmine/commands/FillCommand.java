@@ -141,14 +141,14 @@ public class FillCommand extends AbstractCommand {
 				}
 
 				player.sendStringMessage(
-						"You filled with " + DARK_AQUA + mat.toString() + "(" + mat.getItemTypeId() + ")");
+						"You filled with " + DARK_AQUA + mat.toString() + "(" + mat.getItemType().name() + ")");
 
 				if (command.equals("fill")) {
 					filler = new Filler(tregmine, undoHistory, player, b1, b2, mat, 100000);
 					LOGGER.info("[FILL] " + player.getName() + " filled [" + b1.getLocation().getBlockX() + ","
 							+ b1.getLocation().getBlockZ() + "," + b1.getLocation().getBlockY() + "] - ["
 							+ b2.getLocation().getBlockX() + "," + b2.getLocation().getBlockZ() + ","
-							+ b2.getLocation().getBlockY() + "]  with " + mat.toString() + " " + mat.getItemTypeId());
+							+ b2.getLocation().getBlockY() + "]  with " + mat.toString() + " " + mat.getItemType().name());
 				}
 
 				if (command.equals("testfill")) {
@@ -165,8 +165,8 @@ public class FillCommand extends AbstractCommand {
 
 				}
 
-				player.sendStringMessage("You replaced " + DARK_AQUA + mat.toString() + "(" + mat.getItemTypeId() + ")"
-						+ BLUE + "with" + DARK_AQUA + toMat.toString() + "(" + toMat.getItemTypeId() + ")");
+				player.sendStringMessage("You replaced " + DARK_AQUA + mat.toString() + "(" + mat.getItemType().name() + ")"
+						+ BLUE + "with" + DARK_AQUA + toMat.toString() + "(" + toMat.getItemType().name() + ")");
 
 				if (command.equals("fill")) {
 					filler = new Replacer(tregmine, undoHistory, player, b1, b2, mat, toMat, 100000);
@@ -177,10 +177,10 @@ public class FillCommand extends AbstractCommand {
 				}
 
 				LOGGER.info("[FILL] " + player.getName() + " replaced with " + toMat.toString() + " "
-						+ toMat.getItemTypeId() + "[" + b1.getLocation().getBlockX() + ","
+						+ toMat.getItemType().name() + "[" + b1.getLocation().getBlockX() + ","
 						+ b1.getLocation().getBlockZ() + "," + b1.getLocation().getBlockY() + "] - ["
 						+ b2.getLocation().getBlockX() + "," + b2.getLocation().getBlockZ() + ","
-						+ b2.getLocation().getBlockY() + "] with " + mat.toString() + " " + mat.getItemTypeId());
+						+ b2.getLocation().getBlockY() + "] with " + mat.toString() + " " + mat.getItemType().name());
 			}
 		}
 
@@ -209,16 +209,7 @@ public class FillCommand extends AbstractCommand {
 
 		try {
 			byte subType = 0;
-			if (str.matches("^[0-9]+$")) {
-				material = Material.getMaterial(Integer.parseInt(str));
-			} else if (str.matches("^[0-9]+:[0-9]+$")) {
-				String[] segmentedInput = str.split(":");
-
-				int materialType = Integer.parseInt(segmentedInput[0]);
-				subType = Byte.parseByte(segmentedInput[1]);
-
-				material = Material.getMaterial(materialType);
-			} else if (str.matches("^[A-Za-z_]+:[0-9]+$")) {
+			if (str.matches("^[A-Za-z_]+:[0-9]+$")) {
 				String[] segmentedInput = str.split(":");
 
 				material = Material.getMaterial(segmentedInput[0].toUpperCase());

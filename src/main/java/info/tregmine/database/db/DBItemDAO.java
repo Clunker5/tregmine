@@ -22,11 +22,11 @@ public class DBItemDAO implements IItemDAO {
 	}
 
 	@Override
-	public int getItemValue(int itemId, byte itemData) throws DAOException {
+	public int getItemValue(Material item, byte itemData) throws DAOException {
 		String sql = "SELECT * FROM item WHERE item_id = ? AND item_data = ?";
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setInt(1, itemId);
+			stmt.setString(1, item.name());
 			stmt.setByte(2, itemData);
 			stmt.execute();
 

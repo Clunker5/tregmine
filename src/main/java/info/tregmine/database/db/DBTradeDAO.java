@@ -52,7 +52,7 @@ public class DBTradeDAO implements ITradeDAO {
 				}
 
 				stmt.setInt(1, tradeId);
-				stmt.setInt(2, stack.getTypeId());
+				stmt.setString(2, stack.getType().name());
 				stmt.setInt(3, stack.getData().getData());
 				if (stack.hasItemMeta()) {
 					YamlConfiguration config = new YamlConfiguration();

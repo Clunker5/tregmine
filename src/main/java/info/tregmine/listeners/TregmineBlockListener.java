@@ -42,7 +42,7 @@ public class TregmineBlockListener implements Listener {
 		if (loggedMaterials.contains(material)) {
 			try (IContext ctx = plugin.createContext()) {
 				ILogDAO logDAO = ctx.getLogDAO();
-				logDAO.insertOreLog(player, block.getLocation(), material.getId());
+				logDAO.insertOreLog(player, block.getLocation(), material);
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
 			}

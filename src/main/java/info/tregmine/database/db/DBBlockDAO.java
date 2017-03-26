@@ -67,7 +67,7 @@ public class DBBlockDAO implements IBlockDAO {
 	public int blockValue(Block a) throws DAOException {
 		String sql = "SELECT * FROM item WHERE item_id = ?";
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setDouble(1, a.getTypeId());
+			stmt.setString(1, a.getType().name());
 			stmt.execute();
 			ResultSet rs = stmt.getResultSet();
 			while (rs.next()) {
@@ -107,7 +107,7 @@ public class DBBlockDAO implements IBlockDAO {
 			stmt.execute();
 			ResultSet rs = stmt.getResultSet();
 			while (rs.next()) {
-				prices.put(Material.getMaterial(rs.getInt("item_id")), rs.getInt("mine_value"));
+				prices.put(Material.getMaterial(rs.getString("item_id")), rs.getInt("mine_value"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

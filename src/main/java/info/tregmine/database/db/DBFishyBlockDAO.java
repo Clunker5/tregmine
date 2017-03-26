@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
@@ -82,7 +83,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO {
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, block.getPlayerId());
-			stmt.setInt(2, block.getMaterial().getItemTypeId());
+			stmt.setString(2, block.getMaterial().getItemType().name());
 			stmt.setInt(3, block.getMaterial().getData());
 			stmt.setString(4, serializeEnchants(block.getEnchantments()));
 			stmt.setInt(5, block.getCost());
@@ -162,7 +163,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO {
 					int id = rs.getInt("fishyblock_id");
 					int playerId = rs.getInt("player_id");
 
-					int material = rs.getInt("fishyblock_material");
+					Material material = Material.valueOf(rs.getString("fishyblock_material"));
 					byte data = (byte) rs.getInt("fishyblock_data");
 					Map<Enchantment, Integer> enchants = deserializeEnchants(rs.getString("fishyblock_enchantments"));
 					MaterialData materialData = new MaterialData(material, data);
@@ -230,7 +231,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO {
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 			stmt.setInt(1, block.getPlayerId());
-			stmt.setInt(2, block.getMaterial().getItemTypeId());
+			stmt.setString(2, block.getMaterial().getItemType().name());
 			stmt.setInt(3, block.getMaterial().getData());
 			stmt.setString(4, serializeEnchants(block.getEnchantments()));
 			stmt.setInt(5, block.getCost());

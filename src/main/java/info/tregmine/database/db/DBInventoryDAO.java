@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -103,7 +104,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 		String sql = "SELECT * FROM inventory " + "WHERE inventory_type = ? AND player_id = ?";
 
 		try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, type.toString());
+			stmt.setString(1, type.name());
 			stmt.setInt(2, playerId);
 			stmt.execute();
 
@@ -156,7 +157,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 				while (rs.next()) {
 
 					int slot = rs.getInt("item_slot");
-					int materialId = rs.getInt("item_material");
+					Material material = Material.valueOf(rs.getString("item_material"));
 					int data = rs.getInt("item_data");
 					int count = rs.getInt("item_count");
 					String meta = rs.getString("item_meta");
@@ -169,8 +170,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 						config.loadFromString(meta);
 						metaObj = (ItemMeta) config.get("meta");
 					}
-					
-					stacks[slot] = new ItemStack(materialId, count, (short) data);
+					stacks[slot] = new ItemStack(material, count, (short) data);
 					if (metaObj != null) {
 						stacks[slot].setItemMeta(metaObj);
 					}
@@ -211,8 +211,8 @@ public class DBInventoryDAO implements IInventoryDAO {
 			stmt.setInt(1, inventoryId);
 			stmt.setInt(2, player.getId());
 			stmt.setInt(3, slot);
-			stmt.setInt(4, slotContent.getTypeId());
-			stmt.setInt(5, slotContent.getData().getData());
+			stmt.setString(4, slotContent.getType().name());
+			stmt.setString(5, slotContent.getData().getItemType().name());
 			if (slotContent.hasItemMeta()) {
 				YamlConfiguration config = new YamlConfiguration();
 				config.set("meta", slotContent.getItemMeta());
@@ -221,7 +221,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 				stmt.setString(6, "");
 			}
 			stmt.setInt(7, slotContent.getAmount());
-			stmt.setString(8, type.toString());
+			stmt.setString(8, type.name());
 			stmt.execute();
 		} catch (SQLException e) {
 			throw new DAOException(sql, e);
@@ -249,7 +249,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 				stmt.setInt(5, loc.getBlockZ());
 				stmt.setString(6, loc.getWorld().getName());
 			}
-			stmt.setString(7, type.toString());
+			stmt.setString(7, type.name());
 			stmt.execute();
 
 			stmt.executeQuery("SELECT LAST_INSERT_ID()");
@@ -291,7 +291,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
 				stmt.setInt(1, inventoryId);
 				stmt.setInt(2, counter);
-				stmt.setInt(3, stack.getTypeId());
+				stmt.setString(3, stack.getType().name());
 				stmt.setInt(4, stack.getData().getData());
 				if (stack.hasItemMeta()) {
 					YamlConfiguration config = new YamlConfiguration();
@@ -323,7 +323,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 			try (ResultSet rs = stmt.getResultSet()) {
 				while (rs.next()) {
 					int slot = rs.getInt("item_slot");
-					int materialId = rs.getInt("item_material");
+					Material material = Material.valueOf(rs.getString("item_material"));
 					int data = rs.getInt("item_data");
 					int count = rs.getInt("item_count");
 					String meta = rs.getString("item_meta");
@@ -337,7 +337,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 						metaObj = (ItemMeta) config.get("meta");
 					}
 
-					ItemStack item = new ItemStack(materialId, count, (short) data);
+					ItemStack item = new ItemStack(material, count, (short) data);
 					if ("main".equalsIgnoreCase(type)) {
 						player.getInventory().setItem(slot, item);
 						player.getInventory().getItem(slot).setDurability(durability);
@@ -417,7 +417,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
 				stmt.setInt(1, inventoryID);
 				stmt.setInt(2, counter);
-				stmt.setInt(3, stack.getTypeId());
+				stmt.setString(3, stack.getType().name());
 				stmt.setInt(4, stack.getData().getData());
 				if (stack.hasItemMeta()) {
 					YamlConfiguration config = new YamlConfiguration();

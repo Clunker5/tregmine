@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import info.tregmine.api.TregminePlayer;
@@ -19,7 +20,7 @@ public interface ILogDAO {
 
 	public void insertLogin(TregminePlayer player, boolean logout, int onlinePlayers) throws DAOException;
 
-	public void insertOreLog(TregminePlayer player, Location loc, int material) throws DAOException;
+	public void insertOreLog(TregminePlayer player, Location loc, Material material) throws DAOException;
 
 	public void insertWarpLog(TregminePlayer player, int warpId) throws DAOException;
 }

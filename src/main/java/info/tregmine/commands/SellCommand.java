@@ -92,7 +92,7 @@ public class SellCommand extends AbstractCommand implements Listener {
 
 				Material material = stack.getType();
 				int amount = stack.getAmount();
-				int value = itemDAO.getItemValue(material.getId(), stack.getData().getData());
+				int value = itemDAO.getItemValue(material, stack.getData().getData());
 
 				// Check if the item is illegal :)
 				if (stack.hasItemMeta()) {
@@ -169,7 +169,7 @@ public class SellCommand extends AbstractCommand implements Listener {
 
 					Material material = stack.getType();
 					int amount = stack.getAmount();
-					int value = itemDAO.getItemValue(material.getId(), stack.getData().getData());
+					int value = itemDAO.getItemValue(material, stack.getData().getData());
 
 					bid += amount * value;
 				}

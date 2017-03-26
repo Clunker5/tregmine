@@ -55,15 +55,8 @@ public class BrushCommand extends AbstractCommand implements Listener {
 
 		Material m = Material.matchMaterial(args[0]);
 		if (m == null) {
-			int blockId;
-			try {
-				blockId = Integer.parseInt(args[0]);
-			} catch (NumberFormatException nfe) {
-				p.sendStringMessage(RED + "[Sphere] We detected an issue with your block choice!");
-				return true;
-			}
-
-			m = Material.getMaterial(blockId);
+			p.sendStringMessage(RED + "[Sphere] We detected an issue with your block choice!");
+			return true;
 		}
 
 		if (m == null) {

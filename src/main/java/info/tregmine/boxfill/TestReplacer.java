@@ -21,7 +21,7 @@ public class TestReplacer extends AbstractFiller {
 
 	@Override
 	public void changeBlock(Block block) {
-		if (block.getTypeId() == match.getItemTypeId()
+		if (block.getType() == match.getItemType()
 				&& (match.getData() == 0 || block.getData() == match.getData())) {
 
 			player.getDelegate().sendBlockChange(block.getLocation(), item.getItemType(), item.getData());
