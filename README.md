@@ -1,8 +1,7 @@
-Tregmine 2
+The Tregmine Plugin
 ========
 
-This is the tregmine.com [Tregmine 2] tregmine plugin. Pull requests are appreciated :-)
-Don't ask why the plugin version is 4.X but its called Tregmine 2.
+This is the source manager for the Tregmine plugin.
 Index
 -----
 
@@ -19,16 +18,23 @@ and tools in this repository:
  * zone_exporter - Tool for exporting tregmine zones as single player levels
  * zone_mapper - Tool for generating maps from tregmine zones
 
-Installation
------------
+Building and installing
+========
+First, build Tregmine. You can do this by running
+```
+gradle build
+```
+in the root directory.
 
-Installation has been simplified with Tregmine 2.
-All you need to do is copy the contents of the plugins folder into your server plugins folder, and import tregminedb.sql.
-NOTE: You *MUST* configure the SQL settings in config.yml __at the minimum__ in order for the plugin to function.
+Next, take the jar with the name 'tregmine-withDependencies.jar' - It is vital you take this file and not the generic 'tregmine.jar' -- This way, your jar file has all of the necessary libraries. Put the jar in your plugins folder.
 
+Take the provided .sql file in the repo (the name may change which is why only the extension is provided) and import it to the desired database.
+
+Run your server and let Tregmine do first-run operations. Then stop the server and configure the generated config.yml
+
+You're all set! (To make yourself an admin, run `promote <USERNAME> SENIOR_ADMIN` from the console)
 Current Coders
 -------
- * Robby Catron <rcatron10@gmail.com> - Current maintainer
  * Eric Rabil <ericjrabil@gmail.com> - Current maintainer
 
 Special Thanks To
@@ -38,3 +44,4 @@ Special Thanks To
  * Josh Morgan
  * Joe Notaro
  * James Sherlock
+ * Robby Catron
