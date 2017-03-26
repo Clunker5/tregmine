@@ -33,6 +33,9 @@ public abstract class NotifyCommand extends AbstractCommand {
 		}
 
 		String msg = argsToMessage(args);
+		if(player.getRank().canUseChatColors()){
+			msg = ChatColor.translateAlternateColorCodes('#', msg);
+		}
 
 		// Don't send it twice
 		if (!isTarget(player)) {
