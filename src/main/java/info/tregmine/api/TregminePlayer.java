@@ -1314,7 +1314,7 @@ public class TregminePlayer extends PlayerDelegate {
 			horse.eject();
 			horse.teleport(loc);
 			teleport(loc);
-			horse.setPassenger(getDelegate());
+			horse.addPassenger(getDelegate());
 		} else {
 			teleport(loc);
 		}
