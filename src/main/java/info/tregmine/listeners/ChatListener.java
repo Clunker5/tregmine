@@ -1,23 +1,18 @@
 package info.tregmine.listeners;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
+import info.tregmine.Tregmine;
+import info.tregmine.api.Notification;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.*;
+import info.tregmine.events.TregmineChatEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.Notification;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.ILogDAO;
-import info.tregmine.database.IPlayerDAO;
-import info.tregmine.database.IWalletDAO;
-import info.tregmine.events.TregmineChatEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ChatListener implements Listener {
 	private Tregmine plugin;
