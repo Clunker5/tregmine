@@ -17,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -76,8 +78,7 @@ public class PortalListener implements Listener {
 				currentBlock.remove();
 				currentBlock = null;
 			}
-
-			FallingBlock gravityBlock = player.getWorld().spawnFallingBlock(block.getLocation(), material, data);
+			FallingBlock gravityBlock = player.getWorld().spawnFallingBlock(block.getLocation(), new ItemStack(material).getData());
 			gravityBlock.setDropItem(false);
 			gravityBlock.setFallDistance(0f);
 			gravityBlock.setVelocity(new Vector(0, 0.1, 0));
