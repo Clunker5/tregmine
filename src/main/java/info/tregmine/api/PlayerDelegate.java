@@ -4,6 +4,7 @@ package info.tregmine.api;
 import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Player.Spigot;
@@ -330,7 +331,7 @@ public abstract class PlayerDelegate {
 
 	public double getMaxHealth() {
 		checkState();
-		return delegate.getMaxHealth();
+		return delegate.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 	}
 
 	public int getMaximumAir() {
@@ -368,9 +369,9 @@ public abstract class PlayerDelegate {
 		return delegate.getOpenInventory();
 	}
 
-	public org.bukkit.entity.Entity getPassenger() {
+	public java.util.List<org.bukkit.entity.Entity> getPassengers() {
 		checkState();
-		return delegate.getPassenger();
+		return delegate.getPassengers();
 	}
 
 	public org.bukkit.entity.Player getPlayer() {
@@ -743,7 +744,7 @@ public abstract class PlayerDelegate {
 
 	public void resetMaxHealth() {
 		checkState();
-		delegate.resetMaxHealth();
+		delegate.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
 	}
 
 	public void resetPlayerTime() {
@@ -790,9 +791,9 @@ public abstract class PlayerDelegate {
 		getHandle().playerConnection.sendPacket(packet);
 	}
 
-	public void sendStringMessage(String a) {
+	public void sendStringMessage(String message) {
 		checkState();
-		delegate.sendMessage(a);
+		delegate.sendMessage(message);
 	}
 
 	public java.util.Map<java.lang.String, java.lang.Object> serialize() {
@@ -937,7 +938,7 @@ public abstract class PlayerDelegate {
 
 	public void setMaxHealth(double p0) {
 		checkState();
-		delegate.setMaxHealth(p0);
+		delegate.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(p0);
 	}
 
 	public void setMaximumAir(int p0) {
@@ -965,9 +966,9 @@ public abstract class PlayerDelegate {
 		delegate.setOp(p0);
 	}
 
-	public boolean setPassenger(org.bukkit.entity.Entity p0) {
+	public boolean addPassenger(org.bukkit.entity.Entity p0) {
 		checkState();
-		return delegate.setPassenger(p0);
+		return delegate.addPassenger(p0);
 	}
 
 	public void setPermission(java.lang.String p0) {
