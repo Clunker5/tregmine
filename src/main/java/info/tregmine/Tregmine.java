@@ -735,78 +735,69 @@ public class Tregmine extends JavaPlugin {
 
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.lag, 100L, 1L);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Timer(this), 100L, 1L);
-		List<?> configWorlds = getConfig().getList("worlds.names");
-		if (getConfig().getString("worlds.vanillaworld") == "true") {
-			WorldCreator addWorld = new WorldCreator("vanilla");
-			addWorld.environment(World.Environment.NORMAL);
-			addWorld.generateStructures(true);
-			addWorld.type(WorldType.NORMAL);
-			this.vanillaWorld = addWorld.createWorld();
+		if(getConfig().getBoolean("worlds.enabled")) {
+			List<?> configWorlds = getConfig().getList("worlds.names");
+			if (getConfig().getString("worlds.vanillaworld") == "true") {
+				WorldCreator addWorld = new WorldCreator("vanilla");
+				addWorld.environment(World.Environment.NORMAL);
+				addWorld.generateStructures(true);
+				addWorld.type(WorldType.NORMAL);
+				this.vanillaWorld = addWorld.createWorld();
 
-			// Nether
-			WorldCreator addNether = new WorldCreator("vanilla_nether").environment(World.Environment.NETHER)
-					.type(WorldType.NORMAL);
-			this.vanillaNetherWorld = addNether.createWorld();
+				// Nether
+				WorldCreator addNether = new WorldCreator("vanilla_nether").environment(World.Environment.NETHER)
+						.type(WorldType.NORMAL);
+				this.vanillaNetherWorld = addNether.createWorld();
 
-			// End
-			WorldCreator addEnd = new WorldCreator("vanilla_the_end").environment(World.Environment.THE_END)
-					.type(WorldType.NORMAL);
-			this.vanillaEndWorld = addEnd.createWorld();
-		}
-		if (config.getBoolean("worlds.special.newworld")) {
-			WorldCreator world2g = new WorldCreator("world_2");
-			WorldCreator world2netherg = new WorldCreator("world_2_nether");
-			WorldCreator world2endg = new WorldCreator("world_2_the_end");
-			world2g.environment(World.Environment.NORMAL);
-			world2g.generateStructures(true);
-			world2g.type(WorldType.NORMAL);
-			this.world2 = world2g.createWorld();
-			world2netherg.environment(World.Environment.NETHER);
-			world2netherg.generateStructures(true);
-			world2netherg.type(WorldType.NORMAL);
-			this.world2nether = world2netherg.createWorld();
-			world2endg.environment(World.Environment.THE_END);
-			world2endg.generateStructures(true);
-			world2endg.type(WorldType.NORMAL);
-			this.world2end = world2endg.createWorld();
-			this.secondaryworld = true;
-		}
+				// End
+				WorldCreator addEnd = new WorldCreator("vanilla_the_end").environment(World.Environment.THE_END)
+						.type(WorldType.NORMAL);
+				this.vanillaEndWorld = addEnd.createWorld();
+			}
+			if (config.getBoolean("worlds.special.newworld")) {
+				WorldCreator world2g = new WorldCreator("world_2");
+				WorldCreator world2netherg = new WorldCreator("world_2_nether");
+				WorldCreator world2endg = new WorldCreator("world_2_the_end");
+				world2g.environment(World.Environment.NORMAL);
+				world2g.generateStructures(true);
+				world2g.type(WorldType.NORMAL);
+				this.world2 = world2g.createWorld();
+				world2netherg.environment(World.Environment.NETHER);
+				world2netherg.generateStructures(true);
+				world2netherg.type(WorldType.NORMAL);
+				this.world2nether = world2netherg.createWorld();
+				world2endg.environment(World.Environment.THE_END);
+				world2endg.generateStructures(true);
+				world2endg.type(WorldType.NORMAL);
+				this.world2end = world2endg.createWorld();
+				this.secondaryworld = true;
+			}
 		this.serverName = getConfig().getString("general.servername");
 		this.keywordsEnabled = getConfig().getBoolean("general.keywords");
 		if (getConfig().getString("worlds.enabled") == "true") {
 			String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
 			for (String worldName : worlds) {
-				if (worldName.contains("_the_end") || worldName.contains("_nether")) {
-					// Do nothing
-				} else {
-					WorldCreator addWorld = new WorldCreator(worldName);
-					addWorld.environment(World.Environment.NORMAL);
-					addWorld.generateStructures(false);
-					addWorld.type(WorldType.NORMAL);
-					addWorld.createWorld();
-				}
-			}
-
-			for (String worldName : worlds) {
-				if (!worldName.contains("the_end")) {
-					// Do nothing
-				} else {
+				if (worldName.contains("the_end")) {
 					WorldCreator addWorld = new WorldCreator(worldName);
 					addWorld.environment(World.Environment.THE_END);
 					addWorld.generateStructures(false);
 					addWorld.createWorld();
+					continue;
 				}
-			}
-			for (String worldName : worlds) {
-				if (!worldName.contains("nether")) {
-					// Do nothing
-				} else {
+				if (worldName.contains("nether")) {
 					WorldCreator addWorld = new WorldCreator(worldName);
 					addWorld.environment(World.Environment.NETHER);
 					addWorld.generateStructures(false);
 					addWorld.createWorld();
+					continue;
 				}
+				WorldCreator addWorld = new WorldCreator(worldName);
+				addWorld.environment(World.Environment.NORMAL);
+				addWorld.generateStructures(false);
+				addWorld.type(WorldType.NORMAL);
+				addWorld.createWorld();
 			}
+
 			LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
 		}
 
