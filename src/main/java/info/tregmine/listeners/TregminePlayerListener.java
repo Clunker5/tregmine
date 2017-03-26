@@ -334,7 +334,7 @@ public class TregminePlayerListener implements Listener {
 			Block block = event.getClickedBlock();
 			Location loc = block.getLocation();
 
-			if (player.getItemInHand().getType() == Material.BOOK) {
+			if (player.getInventory().getItemInMainHand().getType() == Material.BOOK) {
 
 				player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + block.getType().toString() + " ("
 						+ ChatColor.BLUE + block.getType().toString() + ChatColor.DARK_AQUA + ")");

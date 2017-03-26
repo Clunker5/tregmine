@@ -70,7 +70,7 @@ public class BookShelfListener implements Listener {
 
 	@EventHandler
 	public void bookshelfOpen(PlayerInteractEvent event) {
-		if (event.isCancelled() || event.getPlayer().getItemInHand().getType().equals(Material.BONE)) {
+		if (event.isCancelled() || event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.BONE)) {
 			return;
 		}
 
