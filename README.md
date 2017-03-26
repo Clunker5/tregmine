@@ -33,6 +33,7 @@ Take the provided .sql file in the repo (the name may change which is why only t
 Run your server and let Tregmine do first-run operations. Then stop the server and configure the generated config.yml
 
 You're all set! (To make yourself an admin, run `promote <USERNAME> SENIOR_ADMIN` from the console)
+
 Current Coders
 -------
  * Eric Rabil <ericjrabil@gmail.com> - Current maintainer
