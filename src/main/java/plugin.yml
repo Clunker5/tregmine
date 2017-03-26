@@ -11,6 +11,9 @@ commands:
     description: Send a message to all active admins
     usage: /admins message
     aliases: a
+  adventure:
+    description: Switch to adventure mode (staff only)
+    usage: /adventure
   afk:
     description: Make your account AFK [Away From Keyboard]
     usage: /afk
@@ -221,6 +224,9 @@ commands:
   spawn:
     description: Go back to spawn
     usage: /spawn
+  spectator:
+    description: Switch to spectator mode (admins only)
+    usage: /spectator
   suicide:
     description: Commit suicide
     usage: /suicide

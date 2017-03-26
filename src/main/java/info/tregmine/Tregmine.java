@@ -822,6 +822,11 @@ public class Tregmine extends JavaPlugin {
 						|| player.getRank() == Rank.SENIOR_ADMIN;
 			}
 		});
+
+		for(GameMode gm : GameMode.values()){
+			getCommand(gm.name().toLowerCase()).setExecutor(new GameModeCommand(this, gm.name().toLowerCase(), gm));
+		}
+
 		getCommand("taxi").setExecutor(new OWCommand(this));
 		getCommand("property").setExecutor(new PropertyCommand(this));
 		getCommand("staffbook").setExecutor(new StaffHandbookCommand(this));
@@ -843,7 +848,7 @@ public class Tregmine extends JavaPlugin {
 		getCommand("createmob").setExecutor(new CreateMobCommand(this));
 		getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
 		getCommand("discord").setExecutor(new DiscordCommand(this));
-		getCommand("creative").setExecutor(new GameModeCommand(this, "creative", GameMode.CREATIVE));
+		getCommand("gamemode").setExecutor(new GameModeCommand(this, "gamemode", null));
 		getCommand("fill").setExecutor(new FillCommand(this, "fill"));
 		getCommand("suicide").setExecutor(new SuicideCommand(this));
 		getCommand("fly").setExecutor(new FlyCommand(this));
@@ -892,7 +897,6 @@ public class Tregmine extends JavaPlugin {
 		getCommand("spawn").setExecutor(new SpawnCommand(this));
 		getCommand("summon").setExecutor(new SummonCommand(this));
 		getCommand("support").setExecutor(new SupportCommand(this));
-		getCommand("survival").setExecutor(new GameModeCommand(this, "survival", GameMode.SURVIVAL));
 		getCommand("staffnews").setExecutor(new StaffNewsCommand(this));
 		getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
 		getCommand("time").setExecutor(new TimeCommand(this));
@@ -915,7 +919,6 @@ public class Tregmine extends JavaPlugin {
 		getCommand("vanilla").setExecutor(new VanillaCommand(this));
 		getCommand("zone").setExecutor(new ZoneCommand(this, "zone"));
 		getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
-		getCommand("gamemode").setExecutor(new GameModeLegacyCommand(this));
 		getCommand("rcode").setExecutor(new ReferralCodeCommand(this, "rcode"));
 		getCommand("referralcode").setExecutor(new ReferralCodeCommand(this, "referralcode"));
 		ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool

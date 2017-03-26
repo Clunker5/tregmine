@@ -13,7 +13,6 @@ public class GameModeCommand extends AbstractCommand {
 
 	public GameModeCommand(Tregmine tregmine, String name, GameMode mode) {
 		super(tregmine, name);
-
 		this.mode = mode;
 	}
 
@@ -24,15 +23,38 @@ public class GameModeCommand extends AbstractCommand {
 			player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
 			return true;
 		}
-		if (!player.getRank().canUseCreative()) {
-			this.insufficientPerms(player);
-			return true;
-		}
-		player.setGameMode(mode);
-		player.sendStringMessage(YELLOW + "You are now in " + mode.toString().toLowerCase() + " mode. ");
+		if(this.mode != null) {
+			if (!player.getRank().getPermittedGamemodes().contains(this.mode)) {
+				player.sendStringMessage(ChatColor.RED + "You don't have the permissions to switch to " + this.mode.name().toLowerCase() + "!");
+				return true;
+			}
+			player.setGameMode(mode);
+			player.sendStringMessage(YELLOW + "You are now in " + mode.toString().toLowerCase() + " mode. ");
 
-		if (player.getRank().canFly()) {
-			player.setAllowFlight(true);
+			if (player.getRank().canFly()) {
+				player.setAllowFlight(true);
+			}
+		}else{
+			//Generic Mode!
+			if(args.length != 1){
+				player.sendStringMessage(ChatColor.RED + "You must specify a gamemode to switch to!");
+				return true;
+			}
+			GameMode switchTo = GameMode.valueOf(args[0].toUpperCase());
+			if(switchTo == null){
+				player.sendStringMessage(ChatColor.RED + "The specified gamemode does not exist!");
+				return true;
+			}
+			if (!player.getRank().getPermittedGamemodes().contains(switchTo)) {
+				player.sendStringMessage(ChatColor.RED + "You don't have the permissions to switch to " + switchTo.name().toLowerCase() + "!");
+				return true;
+			}
+			player.setGameMode(switchTo);
+			player.sendStringMessage(YELLOW + "You are now in " + switchTo.toString().toLowerCase() + " mode. ");
+
+			if (player.getRank().canFly()) {
+				player.setAllowFlight(true);
+			}
 		}
 
 		return true;
