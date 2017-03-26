@@ -174,6 +174,8 @@ public class Tregmine extends JavaPlugin {
 		this.blockedChats.add(e);
 	}
 
+	private static Boolean coreProtectEnabled = null;
+
 	// End interject
 	public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr) throws PlayerBannedException {
 		// if (players.containsKey(srcPlayer.getName())) {
@@ -385,6 +387,13 @@ public class Tregmine extends JavaPlugin {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static boolean coreProtectEnabled(){
+		if(coreProtectEnabled == null){
+			coreProtectEnabled = Bukkit.getPluginManager().isPluginEnabled("CoreProtect");
+		}
+		return coreProtectEnabled;
 	}
 
 	public TregminePlayer getPlayerOffline(OfflinePlayer player) {

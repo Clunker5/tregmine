@@ -3,6 +3,7 @@ package info.tregmine.listeners;
 import java.util.EnumSet;
 import java.util.Set;
 
+import info.tregmine.api.coreprotect.TregmineCoreProtectAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -54,7 +55,7 @@ public class TregmineBlockListener implements Listener {
 			}
 			IBlockDAO blockDAO = ctx.getBlockDAO();
 			int blockvalue = plugin.getMinedPrice(block.getType());
-			if (!blockDAO.isPlaced(block) && !event.isCancelled() && blockvalue != 0) {
+			if (!new TregmineCoreProtectAPI().isPlaced(block) && !event.isCancelled() && blockvalue != 0) {
 				if (block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2) {
 					if (player.getItemInHand().getType() != Material.SHEARS) {
 						return;
@@ -68,7 +69,6 @@ public class TregmineBlockListener implements Listener {
 					e.printStackTrace();
 				}
 			}
-			blockDAO.blockDestroyed(block);
 		} catch (DAOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
@@ -91,12 +91,6 @@ public class TregmineBlockListener implements Listener {
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		try (IContext ctx = plugin.createContext()) {
-			IBlockDAO blockDAO = ctx.getBlockDAO();
-			blockDAO.addPlaced(event.getBlock(), player);
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
 		if (event.getBlock().getType().equals(Material.LAVA)) {
 			if (!player.getRank().canPlaceBannedBlocks()) {
 				event.setCancelled(true);
