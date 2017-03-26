@@ -65,7 +65,7 @@ import info.tregmine.api.lore.Lore.Sword;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class RareDropListener implements Listener {
-	private class DropDelayTask extends BukkitRunnable {
+	private class DropDelayTask implements Runnable {
 
 		private TregminePlayer player;
 
@@ -76,7 +76,7 @@ public class RareDropListener implements Listener {
 		@Override
 		public void run() {
 			players.remove(player);
-			this.cancel();
+			return;
 		}
 
 	}
@@ -164,7 +164,7 @@ public class RareDropListener implements Listener {
 				ChatColor.GOLD + "Congratulations, you've aquired an item from the rare drop table."));
 		players.add(player);
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new DropDelayTask(player), 20 * 60 * 5L);
+		Bukkit.getScheduler().runTaskLater(plugin, new DropDelayTask(player), 20 * 60 * 5L);
 	}
 
 	private Material getRandomArmor() {
