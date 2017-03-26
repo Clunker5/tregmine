@@ -1,9 +1,13 @@
 package info.tregmine.api;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 
 import info.tregmine.Tregmine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum Rank {
 	UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR, GUARDIAN, CODER, BUILDER, JUNIOR_ADMIN, SENIOR_ADMIN;
@@ -177,6 +181,19 @@ public enum Rank {
 	public boolean canMentor() {
 		return this == RESIDENT || this == DONATOR || this == GUARDIAN || this == CODER || this == BUILDER
 				|| this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+	}
+
+	public List<GameMode> getPermittedGamemodes(){
+		List<GameMode> modes = new ArrayList<GameMode>();
+		if(this.canUseCreative())
+			modes.add(GameMode.CREATIVE);
+		if(this == JUNIOR_ADMIN || this == SENIOR_ADMIN)
+			modes.add(GameMode.SPECTATOR);
+		if(this != UNVERIFIED && this != TOURIST && this != SETTLER && this != RESIDENT){
+			modes.add(GameMode.ADVENTURE);
+			modes.add(GameMode.SURVIVAL);
+		}
+		return modes;
 	}
 
 	public boolean canModifyZones() {
