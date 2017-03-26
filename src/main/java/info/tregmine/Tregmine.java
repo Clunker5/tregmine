@@ -850,6 +850,7 @@ public class Tregmine extends JavaPlugin {
 		getCommand("discord").setExecutor(new DiscordCommand(this));
 		getCommand("gamemode").setExecutor(new GameModeCommand(this, "gamemode", null));
 		getCommand("fill").setExecutor(new FillCommand(this, "fill"));
+		getCommand("database").setExecutor(new DatabaseToolCommand(this));
 		getCommand("suicide").setExecutor(new SuicideCommand(this));
 		getCommand("fly").setExecutor(new FlyCommand(this));
 		getCommand("force").setExecutor(new ForceCommand(this));

@@ -37,6 +37,9 @@ commands:
   creative:
     description: Switch to creative mode (admins and builders only)
     usage: /creative
+  database:
+    description: Miscellanious database tools (console only)
+    usage: /database <repopulate>
   discord:
     description: Interact with discord.
     usage: /discord [link|verify|unlink] [discordID|confcode]
