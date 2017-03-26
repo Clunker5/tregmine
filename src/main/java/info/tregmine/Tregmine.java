@@ -694,33 +694,34 @@ public class Tregmine extends JavaPlugin {
 				this.world2end = world2endg.createWorld();
 				this.secondaryworld = true;
 			}
-		this.serverName = getConfig().getString("general.servername");
-		this.keywordsEnabled = getConfig().getBoolean("general.keywords");
-		if (getConfig().getString("worlds.enabled") == "true") {
-			String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
-			for (String worldName : worlds) {
-				if (worldName.contains("the_end")) {
+			this.serverName = getConfig().getString("general.servername");
+			this.keywordsEnabled = getConfig().getBoolean("general.keywords");
+			if (getConfig().getString("worlds.enabled") == "true") {
+				String[] worlds = configWorlds.toArray(new String[configWorlds.size()]);
+				for (String worldName : worlds) {
+					if (worldName.contains("the_end")) {
+						WorldCreator addWorld = new WorldCreator(worldName);
+						addWorld.environment(World.Environment.THE_END);
+						addWorld.generateStructures(false);
+						addWorld.createWorld();
+						continue;
+					}
+					if (worldName.contains("nether")) {
+						WorldCreator addWorld = new WorldCreator(worldName);
+						addWorld.environment(World.Environment.NETHER);
+						addWorld.generateStructures(false);
+						addWorld.createWorld();
+						continue;
+					}
 					WorldCreator addWorld = new WorldCreator(worldName);
-					addWorld.environment(World.Environment.THE_END);
+					addWorld.environment(World.Environment.NORMAL);
 					addWorld.generateStructures(false);
+					addWorld.type(WorldType.NORMAL);
 					addWorld.createWorld();
-					continue;
 				}
-				if (worldName.contains("nether")) {
-					WorldCreator addWorld = new WorldCreator(worldName);
-					addWorld.environment(World.Environment.NETHER);
-					addWorld.generateStructures(false);
-					addWorld.createWorld();
-					continue;
-				}
-				WorldCreator addWorld = new WorldCreator(worldName);
-				addWorld.environment(World.Environment.NORMAL);
-				addWorld.generateStructures(false);
-				addWorld.type(WorldType.NORMAL);
-				addWorld.createWorld();
-			}
 
-			LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
+				LOGGER.info("" + configWorlds.size() + " extra worlds attempted to load.");
+			}
 		}
 
 		try (IContext ctx = contextFactory.createContext()) {
