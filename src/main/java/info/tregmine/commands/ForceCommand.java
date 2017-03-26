@@ -31,8 +31,13 @@ public class ForceCommand extends AbstractCommand {
 		String channel = args[1];
 
 		List<TregminePlayer> matches = tregmine.matchPlayer(playerPattern);
-		if (matches.size() != 1) {
-			// TODO: List candidates
+		if (matches.size() > 1) {
+			player.sendStringMessage(ChatColor.RED + "Your player name is too broad. Please narrow your search term and try again.");
+			return true;
+		}
+
+		if(matches.size() == 0){
+			player.sendStringMessage(ChatColor.RED + "The player specified is not online or does not exist.");
 			return true;
 		}
 
