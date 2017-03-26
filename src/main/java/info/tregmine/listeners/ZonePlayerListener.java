@@ -1,9 +1,6 @@
 package info.tregmine.listeners;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -705,12 +702,14 @@ public class ZonePlayerListener implements Listener {
 
 			OfflinePlayer fakePlayer = null;
 			if (currentZone.getMainOwner() != null) {
-				fakePlayer = Bukkit.getOfflinePlayer(ChatColor.GOLD + mainOwner);
+				fakePlayer = Bukkit.getOfflinePlayer(UUID.randomUUID());
+				fakePlayer.getPlayer().setDisplayName(ChatColor.GOLD + mainOwner);
 			} else {
-				fakePlayer = Bukkit.getOfflinePlayer("Unknown");
+				fakePlayer = Bukkit.getOfflinePlayer(UUID.randomUUID());
+				fakePlayer.getPlayer().setDisplayName("Unknown");
 			}
 
-			Score score = objective.getScore(fakePlayer);
+			Score score = objective.getScore(fakePlayer.getName());
 			score.setScore(currentZone.getId());
 
 			try {

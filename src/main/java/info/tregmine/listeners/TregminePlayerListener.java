@@ -554,15 +554,16 @@ public class TregminePlayerListener implements Listener {
 
 			// Get a fake offline player
 			String desc = ChatColor.BLUE + "Online guardians: ";
-			Score score = objective.getScore(Bukkit.getOfflinePlayer(desc));
+			Score score = objective.getScore(desc);
+
 			score.setScore(plugin.getOnlineGuardians());
 
 			String juniors = ChatColor.RED + "Online juniors: ";
-			Score junior = objective.getScore(Bukkit.getOfflinePlayer(juniors));
+			Score junior = objective.getScore(juniors);
 			junior.setScore(plugin.getOnlineJuniors());
 
 			String seniors = ChatColor.DARK_RED + "Online seniors: ";
-			Score senior = objective.getScore(Bukkit.getOfflinePlayer(seniors));
+			Score senior = objective.getScore(seniors);
 			senior.setScore(plugin.getOnlineSeniors());
 			try {
 				player.setScoreboard(board);
