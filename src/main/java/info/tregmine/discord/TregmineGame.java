@@ -4,27 +4,27 @@ import net.dv8tion.jda.core.entities.Game;
 
 public class TregmineGame implements Game {
 
-	private String n;
-	private GameType t;
+    private String n;
+    private GameType t;
 
-	public TregmineGame(String name, GameType type) {
-		this.n = name;
-		this.t = type;
-	}
+    public TregmineGame(String name, GameType type) {
+        this.n = name;
+        this.t = type;
+    }
 
-	@Override
-	public String getName() {
-		return n;
-	}
+    @Override
+    public String getName() {
+        return n;
+    }
 
-	@Override
-	public GameType getType() {
-		return t;
-	}
+    @Override
+    public GameType getType() {
+        return t;
+    }
 
-	@Override
-	public String getUrl() {
-		return null;
-	}
+    @Override
+    public String getUrl() {
+        return null;
+    }
 
 }

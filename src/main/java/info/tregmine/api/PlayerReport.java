@@ -3,84 +3,83 @@ package info.tregmine.api;
 import java.util.Date;
 
 public class PlayerReport {
-	public enum Action {
-		KICK, SOFTWARN, HARDWARN, BAN, COMMENT;
+    private int id = 0;
+    private int subjectId = 0;
+    private int issuerId = 0;
+    private Action action = null;
+    private String message = "";
+    private Date timestamp = new Date();
+    private Date validUntil = null;
+    public PlayerReport() {
+    }
 
-		public static Action fromString(String str) {
-			for (Action action : Action.values()) {
-				if (str.equalsIgnoreCase(action.toString())) {
-					return action;
-				}
-			}
+    public Action getAction() {
+        return action;
+    }
 
-			return null;
-		}
-	};
+    public void setAction(Action v) {
+        this.action = v;
+    }
 
-	private int id = 0;
-	private int subjectId = 0;
-	private int issuerId = 0;
-	private Action action = null;
-	private String message = "";
-	private Date timestamp = new Date();
-	private Date validUntil = null;
+    public int getId() {
+        return id;
+    }
 
-	public PlayerReport() {
-	}
+    public void setId(int v) {
+        this.id = v;
+    }
 
-	public Action getAction() {
-		return action;
-	}
+    public int getIssuerId() {
+        return issuerId;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setIssuerId(int v) {
+        this.issuerId = v;
+    }
 
-	public int getIssuerId() {
-		return issuerId;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public void setMessage(String v) {
+        this.message = v;
+    }
 
-	public int getSubjectId() {
-		return subjectId;
-	}
+    public int getSubjectId() {
+        return subjectId;
+    }
 
-	public Date getTimestamp() {
-		return timestamp;
-	}
+    public void setSubjectId(int v) {
+        this.subjectId = v;
+    }
 
-	public Date getValidUntil() {
-		return validUntil;
-	}
+    public Date getTimestamp() {
+        return timestamp;
+    }
 
-	public void setAction(Action v) {
-		this.action = v;
-	}
+    public void setTimestamp(Date v) {
+        this.timestamp = v;
+    }
 
-	public void setId(int v) {
-		this.id = v;
-	}
+    public Date getValidUntil() {
+        return validUntil;
+    }
 
-	public void setIssuerId(int v) {
-		this.issuerId = v;
-	}
+    public void setValidUntil(Date v) {
+        this.validUntil = v;
+    }
 
-	public void setMessage(String v) {
-		this.message = v;
-	}
+    public enum Action {
+        KICK, SOFTWARN, HARDWARN, BAN, COMMENT;
 
-	public void setSubjectId(int v) {
-		this.subjectId = v;
-	}
+        public static Action fromString(String str) {
+            for (Action action : Action.values()) {
+                if (str.equalsIgnoreCase(action.toString())) {
+                    return action;
+                }
+            }
 
-	public void setTimestamp(Date v) {
-		this.timestamp = v;
-	}
-
-	public void setValidUntil(Date v) {
-		this.validUntil = v;
-	}
+            return null;
+        }
+    }
 }

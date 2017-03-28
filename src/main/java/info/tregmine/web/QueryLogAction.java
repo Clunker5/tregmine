@@ -1,63 +1,62 @@
 package info.tregmine.web;
 
-import java.io.PrintWriter;
-import java.util.Map;
-
-import org.eclipse.jetty.server.Request;
-import org.json.JSONException;
-import org.json.JSONWriter;
-
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
 import info.tregmine.database.IContextFactory;
 import info.tregmine.database.db.DBContextFactory;
 import info.tregmine.database.db.LoggingConnection;
+import org.eclipse.jetty.server.Request;
+import org.json.JSONException;
+import org.json.JSONWriter;
+
+import java.io.PrintWriter;
+import java.util.Map;
 
 public class QueryLogAction implements WebHandler.Action {
-	public static class Factory implements WebHandler.ActionFactory {
-		public Factory() {
-		}
+    private Map<String, LoggingConnection.LogEntry> log;
 
-		@Override
-		public WebHandler.Action createAction(Request request) {
-			return new QueryLogAction();
-		}
+    public QueryLogAction() {
+    }
 
-		@Override
-		public String getName() {
-			return "/querylog";
-		}
-	}
+    @Override
+    public void generateResponse(PrintWriter writer) throws WebHandler.WebException {
+        try {
+            JSONWriter json = new JSONWriter(writer);
+            json.array();
+            for (LoggingConnection.LogEntry entry : log.values()) {
+                json.object().key("sql").value(entry.sql).key("count").value(entry.invocationCount).key("avg")
+                        .value(entry.avgTime).key("max").value(entry.maxTime).endObject();
+            }
+            json.endArray();
 
-	private Map<String, LoggingConnection.LogEntry> log;
+            writer.close();
+        } catch (JSONException e) {
+            throw new WebHandler.WebException(e);
+        }
+    }
 
-	public QueryLogAction() {
-	}
+    @Override
+    public void queryGameState(Tregmine tregmine) {
+        IContextFactory ctxFactory = tregmine.getContextFactory();
+        if (!(ctxFactory instanceof DBContextFactory)) {
+            return;
+        }
 
-	@Override
-	public void generateResponse(PrintWriter writer) throws WebHandler.WebException {
-		try {
-			JSONWriter json = new JSONWriter(writer);
-			json.array();
-			for (LoggingConnection.LogEntry entry : log.values()) {
-				json.object().key("sql").value(entry.sql).key("count").value(entry.invocationCount).key("avg")
-						.value(entry.avgTime).key("max").value(entry.maxTime).endObject();
-			}
-			json.endArray();
+        this.log = ((DBContextFactory) ctxFactory).getLog();
+    }
 
-			writer.close();
-		} catch (JSONException e) {
-			throw new WebHandler.WebException(e);
-		}
-	}
+    public static class Factory implements WebHandler.ActionFactory {
+        public Factory() {
+        }
 
-	@Override
-	public void queryGameState(Tregmine tregmine) {
-		IContextFactory ctxFactory = tregmine.getContextFactory();
-		if (!(ctxFactory instanceof DBContextFactory)) {
-			return;
-		}
+        @Override
+        public WebHandler.Action createAction(Request request) {
+            return new QueryLogAction();
+        }
 
-		this.log = ((DBContextFactory) ctxFactory).getLog();
-	}
+        @Override
+        public String getName() {
+            return "/querylog";
+        }
+    }
 }

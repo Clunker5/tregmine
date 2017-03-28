@@ -1,16 +1,7 @@
 package info.tregmine;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.events.TregmineChatEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -25,260 +16,259 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.events.TregmineChatEvent;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
 
 public class ChatHandler extends WebSocketHandler implements WebSocketCreator, Listener {
-	public static class ChatSocket extends WebSocketAdapter {
-		private ChatHandler handler;
-		private Session session;
-		private TregminePlayer player;
+    private Tregmine tregmine;
+    private PluginManager pluginMgr;
+    private Set<ChatSocket> sockets;
+    private Map<Integer, Date> kickedPlayers;
+    public ChatHandler(Tregmine tregmine, PluginManager pluginMgr) {
+        this.tregmine = tregmine;
+        this.pluginMgr = pluginMgr;
 
-		public ChatSocket(ChatHandler handler) {
-			this.handler = handler;
-			this.player = null;
-		}
+        sockets = new HashSet<ChatSocket>();
+        kickedPlayers = new HashMap<Integer, Date>();
+    }
 
-		public TregminePlayer getPlayer() {
-			return player;
-		}
+    private void addSession(ChatSocket session) {
+        Tregmine.LOGGER.info("Web connected");
+        sockets.add(session);
+    }
 
-		@Override
-		public RemoteEndpoint getRemote() {
-			return session.getRemote();
-		}
+    /**
+     * Do not call directly! Calls are synchronized by
+     * WebServer.executeChatAction.
+     **/
+    public void broadcastToWeb(TregminePlayer sender, String channel, String text) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("action", "msg");
+            obj.put("sender", ChatColor.stripColor(sender.getChatNameNoHover()));
+            obj.put("rank", sender.getRank().toString());
+            obj.put("channel", channel);
+            obj.put("text", text);
 
-		@Override
-		public Session getSession() {
-			return session;
-		}
+            Iterator<ChatSocket> it = sockets.iterator();
+            while (it.hasNext()) {
+                ChatSocket socket = it.next();
+                Session session = socket.getSession();
+                if (!session.isOpen()) {
+                    it.remove();
+                    disconnect(socket);
+                    continue;
+                }
 
-		@Override
-		public void onWebSocketClose(int statusCode, String reason) {
-			handler.removeSession(this);
-		}
+                socket.sendMessage(obj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-		@Override
-		public void onWebSocketConnect(Session sess) {
-			this.session = sess;
+    @Override
+    public void configure(WebSocketServletFactory factory) {
+        factory.setCreator(this);
+    }
 
-			// sess.setIdleTimeout(Long.MAX_VALUE);
-			handler.addSession(this);
-		}
+    @Override
+    public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
+        return new ChatSocket(this);
+    }
 
-		@Override
-		public void onWebSocketError(Throwable e) {
-			Tregmine.LOGGER.log(Level.WARNING, "Socket error", e);
-			handler.removeSession(this);
-		}
+    private void disconnect(ChatSocket socket) {
+        try {
+            socket.getSession().disconnect();
+        } catch (IOException e) {
+        }
+    }
 
-		@Override
-		public void onWebSocketText(String message) {
-			handler.dispatch(this, message);
-		}
+    private void dispatch(ChatSocket socket, String message) {
+        try {
+            JSONObject obj = new JSONObject(message);
+            if (!obj.has("action")) {
+                return;
+            }
 
-		public void sendMessage(JSONObject msg) {
-			getRemote().sendStringByFuture(msg.toString());
-		}
+            String action = obj.getString("action");
 
-		public void sendSystemMessage(String message) {
-			try {
-				JSONObject obj = new JSONObject();
-				obj.put("action", "sysmsg");
-				obj.put("text", message);
+            if ("msg".equals(action)) {
+                if (socket.getPlayer() == null) {
+                    Tregmine.LOGGER.info("Player not set.");
+                    return;
+                }
 
-				getRemote().sendStringByFuture(obj.toString());
-			} catch (JSONException e) {
-				throw new RuntimeException(e);
-			}
-		}
+                String channel = obj.getString("channel");
+                if (channel == null) {
+                    return;
+                }
+                String text = obj.getString("text");
+                if (text == null) {
+                    return;
+                }
 
-		public void setPlayer(TregminePlayer v) {
-			this.player = v;
-		}
-	}
+                TregmineChatEvent event = new TregmineChatEvent(socket.getPlayer(), text, channel, true);
+                pluginMgr.callEvent(event);
+            } else if ("auth".equals(action)) {
+                String authToken = obj.getString("authToken");
+                if (authToken == null) {
+                    return;
+                }
 
-	private Tregmine tregmine;
-	private PluginManager pluginMgr;
+                WebServer server = tregmine.getWebServer();
+                Map<String, TregminePlayer> authTokens = server.getAuthTokens();
+                if (authTokens.get(authToken) == null) {
+                    Tregmine.LOGGER.info("Auth token " + authToken + " not found.");
+                    socket.sendSystemMessage("Auth token not found.");
+                    return;
+                }
 
-	private Set<ChatSocket> sockets;
-	private Map<Integer, Date> kickedPlayers;
+                TregminePlayer sender = authTokens.get(authToken);
 
-	public ChatHandler(Tregmine tregmine, PluginManager pluginMgr) {
-		this.tregmine = tregmine;
-		this.pluginMgr = pluginMgr;
+                Date kickTime = kickedPlayers.get(sender.getId());
+                if (kickTime != null) {
+                    long time = (new Date().getTime() - kickTime.getTime()) / 1000L;
+                    if (time < 600l) {
+                        socket.sendSystemMessage("You are not allowed to reconnect yet.");
+                        Tregmine.LOGGER.info(sender.getRealName() + " attempted to "
+                                + "reconnect after being kicked before the allowed duration.");
 
-		sockets = new HashSet<ChatSocket>();
-		kickedPlayers = new HashMap<Integer, Date>();
-	}
+                        disconnect(socket);
+                        removeSession(socket);
+                        return;
+                    }
+                }
 
-	private void addSession(ChatSocket session) {
-		Tregmine.LOGGER.info("Web connected");
-		sockets.add(session);
-	}
+                socket.setPlayer(sender);
 
-	/**
-	 * Do not call directly! Calls are synchronized by
-	 * WebServer.executeChatAction.
-	 **/
-	public void broadcastToWeb(TregminePlayer sender, String channel, String text) {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("action", "msg");
-			obj.put("sender", ChatColor.stripColor(sender.getChatNameNoHover()));
-			obj.put("rank", sender.getRank().toString());
-			obj.put("channel", channel);
-			obj.put("text", text);
+                Tregmine.LOGGER.info(sender.getRealName() + " authed successfully.");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-			Iterator<ChatSocket> it = sockets.iterator();
-			while (it.hasNext()) {
-				ChatSocket socket = it.next();
-				Session session = socket.getSession();
-				if (!session.isOpen()) {
-					it.remove();
-					disconnect(socket);
-					continue;
-				}
+    public boolean isOnline(TregminePlayer player) {
+        for (ChatSocket socket : sockets) {
+            TregminePlayer current = socket.getPlayer();
+            if (current == null) {
+                continue;
+            }
+            if (current.getId() == player.getId()) {
+                return true;
+            }
+        }
 
-				socket.sendMessage(obj);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+        return false;
+    }
 
-	@Override
-	public void configure(WebSocketServletFactory factory) {
-		factory.setCreator(this);
-	}
+    /**
+     * Do not call directly! Calls are synchronized by
+     * WebServer.executeChatAction.
+     **/
+    public void kickPlayer(TregminePlayer sender, TregminePlayer victim, String message) {
+        for (ChatSocket socket : sockets) {
+            TregminePlayer current = socket.getPlayer();
+            if (current == null) {
+                continue;
+            }
+            if (current.getId() == victim.getId()) {
+                socket.sendSystemMessage("You were kicked by " + sender.getRealName() + ": " + message);
 
-	@Override
-	public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-		return new ChatSocket(this);
-	}
+                disconnect(socket);
+                removeSession(socket);
+                kickedPlayers.put(victim.getId(), new Date());
+            }
+        }
+    }
 
-	private void disconnect(ChatSocket socket) {
-		try {
-			socket.getSession().disconnect();
-		} catch (IOException e) {
-		}
-	}
+    public List<TregminePlayer> listPlayers() {
+        List<TregminePlayer> players = new ArrayList<TregminePlayer>();
+        for (ChatSocket socket : sockets) {
+            TregminePlayer current = socket.getPlayer();
+            if (current == null) {
+                continue;
+            }
 
-	private void dispatch(ChatSocket socket, String message) {
-		try {
-			JSONObject obj = new JSONObject(message);
-			if (!obj.has("action")) {
-				return;
-			}
+            players.add(current);
+        }
 
-			String action = obj.getString("action");
+        return players;
+    }
 
-			if ("msg".equals(action)) {
-				if (socket.getPlayer() == null) {
-					Tregmine.LOGGER.info("Player not set.");
-					return;
-				}
+    private void removeSession(ChatSocket session) {
+        Tregmine.LOGGER.info("Web disconnected");
+        sockets.remove(session);
+    }
 
-				String channel = obj.getString("channel");
-				if (channel == null) {
-					return;
-				}
-				String text = obj.getString("text");
-				if (text == null) {
-					return;
-				}
+    public static class ChatSocket extends WebSocketAdapter {
+        private ChatHandler handler;
+        private Session session;
+        private TregminePlayer player;
 
-				TregmineChatEvent event = new TregmineChatEvent(socket.getPlayer(), text, channel, true);
-				pluginMgr.callEvent(event);
-			} else if ("auth".equals(action)) {
-				String authToken = obj.getString("authToken");
-				if (authToken == null) {
-					return;
-				}
+        public ChatSocket(ChatHandler handler) {
+            this.handler = handler;
+            this.player = null;
+        }
 
-				WebServer server = tregmine.getWebServer();
-				Map<String, TregminePlayer> authTokens = server.getAuthTokens();
-				if (authTokens.get(authToken) == null) {
-					Tregmine.LOGGER.info("Auth token " + authToken + " not found.");
-					socket.sendSystemMessage("Auth token not found.");
-					return;
-				}
+        public TregminePlayer getPlayer() {
+            return player;
+        }
 
-				TregminePlayer sender = authTokens.get(authToken);
+        public void setPlayer(TregminePlayer v) {
+            this.player = v;
+        }
 
-				Date kickTime = kickedPlayers.get(sender.getId());
-				if (kickTime != null) {
-					long time = (new Date().getTime() - kickTime.getTime()) / 1000L;
-					if (time < 600l) {
-						socket.sendSystemMessage("You are not allowed to reconnect yet.");
-						Tregmine.LOGGER.info(sender.getRealName() + " attempted to "
-								+ "reconnect after being kicked before the allowed duration.");
+        @Override
+        public RemoteEndpoint getRemote() {
+            return session.getRemote();
+        }
 
-						disconnect(socket);
-						removeSession(socket);
-						return;
-					}
-				}
+        @Override
+        public Session getSession() {
+            return session;
+        }
 
-				socket.setPlayer(sender);
+        @Override
+        public void onWebSocketClose(int statusCode, String reason) {
+            handler.removeSession(this);
+        }
 
-				Tregmine.LOGGER.info(sender.getRealName() + " authed successfully.");
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+        @Override
+        public void onWebSocketConnect(Session sess) {
+            this.session = sess;
 
-	public boolean isOnline(TregminePlayer player) {
-		for (ChatSocket socket : sockets) {
-			TregminePlayer current = socket.getPlayer();
-			if (current == null) {
-				continue;
-			}
-			if (current.getId() == player.getId()) {
-				return true;
-			}
-		}
+            // sess.setIdleTimeout(Long.MAX_VALUE);
+            handler.addSession(this);
+        }
 
-		return false;
-	}
+        @Override
+        public void onWebSocketError(Throwable e) {
+            Tregmine.LOGGER.log(Level.WARNING, "Socket error", e);
+            handler.removeSession(this);
+        }
 
-	/**
-	 * Do not call directly! Calls are synchronized by
-	 * WebServer.executeChatAction.
-	 **/
-	public void kickPlayer(TregminePlayer sender, TregminePlayer victim, String message) {
-		for (ChatSocket socket : sockets) {
-			TregminePlayer current = socket.getPlayer();
-			if (current == null) {
-				continue;
-			}
-			if (current.getId() == victim.getId()) {
-				socket.sendSystemMessage("You were kicked by " + sender.getRealName() + ": " + message);
+        @Override
+        public void onWebSocketText(String message) {
+            handler.dispatch(this, message);
+        }
 
-				disconnect(socket);
-				removeSession(socket);
-				kickedPlayers.put(victim.getId(), new Date());
-			}
-		}
-	}
+        public void sendMessage(JSONObject msg) {
+            getRemote().sendStringByFuture(msg.toString());
+        }
 
-	public List<TregminePlayer> listPlayers() {
-		List<TregminePlayer> players = new ArrayList<TregminePlayer>();
-		for (ChatSocket socket : sockets) {
-			TregminePlayer current = socket.getPlayer();
-			if (current == null) {
-				continue;
-			}
+        public void sendSystemMessage(String message) {
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("action", "sysmsg");
+                obj.put("text", message);
 
-			players.add(current);
-		}
-
-		return players;
-	}
-
-	private void removeSession(ChatSocket session) {
-		Tregmine.LOGGER.info("Web disconnected");
-		sockets.remove(session);
-	}
+                getRemote().sendStringByFuture(obj.toString());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

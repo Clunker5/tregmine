@@ -1,11 +1,11 @@
 package info.tregmine.database;
 
-import java.util.List;
-
 import info.tregmine.api.StaffNews;
 
-public interface IStaffNewsDAO {
-	public List<StaffNews> getStaffNews() throws DAOException;
+import java.util.List;
 
-	public void insertNews(StaffNews news) throws DAOException;
+public interface IStaffNewsDAO {
+    List<StaffNews> getStaffNews() throws DAOException;
+
+    void insertNews(StaffNews news) throws DAOException;
 }

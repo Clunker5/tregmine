@@ -3,34 +3,34 @@ package info.tregmine.api;
 import java.util.Date;
 
 public class InventoryAccess {
-	private int inventoryId;
-	private int playerId;
-	private Date timestamp;
+    private int inventoryId;
+    private int playerId;
+    private Date timestamp;
 
-	public InventoryAccess() {
-	}
+    public InventoryAccess() {
+    }
 
-	public int getInventoryId() {
-		return inventoryId;
-	}
+    public int getInventoryId() {
+        return inventoryId;
+    }
 
-	public int getPlayerId() {
-		return playerId;
-	}
+    public void setInventoryId(int v) {
+        this.inventoryId = v;
+    }
 
-	public Date getTimestamp() {
-		return timestamp;
-	}
+    public int getPlayerId() {
+        return playerId;
+    }
 
-	public void setInventoryId(int v) {
-		this.inventoryId = v;
-	}
+    public void setPlayerId(int v) {
+        this.playerId = v;
+    }
 
-	public void setPlayerId(int v) {
-		this.playerId = v;
-	}
+    public Date getTimestamp() {
+        return timestamp;
+    }
 
-	public void setTimestamp(Date v) {
-		this.timestamp = v;
-	}
+    public void setTimestamp(Date v) {
+        this.timestamp = v;
+    }
 }

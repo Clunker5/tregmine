@@ -21,7 +21,7 @@ public class TregmineLookup extends Lookup {
         ArrayList result = new ArrayList();
 
         try {
-            if(block == null) {
+            if (block == null) {
                 return result;
             }
 
@@ -31,7 +31,7 @@ public class TregmineLookup extends Lookup {
             int wid = Functions.getWorldId(block.getWorld().getName());
 
             Connection connection = Database.getConnection(false);
-            if(connection == null) {
+            if (connection == null) {
                 return result;
             }
 
@@ -39,18 +39,18 @@ public class TregmineLookup extends Lookup {
             String query = "SELECT time,user,action,type,data,rolled_back FROM " + Config.prefix + "block WHERE wid = '" + wid + "' AND x = '" + x + "' AND z = '" + z + "' AND y = '" + y + "' ORDER BY rowid DESC";
             ResultSet rs = statement.executeQuery(query);
 
-            while(rs.next()) {
+            while (rs.next()) {
                 int result_time = rs.getInt("time");
                 int result_userid = rs.getInt("user");
                 int result_action = rs.getInt("action");
                 int result_type = rs.getInt("type");
                 int result_data = rs.getInt("data");
                 int result_rolled_back = rs.getInt("rolled_back");
-                if(Config.player_id_cache_reversed.get(Integer.valueOf(result_userid)) == null) {
+                if (Config.player_id_cache_reversed.get(Integer.valueOf(result_userid)) == null) {
                     Database.loadUserName(connection, result_userid);
                 }
 
-                String result_user = (String)Config.player_id_cache_reversed.get(Integer.valueOf(result_userid));
+                String result_user = Config.player_id_cache_reversed.get(Integer.valueOf(result_userid));
                 String line = result_time + "," + result_user + "," + x + "." + y + "." + z + "," + result_type + "," + result_data + "," + result_action + "," + result_rolled_back + "," + wid + ",";
                 String[] ldata = Functions.toStringArray(line);
                 result.add(ldata);

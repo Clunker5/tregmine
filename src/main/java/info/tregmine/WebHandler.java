@@ -1,19 +1,6 @@
 package info.tregmine;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import info.tregmine.api.util.Base64;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -22,168 +9,175 @@ import org.bukkit.plugin.PluginManager;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-import info.tregmine.api.util.Base64;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 
 public class WebHandler extends AbstractHandler implements Listener {
-	public interface Action {
-		public void generateResponse(PrintWriter writer) throws WebException;
+    private Tregmine tregmine;
+    private PluginManager pluginMgr;
+    private Map<String, ActionFactory> actions;
+    private String key;
 
-		public void queryGameState(Tregmine tregmine);
-	}
+    public WebHandler(Tregmine tregmine, PluginManager pluginMgr, String key) {
+        this.tregmine = tregmine;
+        this.pluginMgr = pluginMgr;
 
-	public interface ActionFactory {
-		public Action createAction(Request request) throws WebException;
+        this.actions = new HashMap<String, ActionFactory>();
 
-		public String getName();
-	}
+        this.key = key;
+    }
 
-	public static class WebEvent extends Event {
-		private static final HandlerList handlers = new HandlerList();
+    private static String hmac(String key, String msg) throws NoSuchAlgorithmException, InvalidKeyException {
+        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "HmacSHA1");
 
-		public static HandlerList getHandlerList() {
-			return handlers;
-		}
+        Mac mac = Mac.getInstance("HmacSHA1");
+        mac.init(keySpec);
+        byte[] result = mac.doFinal(msg.getBytes());
 
-		private Action action;
+        return Base64.encode(result);
+    }
 
-		public WebEvent(Action action) {
-			this.action = action;
-		}
+    public void addAction(ActionFactory factory) {
+        actions.put(factory.getName(), factory);
+    }
 
-		public Action getAction() {
-			return action;
-		}
+    @Override
+    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        System.out.println("Servlet path: " + baseRequest.getServletPath());
+        System.out.println("Path info: " + baseRequest.getPathInfo());
 
-		@Override
-		public HandlerList getHandlers() {
-			return handlers;
-		}
-	}
+        baseRequest.setHandled(true);
+        response.setContentType("application/json;charset=utf-8");
 
-	public static class WebException extends Exception {
-		private static final long serialVersionUID = -1204372750144186534L;
-		private int responseCode;
+        String signingStr = request.getPathInfo();
+        if (request.getQueryString() != null) {
+            signingStr += "?" + request.getQueryString();
+        }
 
-		public WebException(String message, int responseCode) {
-			super(message);
+        try {
+            String auth = hmac(key, signingStr);
+            String authCmp = request.getHeader("Authorization");
+            // TODO: Possible timing sidechannel?
+            if (!auth.equals(authCmp)) {
+                Tregmine.LOGGER.info("Web: " + signingStr + " FAILED");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            } else {
+                Tregmine.LOGGER.info("Web: " + signingStr + " OK");
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new ServletException(e);
+        } catch (InvalidKeyException e) {
+            throw new ServletException(e);
+        }
 
-			this.responseCode = responseCode;
-		}
+        // Look up appropriate action factory for this request
+        try {
+            ActionFactory factory = actions.get(baseRequest.getPathInfo());
+            if (factory == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                Tregmine.LOGGER.info("Web: " + signingStr + " NOT FOUND");
+                return;
+            }
+            Tregmine.LOGGER.info("Web: " + signingStr + " Linked to: " + factory.getName());
 
-		public WebException(Throwable t) {
-			super(t);
+            // Create an action
+            Action action = factory.createAction(baseRequest);
 
-			this.responseCode = 500;
-		}
+            // Wait for bukkit to process it
+            pluginMgr.callEvent(new WebEvent(action));
 
-		public int getResponseCode() {
-			return responseCode;
-		}
-	}
+            // Prepare response
+            response.setStatus(HttpServletResponse.SC_OK);
 
-	private static String hmac(String key, String msg) throws NoSuchAlgorithmException, InvalidKeyException {
-		SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "HmacSHA1");
+            // Generate response
+            PrintWriter writer = response.getWriter();
+            action.generateResponse(writer);
+        } catch (WebException e) {
+            response.setStatus(e.getResponseCode());
+            Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
+        } catch (Throwable e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
+        }
+    }
 
-		Mac mac = Mac.getInstance("HmacSHA1");
-		mac.init(keySpec);
-		byte[] result = mac.doFinal(msg.getBytes());
+    @EventHandler
+    public void onWebEvent(WebEvent event) {
+        Action action = event.getAction();
 
-		return Base64.encode(result);
-	}
+        // Execute action, safely
+        try {
+            Tregmine.LOGGER.info("Web: Querying game state for web action.");
+            action.queryGameState(tregmine);
+        } catch (Throwable e) {
+            Tregmine.LOGGER.log(Level.WARNING, "Querying game state failed", e);
+        }
+    }
 
-	private Tregmine tregmine;
+    public interface Action {
+        void generateResponse(PrintWriter writer) throws WebException;
 
-	private PluginManager pluginMgr;
+        void queryGameState(Tregmine tregmine);
+    }
 
-	private Map<String, ActionFactory> actions;
+    public interface ActionFactory {
+        Action createAction(Request request) throws WebException;
 
-	private String key;
+        String getName();
+    }
 
-	public WebHandler(Tregmine tregmine, PluginManager pluginMgr, String key) {
-		this.tregmine = tregmine;
-		this.pluginMgr = pluginMgr;
+    public static class WebEvent extends Event {
+        private static final HandlerList handlers = new HandlerList();
+        private Action action;
 
-		this.actions = new HashMap<String, ActionFactory>();
+        public WebEvent(Action action) {
+            this.action = action;
+        }
 
-		this.key = key;
-	}
+        public static HandlerList getHandlerList() {
+            return handlers;
+        }
 
-	public void addAction(ActionFactory factory) {
-		actions.put(factory.getName(), factory);
-	}
+        public Action getAction() {
+            return action;
+        }
 
-	@Override
-	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		System.out.println("Servlet path: " + baseRequest.getServletPath());
-		System.out.println("Path info: " + baseRequest.getPathInfo());
+        @Override
+        public HandlerList getHandlers() {
+            return handlers;
+        }
+    }
 
-		baseRequest.setHandled(true);
-		response.setContentType("application/json;charset=utf-8");
+    public static class WebException extends Exception {
+        private static final long serialVersionUID = -1204372750144186534L;
+        private int responseCode;
 
-		String signingStr = request.getPathInfo();
-		if (request.getQueryString() != null) {
-			signingStr += "?" + request.getQueryString();
-		}
+        public WebException(String message, int responseCode) {
+            super(message);
 
-		try {
-			String auth = hmac(key, signingStr);
-			String authCmp = request.getHeader("Authorization");
-			// TODO: Possible timing sidechannel?
-			if (!auth.equals(authCmp)) {
-				Tregmine.LOGGER.info("Web: " + signingStr + " FAILED");
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				return;
-			} else {
-				Tregmine.LOGGER.info("Web: " + signingStr + " OK");
-			}
-		} catch (NoSuchAlgorithmException e) {
-			throw new ServletException(e);
-		} catch (InvalidKeyException e) {
-			throw new ServletException(e);
-		}
+            this.responseCode = responseCode;
+        }
 
-		// Look up appropriate action factory for this request
-		try {
-			ActionFactory factory = actions.get(baseRequest.getPathInfo());
-			if (factory == null) {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				Tregmine.LOGGER.info("Web: " + signingStr + " NOT FOUND");
-				return;
-			}
-			Tregmine.LOGGER.info("Web: " + signingStr + " Linked to: " + factory.getName());
+        public WebException(Throwable t) {
+            super(t);
 
-			// Create an action
-			Action action = factory.createAction(baseRequest);
+            this.responseCode = 500;
+        }
 
-			// Wait for bukkit to process it
-			pluginMgr.callEvent(new WebEvent(action));
-
-			// Prepare response
-			response.setStatus(HttpServletResponse.SC_OK);
-
-			// Generate response
-			PrintWriter writer = response.getWriter();
-			action.generateResponse(writer);
-		} catch (WebException e) {
-			response.setStatus(e.getResponseCode());
-			Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
-		} catch (Throwable e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			Tregmine.LOGGER.log(Level.WARNING, "Error in processing request", e);
-		}
-	}
-
-	@EventHandler
-	public void onWebEvent(WebEvent event) {
-		Action action = event.getAction();
-
-		// Execute action, safely
-		try {
-			Tregmine.LOGGER.info("Web: Querying game state for web action.");
-			action.queryGameState(tregmine);
-		} catch (Throwable e) {
-			Tregmine.LOGGER.log(Level.WARNING, "Querying game state failed", e);
-		}
-	}
+        public int getResponseCode() {
+            return responseCode;
+        }
+    }
 }

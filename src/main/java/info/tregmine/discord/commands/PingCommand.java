@@ -3,29 +3,22 @@ package info.tregmine.discord.commands;
 import info.tregmine.Tregmine;
 import info.tregmine.discord.DiscordUtil;
 import info.tregmine.discord.entities.EmbedAlertType;
-import net.dv8tion.jda.core.EmbedBuilder;
+import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.MessageEmbed;
 
-public class PingCommand extends DiscordCommand{
+public class PingCommand extends DiscordCommand {
 
-	public PingCommand(Tregmine tregmine) {
-		super(tregmine, "!ping");
-	}
-	
-	@Override
-	public boolean handleExecution(Message message, String arguments){
-		MessageChannel fromChannel = message.getChannel();
-		MessageEmbed embed = new EmbedBuilder(null).setTitle(EmbedAlertType.PING.getDisplayName(), null)
-				.setColor(EmbedAlertType.PING.getColor())
-				.setDescription("All systems are a-okay!")
-				.setFooter("This operation was triggered by `" + message.getAuthor().getName() + "`", message.getAuthor().getAvatarUrl())
-				.build();
-		DiscordUtil.flagDestructive(message);
-		DiscordUtil.sendDestructiveMessage(fromChannel, '[' + message.getAuthor().getAsMention() + ']');
-		DiscordUtil.sendDestructiveMessage(fromChannel, embed, 10);
-		return true;
-	}
+    public PingCommand(Tregmine tregmine) {
+        super(tregmine, "!ping", "!ping", "Simple ping command to ensure bot is online.");
+    }
+
+    @Override
+    public boolean handleExecution(Message message, String arguments) {
+        MessageChannel fromChannel = message.getChannel();
+        new DiscordUtil().flagDestructive(message);
+        new DiscordUtil().sendDestructiveMessage(fromChannel, TregmineEmbedBuilder.genericEmbedForUser(EmbedAlertType.PING.getDisplayName(), "All systems are A-OK!", EmbedAlertType.PING.getColor(), message.getAuthor()), 10);
+        return true;
+    }
 
 }

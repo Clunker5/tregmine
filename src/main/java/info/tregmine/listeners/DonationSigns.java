@@ -1,7 +1,10 @@
 package info.tregmine.listeners;
 
-import java.text.NumberFormat;
-
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.database.DAOException;
+import info.tregmine.database.IContext;
+import info.tregmine.database.IWalletDAO;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,73 +16,69 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.database.DAOException;
-import info.tregmine.database.IContext;
-import info.tregmine.database.IWalletDAO;
+import java.text.NumberFormat;
 
 public class DonationSigns implements Listener {
-	private Tregmine plugin;
+    private Tregmine plugin;
 
-	public DonationSigns(Tregmine tregmine) {
-		this.plugin = tregmine;
-	}
+    public DonationSigns(Tregmine tregmine) {
+        this.plugin = tregmine;
+    }
 
-	@EventHandler
-	public void donate(PlayerInteractEvent event) throws IndexOutOfBoundsException, Exception {
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
+    @EventHandler
+    public void donate(PlayerInteractEvent event) throws Exception {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
 
-		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) {
 
-			return;
-		}
+            return;
+        }
 
-		if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
 
-			return;
-		}
+            return;
+        }
 
-		Block clickedBlock = event.getClickedBlock();
-		if (!clickedBlock.getType().equals(Material.STONE_BUTTON)
-				&& !clickedBlock.getType().equals(Material.WOOD_BUTTON)) {
+        Block clickedBlock = event.getClickedBlock();
+        if (!clickedBlock.getType().equals(Material.STONE_BUTTON)
+                && !clickedBlock.getType().equals(Material.WOOD_BUTTON)) {
 
-			return;
-		}
+            return;
+        }
 
-		Location signLocation = clickedBlock.getLocation();
-		World world = player.getWorld();
-		Block signBlock = world.getBlockAt(signLocation.getBlockX(), signLocation.getBlockY() - 1,
-				signLocation.getBlockZ());
-		if (!(signBlock.getState() instanceof Sign)) {
-			return;
-		}
+        Location signLocation = clickedBlock.getLocation();
+        World world = player.getWorld();
+        Block signBlock = world.getBlockAt(signLocation.getBlockX(), signLocation.getBlockY() - 1,
+                signLocation.getBlockZ());
+        if (!(signBlock.getState() instanceof Sign)) {
+            return;
+        }
 
-		Sign sign = (Sign) signBlock.getState();
-		if (!sign.getLine(0).contains("donate")) {
-			return;
-		}
+        Sign sign = (Sign) signBlock.getState();
+        if (!sign.getLine(0).contains("donate")) {
+            return;
+        }
 
-		try (IContext ctx = plugin.createContext()) {
-			IWalletDAO wallet = ctx.getWalletDAO();
-			Integer amount = Integer.parseInt(sign.getLine(1).trim());
-			NumberFormat format = NumberFormat.getNumberInstance();
-			TregminePlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
-			if (receiver == null) {
-				player.sendStringMessage(ChatColor.RED + "The player on the sign does not exist!");
-				return;
-			}
+        try (IContext ctx = plugin.createContext()) {
+            IWalletDAO wallet = ctx.getWalletDAO();
+            Integer amount = Integer.parseInt(sign.getLine(1).trim());
+            NumberFormat format = NumberFormat.getNumberInstance();
+            TregminePlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
+            if (receiver == null) {
+                player.sendStringMessage(ChatColor.RED + "The player on the sign does not exist!");
+                return;
+            }
 
-			if (wallet.take(player, amount)) {
-				wallet.add(receiver, amount);
-				player.sendStringMessage(ChatColor.DARK_AQUA + "You donated " + ChatColor.GOLD + format.format(amount)
-						+ " Tregs " + ChatColor.DARK_AQUA + "to " + receiver.getRealName());
-			} else {
-				player.sendStringMessage(ChatColor.RED + "You dont have enough Tregs!");
-			}
-		} catch (DAOException error) {
-			throw new RuntimeException(error);
-		} catch (NumberFormatException error) {
-		}
-	}
+            if (wallet.take(player, amount)) {
+                wallet.add(receiver, amount);
+                player.sendStringMessage(ChatColor.DARK_AQUA + "You donated " + ChatColor.GOLD + format.format(amount)
+                        + " Tregs " + ChatColor.DARK_AQUA + "to " + receiver.getRealName());
+            } else {
+                player.sendStringMessage(ChatColor.RED + "You dont have enough Tregs!");
+            }
+        } catch (DAOException error) {
+            throw new RuntimeException(error);
+        } catch (NumberFormatException error) {
+        }
+    }
 }

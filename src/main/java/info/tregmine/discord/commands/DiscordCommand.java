@@ -1,38 +1,59 @@
 package info.tregmine.discord.commands;
 
-import java.util.List;
-
 import info.tregmine.Tregmine;
+import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 
-public class DiscordCommand implements IDiscordCommand{
-	
-	private String name;
-	@SuppressWarnings("unused")
-	private Tregmine plugin;
-	
-	public DiscordCommand(Tregmine tregmine, String command){
-		this.name = command;
-		this.plugin = tregmine;
-	}
-	
-	public String getName(){
-		return this.name;
-	}
+import java.util.List;
 
-	@Override
-	public boolean handleExecution(Message message, String arguments) {
-		return true;
-	}
+public class DiscordCommand implements IDiscordCommand {
 
-	@Override
-	public List<String> rolesPermitted() {
-		return null;
-	}
+    @SuppressWarnings("unused")
+    protected Tregmine plugin;
+    protected DiscordSRV discord;
+    private String name;
+    private String syntax;
+    private String description;
 
-	@Override
-	public String[] getAliases() {
-		return new String[0];
-	}
+    public DiscordCommand(Tregmine tregmine, String command, String syntax, String description) {
+        this.name = command;
+        this.plugin = tregmine;
+        this.discord = this.plugin.getDiscordSRV();
+        this.syntax = syntax;
+        this.description = description;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public boolean handleExecution(Message message, String arguments) {
+        return true;
+    }
+
+    @Override
+    public List<String> rolesPermitted() {
+        return null;
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[0];
+    }
+
+    public void invalidSyntax(Message fromMessage) {
+        fromMessage.getChannel().sendMessage(TregmineEmbedBuilder.errorEmbedForUser("Invalid Syntax!", "You have an error in your syntax.\nSyntax: ```" + this.syntax + "```", fromMessage.getAuthor())).complete();
+    }
+
+    public String getSyntax() {
+        return this.syntax;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
+    }
 
 }

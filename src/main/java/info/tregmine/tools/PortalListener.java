@@ -1,12 +1,7 @@
 package info.tregmine.tools;
 
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,219 +13,216 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import java.io.IOException;
+import java.util.*;
 
 public class PortalListener implements Listener {
-	public static class GravityTask implements Runnable {
-		private TregminePlayer player;
-		private Location srcLocation;
-		private Location dstLocation;
-		private FallingBlock currentBlock = null;
-		private Material material;
-		private byte data;
+    public final static Set<Material> disallowedBlocks = EnumSet.of(Material.BED, Material.WOOD_DOOR,
+            Material.WOODEN_DOOR, Material.IRON_DOOR, Material.IRON_DOOR_BLOCK, Material.DOUBLE_PLANT,
+            Material.PISTON_EXTENSION, Material.BEDROCK, Material.ENDER_PORTAL_FRAME, Material.CHEST, Material.HOPPER,
+            Material.MOB_SPAWNER, Material.DROPPER, Material.DISPENSER, Material.FURNACE, Material.BREWING_STAND);
+    private Tregmine plugin;
+    private Map<TregminePlayer, GravityTask> gravityTasks = null;
+    public PortalListener(Tregmine instance) {
+        this.plugin = instance;
+        this.gravityTasks = new HashMap<TregminePlayer, GravityTask>();
+    }
 
-		private BukkitTask task = null;
+    public void clearUp(PlayerQuitEvent event) {
+        if (gravityTasks.containsKey(event.getPlayer())) {
+            GravityTask task = gravityTasks.get(event.getPlayer());
+            task.currentBlock.remove();
+            event.getPlayer().getWorld().getBlockAt(task.srcLocation).setType(task.material);
+            event.getPlayer().getWorld().getBlockAt(task.srcLocation).setData(task.data);
+            gravityTasks.remove(event.getPlayer());
+        }
+    }
 
-		public GravityTask(TregminePlayer player) {
-			this.player = player;
-		}
+    @EventHandler
+    public void dropBlock(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
 
-		public void cancel() {
-			task.cancel();
-		}
+            return;
+        }
 
-		public byte getData() {
-			return data;
-		}
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
+            return;
+        }
+        if (!gravityTasks.containsKey(player)) {
+            return;
+        }
 
-		public Location getDstLocation() {
-			return dstLocation;
-		}
+        GravityTask task = gravityTasks.get(player);
 
-		public Material getMaterial() {
-			return material;
-		}
+        if (!player.hasBlockPermission(task.getDstLocation(), false)) {
+            player.sendStringMessage(ChatColor.RED + "Can not place it here!");
+            return;
+        }
 
-		public Location getSrcLocation() {
-			return srcLocation;
-		}
+        gravityTasks.remove(player);
+        task.cancel();
+        player.sendStringMessage(ChatColor.GREEN + "Successfully dropped block!");
+    }
 
-		@Override
-		public void run() {
-			int distance = 5;
-			Block block = null;
-			while (distance > 0) {
-				block = player.getDelegate().getTargetBlock((Set<Material>) null, distance);
-				if (block.getType().equals(Material.AIR)) {
-					break;
-				}
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public void pickupBlock(PlayerInteractEvent event) throws IOException {
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
+            return;
+        }
 
-				distance--;
-			}
+        if (event.getItem() == null || !Material.DIAMOND_HOE.equals(event.getItem().getType())) {
+            return;
+        }
 
-			if (currentBlock != null) {
-				currentBlock.remove();
-				currentBlock = null;
-			}
-			FallingBlock gravityBlock = player.getWorld().spawnFallingBlock(block.getLocation(), new ItemStack(material).getData());
-			gravityBlock.setDropItem(false);
-			gravityBlock.setFallDistance(0f);
-			gravityBlock.setVelocity(new Vector(0, 0.1, 0));
+        TregminePlayer p = plugin.getPlayer(event.getPlayer());
+        if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
+            return;
+        }
+        if (!p.getRank().canUseTools())
+            return;
 
-			dstLocation = gravityBlock.getLocation();
-			currentBlock = gravityBlock;
-		}
+        List<String> lore = p.getItemInHand().getItemMeta().getLore();
 
-		public void setData(byte v) {
-			this.data = v;
-		}
+        if (lore.isEmpty())
+            return;
+        if (!lore.get(0).equals(ToolsRegistry.GravityGunLoreTag))
+            return;
 
-		public void setDstLocation(Location v) {
-			this.dstLocation = v;
-		}
+        Block block = event.getClickedBlock();
+        if (!block.getType().isSolid() || disallowedBlocks.contains(block.getType())) {
 
-		public void setMaterial(Material v) {
-			this.material = v;
-		}
+            p.sendStringMessage(ChatColor.RED + "Denied use of Gravity Gun!");
+            p.sendStringMessage(ChatColor.AQUA + "Try using blocks!");
 
-		public void setSrcLocation(Location v) {
-			this.srcLocation = v;
-		}
+            return;
+        }
 
-		public void start() {
-			BukkitScheduler scheduler = player.getServer().getScheduler();
-			task = scheduler.runTaskTimer(player.getPlugin(), this, 0L, 1L);
-		}
-	}
+        if (plugin.getBlessedBlocks().containsKey(block.getLocation())) {
+            p.sendStringMessage(ChatColor.RED + "This block is blessed!");
+            return;
+        }
 
-	public final static Set<Material> disallowedBlocks = EnumSet.of(Material.BED, Material.WOOD_DOOR,
-			Material.WOODEN_DOOR, Material.IRON_DOOR, Material.IRON_DOOR_BLOCK, Material.DOUBLE_PLANT,
-			Material.PISTON_EXTENSION, Material.BEDROCK, Material.ENDER_PORTAL_FRAME, Material.CHEST, Material.HOPPER,
-			Material.MOB_SPAWNER, Material.DROPPER, Material.DISPENSER, Material.FURNACE, Material.BREWING_STAND);
+        if (plugin.getFishyBlocks().containsKey(block.getLocation())) {
+            p.sendStringMessage(ChatColor.RED + "Can not move fishyblocks!");
+            return;
+        }
 
-	private Tregmine plugin;
-	private Map<TregminePlayer, GravityTask> gravityTasks = null;
+        if (!p.hasBlockPermission(block.getLocation(), false)) {
+            p.sendStringMessage(ChatColor.RED + "Can not pick up from here!");
+            return;
+        }
 
-	public PortalListener(Tregmine instance) {
-		this.plugin = instance;
-		this.gravityTasks = new HashMap<TregminePlayer, GravityTask>();
-	}
+        if (gravityTasks.containsKey(p)) {
+            p.sendStringMessage(ChatColor.RED + "You are already carrying a block, You're not that strong!");
+            return;
+        }
 
-	public void clearUp(PlayerQuitEvent event) {
-		if (gravityTasks.containsKey(event.getPlayer())) {
-			GravityTask task = gravityTasks.get(event.getPlayer());
-			task.currentBlock.remove();
-			event.getPlayer().getWorld().getBlockAt(task.srcLocation).setType(task.material);
-			event.getPlayer().getWorld().getBlockAt(task.srcLocation).setData(task.data);
-			gravityTasks.remove(event.getPlayer());
-		}
-	}
+        String[] durability = lore.get(1).split("/");
+        if (Integer.parseInt(durability[0]) == 0) {
+            p.sendStringMessage(ChatColor.RED + "You are out of durability, Try repairing!");
+            return;
+        }
 
-	@EventHandler
-	public void dropBlock(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        lore.remove(1);
+        lore.add(Integer.parseInt(durability[0]) - 1 + "/1000");
 
-			return;
-		}
+        GravityTask task = new GravityTask(p);
+        task.setMaterial(block.getType());
+        task.setData(block.getData());
+        task.setDstLocation(block.getLocation());
+        task.setSrcLocation(block.getLocation());
+        gravityTasks.put(p, task);
 
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-			return;
-		}
-		if (!gravityTasks.containsKey(player)) {
-			return;
-		}
+        task.start();
 
-		GravityTask task = gravityTasks.get(player);
+        block.setType(Material.AIR);
+    }
 
-		if (!player.hasBlockPermission(task.getDstLocation(), false)) {
-			player.sendStringMessage(ChatColor.RED + "Can not place it here!");
-			return;
-		}
+    public static class GravityTask implements Runnable {
+        private TregminePlayer player;
+        private Location srcLocation;
+        private Location dstLocation;
+        private FallingBlock currentBlock = null;
+        private Material material;
+        private byte data;
 
-		gravityTasks.remove(player);
-		task.cancel();
-		player.sendStringMessage(ChatColor.GREEN + "Successfully dropped block!");
-	}
+        private BukkitTask task = null;
 
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void pickupBlock(PlayerInteractEvent event) throws IOException {
-		if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
-			return;
-		}
+        public GravityTask(TregminePlayer player) {
+            this.player = player;
+        }
 
-		if (event.getItem() == null || !Material.DIAMOND_HOE.equals(event.getItem().getType())) {
-			return;
-		}
+        public void cancel() {
+            task.cancel();
+        }
 
-		TregminePlayer p = plugin.getPlayer(event.getPlayer());
-		if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
-			return;
-		}
-		if (!p.getRank().canUseTools())
-			return;
+        public byte getData() {
+            return data;
+        }
 
-		List<String> lore = p.getItemInHand().getItemMeta().getLore();
+        public void setData(byte v) {
+            this.data = v;
+        }
 
-		if (lore.isEmpty())
-			return;
-		if (!lore.get(0).equals(ToolsRegistry.GravityGunLoreTag))
-			return;
+        public Location getDstLocation() {
+            return dstLocation;
+        }
 
-		Block block = event.getClickedBlock();
-		if (!block.getType().isSolid() || disallowedBlocks.contains(block.getType())) {
+        public void setDstLocation(Location v) {
+            this.dstLocation = v;
+        }
 
-			p.sendStringMessage(ChatColor.RED + "Denied use of Gravity Gun!");
-			p.sendStringMessage(ChatColor.AQUA + "Try using blocks!");
+        public Material getMaterial() {
+            return material;
+        }
 
-			return;
-		}
+        public void setMaterial(Material v) {
+            this.material = v;
+        }
 
-		if (plugin.getBlessedBlocks().containsKey(block.getLocation())) {
-			p.sendStringMessage(ChatColor.RED + "This block is blessed!");
-			return;
-		}
+        public Location getSrcLocation() {
+            return srcLocation;
+        }
 
-		if (plugin.getFishyBlocks().containsKey(block.getLocation())) {
-			p.sendStringMessage(ChatColor.RED + "Can not move fishyblocks!");
-			return;
-		}
+        public void setSrcLocation(Location v) {
+            this.srcLocation = v;
+        }
 
-		if (!p.hasBlockPermission(block.getLocation(), false)) {
-			p.sendStringMessage(ChatColor.RED + "Can not pick up from here!");
-			return;
-		}
+        @Override
+        public void run() {
+            int distance = 5;
+            Block block = null;
+            while (distance > 0) {
+                block = player.getDelegate().getTargetBlock((Set<Material>) null, distance);
+                if (block.getType().equals(Material.AIR)) {
+                    break;
+                }
 
-		if (gravityTasks.containsKey(p)) {
-			p.sendStringMessage(ChatColor.RED + "You are already carrying a block, You're not that strong!");
-			return;
-		}
+                distance--;
+            }
 
-		String[] durability = lore.get(1).split("/");
-		if (Integer.parseInt(durability[0]) == 0) {
-			p.sendStringMessage(ChatColor.RED + "You are out of durability, Try repairing!");
-			return;
-		}
+            if (currentBlock != null) {
+                currentBlock.remove();
+                currentBlock = null;
+            }
+            FallingBlock gravityBlock = player.getWorld().spawnFallingBlock(block.getLocation(), new ItemStack(material).getData());
+            gravityBlock.setDropItem(false);
+            gravityBlock.setFallDistance(0f);
+            gravityBlock.setVelocity(new Vector(0, 0.1, 0));
 
-		lore.remove(1);
-		lore.add(Integer.parseInt(durability[0]) - 1 + "/1000");
+            dstLocation = gravityBlock.getLocation();
+            currentBlock = gravityBlock;
+        }
 
-		GravityTask task = new GravityTask(p);
-		task.setMaterial(block.getType());
-		task.setData(block.getData());
-		task.setDstLocation(block.getLocation());
-		task.setSrcLocation(block.getLocation());
-		gravityTasks.put(p, task);
-
-		task.start();
-
-		block.setType(Material.AIR);
-	}
+        public void start() {
+            BukkitScheduler scheduler = player.getServer().getScheduler();
+            task = scheduler.runTaskTimer(player.getPlugin(), this, 0L, 1L);
+        }
+    }
 }

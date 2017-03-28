@@ -1,28 +1,28 @@
 package info.tregmine.database;
 
-import java.util.List;
-
 import info.tregmine.api.Account;
 import info.tregmine.api.Bank;
 
+import java.util.List;
+
 public interface IBankDAO {
-	public void createAccount(Account acct, int playerId) throws DAOException;
+    void createAccount(Account acct, int playerId) throws DAOException;
 
-	public int createBank(Bank bank) throws DAOException;
+    int createBank(Bank bank) throws DAOException;
 
-	public void deleteBank(Bank bank) throws DAOException;
+    void deleteBank(Bank bank) throws DAOException;
 
-	public void deposit(Bank bank, Account acct, int playerId, long amount) throws DAOException;
+    void deposit(Bank bank, Account acct, int playerId, long amount) throws DAOException;
 
-	public Account getAccount(Bank bank, int accNumber) throws DAOException;
+    Account getAccount(Bank bank, int accNumber) throws DAOException;
 
-	public Account getAccountByPlayer(Bank bank, int playerId) throws DAOException;
+    Account getAccountByPlayer(Bank bank, int playerId) throws DAOException;
 
-	public List<Account> getAccounts(Bank bank) throws DAOException;
+    List<Account> getAccounts(Bank bank) throws DAOException;
 
-	public Bank getBank(int bankId) throws DAOException;
+    Bank getBank(int bankId) throws DAOException;
 
-	public void setPin(Account acct, String pin) throws DAOException;
+    void setPin(Account acct, String pin) throws DAOException;
 
-	public boolean withdraw(Bank bank, Account acct, int playerId, long amount) throws DAOException;
+    boolean withdraw(Bank bank, Account acct, int playerId, long amount) throws DAOException;
 }

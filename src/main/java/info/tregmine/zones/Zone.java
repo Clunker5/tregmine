@@ -1,291 +1,278 @@
 package info.tregmine.zones;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
 
+import java.util.*;
+
 public class Zone {
-	// Flags are stored as integers - order must _NOT_ be changed
-	public enum Flags {
-		BLOCK_WARNED, // default false == 1
-		ADMIN_ONLY, // default false == 2
-		REQUIRE_RESIDENCY; // default false == 4
-	}
+    private String texture;
+    private int id;
+    private String world;
+    private String name;
+    private List<Rectangle> rects;
+    private Set<Flags> flags;
+    private boolean enterDefault = true;
+    private boolean placeDefault = true;
+    private boolean destroyDefault = true;
+    private boolean pvp = false;
+    private boolean hostiles = false;
+    private boolean communism = false;
+    private boolean publicProfile = false;
+    private String textEnter;
+    private String textExit;
+    private String mainOwner;
+    private Map<Integer, Permission> users;
+    public Zone() {
+        rects = new ArrayList<Rectangle>();
+        users = new HashMap<Integer, Permission>();
 
-	public enum lotStatus {
-		dropzone, bank;
-	}
+        this.flags = EnumSet.noneOf(Flags.class);
+    }
 
-	public enum Permission {
-		// can modify the zone in any way
-		Owner("%s is now an owner of %s.", "You are now an owner of %s.", "%s is no longer an owner of %s.",
-				"You are no longer an owner of %s.", "You are an owner in this zone."),
-		// can build in the zone
-		Maker("%s is now a maker in %s.", "You are now a maker in %s.", "%s is no longer a maker in %s.",
-				"You are no longer a maker in %s.", "You are a maker in this zone."),
-		// is allowed in the zone, if this isn't the default
-		Allowed("%s is now allowed in %s.", "You are now allowed in %s.", "%s is no longer allowed in %s.",
-				"You are no longer allowed in %s.", "You are allowed in this zone."),
-		// banned from the zone
-		Banned("%s is now banned from %s.", "You have been banned from %s.", "%s is no longer banned in %s.",
-				"You are no longer banned in %s.", "You are banned from this zone.");
+    public void addRect(Rectangle rect) {
+        rects.add(rect);
+    }
 
-		public static Permission fromString(String type) {
-			if ("owner".equalsIgnoreCase(type)) {
-				return Permission.Owner;
-			} else if ("maker".equalsIgnoreCase(type)) {
-				return Permission.Maker;
-			} else if ("allowed".equalsIgnoreCase(type)) {
-				return Permission.Allowed;
-			} else if ("banned".equalsIgnoreCase(type)) {
-				return Permission.Banned;
-			}
+    public void addUser(TregminePlayer player, Permission perm) {
+        users.put(player.getId(), perm);
+    }
 
-			return null;
-		}
+    public boolean contains(Point p) {
+        for (Rectangle rect : rects) {
+            if (rect.contains(p)) {
+                return true;
+            }
+        }
 
-		private String addedConfirmation;
-		private String addedNotification;
-		private String delConfirmation;
-		private String delNotification;
+        return false;
+    }
 
-		private String permNotification;
+    public void deleteUser(TregminePlayer player) {
+        users.remove(player.getId());
+    }
 
-		private Permission(String addedConfirmation, String addedNotification, String delConfirmation,
-				String delNotification, String permNotification) {
-			this.addedConfirmation = addedConfirmation;
-			this.addedNotification = addedNotification;
-			this.delConfirmation = delConfirmation;
-			this.delNotification = delNotification;
-			this.permNotification = permNotification;
-		}
+    public boolean getDestroyDefault() {
+        return destroyDefault;
+    }
 
-		public String getAddedConfirmation() {
-			return addedConfirmation;
-		}
+    public void setDestroyDefault(boolean destroyDefault) {
+        this.destroyDefault = destroyDefault;
+    }
 
-		public String getAddedNotification() {
-			return addedNotification;
-		}
+    public boolean getEnterDefault() {
+        return enterDefault;
+    }
 
-		public String getDeletedConfirmation() {
-			return delConfirmation;
-		}
+    public void setEnterDefault(boolean enterDefault) {
+        this.enterDefault = enterDefault;
+    }
 
-		public String getDeletedNotification() {
-			return delNotification;
-		}
+    public int getId() {
+        return id;
+    }
 
-		public String getPermissionNotification() {
-			return permNotification;
-		}
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	private String texture;
+    public String getMainOwner() {
+        return this.mainOwner;
+    }
 
-	private int id;
-	private String world;
-	private String name;
-	private List<Rectangle> rects;
-	private Set<Flags> flags;
+    public void setMainOwner(String _owner) {
+        this.mainOwner = _owner;
+    }
 
-	private boolean enterDefault = true;
-	private boolean placeDefault = true;
-	private boolean destroyDefault = true;
-	private boolean pvp = false;
-	private boolean hostiles = false;
-	private boolean communism = false;
-	private boolean publicProfile = false;
+    public String getName() {
+        return name;
+    }
 
-	private String textEnter;
-	private String textExit;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	private String mainOwner;
+    public boolean getPlaceDefault() {
+        return placeDefault;
+    }
 
-	private Map<Integer, Permission> users;
+    public void setPlaceDefault(boolean placeDefault) {
+        this.placeDefault = placeDefault;
+    }
 
-	public Zone() {
-		rects = new ArrayList<Rectangle>();
-		users = new HashMap<Integer, Permission>();
+    public List<Rectangle> getRects() {
+        return rects;
+    }
 
-		this.flags = EnumSet.noneOf(Flags.class);
-	}
+    public void setRects(List<Rectangle> rects) {
+        this.rects = rects;
+    }
 
-	public void addRect(Rectangle rect) {
-		rects.add(rect);
-	}
+    public String getTextEnter() {
+        return textEnter;
+    }
 
-	public void addUser(TregminePlayer player, Permission perm) {
-		users.put(player.getId(), perm);
-	}
+    public void setTextEnter(String textEnter) {
+        this.textEnter = textEnter;
+    }
 
-	public boolean contains(Point p) {
-		for (Rectangle rect : rects) {
-			if (rect.contains(p)) {
-				return true;
-			}
-		}
+    public String getTextExit() {
+        return textExit;
+    }
 
-		return false;
-	}
+    public void setTextExit(String textExit) {
+        this.textExit = textExit;
+    }
 
-	public void deleteUser(TregminePlayer player) {
-		users.remove(player.getId());
-	}
+    public String getTexture() {
+        if (this.texture == null) {
+            return "";
+        }
 
-	public boolean getDestroyDefault() {
-		return destroyDefault;
-	}
+        return this.texture;
+    }
 
-	public boolean getEnterDefault() {
-		return enterDefault;
-	}
+    public void setTexture(String texture) {
+        this.texture = texture;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public Permission getUser(TregminePlayer player) {
+        return users.get(player.getId());
+    }
 
-	public String getMainOwner() {
-		return this.mainOwner;
-	}
+    public Collection<Integer> getUsers() {
+        return users.keySet();
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setUsers(Map<Integer, Permission> v) {
+        this.users = v;
+    }
 
-	public boolean getPlaceDefault() {
-		return placeDefault;
-	}
+    public String getWorld() {
+        return world;
+    }
 
-	public List<Rectangle> getRects() {
-		return rects;
-	}
+    public void setWorld(String world) {
+        this.world = world;
+    }
 
-	public String getTextEnter() {
-		return textEnter;
-	}
+    public boolean hasFlag(Flags flag) {
+        return flags.contains(flag);
+    }
 
-	public String getTextExit() {
-		return textExit;
-	}
+    public boolean hasHostiles() {
+        return hostiles;
+    }
 
-	public String getTexture() {
-		if (this.texture == null) {
-			return "";
-		}
+    public boolean hasPublicProfile() {
+        return publicProfile;
+    }
 
-		return this.texture;
-	}
+    public boolean isCommunist() {
+        return communism;
+    }
 
-	public Permission getUser(TregminePlayer player) {
-		return users.get(player.getId());
-	}
+    public void setCommunist(boolean v) {
+        this.communism = v;
+    }
 
-	public Collection<Integer> getUsers() {
-		return users.keySet();
-	}
+    public boolean isPvp() {
+        return pvp;
+    }
 
-	public String getWorld() {
-		return world;
-	}
+    public void setPvp(boolean pvp) {
+        this.pvp = pvp;
+    }
 
-	public boolean hasFlag(Flags flag) {
-		return flags.contains(flag);
-	}
+    public void removeFlag(Flags flag) {
+        flags.remove(flag);
+    }
 
-	public boolean hasHostiles() {
-		return hostiles;
-	}
+    public void setFlag(Flags flag) {
+        flags.add(flag);
+    }
 
-	public boolean hasPublicProfile() {
-		return publicProfile;
-	}
+    public void setHostiles(boolean hostiles) {
+        this.hostiles = hostiles;
+    }
 
-	public boolean isCommunist() {
-		return communism;
-	}
+    public void setPublicProfile(boolean v) {
+        this.publicProfile = v;
+    }
 
-	public boolean isPvp() {
-		return pvp;
-	}
+    // Flags are stored as integers - order must _NOT_ be changed
+    public enum Flags {
+        BLOCK_WARNED, // default false == 1
+        ADMIN_ONLY, // default false == 2
+        REQUIRE_RESIDENCY // default false == 4
+    }
 
-	public void removeFlag(Flags flag) {
-		flags.remove(flag);
-	}
+    public enum lotStatus {
+        dropzone, bank
+    }
 
-	public void setCommunist(boolean v) {
-		this.communism = v;
-	}
+    public enum Permission {
+        // can modify the zone in any way
+        Owner("%s is now an owner of %s.", "You are now an owner of %s.", "%s is no longer an owner of %s.",
+                "You are no longer an owner of %s.", "You are an owner in this zone."),
+        // can build in the zone
+        Maker("%s is now a maker in %s.", "You are now a maker in %s.", "%s is no longer a maker in %s.",
+                "You are no longer a maker in %s.", "You are a maker in this zone."),
+        // is allowed in the zone, if this isn't the default
+        Allowed("%s is now allowed in %s.", "You are now allowed in %s.", "%s is no longer allowed in %s.",
+                "You are no longer allowed in %s.", "You are allowed in this zone."),
+        // banned from the zone
+        Banned("%s is now banned from %s.", "You have been banned from %s.", "%s is no longer banned in %s.",
+                "You are no longer banned in %s.", "You are banned from this zone.");
 
-	public void setDestroyDefault(boolean destroyDefault) {
-		this.destroyDefault = destroyDefault;
-	}
+        private String addedConfirmation;
+        private String addedNotification;
+        private String delConfirmation;
+        private String delNotification;
+        private String permNotification;
 
-	public void setEnterDefault(boolean enterDefault) {
-		this.enterDefault = enterDefault;
-	}
+        Permission(String addedConfirmation, String addedNotification, String delConfirmation,
+                   String delNotification, String permNotification) {
+            this.addedConfirmation = addedConfirmation;
+            this.addedNotification = addedNotification;
+            this.delConfirmation = delConfirmation;
+            this.delNotification = delNotification;
+            this.permNotification = permNotification;
+        }
 
-	public void setFlag(Flags flag) {
-		flags.add(flag);
-	}
+        public static Permission fromString(String type) {
+            if ("owner".equalsIgnoreCase(type)) {
+                return Permission.Owner;
+            } else if ("maker".equalsIgnoreCase(type)) {
+                return Permission.Maker;
+            } else if ("allowed".equalsIgnoreCase(type)) {
+                return Permission.Allowed;
+            } else if ("banned".equalsIgnoreCase(type)) {
+                return Permission.Banned;
+            }
 
-	public void setHostiles(boolean hostiles) {
-		this.hostiles = hostiles;
-	}
+            return null;
+        }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+        public String getAddedConfirmation() {
+            return addedConfirmation;
+        }
 
-	public void setMainOwner(String _owner) {
-		this.mainOwner = _owner;
-	}
+        public String getAddedNotification() {
+            return addedNotification;
+        }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        public String getDeletedConfirmation() {
+            return delConfirmation;
+        }
 
-	public void setPlaceDefault(boolean placeDefault) {
-		this.placeDefault = placeDefault;
-	}
+        public String getDeletedNotification() {
+            return delNotification;
+        }
 
-	public void setPublicProfile(boolean v) {
-		this.publicProfile = v;
-	}
-
-	public void setPvp(boolean pvp) {
-		this.pvp = pvp;
-	}
-
-	public void setRects(List<Rectangle> rects) {
-		this.rects = rects;
-	}
-
-	public void setTextEnter(String textEnter) {
-		this.textEnter = textEnter;
-	}
-
-	public void setTextExit(String textExit) {
-		this.textExit = textExit;
-	}
-
-	public void setTexture(String texture) {
-		this.texture = texture;
-	}
-
-	public void setUsers(Map<Integer, Permission> v) {
-		this.users = v;
-	}
-
-	public void setWorld(String world) {
-		this.world = world;
-	}
+        public String getPermissionNotification() {
+            return permNotification;
+        }
+    }
 }

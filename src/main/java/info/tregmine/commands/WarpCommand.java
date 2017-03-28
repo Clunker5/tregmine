@@ -1,19 +1,5 @@
 package info.tregmine.commands;
 
-import static org.bukkit.ChatColor.AQUA;
-import static org.bukkit.ChatColor.BLUE;
-import static org.bukkit.ChatColor.DARK_GREEN;
-import static org.bukkit.ChatColor.RED;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitScheduler;
-
 import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Warp;
@@ -22,103 +8,109 @@ import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
 import info.tregmine.database.IWarpDAO;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitScheduler;
+
+import static org.bukkit.ChatColor.*;
 
 public class WarpCommand extends AbstractCommand {
-	private static class WarpTask implements Runnable {
-		private TregminePlayer player;
-		private Location loc;
+    private Tregmine plugin;
 
-		public WarpTask(TregminePlayer player, Location loc) {
-			this.player = player;
-			this.loc = loc;
-		}
+    public WarpCommand(Tregmine tregmine) {
+        super(tregmine, "warp");
+        plugin = tregmine;
+    }
 
-		@Override
-		public void run() {
-			if (player.getRank().canTeleportBetweenWorlds()) {
-				player.teleportWithHorse(loc);
-				return;
-			}
+    @Override
+    public boolean handlePlayer(TregminePlayer player, String[] args) {
+        if (args.length == 0) {
+            return false;
+        }
 
-			World playerWorld = player.getWorld();
-			String playerWorldName = playerWorld.getName();
-			World locWorld = loc.getWorld();
-			String locWorldName = locWorld.getName();
+        Server server = tregmine.getServer();
+        String name = args[0];
+        if (name.equalsIgnoreCase("irl")) {
+            player.kickPlayer(plugin, "Welcome to IRL.");
+            plugin.broadcast(new TextComponent(ChatColor.GOLD + "" + player.getChatName() + " found the IRL warp!"));
+            return true;
+        }
 
-			if (playerWorldName.equalsIgnoreCase(locWorldName)) {
-				player.teleportWithHorse(loc);
+        Warp warp = null;
+        try (IContext ctx = tregmine.createContext()) {
+            IWarpDAO warpDAO = ctx.getWarpDAO();
+            warp = warpDAO.getWarp(name, server);
+            if (warp == null) {
+                player.sendStringMessage("Warp not found!");
+                LOGGER.info("[warp failed] + <" + player.getName() + "> " + name + " -- not found");
+                return true;
+            }
 
-				PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
-				player.addPotionEffect(ef);
-			} else {
-				player.sendStringMessage(RED + "You can't teleport between worlds.");
-			}
-		}
-	}
+            ILogDAO logDAO = ctx.getLogDAO();
+            logDAO.insertWarpLog(player, warp.getId());
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
 
-	private Tregmine plugin;
+        Location warpPoint = warp.getLocation();
 
-	public WarpCommand(Tregmine tregmine) {
-		super(tregmine, "warp");
-		plugin = tregmine;
-	}
+        World world = warpPoint.getWorld();
 
-	@Override
-	public boolean handlePlayer(TregminePlayer player, String[] args) {
-		if (args.length == 0) {
-			return false;
-		}
+        player.sendStringMessage(
+                AQUA + "You started teleport to " + DARK_GREEN + name + AQUA + " in " + BLUE + world.getName() + ".");
+        LOGGER.info("[warp] + <" + player.getName() + "> " + name + ":" + world.getName());
 
-		Server server = tregmine.getServer();
-		String name = args[0];
-		if (name.equalsIgnoreCase("irl")) {
-			player.kickPlayer(plugin, "Welcome to IRL.");
-			plugin.broadcast(new TextComponent(ChatColor.GOLD + "" + player.getChatName() + " found the IRL warp!"));
-			return true;
-		}
+        player.setNoDamageTicks(200);
 
-		Warp warp = null;
-		try (IContext ctx = tregmine.createContext()) {
-			IWarpDAO warpDAO = ctx.getWarpDAO();
-			warp = warpDAO.getWarp(name, server);
-			if (warp == null) {
-				player.sendStringMessage("Warp not found!");
-				LOGGER.info("[warp failed] + <" + player.getName() + "> " + name + " -- not found");
-				return true;
-			}
+        Chunk chunk = world.getChunkAt(warpPoint);
+        world.loadChunk(chunk);
 
-			ILogDAO logDAO = ctx.getLogDAO();
-			logDAO.insertWarpLog(player, warp.getId());
-		} catch (DAOException e) {
-			throw new RuntimeException(e);
-		}
+        if (world.isChunkLoaded(chunk)) {
+            long delay = player.getRank().getTeleportTimeout();
 
-		Location warpPoint = warp.getLocation();
+            player.sendStringMessage(AQUA + "You must now stand still and wait " + (delay / 20)
+                    + " seconds for the stars to align, " + "allowing you to warp");
 
-		World world = warpPoint.getWorld();
+            BukkitScheduler scheduler = server.getScheduler();
+            scheduler.scheduleSyncDelayedTask(tregmine, new WarpTask(player, warpPoint), delay);
 
-		player.sendStringMessage(
-				AQUA + "You started teleport to " + DARK_GREEN + name + AQUA + " in " + BLUE + world.getName() + ".");
-		LOGGER.info("[warp] + <" + player.getName() + "> " + name + ":" + world.getName());
+        } else {
+            player.sendStringMessage(RED + "Chunk failed to load. Please try to warp again");
+        }
 
-		player.setNoDamageTicks(200);
+        return true;
+    }
 
-		Chunk chunk = world.getChunkAt(warpPoint);
-		world.loadChunk(chunk);
+    private static class WarpTask implements Runnable {
+        private TregminePlayer player;
+        private Location loc;
 
-		if (world.isChunkLoaded(chunk)) {
-			long delay = player.getRank().getTeleportTimeout();
+        public WarpTask(TregminePlayer player, Location loc) {
+            this.player = player;
+            this.loc = loc;
+        }
 
-			player.sendStringMessage(AQUA + "You must now stand still and wait " + (delay / 20)
-					+ " seconds for the stars to align, " + "allowing you to warp");
+        @Override
+        public void run() {
+            if (player.getRank().canTeleportBetweenWorlds()) {
+                player.teleportWithHorse(loc);
+                return;
+            }
 
-			BukkitScheduler scheduler = server.getScheduler();
-			scheduler.scheduleSyncDelayedTask(tregmine, new WarpTask(player, warpPoint), delay);
+            World playerWorld = player.getWorld();
+            String playerWorldName = playerWorld.getName();
+            World locWorld = loc.getWorld();
+            String locWorldName = locWorld.getName();
 
-		} else {
-			player.sendStringMessage(RED + "Chunk failed to load. Please try to warp again");
-		}
+            if (playerWorldName.equalsIgnoreCase(locWorldName)) {
+                player.teleportWithHorse(loc);
 
-		return true;
-	}
+                PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
+                player.addPotionEffect(ef);
+            } else {
+                player.sendStringMessage(RED + "You can't teleport between worlds.");
+            }
+        }
+    }
 }

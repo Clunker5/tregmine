@@ -1,22 +1,21 @@
 package info.tregmine.database;
 
-import java.util.List;
-
+import info.tregmine.api.TregminePlayer;
 import org.bukkit.Location;
 import org.bukkit.Server;
 
-import info.tregmine.api.TregminePlayer;
+import java.util.List;
 
 public interface IHomeDAO {
-	public void deleteHome(int playerId, String name) throws DAOException;
+    void deleteHome(int playerId, String name) throws DAOException;
 
-	public Location getHome(int playerId, String name, Server server) throws DAOException;
+    Location getHome(int playerId, String name, Server server) throws DAOException;
 
-	public Location getHome(TregminePlayer player) throws DAOException;
+    Location getHome(TregminePlayer player) throws DAOException;
 
-	public Location getHome(TregminePlayer player, String name) throws DAOException;
+    Location getHome(TregminePlayer player, String name) throws DAOException;
 
-	public List<String> getHomeNames(int playerId) throws DAOException;
+    List<String> getHomeNames(int playerId) throws DAOException;
 
-	public void insertHome(TregminePlayer player, String name, Location loc) throws DAOException;
+    void insertHome(TregminePlayer player, String name, Location loc) throws DAOException;
 }

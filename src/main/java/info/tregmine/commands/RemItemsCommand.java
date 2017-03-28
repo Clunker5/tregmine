@@ -1,7 +1,8 @@
 package info.tregmine.commands;
 
-import java.util.List;
-
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.math.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,135 +11,129 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.math.MathUtil;
+import java.util.List;
 
 public class RemItemsCommand extends AbstractCommand {
-	public int number = 60;
+    public int number = 60;
 
-	int taskID;
+    int taskID;
 
-	public RemItemsCommand(Tregmine tregmine) {
-		super(tregmine, "remitems");
-	}
+    public RemItemsCommand(Tregmine tregmine) {
+        super(tregmine, "remitems");
+    }
 
-	@Override
-	public boolean handlePlayer(final TregminePlayer p, String[] args) {
-		if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
-			p.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
-			return true;
-		}
-		if (!p.getRank().canRemItems()) {
-			return true;
-		}
+    @Override
+    public boolean handlePlayer(final TregminePlayer p, String[] args) {
+        if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
+            p.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            return true;
+        }
+        if (!p.getRank().canRemItems()) {
+            return true;
+        }
 
-		if (args.length != 1) {
-			p.sendStringMessage(ChatColor.GRAY + "Please type /remitems help");
-			return true;
-		}
+        if (args.length != 1) {
+            p.sendStringMessage(ChatColor.GRAY + "Please type /remitems help");
+            return true;
+        }
 
-		if (args[0].equalsIgnoreCase("help")) {
-			p.sendStringMessage(
-					ChatColor.GRAY + "/remitems <radius> - Remove all ground items in the specified radius");
-			p.sendStringMessage(ChatColor.GRAY + "/remitems all - Remove all ground items in your current world.");
-		}
+        if (args[0].equalsIgnoreCase("help")) {
+            p.sendStringMessage(
+                    ChatColor.GRAY + "/remitems <radius> - Remove all ground items in the specified radius");
+            p.sendStringMessage(ChatColor.GRAY + "/remitems all - Remove all ground items in your current world.");
+        } else if (args[0].equalsIgnoreCase("all")) {
+            worldItemRemover(p);
+        } else {
+            int distance;
+            try {
+                distance = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                distance = 500;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                distance = 500;
+            }
 
-		else if (args[0].equalsIgnoreCase("all")) {
-			worldItemRemover(p);
-		}
+            p.sendStringMessage(ChatColor.GREEN + "Removing all ground items within " + distance + " blocks.");
 
-		else {
-			int distance;
-			try {
-				distance = Integer.parseInt(args[0]);
-			} catch (NumberFormatException e) {
-				distance = 500;
-			} catch (ArrayIndexOutOfBoundsException e) {
-				distance = 500;
-			}
+            Location loc = p.getLocation();
 
-			p.sendStringMessage(ChatColor.GREEN + "Removing all ground items within " + distance + " blocks.");
+            World world = p.getWorld();
 
-			Location loc = p.getLocation();
+            List<Entity> entList = world.getEntities();
+            int total = 0;
 
-			World world = p.getWorld();
+            for (Entity current : entList) {
+                if (current instanceof Item) {
+                    if (MathUtil.calcDistance2d(loc, current.getLocation()) > distance) {
+                        continue;
+                    }
+                    total++;
+                    current.remove();
 
-			List<Entity> entList = world.getEntities();
-			int total = 0;
+                }
+            }
+            p.sendStringMessage(ChatColor.GOLD + "" + total + ChatColor.GREEN + " items successfully removed!");
+        }
 
-			for (Entity current : entList) {
-				if (current instanceof Item) {
-					if (MathUtil.calcDistance2d(loc, current.getLocation()) > distance) {
-						continue;
-					}
-					total++;
-					current.remove();
+        return true;
+    }
 
-				}
-			}
-			p.sendStringMessage(ChatColor.GOLD + "" + total + ChatColor.GREEN + " items successfully removed!");
-		}
+    void worldItemRemover(final TregminePlayer p) {
 
-		return true;
-	}
+        final World world = p.getLocation().getWorld();
 
-	void worldItemRemover(final TregminePlayer p) {
+        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(tregmine, new Runnable() {
+            @Override
+            public void run() {
+                if (number == -1) {
+                    number = 60;
+                    Bukkit.getServer().getScheduler().cancelTask(taskID);
+                } else {
+                    if (number == 60) {
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.sendMessage(p.getName() + ChatColor.DARK_RED + " is clearing all ground items in "
+                                    + ChatColor.GOLD + world.getName());
+                            online.sendMessage(ChatColor.AQUA + "Please pick up any items you have on the ground.");
+                            online.sendMessage(ChatColor.AQUA + "Item removal commencing in 60 seconds.");
+                        }
+                        number--;
+                    } else if (number == 30 || number == 20 || number == 10) {
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.sendMessage(ChatColor.AQUA + "" + number + " seconds until item removal.");
+                        }
+                        number--;
+                    } else if (number <= 5 && number > 0) {
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.sendMessage(ChatColor.AQUA + "" + number);
+                        }
+                        number--;
+                    } else if (number == 0) {
 
-		final World world = p.getLocation().getWorld();
+                        number--;
 
-		taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(tregmine, new Runnable() {
-			@Override
-			public void run() {
-				if (number == -1) {
-					number = 60;
-					Bukkit.getServer().getScheduler().cancelTask(taskID);
-				} else {
-					if (number == 60) {
-						for (Player online : Bukkit.getOnlinePlayers()) {
-							online.sendMessage(p.getName() + ChatColor.DARK_RED + " is clearing all ground items in "
-									+ ChatColor.GOLD + world.getName());
-							online.sendMessage(ChatColor.AQUA + "Please pick up any items you have on the ground.");
-							online.sendMessage(ChatColor.AQUA + "Item removal commencing in 60 seconds.");
-						}
-						number--;
-					} else if (number == 30 || number == 20 || number == 10) {
-						for (Player online : Bukkit.getOnlinePlayers()) {
-							online.sendMessage(ChatColor.AQUA + "" + number + " seconds until item removal.");
-						}
-						number--;
-					} else if (number <= 5 && number > 0) {
-						for (Player online : Bukkit.getOnlinePlayers()) {
-							online.sendMessage(ChatColor.AQUA + "" + number);
-						}
-						number--;
-					} else if (number == 0) {
+                        List<Entity> entList = world.getEntities();
+                        int count = 0;
 
-						number--;
+                        for (Entity current : entList) {
+                            if (current instanceof Item) {
+                                count++;
+                                current.remove();
+                            }
+                        }
+                        p.sendStringMessage(
+                                ChatColor.GOLD + "" + count + ChatColor.GREEN + " items successfully removed");
 
-						List<Entity> entList = world.getEntities();
-						int count = 0;
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.sendMessage(ChatColor.GREEN + "Item removal in " + ChatColor.GOLD + world.getName()
+                                    + ChatColor.GREEN + " completed successfully!");
+                            online.sendMessage(ChatColor.GOLD + "" + count + ChatColor.GREEN + " items were removed.");
+                        }
+                    } else {
+                        number--;
+                    }
+                }
 
-						for (Entity current : entList) {
-							if (current instanceof Item) {
-								count++;
-								current.remove();
-							}
-						}
-						p.sendStringMessage(
-								ChatColor.GOLD + "" + count + ChatColor.GREEN + " items successfully removed");
-
-						for (Player online : Bukkit.getOnlinePlayers()) {
-							online.sendMessage(ChatColor.GREEN + "Item removal in " + ChatColor.GOLD + world.getName()
-									+ ChatColor.GREEN + " completed successfully!");
-							online.sendMessage(ChatColor.GOLD + "" + count + ChatColor.GREEN + " items were removed.");
-						}
-					} else {
-						number--;
-					}
-				}
-
-			}
-		}, 20, 20);
-	}
+            }
+        }, 20, 20);
+    }
 }

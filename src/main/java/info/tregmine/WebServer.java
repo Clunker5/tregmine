@@ -1,11 +1,7 @@
 package info.tregmine;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-
+import info.tregmine.api.TregminePlayer;
+import info.tregmine.web.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.eclipse.jetty.server.Server;
@@ -13,257 +9,252 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.web.AuthAction;
-import info.tregmine.web.PlayerKickAction;
-import info.tregmine.web.PlayerListAction;
-import info.tregmine.web.PlayerReloadInventoryAction;
-import info.tregmine.web.PushNotificationAction;
-import info.tregmine.web.QueryLogAction;
-import info.tregmine.web.VersionAction;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
 
 public class WebServer implements Runnable {
-	public static interface ChatAction {
-		public void execute(ChatHandler handler);
-	}
+    private Server webServer;
+    private WebHandler webHandler;
+    private ChatHandler chatHandler;
+    private Map<String, TregminePlayer> authTokens;
+    private BlockingQueue<ChatAction> messageQueue;
+    private Thread thread = null;
+    private boolean running = true;
 
-	public static class ChatMessage implements ChatAction {
-		private TregminePlayer sender;
-		private String channel;
-		private String text;
+    public WebServer(Tregmine tregmine) {
+        thread = new Thread(this);
 
-		public ChatMessage(TregminePlayer sender, String channel, String text) {
-			this.sender = sender;
-			this.channel = channel;
-			this.text = text;
-		}
+        authTokens = new HashMap<>();
+        messageQueue = new LinkedBlockingQueue<>();
 
-		@Override
-		public void execute(ChatHandler handler) {
-			handler.broadcastToWeb(sender, channel, text);
-		}
+        PluginManager pluginMgm = tregmine.getServer().getPluginManager();
 
-		public String getChannel() {
-			return channel;
-		}
+        try {
+            FileConfiguration config = tregmine.getConfig();
+            String apiKey = config.getString("api.signing-key", "");
+            int apiPort = config.getInt("api.port", 9192);
 
-		public TregminePlayer getSender() {
-			return sender;
-		}
+            HandlerList handlers = new HandlerList();
 
-		public String getText() {
-			return text;
-		}
-	}
+            // Start chat handler and bind to /chat
+            chatHandler = new ChatHandler(tregmine, pluginMgm);
+            pluginMgm.registerEvents(chatHandler, tregmine);
 
-	private static class DummyLogger implements org.eclipse.jetty.util.log.Logger {
-		@Override
-		public void debug(String msg, Object... args) {
-		}
+            ContextHandler context = new ContextHandler();
+            context.setContextPath("/chat");
+            context.setHandler(chatHandler);
+            handlers.addHandler(context);
 
-		@Override
-		public void debug(String msg, Throwable thrown) {
-		}
+            // Start web handler and bind to rest of paths
+            webHandler = new WebHandler(tregmine, pluginMgm, apiKey);
+            pluginMgm.registerEvents(webHandler, tregmine);
 
-		@Override
-		public void debug(Throwable thrown) {
-		}
+            webHandler.addAction(new AuthAction.Factory());
+            webHandler.addAction(new PlayerKickAction.Factory());
+            webHandler.addAction(new PlayerListAction.Factory());
+            webHandler.addAction(new PushNotificationAction.Factory());
+            webHandler.addAction(new PlayerReloadInventoryAction.Factory());
+            webHandler.addAction(new QueryLogAction.Factory());
+            webHandler.addAction(new VersionAction.Factory());
 
-		@Override
-		public org.eclipse.jetty.util.log.Logger getLogger(String name) {
-			return this;
-		}
+            handlers.addHandler(webHandler);
 
-		@Override
-		public String getName() {
-			return "DummyLogger";
-		}
+            // Disable jetty logging
+            org.eclipse.jetty.util.log.Log.setLog(new DummyLogger());
 
-		@Override
-		public void ignore(Throwable ignored) {
-		}
+            // Start server at apiPort
+            webServer = new Server();
 
-		@Override
-		public void info(String msg, Object... args) {
-		}
+            ServerConnector connector = new ServerConnector(webServer);
+            connector.setPort(apiPort);
+            connector.setHost("localhost");
+            connector.setReuseAddress(true);
+            connector.setSoLingerTime(-1);
+            webServer.addConnector(connector);
+            webServer.setHandler(handlers);
+        } catch (Exception e) {
+            Tregmine.LOGGER.log(Level.WARNING, "Failed to start web server!", e);
+        }
+    }
 
-		@Override
-		public void info(String msg, Throwable thrown) {
-		}
+    public void executeChatAction(ChatAction msg) {
+        messageQueue.offer(msg);
+    }
 
-		@Override
-		public void info(Throwable thrown) {
-		}
+    public Map<String, TregminePlayer> getAuthTokens() {
+        return authTokens;
+    }
 
-		@Override
-		public boolean isDebugEnabled() {
-			return false;
-		}
+    public ChatHandler getChatHandler() {
+        return chatHandler;
+    }
 
-		@Override
-		public void setDebugEnabled(boolean enabled) {
-		}
+    public WebHandler getWebHandler() {
+        return webHandler;
+    }
 
-		@Override
-		public void warn(String msg, Object... args) {
-		}
+    public boolean isPlayerOnWeb(TregminePlayer player) {
+        return chatHandler.isOnline(player);
+    }
 
-		@Override
-		public void warn(String msg, Throwable thrown) {
-		}
+    @Override
+    public void run() {
+        try {
+            webServer.start();
+            Tregmine.LOGGER.info("Web server started.");
+        } catch (Exception e) {
+            Tregmine.LOGGER.log(Level.WARNING, "Failed to start web server!", e);
+        }
 
-		@Override
-		public void warn(Throwable thrown) {
-		}
+        while (running) {
+            try {
+                ChatAction msg = messageQueue.take();
+                msg.execute(chatHandler);
+            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                Tregmine.LOGGER.log(Level.WARNING, "Exception in WebServer message loop.", e);
+            }
+        }
 
-		@Override
-		public void debug(String msg, long value) {
-			
-		}
-	}
+        try {
+            webServer.stop();
+            webServer.join();
+        } catch (Exception e) {
+            Tregmine.LOGGER.log(Level.WARNING, "Failed to stop web server!", e);
+        }
+    }
 
-	public static class KickAction implements ChatAction {
-		private TregminePlayer sender;
-		private TregminePlayer victim;
-		private String message;
+    public void start() {
+        thread.start();
+    }
 
-		public KickAction(TregminePlayer sender, TregminePlayer victim, String message) {
-			this.sender = sender;
-			this.victim = victim;
-			this.message = message;
-		}
+    public void stop() {
+        running = false;
 
-		@Override
-		public void execute(ChatHandler handler) {
-			handler.kickPlayer(sender, victim, message);
-		}
-	}
+        try {
+            thread.interrupt();
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	private Server webServer;
-	private WebHandler webHandler;
-	private ChatHandler chatHandler;
+    public interface ChatAction {
+        void execute(ChatHandler handler);
+    }
 
-	private Map<String, TregminePlayer> authTokens;
-	private BlockingQueue<ChatAction> messageQueue;
+    public static class ChatMessage implements ChatAction {
+        private TregminePlayer sender;
+        private String channel;
+        private String text;
 
-	private Thread thread = null;
-	private boolean running = true;
+        public ChatMessage(TregminePlayer sender, String channel, String text) {
+            this.sender = sender;
+            this.channel = channel;
+            this.text = text;
+        }
 
-	public WebServer(Tregmine tregmine) {
-		thread = new Thread(this);
+        @Override
+        public void execute(ChatHandler handler) {
+            handler.broadcastToWeb(sender, channel, text);
+        }
 
-		authTokens = new HashMap<>();
-		messageQueue = new LinkedBlockingQueue<>();
+        public String getChannel() {
+            return channel;
+        }
 
-		PluginManager pluginMgm = tregmine.getServer().getPluginManager();
+        public TregminePlayer getSender() {
+            return sender;
+        }
 
-		try {
-			FileConfiguration config = tregmine.getConfig();
-			String apiKey = config.getString("api.signing-key", "");
-			int apiPort = config.getInt("api.port", 9192);
+        public String getText() {
+            return text;
+        }
+    }
 
-			HandlerList handlers = new HandlerList();
+    private static class DummyLogger implements org.eclipse.jetty.util.log.Logger {
+        @Override
+        public void debug(String msg, Object... args) {
+        }
 
-			// Start chat handler and bind to /chat
-			chatHandler = new ChatHandler(tregmine, pluginMgm);
-			pluginMgm.registerEvents(chatHandler, tregmine);
+        @Override
+        public void debug(String msg, Throwable thrown) {
+        }
 
-			ContextHandler context = new ContextHandler();
-			context.setContextPath("/chat");
-			context.setHandler(chatHandler);
-			handlers.addHandler(context);
+        @Override
+        public void debug(Throwable thrown) {
+        }
 
-			// Start web handler and bind to rest of paths
-			webHandler = new WebHandler(tregmine, pluginMgm, apiKey);
-			pluginMgm.registerEvents(webHandler, tregmine);
+        @Override
+        public org.eclipse.jetty.util.log.Logger getLogger(String name) {
+            return this;
+        }
 
-			webHandler.addAction(new AuthAction.Factory());
-			webHandler.addAction(new PlayerKickAction.Factory());
-			webHandler.addAction(new PlayerListAction.Factory());
-			webHandler.addAction(new PushNotificationAction.Factory());
-			webHandler.addAction(new PlayerReloadInventoryAction.Factory());
-			webHandler.addAction(new QueryLogAction.Factory());
-			webHandler.addAction(new VersionAction.Factory());
+        @Override
+        public String getName() {
+            return "DummyLogger";
+        }
 
-			handlers.addHandler(webHandler);
+        @Override
+        public void ignore(Throwable ignored) {
+        }
 
-			// Disable jetty logging
-			org.eclipse.jetty.util.log.Log.setLog(new DummyLogger());
+        @Override
+        public void info(String msg, Object... args) {
+        }
 
-			// Start server at apiPort
-			webServer = new Server();
+        @Override
+        public void info(String msg, Throwable thrown) {
+        }
 
-			ServerConnector connector = new ServerConnector(webServer);
-			connector.setPort(apiPort);
-			connector.setHost("localhost");
-			connector.setReuseAddress(true);
-			connector.setSoLingerTime(-1);
-			webServer.addConnector(connector);
-			webServer.setHandler(handlers);
-		} catch (Exception e) {
-			Tregmine.LOGGER.log(Level.WARNING, "Failed to start web server!", e);
-		}
-	}
+        @Override
+        public void info(Throwable thrown) {
+        }
 
-	public void executeChatAction(ChatAction msg) {
-		messageQueue.offer(msg);
-	}
+        @Override
+        public boolean isDebugEnabled() {
+            return false;
+        }
 
-	public Map<String, TregminePlayer> getAuthTokens() {
-		return authTokens;
-	}
+        @Override
+        public void setDebugEnabled(boolean enabled) {
+        }
 
-	public ChatHandler getChatHandler() {
-		return chatHandler;
-	}
+        @Override
+        public void warn(String msg, Object... args) {
+        }
 
-	public WebHandler getWebHandler() {
-		return webHandler;
-	}
+        @Override
+        public void warn(String msg, Throwable thrown) {
+        }
 
-	public boolean isPlayerOnWeb(TregminePlayer player) {
-		return chatHandler.isOnline(player);
-	}
+        @Override
+        public void warn(Throwable thrown) {
+        }
 
-	@Override
-	public void run() {
-		try {
-			webServer.start();
-			Tregmine.LOGGER.info("Web server started.");
-		} catch (Exception e) {
-			Tregmine.LOGGER.log(Level.WARNING, "Failed to start web server!", e);
-		}
+        @Override
+        public void debug(String msg, long value) {
 
-		while (running) {
-			try {
-				ChatAction msg = messageQueue.take();
-				msg.execute(chatHandler);
-			} catch (InterruptedException e) {
-			} catch (Exception e) {
-				Tregmine.LOGGER.log(Level.WARNING, "Exception in WebServer message loop.", e);
-			}
-		}
+        }
+    }
 
-		try {
-			webServer.stop();
-			webServer.join();
-		} catch (Exception e) {
-			Tregmine.LOGGER.log(Level.WARNING, "Failed to stop web server!", e);
-		}
-	}
+    public static class KickAction implements ChatAction {
+        private TregminePlayer sender;
+        private TregminePlayer victim;
+        private String message;
 
-	public void start() {
-		thread.start();
-	}
+        public KickAction(TregminePlayer sender, TregminePlayer victim, String message) {
+            this.sender = sender;
+            this.victim = victim;
+            this.message = message;
+        }
 
-	public void stop() {
-		running = false;
-
-		try {
-			thread.interrupt();
-			thread.join();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        @Override
+        public void execute(ChatHandler handler) {
+            handler.kickPlayer(sender, victim, message);
+        }
+    }
 }

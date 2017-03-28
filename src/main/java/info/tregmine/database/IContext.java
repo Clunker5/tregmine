@@ -1,52 +1,52 @@
 package info.tregmine.database;
 
 public interface IContext extends AutoCloseable {
-	@Override
-	public void close();
+    @Override
+    void close();
 
-	public IBankDAO getBankDAO();
+    IBankDAO getBankDAO();
 
-	public IBlessedBlockDAO getBlessedBlockDAO();
+    IBlessedBlockDAO getBlessedBlockDAO();
 
-	public IBlockDAO getBlockDAO();
+    IBlockDAO getBlockDAO();
 
-	public IDiscordDAO getDiscordDAO();
+    IDiscordDAO getDiscordDAO();
 
-	public IEnchantmentDAO getEnchantmentDAO();
+    IEnchantmentDAO getEnchantmentDAO();
 
-	public IFishyBlockDAO getFishyBlockDAO();
+    IFishyBlockDAO getFishyBlockDAO();
 
-	public IHandbookDAO getHandbookDAO();
+    IHandbookDAO getHandbookDAO();
 
-	public IHomeDAO getHomeDAO();
+    IHomeDAO getHomeDAO();
 
-	public IInventoryDAO getInventoryDAO();
+    IInventoryDAO getInventoryDAO();
 
-	public IInviteDAO getInviteDAO();
+    IInviteDAO getInviteDAO();
 
-	public IItemDAO getItemDAO();
+    IItemDAO getItemDAO();
 
-	public ILogDAO getLogDAO();
+    ILogDAO getLogDAO();
 
-	public IMailDAO getMailDAO();
+    IMailDAO getMailDAO();
 
-	public IMentorLogDAO getMentorLogDAO();
+    IMentorLogDAO getMentorLogDAO();
 
-	public IMiscDAO getMiscDAO();
+    IMiscDAO getMiscDAO();
 
-	public IMotdDAO getMotdDAO();
+    IMotdDAO getMotdDAO();
 
-	public IStaffNewsDAO getNewsByUploader();
+    IStaffNewsDAO getNewsByUploader();
 
-	public IPlayerDAO getPlayerDAO();
+    IPlayerDAO getPlayerDAO();
 
-	public IPlayerReportDAO getPlayerReportDAO();
+    IPlayerReportDAO getPlayerReportDAO();
 
-	public ITradeDAO getTradeDAO();
+    ITradeDAO getTradeDAO();
 
-	public IWalletDAO getWalletDAO();
+    IWalletDAO getWalletDAO();
 
-	public IWarpDAO getWarpDAO();
+    IWarpDAO getWarpDAO();
 
-	public IZonesDAO getZonesDAO();
+    IZonesDAO getZonesDAO();
 }

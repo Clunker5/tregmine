@@ -1,28 +1,27 @@
 package info.tregmine.database;
 
-import java.util.Map;
-
+import info.tregmine.api.FishyBlock;
+import info.tregmine.api.TregminePlayer;
 import org.bukkit.Location;
 import org.bukkit.Server;
 
-import info.tregmine.api.FishyBlock;
-import info.tregmine.api.TregminePlayer;
+import java.util.Map;
 
 public interface IFishyBlockDAO {
-	public enum TransactionType {
-		DEPOSIT, WITHDRAW, BUY;
-	}
+    void delete(FishyBlock fishyBlock) throws DAOException;
 
-	public void delete(FishyBlock fishyBlock) throws DAOException;
+    void insert(FishyBlock fishyBlock) throws DAOException;
 
-	public void insert(FishyBlock fishyBlock) throws DAOException;
+    void insertCostChange(FishyBlock fishyBlock, int oldCost) throws DAOException;
 
-	public void insertCostChange(FishyBlock fishyBlock, int oldCost) throws DAOException;
+    void insertTransaction(FishyBlock fishyBlock, TregminePlayer player, TransactionType type, int amount)
+            throws DAOException;
 
-	public void insertTransaction(FishyBlock fishyBlock, TregminePlayer player, TransactionType type, int amount)
-			throws DAOException;
+    Map<Location, FishyBlock> loadFishyBlocks(Server server) throws DAOException;
 
-	public Map<Location, FishyBlock> loadFishyBlocks(Server server) throws DAOException;
+    void update(FishyBlock fishyBlock) throws DAOException;
 
-	public void update(FishyBlock fishyBlock) throws DAOException;
+    enum TransactionType {
+        DEPOSIT, WITHDRAW, BUY
+    }
 }

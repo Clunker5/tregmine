@@ -1,15 +1,5 @@
 package info.tregmine.web;
 
-import java.io.PrintWriter;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.eclipse.jetty.server.Request;
-import org.json.JSONException;
-import org.json.JSONWriter;
-
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
 import info.tregmine.WebServer;
@@ -18,133 +8,141 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import org.eclipse.jetty.server.Request;
+import org.json.JSONException;
+import org.json.JSONWriter;
+
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class AuthAction implements WebHandler.Action {
-	public static class Factory implements WebHandler.ActionFactory {
-		public Factory() {
-		}
+    private int playerId;
+    private boolean found = false;
+    private String token = null;
+    public AuthAction(int playerId) {
+        this.playerId = playerId;
+    }
 
-		@Override
-		public WebHandler.Action createAction(Request request) throws WebHandler.WebException {
-			try {
-				int id = Integer.parseInt(request.getParameter("id"));
-				return new AuthAction(id);
-			} catch (NullPointerException e) {
-				throw new WebHandler.WebException(e);
-			} catch (NumberFormatException e) {
-				throw new WebHandler.WebException(e);
-			}
-		}
+    private boolean checkForBan(Tregmine tregmine, TregminePlayer player) {
+        try (IContext ctx = tregmine.createContext()) {
+            IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
+            List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
+            for (PlayerReport report : reports) {
+                Date validUntil = report.getValidUntil();
+                if (validUntil == null) {
+                    continue;
+                }
+                if (validUntil.getTime() < System.currentTimeMillis()) {
+                    continue;
+                }
 
-		@Override
-		public String getName() {
-			return "/auth";
-		}
-	}
+                if (report.getAction() == PlayerReport.Action.BAN) {
+                    return true;
+                }
+            }
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
 
-	private int playerId;
-	private boolean found = false;
-	private String token = null;
+        return false;
+    }
 
-	public AuthAction(int playerId) {
-		this.playerId = playerId;
-	}
+    @Override
+    public void generateResponse(PrintWriter writer) throws WebHandler.WebException {
+        try {
+            JSONWriter json = new JSONWriter(writer);
 
-	private boolean checkForBan(Tregmine tregmine, TregminePlayer player) {
-		try (IContext ctx = tregmine.createContext()) {
-			IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
-			List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
-			for (PlayerReport report : reports) {
-				Date validUntil = report.getValidUntil();
-				if (validUntil == null) {
-					continue;
-				}
-				if (validUntil.getTime() < System.currentTimeMillis()) {
-					continue;
-				}
+            if (found) {
+                json.object().key("found").value(found).key("token").value(token).endObject();
+            } else {
+                json.object().key("found").value(found).endObject();
+            }
 
-				if (report.getAction() == PlayerReport.Action.BAN) {
-					return true;
-				}
-			}
-		} catch (DAOException e) {
-			throw new RuntimeException(e);
-		}
+            writer.close();
+        } catch (JSONException e) {
+            throw new WebHandler.WebException(e);
+        }
+    }
 
-		return false;
-	}
+    private String generateToken() {
+        StringBuilder buffer = new StringBuilder();
+        Random rand = new Random();
+        for (int i = 0; i < 32; i++) {
+            buffer.append(String.format("%02X", rand.nextInt(0xFF)));
+        }
 
-	@Override
-	public void generateResponse(PrintWriter writer) throws WebHandler.WebException {
-		try {
-			JSONWriter json = new JSONWriter(writer);
+        return buffer.toString();
+    }
 
-			if (found) {
-				json.object().key("found").value(found).key("token").value(token).endObject();
-			} else {
-				json.object().key("found").value(found).endObject();
-			}
+    @Override
+    public void queryGameState(Tregmine tregmine) {
+        WebServer server = tregmine.getWebServer();
+        Map<String, TregminePlayer> authTokens = server.getAuthTokens();
 
-			writer.close();
-		} catch (JSONException e) {
-			throw new WebHandler.WebException(e);
-		}
-	}
+        // look for existing tokens
+        for (Map.Entry<String, TregminePlayer> entry : authTokens.entrySet()) {
+            String currentToken = entry.getKey();
+            TregminePlayer currentPlayer = entry.getValue();
+            if (currentPlayer.getId() == playerId) {
+                if (!checkForBan(tregmine, currentPlayer)) {
+                    token = currentToken;
+                    found = true;
+                    Tregmine.LOGGER.info("Restoring token " + token + " to " + currentPlayer.getRealName());
+                } else {
+                    token = null;
+                    found = false;
+                    Tregmine.LOGGER
+                            .info("Refused to restore token for " + currentPlayer.getRealName() + " due to ban.");
+                    authTokens.remove(currentToken);
+                }
+                return;
+            }
+        }
 
-	private String generateToken() {
-		StringBuilder buffer = new StringBuilder();
-		Random rand = new Random();
-		for (int i = 0; i < 32; i++) {
-			buffer.append(String.format("%02X", rand.nextInt(0xFF)));
-		}
+        // otherwise, retrieve player from db...
+        TregminePlayer player = tregmine.getPlayerOffline(playerId);
+        if (player == null) {
+            found = false;
+            return;
+        }
 
-		return buffer.toString();
-	}
+        if (!checkForBan(tregmine, player)) {
+            // and generate a new token
+            token = generateToken();
+            authTokens.put(token, player);
+            found = true;
 
-	@Override
-	public void queryGameState(Tregmine tregmine) {
-		WebServer server = tregmine.getWebServer();
-		Map<String, TregminePlayer> authTokens = server.getAuthTokens();
+            Tregmine.LOGGER.info("Assigned token " + token + " to " + player.getRealName());
+        } else {
+            token = null;
+            found = false;
 
-		// look for existing tokens
-		for (Map.Entry<String, TregminePlayer> entry : authTokens.entrySet()) {
-			String currentToken = entry.getKey();
-			TregminePlayer currentPlayer = entry.getValue();
-			if (currentPlayer.getId() == playerId) {
-				if (!checkForBan(tregmine, currentPlayer)) {
-					token = currentToken;
-					found = true;
-					Tregmine.LOGGER.info("Restoring token " + token + " to " + currentPlayer.getRealName());
-				} else {
-					token = null;
-					found = false;
-					Tregmine.LOGGER
-							.info("Refused to restore token for " + currentPlayer.getRealName() + " due to ban.");
-					authTokens.remove(currentToken);
-				}
-				return;
-			}
-		}
+            Tregmine.LOGGER.info("Denied token for " + player.getRealName() + " due to ban.");
+        }
+    }
 
-		// otherwise, retrieve player from db...
-		TregminePlayer player = tregmine.getPlayerOffline(playerId);
-		if (player == null) {
-			found = false;
-			return;
-		}
+    public static class Factory implements WebHandler.ActionFactory {
+        public Factory() {
+        }
 
-		if (!checkForBan(tregmine, player)) {
-			// and generate a new token
-			token = generateToken();
-			authTokens.put(token, player);
-			found = true;
+        @Override
+        public WebHandler.Action createAction(Request request) throws WebHandler.WebException {
+            try {
+                int id = Integer.parseInt(request.getParameter("id"));
+                return new AuthAction(id);
+            } catch (NullPointerException e) {
+                throw new WebHandler.WebException(e);
+            } catch (NumberFormatException e) {
+                throw new WebHandler.WebException(e);
+            }
+        }
 
-			Tregmine.LOGGER.info("Assigned token " + token + " to " + player.getRealName());
-		} else {
-			token = null;
-			found = false;
-
-			Tregmine.LOGGER.info("Denied token for " + player.getRealName() + " due to ban.");
-		}
-	}
+        @Override
+        public String getName() {
+            return "/auth";
+        }
+    }
 }

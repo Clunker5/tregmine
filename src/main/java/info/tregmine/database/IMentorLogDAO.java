@@ -3,27 +3,27 @@ package info.tregmine.database;
 import info.tregmine.api.TregminePlayer;
 
 public interface IMentorLogDAO {
-	enum MentoringEvent {
-		STARTED, COMPLETED, CANCELLED, SKIPPED;
+    int getMentorLogId(TregminePlayer student, TregminePlayer mentor) throws DAOException;
 
-		public MentoringEvent fromString(String str) {
-			for (MentoringEvent event : MentoringEvent.values()) {
-				if (event.toString().equalsIgnoreCase(str)) {
-					return event;
-				}
-			}
+    void insertMentorLog(TregminePlayer student, TregminePlayer mentor) throws DAOException;
 
-			return null;
-		}
-	};
+    void updateMentorLogChannel(int mentorLogId, String channel) throws DAOException;
 
-	public int getMentorLogId(TregminePlayer student, TregminePlayer mentor) throws DAOException;
+    void updateMentorLogEvent(int mentorLogId, MentoringEvent event) throws DAOException;
 
-	public void insertMentorLog(TregminePlayer student, TregminePlayer mentor) throws DAOException;
+    void updateMentorLogResume(int mentorLogId) throws DAOException;
 
-	public void updateMentorLogChannel(int mentorLogId, String channel) throws DAOException;
+    enum MentoringEvent {
+        STARTED, COMPLETED, CANCELLED, SKIPPED;
 
-	public void updateMentorLogEvent(int mentorLogId, MentoringEvent event) throws DAOException;
+        public MentoringEvent fromString(String str) {
+            for (MentoringEvent event : MentoringEvent.values()) {
+                if (event.toString().equalsIgnoreCase(str)) {
+                    return event;
+                }
+            }
 
-	public void updateMentorLogResume(int mentorLogId) throws DAOException;
+            return null;
+        }
+    }
 }

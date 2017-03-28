@@ -1,5 +1,7 @@
 package info.tregmine.listeners;
 
+import info.tregmine.Tregmine;
+import info.tregmine.api.TregminePlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,75 +12,72 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-
 public class BoxFillBlockListener implements Listener {
-	private Tregmine plugin;
+    private Tregmine plugin;
 
-	public BoxFillBlockListener(Tregmine tregmine) {
-		this.plugin = tregmine;
-	}
+    public BoxFillBlockListener(Tregmine tregmine) {
+        this.plugin = tregmine;
+    }
 
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event) {
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (!player.getRank().canFill()) {
-			return;
-		}
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canFill()) {
+            return;
+        }
 
-		if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
-			return;
-		} else {
-			event.setCancelled(true);
-		}
-		Block block = event.getBlock();
-		player.setFillBlock1(block);
-		event.getPlayer().sendMessage("First block set");
-		player.setFillBlockCounter(1);
-	}
+        if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+            return;
+        } else {
+            event.setCancelled(true);
+        }
+        Block block = event.getBlock();
+        player.setFillBlock1(block);
+        event.getPlayer().sendMessage("First block set");
+        player.setFillBlockCounter(1);
+    }
 
-	@EventHandler
-	public void onBlockDamage(BlockDamageEvent event) {
+    @EventHandler
+    public void onBlockDamage(BlockDamageEvent event) {
 
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (player.getGameMode() == GameMode.CREATIVE) {
-			return;
-		}
-		if (!player.getRank().canFill()) {
-			return;
-		}
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+        if (!player.getRank().canFill()) {
+            return;
+        }
 
-		if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
-			return;
-		} else {
-			event.setCancelled(true);
-		}
-		Block block = event.getBlock();
+        if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+            return;
+        } else {
+            event.setCancelled(true);
+        }
+        Block block = event.getBlock();
 
-		player.setFillBlock1(block);
-		event.getPlayer().sendMessage("First block set");
-		player.setFillBlockCounter(1);
-	}
+        player.setFillBlock1(block);
+        event.getPlayer().sendMessage("First block set");
+        player.setFillBlockCounter(1);
+    }
 
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-			return;
-		}
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-		TregminePlayer player = plugin.getPlayer(event.getPlayer());
-		if (!player.getRank().canFill()) {
-			return;
-		}
+        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canFill()) {
+            return;
+        }
 
-		if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
-			return;
-		}
+        if (player.getItemInHand().getType() != Material.WOOD_SPADE) {
+            return;
+        }
 
-		Block block = event.getClickedBlock();
-		player.setFillBlock2(block);
-		event.getPlayer().sendMessage("Second block set");
-		player.setFillBlockCounter(0);
-	}
+        Block block = event.getClickedBlock();
+        player.setFillBlock2(block);
+        event.getPlayer().sendMessage("Second block set");
+        player.setFillBlockCounter(0);
+    }
 }
