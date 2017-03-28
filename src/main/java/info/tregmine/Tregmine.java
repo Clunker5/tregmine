@@ -1,6 +1,7 @@
 package info.tregmine;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.SecureRandom;
@@ -18,7 +19,11 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.maxmind.geoip.LookupService;
+import info.tregmine.api.util.TregmineFileUtil;
 import info.tregmine.commands.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -34,8 +39,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-
-import com.maxmind.geoip.LookupService;
 
 import info.tregmine.api.BlockStats;
 import info.tregmine.api.FishyBlock;
@@ -140,6 +143,8 @@ public class Tregmine extends JavaPlugin {
 	private Queue<TregminePlayer> mentors;
 	private Queue<TregminePlayer> students;
 	private boolean lockdown = false;
+
+	private File configFile;
 
 	private SecureRandom random = new SecureRandom();
 
@@ -641,7 +646,8 @@ public class Tregmine extends JavaPlugin {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		if(webServer == null)
+			return;
 		try {
 			webServer.stop();
 		} catch (Exception e) {
@@ -649,11 +655,45 @@ public class Tregmine extends JavaPlugin {
 		}
 	}
 
+	private void setupInstructions(){
+		LOGGER.info("[tregmine] It appears you have not set up the tregmine plugin!");
+		LOGGER.info("[tregmine] Please import the generated tregmine.sql file to the desired database.");
+		LOGGER.info("[tregmine] Please configure the generated config.yml, then set enabled to true on the top of the file.");
+		LOGGER.info("[tregmine] Restart the server once you have done this; Hopefully tregmine will start!");
+	}
+
 	@Override
 	public void onEnable() {
 
 		this.server = getServer();
 		plugin = this;
+
+		this.configFile = new File(plugin.getDataFolder(), "config.yml");
+		File schemaFile = new File(plugin.getDataFolder(), "tregmine.sql");
+
+		if(!schemaFile.exists()){
+			try {
+				schemaFile.createNewFile();
+				FileOutputStream os = new FileOutputStream(schemaFile);
+				IOUtils.copy(this.getClassLoader().getResourceAsStream("tregmine.sql"), os);
+			} catch (IOException e) {
+				LOGGER.info("[tregmine] Failed to generate database file, see GitHub for instructions.");
+				e.printStackTrace();
+			}
+		}
+
+		if(!this.configFile.exists()){
+			this.saveDefaultConfig();
+			this.setupInstructions();
+			this.server.getPluginManager().disablePlugin(this);
+			return;
+		}
+
+		if(!this.getConfig().getBoolean("enabled")){
+			this.setupInstructions();
+			this.server.getPluginManager().disablePlugin(this);
+			return;
+		}
 
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, this.lag, 100L, 1L);
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Timer(this), 100L, 1L);
@@ -1015,7 +1055,7 @@ public class Tregmine extends JavaPlugin {
 		}
 
 		try {
-			cl = new LookupService(new File(folder, "GeoIPCity.dat"), LookupService.GEOIP_MEMORY_CACHE);
+			cl = new LookupService(TregmineFileUtil.fileFromInputStream(this.getClassLoader().getResourceAsStream("GeoIPCity.dat")), LookupService.GEOIP_MEMORY_CACHE);
 		} catch (IOException e) {
 			Tregmine.LOGGER.warning("GeoIPCity.dat was not found! ");
 		}
