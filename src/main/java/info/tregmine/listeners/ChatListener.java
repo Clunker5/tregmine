@@ -193,25 +193,5 @@ public class ChatListener implements Listener {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
-
-		// event.setCancelled(true);
-		// WebServer server = plugin.getWebServer();
-		// server.executeChatAction(new WebServer.ChatMessage(sender, channel,
-		// event.getMessage()));
-		// if (plugin.getConfig().getString("general.life-log") == "true") {
-		// ListStore lifeChat = new ListStore(new File(plugin.getPluginFolder()
-		// + File.separator + "life-log.txt"));
-		// lifeChat.load();
-		// Date now = new Date();
-		// SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy
-		// HH:mm:ss");
-		// String chatTimeStamp = format.format(now);
-		// String userName = event.getPlayer().getName();
-		// String message = event.getMessage();
-		// String logChat = "[" + chatTimeStamp + "] <" + userName + "> " +
-		// message;
-		// lifeChat.add(logChat);
-		// lifeChat.save();
-		// }
 	}
 }
