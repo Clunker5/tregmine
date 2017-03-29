@@ -1,5 +1,6 @@
 package info.tregmine.discord;
 
+import info.tregmine.Tregmine;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
@@ -212,7 +213,7 @@ public class DiscordUtil {
     public boolean canManage(Message message) {
         boolean isPrivate = message.getChannelType() == ChannelType.PRIVATE;
         boolean isSelf = message.getAuthor().getId() == DiscordSRV.selfUser.getId();
-        return isPrivate && isSelf;
+        return !isPrivate || isSelf;
     }
 
 }
