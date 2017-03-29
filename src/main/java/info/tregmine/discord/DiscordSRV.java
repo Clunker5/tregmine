@@ -64,16 +64,7 @@ public class DiscordSRV {
         DiscordSRV.selfUser = this.api.getSelfUser();
 
         // print the servers that the bot can see
-        Tregmine.LOGGER.info("Discord: The following servers are visible:");
-        for (Guild server : api.getGuilds()) {
-            Tregmine.LOGGER.info("Server: " + server.getName() + " [ID " + server.getId() + "]");
-        }
-        Tregmine.LOGGER.info("DiscordSRV is able to see the following channels from specified server:");
-        for (Guild server : api.getGuilds()) {
-            for (Channel channel : server.getTextChannels()) {
-                Tregmine.LOGGER.info("Channel: " + channel.getName() + " [ID " + channel.getId() + "]");
-            }
-        }
+        Tregmine.LOGGER.info("Discord: The following servers are visible: " + api.getGuilds().size());
 
         // check & get location info
         guild = api.getGuildById(this.plugin.getConfig().getString("discord.guild-info.guild-id"));
@@ -149,18 +140,6 @@ public class DiscordSRV {
                     && !PermissionUtil.checkPermission(consoleChannel, selfMember, Permission.MESSAGE_READ))
                 Tregmine.LOGGER.warning("The bot does not have access to read messages in " + consoleChannel.getName());
         }
-
-        // load unsubscribed users
-        if (new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").exists())
-            try {
-                for (String id : FileUtils
-                        .readFileToString(new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt"))
-                        .split("\n"))
-                    unsubscribedPlayers.add(id);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
     }
 
     public void broadcastMessageToMinecraftServer(String message) {
