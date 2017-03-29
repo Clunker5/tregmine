@@ -43,26 +43,25 @@ public class DebugCommand extends DiscordCommand {
                     return true;
                 }
                 RandomString strBldr = new RandomString(10);
-                while (junkToSend != 0) {
-                    Thread t = new Thread(new Runnable() {
-                        public void run() {
-                            while (junkToSend != 0) {
+                new DiscordUtil().flagDestructive(message, 5);
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+                        while (junkToSend != 0) {
+                            try {
+                                message.getChannel().sendMessage(strBldr.nextString()).complete();
                                 junkToSend--;
+                            } catch (ErrorResponseException e) {
                                 try {
-                                    message.getChannel().sendMessage(strBldr.nextString());
-                                } catch (ErrorResponseException e) {
-                                    try {
-                                        Thread.sleep(2000);
-                                    } catch (InterruptedException e1) {
-                                        e1.printStackTrace();
-                                    }
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e1) {
+                                    e1.printStackTrace();
                                 }
                             }
-                            return;
                         }
-                    });
-                    t.start();
-                }
+                        return;
+                    }
+                });
+                t.start();
 
         }
         return true;
