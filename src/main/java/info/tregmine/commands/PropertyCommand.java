@@ -28,17 +28,17 @@ public class PropertyCommand extends AbstractCommand {
         b = player;
         c = args;
         if (!b.getIsAdmin()) {
-            b.sendStringMessage(ChatColor.RED + "You're not allowed to change player properties!");
+            b.sendMessage(ChatColor.RED + "You're not allowed to change player properties!");
             return true;
         }
         if (c.length <= 2) {
-            b.sendStringMessage(ChatColor.RED + "You gave the wrong amount of arguments.");
-            b.sendStringMessage(ChatColor.RED + "/property <target player> <key> <value>");
+            b.sendMessage(ChatColor.RED + "You gave the wrong amount of arguments.");
+            b.sendMessage(ChatColor.RED + "/property <target player> <key> <value>");
             return true;
         }
         e = a.matchPlayer(c[0]);
         if (e.size() != 1) {
-            b.sendStringMessage(ChatColor.RED + "The target player specified does not exist");
+            b.sendMessage(ChatColor.RED + "The target player specified does not exist");
             return true;
         }
         d = e.get(0);
@@ -59,11 +59,11 @@ public class PropertyCommand extends AbstractCommand {
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO h = ctx.getPlayerDAO();
             h.updateProperty(d, c[1], j);
-            d.sendSpigotMessage(new TextComponent(ChatColor.GOLD + c[1] + ChatColor.GREEN + " has been set to "
+            d.sendMessage(new TextComponent(ChatColor.GOLD + c[1] + ChatColor.GREEN + " has been set to "
                     + ChatColor.GOLD + j + ChatColor.GREEN + " for " + ChatColor.GOLD + d.getName()));
         } catch (DAOException g) {
             g.printStackTrace();
-            d.sendStringMessage(ChatColor.RED + "Something went wrong!");
+            d.sendMessage(ChatColor.RED + "Something went wrong!");
             return true;
         }
 

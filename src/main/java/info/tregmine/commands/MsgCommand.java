@@ -64,7 +64,7 @@ public class MsgCommand extends AbstractCommand {
                 // invisible, to prevent /msg from giving away hidden players
                 // presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-                    player.sendSpigotMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.decideVS(player),
+                    player.sendMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.decideVS(player),
                             new TextComponent(GREEN + ": " + message));
                 } else {
                     player.sendNotification(Notification.COMMAND_FAIL,

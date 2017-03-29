@@ -13,9 +13,9 @@ public class ReferralCodeCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer sender, String[] args) {
         if (sender.getRank().canHaveReferralCode()) {
-            sender.sendStringMessage(ChatColor.YELLOW + "Your referral code is " + sender.getId());
+            sender.sendMessage(ChatColor.YELLOW + "Your referral code is " + sender.getId());
         } else {
-            sender.sendStringMessage(ChatColor.RED + "Please verify your account before proceeding.");
+            sender.sendMessage(ChatColor.RED + "Please verify your account before proceeding.");
         }
         return true;
     }

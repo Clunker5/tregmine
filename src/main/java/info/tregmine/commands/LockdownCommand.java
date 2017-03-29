@@ -15,11 +15,11 @@ public class LockdownCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (!player.getIsAdmin()) {
-            player.sendStringMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
+            player.sendMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
             return true;
         }
         if (args.length == 0) {
-            player.sendStringMessage(ChatColor.RED + "You must specify <on|off>");
+            player.sendMessage(ChatColor.RED + "You must specify <on|off>");
             return true;
         }
         System.out.println(args[0]);
@@ -29,7 +29,7 @@ public class LockdownCommand extends AbstractCommand {
         } else if (args[0].equalsIgnoreCase("off")) {
             state = false;
         } else {
-            player.sendStringMessage(ChatColor.RED + "You must specify <on|off>");
+            player.sendMessage(ChatColor.RED + "You must specify <on|off>");
             return true;
         }
         plugin.setLockdown(state);

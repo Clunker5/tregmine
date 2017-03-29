@@ -21,7 +21,7 @@ public class TeleportShieldCommand extends AbstractCommand {
         }
 
         if (args.length < 1) {
-            player.sendStringMessage(
+            player.sendMessage(
                     "Your tpblock is set to " + (player.hasFlag(TregminePlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
             return true;
         }
@@ -30,15 +30,15 @@ public class TeleportShieldCommand extends AbstractCommand {
 
         if ("on".equalsIgnoreCase(state)) {
             player.setFlag(TregminePlayer.Flags.TPSHIELD);
-            player.sendStringMessage(AQUA + "Teleportation is now blocked to you.");
+            player.sendMessage(AQUA + "Teleportation is now blocked to you.");
         } else if ("off".equalsIgnoreCase(state)) {
             player.removeFlag(TregminePlayer.Flags.TPSHIELD);
-            player.sendStringMessage(AQUA + "Teleportation is now allowed to you.");
+            player.sendMessage(AQUA + "Teleportation is now allowed to you.");
         } else if ("status".equalsIgnoreCase(state)) {
-            player.sendStringMessage(
+            player.sendMessage(
                     "Your tpblock is set to " + (player.hasFlag(TregminePlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
         } else {
-            player.sendStringMessage(RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
+            player.sendMessage(RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
         }
 
         try (IContext ctx = tregmine.createContext()) {

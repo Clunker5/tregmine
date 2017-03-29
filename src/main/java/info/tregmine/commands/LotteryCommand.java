@@ -43,24 +43,24 @@ public class LotteryCommand extends AbstractCommand {
         }
 
         if (args.length < 1 || args.length > 1) {
-            player.sendStringMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE + "Lottery Info"
+            player.sendMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE + "Lottery Info"
                     + ChatColor.DARK_AQUA + "----------------");
-            player.sendStringMessage(ChatColor.RED + "Amount needed to join: " + ChatColor.YELLOW + "2,000 Tregs");
-            player.sendStringMessage(ChatColor.RED + "Players in lottery: " + ChatColor.YELLOW + size);
-            player.sendStringMessage(ChatColor.RED + "Amount currently in lottery: " + ChatColor.YELLOW
+            player.sendMessage(ChatColor.RED + "Amount needed to join: " + ChatColor.YELLOW + "2,000 Tregs");
+            player.sendMessage(ChatColor.RED + "Players in lottery: " + ChatColor.YELLOW + size);
+            player.sendMessage(ChatColor.RED + "Amount currently in lottery: " + ChatColor.YELLOW
                     + format.format(amount) + " Tregs");
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.RED + "Prize is including a: " + ChatColor.YELLOW + jackpot + " treg bonus!");
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.RED + "Enough players for lottery (min 2): " + ChatColor.YELLOW + enough);
-            player.sendStringMessage(ChatColor.RED + "You are in lottery: " + ChatColor.YELLOW + joined);
-            player.sendStringMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE
+            player.sendMessage(ChatColor.RED + "You are in lottery: " + ChatColor.YELLOW + joined);
+            player.sendMessage(ChatColor.DARK_AQUA + "----------------" + ChatColor.DARK_PURPLE
                     + "Lottery Command" + ChatColor.DARK_AQUA + "-------------");
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.RED + "/lottery join - " + ChatColor.YELLOW + "Join the lottery (Takes 2,000 Tregs)");
-            player.sendStringMessage(ChatColor.RED + "/lottery quit - " + ChatColor.YELLOW
+            player.sendMessage(ChatColor.RED + "/lottery quit - " + ChatColor.YELLOW
                     + "Quit the lottery before a winner is picked");
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.RED + "/lottery choose - " + ChatColor.YELLOW + "Randomly picks a winner");
         }
 
@@ -68,9 +68,9 @@ public class LotteryCommand extends AbstractCommand {
             if (player.getRank().canChangeJackpot()) {
                 try {
                     jackpot = Integer.parseInt(args[1]);
-                    player.sendStringMessage(ChatColor.GREEN + "Changed jackpot to " + jackpot + "!");
+                    player.sendMessage(ChatColor.GREEN + "Changed jackpot to " + jackpot + "!");
                 } catch (NumberFormatException e) {
-                    player.sendStringMessage(ChatColor.AQUA + "Failed to change jackpot due to incorrect parameters!");
+                    player.sendMessage(ChatColor.AQUA + "Failed to change jackpot due to incorrect parameters!");
                     e.printStackTrace();
                 }
             }
@@ -84,15 +84,15 @@ public class LotteryCommand extends AbstractCommand {
                     if (!lottery.contains(player)) {
                         if (wallet.take(player, 2000)) {
                             lottery.add(player);
-                            player.sendStringMessage(ChatColor.GREEN + "You've been added to the lottery!");
-                            player.sendStringMessage(ChatColor.GREEN + "2,000 Tregs have been taken from you.");
+                            player.sendMessage(ChatColor.GREEN + "You've been added to the lottery!");
+                            player.sendMessage(ChatColor.GREEN + "2,000 Tregs have been taken from you.");
                             tregmine.broadcast(player.getChatName(),
                                     new TextComponent(ChatColor.DARK_GREEN + " joined the lottery!"));
                         } else {
-                            player.sendStringMessage(ChatColor.RED + "You need at least 2,000 Tregs to join!");
+                            player.sendMessage(ChatColor.RED + "You need at least 2,000 Tregs to join!");
                         }
                     } else {
-                        player.sendStringMessage(ChatColor.RED + "You've already joined the lottery!");
+                        player.sendMessage(ChatColor.RED + "You've already joined the lottery!");
                     }
                 }
 
@@ -100,8 +100,8 @@ public class LotteryCommand extends AbstractCommand {
                     if (lottery.contains(player)) {
                         lottery.remove(player);
                         wallet.add(player, 2000);
-                        player.sendStringMessage(ChatColor.RED + "You are no longer in the lottery.");
-                        player.sendStringMessage(ChatColor.RED + "You received your 2,000 Tregs back");
+                        player.sendMessage(ChatColor.RED + "You are no longer in the lottery.");
+                        player.sendMessage(ChatColor.RED + "You received your 2,000 Tregs back");
                         tregmine.broadcast(player.getChatName(),
                                 new TextComponent(ChatColor.RED + " withdrew themself from the lottery"/*
                                                                                                          * +
@@ -132,7 +132,7 @@ public class LotteryCommand extends AbstractCommand {
                             Random random = new Random();
                             TregminePlayer winner = lottery.get(random.nextInt(size));
                             if (!winner.isOnline()) {
-                                player.sendStringMessage(ChatColor.RED + winner.getChatNameNoHover() + " won, "
+                                player.sendMessage(ChatColor.RED + winner.getChatNameNoHover() + " won, "
                                         + "but is no longer online. Try again.");
                                 return true;
                             }
@@ -142,12 +142,12 @@ public class LotteryCommand extends AbstractCommand {
                                     new TextComponent(ChatColor.DARK_AQUA + " won the lottery! " + ChatColor.RED + " - "
                                             + ChatColor.GOLD + format.format(amount) + " Tregs!"));
                             lottery.clear();
-                            player.sendStringMessage(ChatColor.GREEN + "Lottery has been succesfully cleared.");
+                            player.sendMessage(ChatColor.GREEN + "Lottery has been succesfully cleared.");
                         } else {
-                            player.sendStringMessage(ChatColor.RED + "At least two players must be in the lottery!");
+                            player.sendMessage(ChatColor.RED + "At least two players must be in the lottery!");
                         }
                     } else {
-                        player.sendStringMessage(ChatColor.RED + "Only Admins/Guardians/Coders can use this command!");
+                        player.sendMessage(ChatColor.RED + "Only Admins/Guardians/Coders can use this command!");
                     }
                 }
             } catch (DAOException error) {

@@ -32,10 +32,10 @@ public class MentorCommand extends AbstractCommand {
             startMentoring(plugin, student, mentor);
         } else {
             if (onlineTeachers < 3) {
-                student.sendStringMessage(RED
+                student.sendMessage(RED
                         + "As there are less than three teachers online, you can do /mentor complete to skip the mentoring process automatically. Alternatively, you can wait for a mentor to be assigned to you.");
             } else {
-                student.sendStringMessage(YELLOW + "You will now be assigned "
+                student.sendMessage(YELLOW + "You will now be assigned "
                         + "a mentor to show you around, as soon as one becomes available.");
             }
             Queue<TregminePlayer> students = plugin.getStudentQueue();
@@ -46,7 +46,7 @@ public class MentorCommand extends AbstractCommand {
                     continue;
                 }
 
-                p.sendStringMessage(
+                p.sendMessage(
                         student.getName() + YELLOW + " needs a mentor! Type /mentor to " + "offer your services!");
             }
         }
@@ -72,29 +72,29 @@ public class MentorCommand extends AbstractCommand {
         Tregmine.LOGGER.info("[MENTOR] " + mentor.getName() + " is " + "mentoring " + student.getName());
 
         // Instructions for students
-        student.sendStringMessage(mentor.getName() + GREEN + " has been assigned as your mentor!");
-        student.sendStringMessage(YELLOW + "He or she will show you "
+        student.sendMessage(mentor.getName() + GREEN + " has been assigned as your mentor!");
+        student.sendMessage(YELLOW + "He or she will show you "
                 + "around, answer any questions, and help you find a place " + "to build.");
-        student.sendStringMessage(YELLOW + "If your mentor turns out to be unhelpful, " + "type " + RED
+        student.sendMessage(YELLOW + "If your mentor turns out to be unhelpful, " + "type " + RED
                 + "/mentor cancel" + YELLOW + " to stop and wait " + "for a new mentor to become available.");
 
         // Instructions for mentor
-        mentor.sendStringMessage(GREEN + "You have been assigned to " + "mentor " + student.getName() + GREEN + ".");
-        mentor.sendStringMessage(YELLOW + "Please do this: ");
-        mentor.sendStringMessage(YELLOW + "1. Explain basic rules (" + RED
+        mentor.sendMessage(GREEN + "You have been assigned to " + "mentor " + student.getName() + GREEN + ".");
+        mentor.sendMessage(YELLOW + "Please do this: ");
+        mentor.sendMessage(YELLOW + "1. Explain basic rules (" + RED
                 + "Do not force your student to read the rules, or take a test " + YELLOW + ")");
-        mentor.sendStringMessage(YELLOW + "2. Demonstrate basic commands");
-        mentor.sendStringMessage(YELLOW + "3. Show him or her around");
-        mentor.sendStringMessage(
+        mentor.sendMessage(YELLOW + "2. Demonstrate basic commands");
+        mentor.sendMessage(YELLOW + "3. Show him or her around");
+        mentor.sendMessage(
                 YELLOW + "4. Help him or her to find a lot " + "and start building. If you own a zone, you may sell "
                         + "a lot, but keep in mind that it might be a good idea "
                         + "to let other players make offers too. Your students will "
                         + "also be able to build anywhere as long as they are within a " + "50 block radius of you.");
-        mentor.sendStringMessage(YELLOW + "Scamming new players will not be  " + "tolerated.");
-        mentor.sendStringMessage(YELLOW + "Mentoring takes at least 15 minutes, and "
+        mentor.sendMessage(YELLOW + "Scamming new players will not be  " + "tolerated.");
+        mentor.sendMessage(YELLOW + "Mentoring takes at least 15 minutes, and "
                 + "after that time has passed you can upgrade the tourist to " + "settler rank by doing " + GREEN
                 + "/mentor complete" + YELLOW + ".");
-        mentor.sendStringMessage(YELLOW + "Please start by teleporting to " + student.getName() + YELLOW
+        mentor.sendMessage(YELLOW + "Please start by teleporting to " + student.getName() + YELLOW
                 + ", or by summoning him or her!");
     }
 
@@ -107,12 +107,12 @@ public class MentorCommand extends AbstractCommand {
 
         if ("queue".equalsIgnoreCase(action)) {
             if (!player.canMentor()) {
-                player.sendStringMessage(RED + "You have not been granted mentoring abilities.");
+                player.sendMessage(RED + "You have not been granted mentoring abilities.");
                 return true;
             }
 
             if (player.getStudent() != null) {
-                player.sendStringMessage(RED + "You can only mentor one " + "student at any given time.");
+                player.sendMessage(RED + "You can only mentor one " + "student at any given time.");
                 return true;
             }
 
@@ -126,7 +126,7 @@ public class MentorCommand extends AbstractCommand {
             Queue<TregminePlayer> mentors = tregmine.getMentorQueue();
             mentors.offer(player);
 
-            player.sendStringMessage(GREEN + "You are now part of the mentor queue. " + "You are number "
+            player.sendMessage(GREEN + "You are now part of the mentor queue. " + "You are number "
                     + mentors.size() + ". Type /mentor cancel " + "to opt out.");
         } else if ("cancel".equalsIgnoreCase(action)) {
             if (player.getRank() == Rank.TOURIST) {
@@ -143,29 +143,29 @@ public class MentorCommand extends AbstractCommand {
                 player.setMentor(null);
                 mentor.setStudent(null);
 
-                mentor.sendStringMessage(player.getName() + "" + RED + " cancelled " + "mentoring with you.");
-                player.sendStringMessage(GREEN + "Mentoring cancelled. Attempting to " + "find you a new mentor.");
+                mentor.sendMessage(player.getName() + "" + RED + " cancelled " + "mentoring with you.");
+                player.sendMessage(GREEN + "Mentoring cancelled. Attempting to " + "find you a new mentor.");
 
                 findMentor(tregmine, player);
             } else {
                 Queue<TregminePlayer> mentors = tregmine.getMentorQueue();
                 if (!mentors.contains(player)) {
-                    player.sendStringMessage(RED + "You are not part of the mentor queue. "
+                    player.sendMessage(RED + "You are not part of the mentor queue. "
                             + "If you have already been assigned a student, you cannot " + "abort the mentoring.");
                     return true;
                 }
                 mentors.remove(player);
 
-                player.sendStringMessage(GREEN + "You are no longer part of the mentor queue.");
+                player.sendMessage(GREEN + "You are no longer part of the mentor queue.");
             }
         } else if ("complete".equalsIgnoreCase(action)) {
             if (!player.getRank().canMentor() && tregmine.getOnlineTeachers() >= 3) {
-                player.sendStringMessage(RED + "You do not have permission to mentor.");
+                player.sendMessage(RED + "You do not have permission to mentor.");
                 return true;
             }
             TregminePlayer student = player.getStudent();
             if (student == null && tregmine.getOnlineTeachers() >= 3) {
-                player.sendStringMessage(RED + "You are not mentoring anyone right now.");
+                player.sendMessage(RED + "You are not mentoring anyone right now.");
                 return true;
             }
 
@@ -181,7 +181,7 @@ public class MentorCommand extends AbstractCommand {
                     int mentorLogId = mentorLogDAO.getMentorLogId(player, player);
 
                     mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.SKIPPED);
-                    player.sendStringMessage(ChatColor.GREEN + "You have been elevated to settler status.");
+                    player.sendMessage(ChatColor.GREEN + "You have been elevated to settler status.");
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 }
@@ -198,10 +198,10 @@ public class MentorCommand extends AbstractCommand {
                     int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
 
                     mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.COMPLETED);
-                    player.sendStringMessage(GREEN + "Mentoring of " + student.getName() + GREEN + " has now finished!");
+                    player.sendMessage(GREEN + "Mentoring of " + student.getName() + GREEN + " has now finished!");
                     player.giveExp(100);
 
-                    student.sendStringMessage(GREEN + "Congratulations! You have now achieved "
+                    student.sendMessage(GREEN + "Congratulations! You have now achieved "
                             + "settler status. We hope you'll enjoy your stay on Tregmine!");
                 } catch (DAOException e) {
                     throw new RuntimeException(e);

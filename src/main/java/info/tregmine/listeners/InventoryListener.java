@@ -152,7 +152,7 @@ public class InventoryListener implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE
                 && (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld())) {
             event.setCancelled(true);
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.RED + "You cannot be in creative in this world! Your gamemode has been set to survival.");
             return;
         }
@@ -196,7 +196,7 @@ public class InventoryListener implements Listener {
                 }
 
                 if (others > 0 && player.hasFlag(TregminePlayer.Flags.CHEST_LOG)) {
-                    player.sendStringMessage(ChatColor.YELLOW + "Last accessed by:");
+                    player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
                     SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
                     int i = 0;
                     for (InventoryAccess access : accessLog) {
@@ -207,7 +207,7 @@ public class InventoryListener implements Listener {
                             TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
                             TextComponent message = new TextComponent(
                                     ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
-                            player.sendSpigotMessage(p.getChatName(), message);
+                            player.sendMessage(p.getChatName(), message);
                             i++;
                         }
                     }

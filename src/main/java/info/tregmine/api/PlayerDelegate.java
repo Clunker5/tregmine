@@ -996,12 +996,7 @@ public abstract class PlayerDelegate {
         delegate.sendRawMessage(p0);
     }
 
-    public void sendSpigotMessage(BaseComponent a) {
-        checkState();
-        sendSpigotMessage(new BaseComponent[]{a});
-    }
-
-    public void sendSpigotMessage(BaseComponent... a) {
+    public void sendMessage(BaseComponent... a) {
         checkState();
         if (getHandle().playerConnection == null)
             return;
@@ -1010,7 +1005,7 @@ public abstract class PlayerDelegate {
         getHandle().playerConnection.sendPacket(packet);
     }
 
-    public void sendStringMessage(String message) {
+    public void sendMessage(String message) {
         checkState();
         delegate.sendMessage(message);
     }

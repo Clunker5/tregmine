@@ -131,7 +131,7 @@ public class ActionCommand extends AbstractCommand {
                 msg = msg.replaceAll("#o", ChatColor.ITALIC + "");
             }
         } else {
-            player.sendStringMessage(ChatColor.RED + "You are not allowed to use chat colors!");
+            player.sendMessage(ChatColor.RED + "You are not allowed to use chat colors!");
         }
 
         Collection<? extends Player> players = server.getOnlinePlayers();

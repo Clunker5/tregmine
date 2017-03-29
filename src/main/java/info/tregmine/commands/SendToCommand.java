@@ -33,7 +33,7 @@ public class SendToCommand extends AbstractCommand {
         Server server = tregmine.getServer();
         World world = server.getWorld(args[1]);
         if (world == null) {
-            player.sendStringMessage(ChatColor.RED + "That world does not exist.");
+            player.sendMessage(ChatColor.RED + "That world does not exist.");
             return true;
         }
 

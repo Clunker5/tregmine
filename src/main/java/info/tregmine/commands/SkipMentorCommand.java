@@ -24,27 +24,27 @@ public class SkipMentorCommand extends AbstractCommand {
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getRank() != Rank.SENIOR_ADMIN && player.getRank() != Rank.JUNIOR_ADMIN
                 && player.getRank() != Rank.GUARDIAN) {
-            player.sendStringMessage(RED
+            player.sendMessage(RED
                     + "You are not authorized to perform that command. All online administrators have been notified.");
             return true;
         }
         if (args.length != 1) {
             // Player didn't enter two arguments, terminate.
-            player.sendStringMessage(ChatColor.RED + "Invalid arguments! Use /skipmentor <player>");
+            player.sendMessage(ChatColor.RED + "Invalid arguments! Use /skipmentor <player>");
             return true;
         }
         // The checks have finished, perform the command
         String possibleuser = args[0];
         List<TregminePlayer> candidate = tregmine.matchPlayer(possibleuser);
         if (candidate.size() != 1) {
-            player.sendStringMessage(RED + "The player specified was not found. Please try again.");
+            player.sendMessage(RED + "The player specified was not found. Please try again.");
             return true;
         }
         TregminePlayer user = candidate.get(0);
         if (user.hasFlag(Flags.HARDWARNED)) {
             // Players with a hardwarn cannot be promoted using this command.
             // They must be promoted manually.
-            player.sendStringMessage(
+            player.sendMessage(
                     RED + "The player specified has been hardwarned and is not eligible for promotion.");
             return true;
         }
@@ -63,7 +63,7 @@ public class SkipMentorCommand extends AbstractCommand {
             }
             return true;
         } else {
-            player.sendStringMessage(
+            player.sendMessage(
                     RED + "This player cannot skip mentoring because their rank does not qualify them.");
             return true;
         }

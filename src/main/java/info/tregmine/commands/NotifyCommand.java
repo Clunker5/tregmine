@@ -38,7 +38,7 @@ public abstract class NotifyCommand extends AbstractCommand {
 
         // Don't send it twice
         if (!isTarget(player)) {
-            player.sendSpigotMessage(new TextComponent(getColor() + " + "), player.decideVS(player),
+            player.sendMessage(new TextComponent(getColor() + " + "), player.decideVS(player),
                     new TextComponent(" " + WHITE + msg));
         }
 
@@ -46,7 +46,7 @@ public abstract class NotifyCommand extends AbstractCommand {
             if (!isTarget(to)) {
                 continue;
             }
-            to.sendSpigotMessage(new TextComponent(getColor() + " + "), player.decideVS(to),
+            to.sendMessage(new TextComponent(getColor() + " + "), player.decideVS(to),
                     new TextComponent(" " + WHITE + msg));
         }
 

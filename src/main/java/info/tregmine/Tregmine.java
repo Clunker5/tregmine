@@ -181,13 +181,13 @@ public class Tregmine extends JavaPlugin {
 
     public void broadcast(BaseComponent a) {
         for (TregminePlayer player : this.getOnlinePlayers()) {
-            player.sendSpigotMessage(a);
+            player.sendMessage(a);
         }
     }
 
     public void broadcast(BaseComponent... a) {
         for (TregminePlayer player : this.getOnlinePlayers()) {
-            player.sendSpigotMessage(a);
+            player.sendMessage(a);
         }
     }
 
@@ -557,7 +557,7 @@ public class Tregmine extends JavaPlugin {
 
         try {
             for (TregminePlayer player : getOnlinePlayers()) {
-                player.sendSpigotMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA
+                player.sendMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA
                         + " may be shutting down soon! Please prepare to be kicked."));
                 player.saveInventory(player.getCurrentInventory());
                 removePlayer(player);
@@ -897,7 +897,7 @@ public class Tregmine extends JavaPlugin {
 
         try {
             for (TregminePlayer player : getOnlinePlayers()) {
-                player.sendStringMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
+                player.sendMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -914,7 +914,7 @@ public class Tregmine extends JavaPlugin {
                             player.setCombatLog(player.getCombatLog() - 1);
 
                             if (player.getCombatLog() == 0) {
-                                player.sendSpigotMessage(new TextComponent(
+                                player.sendMessage(new TextComponent(
                                         ChatColor.GREEN + "Combat log has warn off... Safe to log off!"));
                             }
                         }

@@ -25,16 +25,16 @@ public class AlertCommand extends AbstractCommand {
         }
 
         if (args.length == 0) {
-            player.sendStringMessage(ChatColor.DARK_RED + "Incorrect Syntax:");
-            player.sendStringMessage(ChatColor.AQUA + "/alert <add/remove> word (To add/remove alert words)");
-            player.sendStringMessage(ChatColor.AQUA + "/alert list (To view your alert words)");
+            player.sendMessage(ChatColor.DARK_RED + "Incorrect Syntax:");
+            player.sendMessage(ChatColor.AQUA + "/alert <add/remove> word (To add/remove alert words)");
+            player.sendMessage(ChatColor.AQUA + "/alert list (To view your alert words)");
             return true;
         } else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             if (player_keywords.size() > 0) {
-                player.sendStringMessage(ChatColor.AQUA
+                player.sendMessage(ChatColor.AQUA
                         + player_keywords.toString().replace(",", " ").replace("[", "").replace("]", ""));
             } else {
-                player.sendStringMessage("Detected no alert words!");
+                player.sendMessage("Detected no alert words!");
             }
             return true;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
@@ -42,7 +42,7 @@ public class AlertCommand extends AbstractCommand {
             try (IContext ctx = tregmine.createContext()) {
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updateKeywords(player, player_keywords);
-                player.sendStringMessage(ChatColor.AQUA + "Added the alert word: " + args[1]);
+                player.sendMessage(ChatColor.AQUA + "Added the alert word: " + args[1]);
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
@@ -51,7 +51,7 @@ public class AlertCommand extends AbstractCommand {
             if (player_keywords.contains(args[1])) {
                 player_keywords.remove(args[1]);
             } else {
-                player.sendStringMessage(ChatColor.AQUA + "The alert word " + args[1] + " doesn't exist to remove!");
+                player.sendMessage(ChatColor.AQUA + "The alert word " + args[1] + " doesn't exist to remove!");
                 return true;
             }
 
@@ -61,7 +61,7 @@ public class AlertCommand extends AbstractCommand {
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
-            player.sendStringMessage(ChatColor.AQUA + "Removed the alert word: " + args[1]);
+            player.sendMessage(ChatColor.AQUA + "Removed the alert word: " + args[1]);
 
             return true;
         }

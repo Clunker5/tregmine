@@ -84,7 +84,7 @@ public class CompassListener implements Listener {
             BooleanStringReturn returnValue = player.canBeHere(target.getLocation());
 
             if (!returnValue.getBoolean()) {
-                player.sendStringMessage(returnValue.getString());
+                player.sendMessage(returnValue.getString());
                 return;
             }
 
@@ -101,7 +101,7 @@ public class CompassListener implements Listener {
                             target.getZ() + 0.5, player.getLocation().getYaw(), player.getLocation().getPitch());
                     player.teleportWithHorse(loc);
                 } else {
-                    player.sendStringMessage(ChatColor.RED + "I think its a stupid idea to teleport in to a wall");
+                    player.sendMessage(ChatColor.RED + "I think its a stupid idea to teleport in to a wall");
                 }
             }
         }

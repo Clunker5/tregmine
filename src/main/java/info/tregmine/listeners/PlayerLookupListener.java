@@ -53,7 +53,7 @@ public class PlayerLookupListener implements Listener {
                 }
 
                 SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
-                player.sendStringMessage(ChatColor.RED + "[" + i.getAction() + "]" + i.getMessage() + " - Valid until: "
+                player.sendMessage(ChatColor.RED + "[" + i.getAction() + "]" + i.getMessage() + " - Valid until: "
                         + dfm.format(i.getTimestamp()));
                 break;
             }
@@ -66,18 +66,18 @@ public class PlayerLookupListener implements Listener {
                 for (TregminePlayer to : plugin.getOnlinePlayers()) {
                     if (to.getRank().canSeeHiddenInfo()) {
                         if (player.getCountry() != null) {
-                            to.sendSpigotMessage(new TextComponent("Welcome "), player.getChatNameStaff(),
+                            to.sendMessage(new TextComponent("Welcome "), player.getChatNameStaff(),
                                     new TextComponent(" from " + player.getCountry() + "!"));
-                            to.sendSpigotMessage(player.getChatNameStaff(),
+                            to.sendMessage(player.getChatNameStaff(),
                                     new TextComponent(ChatColor.DARK_AQUA + " is invisible!"));
                         } else {
-                            to.sendSpigotMessage(new TextComponent(ChatColor.DARK_AQUA + "Welcome "),
+                            to.sendMessage(new TextComponent(ChatColor.DARK_AQUA + "Welcome "),
                                     player.getChatNameStaff());
-                            to.sendSpigotMessage(player.getChatNameStaff(),
+                            to.sendMessage(player.getChatNameStaff(),
                                     new TextComponent("" + ChatColor.DARK_AQUA + " is invisible!"));
                         }
                         if (player.hasFlag(Flags.CHILD)) {
-                            to.sendSpigotMessage(player.getChatName(), new TextComponent(
+                            to.sendMessage(player.getChatName(), new TextComponent(
                                     ChatColor.YELLOW + " is a child; Please be aware when sending messages."));
                         }
                     }

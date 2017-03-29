@@ -21,7 +21,7 @@ public class GiveCommand extends AbstractCommand {
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.isInVanillaWorld()) {
             player.setFireTicks(30);
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (args.length == 0) {
@@ -42,14 +42,14 @@ public class GiveCommand extends AbstractCommand {
 
         TregminePlayer target = candidates.get(0);
         if (target.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "That player is in the vanilla world!");
+            player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
             return true;
         }
         Material material;
         try {
             material = Material.getMaterial(param);
         } catch (NullPointerException ne) {
-            player.sendStringMessage(DARK_AQUA + "/give <name> <amount> <data>.");
+            player.sendMessage(DARK_AQUA + "/give <name> <amount> <data>.");
             return true;
         }
 
@@ -85,9 +85,9 @@ public class GiveCommand extends AbstractCommand {
 
         String materialName = material.name();
 
-        player.sendStringMessage("You gave " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + " to "
+        player.sendMessage("You gave " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + " to "
                 + target.getName() + ".");
-        target.sendStringMessage(YELLOW + "You were gifted by the gods. Look in your " + "inventory!");
+        target.sendMessage(YELLOW + "You were gifted by the gods. Look in your " + "inventory!");
         LOGGER.info(player.getName() + " SPAWNED " + amount + ":" + materialName + "=>" + target.getName());
 
         return true;

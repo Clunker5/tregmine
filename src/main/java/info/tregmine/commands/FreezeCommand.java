@@ -17,26 +17,26 @@ public class FreezeCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (!player.getIsAdmin()) {
-            player.sendStringMessage(ChatColor.RED + "You don't have permission to freeze players!");
+            player.sendMessage(ChatColor.RED + "You don't have permission to freeze players!");
             return true;
         }
         if (args.length != 1) {
-            player.sendStringMessage(ChatColor.RED + "Invalid arguments! Use /freeze <player>");
+            player.sendMessage(ChatColor.RED + "Invalid arguments! Use /freeze <player>");
             return true;
         }
         String raw = args[0];
         List<TregminePlayer> victims = plugin.matchPlayer(raw);
         if (victims.size() != 1) {
-            player.sendStringMessage(ChatColor.RED + "That player is not online!");
+            player.sendMessage(ChatColor.RED + "That player is not online!");
             return true;
         }
         TregminePlayer victim = victims.get(0);
         if (player.isInVanillaWorld()) {
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.RED + "You cannot freeze that player because they are in the vanilla world!");
             return true;
         }
@@ -44,8 +44,8 @@ public class FreezeCommand extends AbstractCommand {
         victim.setFrozen(newValue);
         String getState = (newValue ? "frozen" : "unfrozen");
         ChatColor color = (newValue ? ChatColor.RED : ChatColor.GREEN);
-        player.sendStringMessage(victim.getName() + ChatColor.BLUE + " has been " + getState + ".");
-        victim.sendStringMessage(color + "You have been " + getState + ".");
+        player.sendMessage(victim.getName() + ChatColor.BLUE + " has been " + getState + ".");
+        victim.sendMessage(color + "You have been " + getState + ".");
         return true;
     }
 }

@@ -20,7 +20,7 @@ public class VanishCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (!player.getRank().canVanish()) {
@@ -29,11 +29,11 @@ public class VanishCommand extends AbstractCommand {
 
         if (args.length == 0) {
             if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-                player.sendStringMessage(DARK_AQUA + "You are currently invisible.");
+                player.sendMessage(DARK_AQUA + "You are currently invisible.");
             } else {
-                player.sendStringMessage(DARK_AQUA + "You are currently visible.");
+                player.sendMessage(DARK_AQUA + "You are currently visible.");
             }
-            player.sendStringMessage(DARK_AQUA + "If you wanted to switch your visibility status, do /vanish on|off");
+            player.sendMessage(DARK_AQUA + "If you wanted to switch your visibility status, do /vanish on|off");
             return true;
         }
 
@@ -66,9 +66,9 @@ public class VanishCommand extends AbstractCommand {
         }
 
         if (vanish) {
-            player.sendStringMessage(YELLOW + "You are now invisible!");
+            player.sendMessage(YELLOW + "You are now invisible!");
         } else {
-            player.sendStringMessage(YELLOW + "You are no longer hidden!");
+            player.sendMessage(YELLOW + "You are no longer hidden!");
         }
 
         return true;

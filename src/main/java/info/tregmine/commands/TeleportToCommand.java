@@ -15,11 +15,11 @@ public class TeleportToCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (args.length != 3) {
-            player.sendStringMessage(ChatColor.RED + "Incorrect parameters passed!");
+            player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
             return true;
         }
         if (!player.getRank().canTeleportToPlayers()) {
@@ -50,7 +50,7 @@ public class TeleportToCommand extends AbstractCommand {
             }
 
             if (x == 0 || y == 0 || z == 0) {
-                player.sendStringMessage(ChatColor.RED + "Incorrect parameters passed!");
+                player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
                 return true;
             }
         }

@@ -21,8 +21,8 @@ public class ChannelCommand extends AbstractCommand {
         String channel = args[0];
         String oldchannel = player.getChatChannel();
 
-        player.sendStringMessage(YELLOW + "You are now talking in channel " + channel + ".");
-        player.sendStringMessage(YELLOW + "Write /channel global to switch to " + "the global chat.");
+        player.sendMessage(YELLOW + "You are now talking in channel " + channel + ".");
+        player.sendMessage(YELLOW + "Write /channel global to switch to " + "the global chat.");
         player.setChatChannel(channel);
 
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE))
@@ -34,10 +34,10 @@ public class ChannelCommand extends AbstractCommand {
 
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldchannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendSpigotMessage(player.decideVS(player),
+                players.sendMessage(player.decideVS(player),
                         new TextComponent(ChatColor.YELLOW + " has left channel " + oldchannel));
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendSpigotMessage(player.decideVS(players),
+                players.sendMessage(player.decideVS(players),
                         new TextComponent(ChatColor.YELLOW + " has joined channel " + channel));
             }
         }

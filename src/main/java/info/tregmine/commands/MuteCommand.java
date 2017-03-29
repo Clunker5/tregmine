@@ -16,20 +16,20 @@ public class MuteCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (!player.getRank().canMute()) {
-            player.sendStringMessage(ChatColor.RED + "You aren't allowed to mute players.");
+            player.sendMessage(ChatColor.RED + "You aren't allowed to mute players.");
             return true;
         }
         if (args.length != 2) {
-            player.sendStringMessage(ChatColor.RED + "Invalid Arguments; /mute <player> <duration:-1 for indefinite>");
+            player.sendMessage(ChatColor.RED + "Invalid Arguments; /mute <player> <duration:-1 for indefinite>");
             return true;
         }
         if (tregmine.getPlayer(args[0]) == null) {
-            player.sendStringMessage(ChatColor.YELLOW + "Player not found; Check the spelling and try again");
+            player.sendMessage(ChatColor.YELLOW + "Player not found; Check the spelling and try again");
             return true;
         }
         TregminePlayer mutee = tregmine.getPlayer(args[0]);
         if (!mutee.getRank().canBeMuted()) {
-            player.sendSpigotMessage(new TextComponent(ChatColor.RED + "You cannot mute "), mutee.decideVS(player),
+            player.sendMessage(new TextComponent(ChatColor.RED + "You cannot mute "), mutee.decideVS(player),
                     new TextComponent(ChatColor.RED + " because their rank bypasses muting."));
             return true;
         }
@@ -37,7 +37,7 @@ public class MuteCommand extends AbstractCommand {
         try {
             duration = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.YELLOW + "Invalid duration specified; /mute <player> <duration:-1 for indefinite>");
             return true;
         }
@@ -45,7 +45,7 @@ public class MuteCommand extends AbstractCommand {
         mutee.setMuted(true);
         mutee.setMute(mute);
         String suffix = (duration == -1) ? "ever" : " " + duration + " seconds";
-        player.sendSpigotMessage(mutee.getChatName(),
+        player.sendMessage(mutee.getChatName(),
                 new TextComponent(ChatColor.YELLOW + " has been muted for" + suffix));
         return true;
     }

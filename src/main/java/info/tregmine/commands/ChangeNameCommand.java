@@ -20,7 +20,7 @@ public class ChangeNameCommand extends AbstractCommand {
             return false;
         }
         if (!player.getRank().canChangeName()) {
-            player.sendStringMessage(ChatColor.RED + "You can't change your name!");
+            player.sendMessage(ChatColor.RED + "You can't change your name!");
             return true;
         }
         // String colorstring = args[0];
@@ -66,7 +66,7 @@ public class ChangeNameCommand extends AbstractCommand {
         player.setTemporaryChatName(nname.getNickname());
 
         player.setProperty(Property.NICKNAME);
-        player.sendStringMessage("You are now: " + player.getChatNameNoHover());
+        player.sendMessage("You are now: " + player.getChatNameNoHover());
         LOGGER.info(player.getName() + " changed name to " + player.getChatNameNoHover());
 
         return true;

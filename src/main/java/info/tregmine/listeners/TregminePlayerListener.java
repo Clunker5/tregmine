@@ -135,7 +135,7 @@ public class TregminePlayerListener implements Listener {
                 // Notify previously active guardian of their state change
                 for (TregminePlayer guardian : activeGuardians) {
                     if (!activationSet.contains(guardian)) {
-                        guardian.sendStringMessage(ChatColor.BLUE
+                        guardian.sendMessage(ChatColor.BLUE
                                 + "You are no longer on active duty, and should not respond to help requests, unless asked by an admin or active guardian.");
                     }
                 }
@@ -143,7 +143,7 @@ public class TregminePlayerListener implements Listener {
                 // Notify previously inactive guardians of their state change
                 for (TregminePlayer guardian : inactiveGuardians) {
                     if (activationSet.contains(guardian)) {
-                        guardian.sendStringMessage(ChatColor.BLUE
+                        guardian.sendMessage(ChatColor.BLUE
                                 + "You have been restored to active duty and should respond to help requests.");
                     }
                 }
@@ -151,7 +151,7 @@ public class TregminePlayerListener implements Listener {
                 // Notify previously queued guardians of their state change
                 for (TregminePlayer guardian : queuedGuardians) {
                     if (activationSet.contains(guardian)) {
-                        guardian.sendStringMessage(
+                        guardian.sendMessage(
                                 ChatColor.BLUE + "You are now on active duty and should respond to help requests.");
                     }
                 }
@@ -358,9 +358,9 @@ public class TregminePlayerListener implements Listener {
                 for (StaffNews singleNews : news) {
                     String username = singleNews.getUsername();
                     String text = singleNews.getText();
-                    player.sendStringMessage(
+                    player.sendMessage(
                             ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
-                    player.sendStringMessage(ChatColor.GOLD + text);
+                    player.sendMessage(ChatColor.GOLD + text);
                 }
             }
         }
@@ -374,7 +374,7 @@ public class TregminePlayerListener implements Listener {
                 } else {
                     suffix = "messages";
                 }
-                player.sendStringMessage(
+                player.sendMessage(
                         ChatColor.AQUA + "You have " + total + " " + suffix + " -- Type /mail read to view them.");
             }
         } catch (DAOException e) {
@@ -384,7 +384,7 @@ public class TregminePlayerListener implements Listener {
         // Handle invisibility, if set
         List<TregminePlayer> players = plugin.getOnlinePlayers();
         if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-            player.sendStringMessage(ChatColor.YELLOW + "You are now invisible!");
+            player.sendMessage(ChatColor.YELLOW + "You are now invisible!");
 
             // Hide the new player from all existing players
             for (TregminePlayer current : players) {
@@ -437,18 +437,18 @@ public class TregminePlayerListener implements Listener {
 
         // Check if the player is allowed to fly
         if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) || player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
-            player.sendStringMessage("You are warned and are not allowed to fly.");
+            player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
             if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
-                player.sendStringMessage("Flying: Allowed and Enabled! Toggle flying with /fly");
+                player.sendMessage("Flying: Allowed and Enabled! Toggle flying with /fly");
                 player.setAllowFlight(true);
             } else {
-                player.sendStringMessage("Flying: Allowed but Disabled! Toggle flying with /fly");
+                player.sendMessage("Flying: Allowed but Disabled! Toggle flying with /fly");
                 player.setAllowFlight(false);
             }
         } else {
-            player.sendStringMessage("You are NOT allowed to fly");
+            player.sendMessage("You are NOT allowed to fly");
             player.setAllowFlight(false);
         }
 
@@ -461,7 +461,7 @@ public class TregminePlayerListener implements Listener {
                 playerDAO.updatePlayer(player);
                 playerDAO.updatePlayerInfo(player);
 
-                player.sendStringMessage(
+                player.sendMessage(
                         ChatColor.DARK_GREEN + "Congratulations! " + "You are now a resident on Tregmine!");
             }
 
@@ -471,7 +471,7 @@ public class TregminePlayerListener implements Listener {
             if (message != null) {
                 String[] lines = message.split("\n");
                 for (String line : lines) {
-                    player.sendStringMessage(ChatColor.GOLD + "" + ChatColor.BOLD + line);
+                    player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + line);
                 }
             }
         } catch (DAOException e) {
@@ -521,7 +521,7 @@ public class TregminePlayerListener implements Listener {
         } else if (player.canMentor()) {
             Queue<TregminePlayer> students = plugin.getStudentQueue();
             if (students.size() > 0) {
-                player.sendStringMessage(
+                player.sendMessage(
                         ChatColor.YELLOW + "Mentors are needed! " + "Type /mentor to offer your services!");
             }
         }
@@ -634,11 +634,11 @@ public class TregminePlayerListener implements Listener {
                 ILogDAO logDAO = ctx.getLogDAO();
                 logDAO.insertGiveLog(droppedBy, player, stack);
 
-                player.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "You got " + stack.getAmount() + " "
+                player.sendMessage(new TextComponent(ChatColor.YELLOW + "You got " + stack.getAmount() + " "
                         + stack.getType() + " from " + droppedBy.getName() + "."));
 
                 if (droppedBy.isOnline()) {
-                    droppedBy.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "You gave " + stack.getAmount()
+                    droppedBy.sendMessage(new TextComponent(ChatColor.YELLOW + "You gave " + stack.getAmount()
                             + " " + stack.getType() + " to " + player.getName() + "."));
                 }
             }
@@ -691,7 +691,7 @@ public class TregminePlayerListener implements Listener {
             student.setMentor(null);
             player.setStudent(null);
 
-            student.sendStringMessage(ChatColor.RED + "Your mentor left. We'll try "
+            student.sendMessage(ChatColor.RED + "Your mentor left. We'll try "
                     + "to find a new one for you as quickly as possible.");
 
             MentorCommand.findMentor(plugin, student);
@@ -709,7 +709,7 @@ public class TregminePlayerListener implements Listener {
             mentor.setStudent(null);
             player.setMentor(null);
 
-            mentor.sendStringMessage(ChatColor.RED + "Your student left. :(");
+            mentor.sendMessage(ChatColor.RED + "Your student left. :(");
         }
 
         plugin.removePlayer(player);

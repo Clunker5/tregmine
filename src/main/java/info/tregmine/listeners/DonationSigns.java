@@ -65,16 +65,16 @@ public class DonationSigns implements Listener {
             NumberFormat format = NumberFormat.getNumberInstance();
             TregminePlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
             if (receiver == null) {
-                player.sendStringMessage(ChatColor.RED + "The player on the sign does not exist!");
+                player.sendMessage(ChatColor.RED + "The player on the sign does not exist!");
                 return;
             }
 
             if (wallet.take(player, amount)) {
                 wallet.add(receiver, amount);
-                player.sendStringMessage(ChatColor.DARK_AQUA + "You donated " + ChatColor.GOLD + format.format(amount)
+                player.sendMessage(ChatColor.DARK_AQUA + "You donated " + ChatColor.GOLD + format.format(amount)
                         + " Tregs " + ChatColor.DARK_AQUA + "to " + receiver.getRealName());
             } else {
-                player.sendStringMessage(ChatColor.RED + "You dont have enough Tregs!");
+                player.sendMessage(ChatColor.RED + "You dont have enough Tregs!");
             }
         } catch (DAOException error) {
             throw new RuntimeException(error);

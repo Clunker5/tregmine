@@ -15,14 +15,14 @@ public class WeatherCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName() == "vanilla") {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (!player.getRank().canSetWeather()) {
             return true;
         }
         if (args.length != 1) {
-            player.sendStringMessage("/weather <downfall or clear>");
+            player.sendMessage("/weather <downfall or clear>");
             player.resetPlayerWeather();
             return true;
         }
@@ -30,7 +30,7 @@ public class WeatherCommand extends AbstractCommand {
         try {
             WeatherType type = WeatherType.valueOf(args[0].toUpperCase());
             player.setPlayerWeather(type);
-            player.sendStringMessage(YELLOW + "Weather set to " + type);
+            player.sendMessage(YELLOW + "Weather set to " + type);
         } catch (IllegalArgumentException e) {
             return false;
         }

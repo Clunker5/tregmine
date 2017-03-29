@@ -22,11 +22,11 @@ public class ResetLoreCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer sender, String[] args) {
         if (sender.getWorld().getName().equalsIgnoreCase("vanilla") || sender.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (!sender.getIsAdmin()) {
-            sender.sendStringMessage(ChatColor.RED + "You do not have permission to reset lores.");
+            sender.sendMessage(ChatColor.RED + "You do not have permission to reset lores.");
             return true;
         }
         player = sender;
@@ -41,7 +41,7 @@ public class ResetLoreCommand extends AbstractCommand {
                 item.setItemMeta(meta);
             }
         }
-        player.sendStringMessage(ChatColor.GOLD + "Any items that had a lore have lost their lore.");
+        player.sendMessage(ChatColor.GOLD + "Any items that had a lore have lost their lore.");
         return true;
     }
 }

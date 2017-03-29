@@ -32,7 +32,7 @@ public class StaffNewsCommand extends AbstractCommand {
             return true;
         }
         if (args.length < 3) {
-            player.sendStringMessage(ChatColor.RED + "Please provide three or more words.");
+            player.sendMessage(ChatColor.RED + "Please provide three or more words.");
             return true;
         }
         String message = argsToMessage(args);
@@ -46,7 +46,7 @@ public class StaffNewsCommand extends AbstractCommand {
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
-        player.sendStringMessage(BLUE + "Your message has been added to the news board.");
+        player.sendMessage(BLUE + "Your message has been added to the news board.");
         return true;
     }
 

@@ -34,7 +34,7 @@ public class WebKickCommand extends AbstractCommand {
         }
 
         if (args.length < 2) {
-            player.sendStringMessage(DARK_AQUA + "/webkick <player> <message>");
+            player.sendMessage(DARK_AQUA + "/webkick <player> <message>");
             return true;
         }
 
@@ -49,7 +49,7 @@ public class WebKickCommand extends AbstractCommand {
 
         WebServer webServer = tregmine.getWebServer();
         if (!webServer.isPlayerOnWeb(victim)) {
-            player.sendStringMessage(RED + "Player is not on web chat.");
+            player.sendMessage(RED + "Player is not on web chat.");
             return true;
         }
 

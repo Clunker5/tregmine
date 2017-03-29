@@ -50,12 +50,12 @@ public class SeenCommand extends AbstractCommand {
         try {
             target = tregmine.getPlayerOffline(args[0]);
         } catch (NullPointerException e) {
-            player.sendSpigotMessage(
+            player.sendMessage(
                     new TextComponent(ChatColor.RED + "That player was not found, check the spelling and try again."));
             return true;
         }
         if (target == null) {
-            player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+            player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
             return true;
         }
 
@@ -64,11 +64,11 @@ public class SeenCommand extends AbstractCommand {
             Date seen = logDAO.getLastSeen(target);
 
             if (seen != null) {
-                player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""),
+                player.sendMessage(new TextComponent(ChatColor.GREEN + ""),
                         new TextComponent(target.getChatName()),
                         new TextComponent(ChatColor.YELLOW + " was last seen on: " + ChatColor.AQUA + seen));
             } else {
-                player.sendSpigotMessage(new TextComponent(ChatColor.GREEN + ""),
+                player.sendMessage(new TextComponent(ChatColor.GREEN + ""),
                         new TextComponent(target.getChatName()),
                         new TextComponent(ChatColor.YELLOW + " hasn't been seen for a while."));
             }

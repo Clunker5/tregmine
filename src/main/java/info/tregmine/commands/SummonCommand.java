@@ -18,7 +18,7 @@ public class SummonCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName() == "vanilla") {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (args.length == 0) {
@@ -29,12 +29,12 @@ public class SummonCommand extends AbstractCommand {
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
-            player.sendStringMessage(RED + "Can't find user.");
+            player.sendMessage(RED + "Can't find user.");
         }
 
         TregminePlayer victim = candidates.get(0);
         if (victim.getWorld().getName() == "vanilla") {
-            player.sendStringMessage(ChatColor.RED + "That player is in the vanilla world!");
+            player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
             return true;
         }
         victim.setLastPos(victim.getLocation());
@@ -49,8 +49,8 @@ public class SummonCommand extends AbstractCommand {
 
         victim.teleportWithHorse(player.getLocation());
 
-        victim.sendSpigotMessage(player.decideVS(victim), new TextComponent(AQUA + " summoned you."));
-        player.sendSpigotMessage(new TextComponent(AQUA + "You summoned "), victim.decideVS(player),
+        victim.sendMessage(player.decideVS(victim), new TextComponent(AQUA + " summoned you."));
+        player.sendMessage(new TextComponent(AQUA + "You summoned "), victim.decideVS(player),
                 new TextComponent(AQUA + " to yourself."));
 
         return true;

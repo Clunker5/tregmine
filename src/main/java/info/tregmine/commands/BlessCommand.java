@@ -31,7 +31,7 @@ public class BlessCommand extends AbstractCommand {
         }
 
         TregminePlayer candidate = candidates.get(0);
-        player.sendSpigotMessage(new TextComponent(AQUA + "You will bless following " + "blocks to "),
+        player.sendMessage(new TextComponent(AQUA + "You will bless following " + "blocks to "),
                 candidate.getChatName(), new TextComponent("."));
         player.setBlessTarget(candidate.getId());
 

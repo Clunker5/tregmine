@@ -16,7 +16,7 @@ public class HeadCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[]) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (player.getRank().canGetPlayerHead()) {
@@ -28,12 +28,12 @@ public class HeadCommand extends AbstractCommand {
                 item.setItemMeta(itemMeta);
                 PlayerInventory inventory = player.getInventory();
                 inventory.addItem(item);
-                player.sendStringMessage(ChatColor.YELLOW + "You received the head of " + args[0]);
+                player.sendMessage(ChatColor.YELLOW + "You received the head of " + args[0]);
             } else {
-                player.sendStringMessage(ChatColor.RED + "Type /head <player>");
+                player.sendMessage(ChatColor.RED + "Type /head <player>");
             }
         } else {
-            player.sendStringMessage(ChatColor.RED + "Only admins can use this command!");
+            player.sendMessage(ChatColor.RED + "Only admins can use this command!");
         }
         return true;
     }

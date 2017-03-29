@@ -49,7 +49,7 @@ public class SayCommand extends AbstractCommand {
             return true;
         }
         if (args.length == 0) {
-            player.sendStringMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
+            player.sendMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
             return true;
         }
         Server server = player.getServer();
@@ -68,7 +68,7 @@ public class SayCommand extends AbstractCommand {
         for (Player p : players) {
             TregminePlayer current = tregmine.getPlayer(p);
             if (current.getRank().canBeGod()) {
-                current.sendSpigotMessage(new TextComponent(DARK_AQUA + "/say used by: "), player.getChatName());
+                current.sendMessage(new TextComponent(DARK_AQUA + "/say used by: "), player.getChatName());
             }
         }
 

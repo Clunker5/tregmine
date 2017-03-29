@@ -23,7 +23,7 @@ public class CheckBlocksCommand extends AbstractCommand {
         }
 
         if (args.length != 1) {
-            player.sendStringMessage(ChatColor.RED + "Please select a radius");
+            player.sendMessage(ChatColor.RED + "Please select a radius");
             return true;
         }
 
@@ -31,17 +31,17 @@ public class CheckBlocksCommand extends AbstractCommand {
         try {
             radius = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            player.sendStringMessage(ChatColor.RED + "Please select a valid radius");
+            player.sendMessage(ChatColor.RED + "Please select a valid radius");
         }
 
         try (IContext ctx = tregmine.createContext()) {
             IMiscDAO dao = ctx.getMiscDAO();
             boolean bool = dao.blocksWereChanged(player.getLocation(), radius);
             if (bool) {
-                player.sendStringMessage(ChatColor.RED + "Blocks have been edited in a radius of " + ChatColor.GOLD
+                player.sendMessage(ChatColor.RED + "Blocks have been edited in a radius of " + ChatColor.GOLD
                         + radius + ChatColor.RED + " from your location");
             } else {
-                player.sendStringMessage(ChatColor.AQUA + "No blocks have been edited within " + radius + " blocks");
+                player.sendMessage(ChatColor.AQUA + "No blocks have been edited within " + radius + " blocks");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);

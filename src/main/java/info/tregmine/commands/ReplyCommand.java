@@ -38,7 +38,7 @@ public class ReplyCommand extends AbstractCommand {
             String lastMessenger = player.getLastMessenger();
 
             if (lastMessenger == null || lastMessenger.equalsIgnoreCase("")) {
-                player.sendStringMessage(ChatColor.RED + "No one has messaged you");
+                player.sendMessage(ChatColor.RED + "No one has messaged you");
                 return true;
             }
 
@@ -68,7 +68,7 @@ public class ReplyCommand extends AbstractCommand {
                 // invisible, to prevent /msg from giving away hidden players
                 // presence
                 if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-                    player.sendSpigotMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.getChatName(),
+                    player.sendMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.getChatName(),
                             new TextComponent(GREEN + ": " + message));
                 }
 
@@ -81,7 +81,7 @@ public class ReplyCommand extends AbstractCommand {
             }
 
         } else {
-            player.sendStringMessage(ChatColor.RED + "You need to type a message!");
+            player.sendMessage(ChatColor.RED + "You need to type a message!");
         }
         return true;
     }

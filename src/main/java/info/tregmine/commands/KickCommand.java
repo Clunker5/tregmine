@@ -63,7 +63,7 @@ public class KickCommand extends AbstractCommand {
         }
 
         if (args.length < 2) {
-            player.sendStringMessage(DARK_AQUA + "/kick <player> <message>");
+            player.sendMessage(DARK_AQUA + "/kick <player> <message>");
             return true;
         }
         String pattern = args[0];

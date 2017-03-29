@@ -48,9 +48,9 @@ public class SupportCommand extends AbstractCommand {
             message.setText(
                     "Help request from: " + p.getName() + " at " + time + "\n" + "\n" + "Message: " + text + "\n");
             Transport.send(message);
-            p.sendStringMessage(ChatColor.GREEN + "Help request sent, we will get back to you ASAP :)");
+            p.sendMessage(ChatColor.GREEN + "Help request sent, we will get back to you ASAP :)");
         } catch (MessagingException e) {
-            p.sendStringMessage(ChatColor.RED + "Error sending message, please try again.");
+            p.sendMessage(ChatColor.RED + "Error sending message, please try again.");
             throw new RuntimeException(e);
         }
     }

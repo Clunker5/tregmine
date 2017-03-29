@@ -29,7 +29,7 @@ public class QuitMessageCommand extends AbstractCommand {
 
     private boolean getElseMsg(TregminePlayer player, String[] args) {
         if (args.length > 3) {
-            player.sendStringMessage(RED + "Correct Usage: /quitmessage player get <player>");
+            player.sendMessage(RED + "Correct Usage: /quitmessage player get <player>");
             return true;
         }
 
@@ -47,8 +47,8 @@ public class QuitMessageCommand extends AbstractCommand {
         }
         String victimName = victim.getName();
 
-        player.sendStringMessage(victimName + "'s " + YELLOW + "current Quit Message is:");
-        player.sendStringMessage(YELLOW + victim.getQuitMessage());
+        player.sendMessage(victimName + "'s " + YELLOW + "current Quit Message is:");
+        player.sendMessage(YELLOW + victim.getQuitMessage());
         return true;
     }
 
@@ -57,8 +57,8 @@ public class QuitMessageCommand extends AbstractCommand {
             return true;
         }
 
-        player.sendStringMessage(YELLOW + "Your current Quit Message is:");
-        player.sendStringMessage(YELLOW + player.getQuitMessage());
+        player.sendMessage(YELLOW + "Your current Quit Message is:");
+        player.sendMessage(YELLOW + player.getQuitMessage());
         return true;
     }
 
@@ -81,24 +81,24 @@ public class QuitMessageCommand extends AbstractCommand {
 
     private boolean help(TregminePlayer player, String[] args) {
         if (player.getRank().canSetOthersQuitMessage()) {
-            player.sendStringMessage(DARK_GRAY + "-----------------------------------------");
-            player.sendStringMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
-            player.sendStringMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
-            player.sendStringMessage(GRAY + "Get another player's Quit Message: ");
-            player.sendStringMessage(GREEN + "/quitmessage player get <player>");
-            player.sendStringMessage(GRAY + "Set another player's Quit Message: ");
-            player.sendStringMessage(GREEN + "/quitmessage player set <player> <message>");
-            player.sendStringMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
+            player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
+            player.sendMessage(GRAY + "Get another player's Quit Message: ");
+            player.sendMessage(GREEN + "/quitmessage player get <player>");
+            player.sendMessage(GRAY + "Set another player's Quit Message: ");
+            player.sendMessage(GREEN + "/quitmessage player set <player> <message>");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
         } else if (player.getRank().canSetQuitMessage()) {
-            player.sendStringMessage(DARK_GRAY + "-----------------------------------------");
-            player.sendStringMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
-            player.sendStringMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
-            player.sendStringMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
+            player.sendMessage(GRAY + "Set your Quit Message: " + GREEN + "/quitmessage <message>");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
         } else {
-            player.sendStringMessage(DARK_GRAY + "-----------------------------------------");
-            player.sendStringMessage(RED + "Sorry, Quit Messages are only for players who");
-            player.sendStringMessage(RED + "donate to keep the server running.");
-            player.sendStringMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
+            player.sendMessage(RED + "Sorry, Quit Messages are only for players who");
+            player.sendMessage(RED + "donate to keep the server running.");
+            player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
         return true;
     }
@@ -109,7 +109,7 @@ public class QuitMessageCommand extends AbstractCommand {
         }
 
         if (args.length == 3) {
-            player.sendStringMessage(RED + "Correct Usage: /quitmessage player set <player> <message>");
+            player.sendMessage(RED + "Correct Usage: /quitmessage player set <player> <message>");
             return true;
         }
 
@@ -127,7 +127,7 @@ public class QuitMessageCommand extends AbstractCommand {
         }
 
         if (victim.isOp()) {
-            player.sendStringMessage(RED + "Thou shall not mess with the Gods!");
+            player.sendMessage(RED + "Thou shall not mess with the Gods!");
 
             World world = player.getWorld();
             org.bukkit.Location location = player.getLocation();
@@ -144,8 +144,8 @@ public class QuitMessageCommand extends AbstractCommand {
 
         victim.setQuitMessage(quitmsgString);
 
-        player.sendStringMessage(victim.getName() + "'s" + YELLOW + " quit message has been set to:");
-        player.sendStringMessage(YELLOW + quitmsgString);
+        player.sendMessage(victim.getName() + "'s" + YELLOW + " quit message has been set to:");
+        player.sendMessage(YELLOW + quitmsgString);
 
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -168,14 +168,14 @@ public class QuitMessageCommand extends AbstractCommand {
         if (args.length != 0) {
             message = argsToMessage(args);
         } else {
-            player.sendStringMessage(YELLOW + "Your current message: " + player.getQuitMessage());
+            player.sendMessage(YELLOW + "Your current message: " + player.getQuitMessage());
             return true;
         }
 
         player.setQuitMessage(message);
 
-        player.sendStringMessage(YELLOW + "Your quit message has been set to:");
-        player.sendStringMessage(YELLOW + message);
+        player.sendMessage(YELLOW + "Your quit message has been set to:");
+        player.sendMessage(YELLOW + message);
 
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();

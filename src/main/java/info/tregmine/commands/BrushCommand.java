@@ -34,7 +34,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
     @Override
     public boolean handlePlayer(TregminePlayer p, String[] args) {
         if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
-            p.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (!p.getRank().canBrush()) {
@@ -48,18 +48,18 @@ public class BrushCommand extends AbstractCommand implements Listener {
 
         // Check if an item in hand.
         if (p.getItemInHand().getAmount() == 0) {
-            p.sendStringMessage(RED + "[Sphere] No item to bind to in hand!");
+            p.sendMessage(RED + "[Sphere] No item to bind to in hand!");
             return true;
         }
 
         Material m = Material.matchMaterial(args[0]);
         if (m == null) {
-            p.sendStringMessage(RED + "[Sphere] We detected an issue with your block choice!");
+            p.sendMessage(RED + "[Sphere] We detected an issue with your block choice!");
             return true;
         }
 
         if (m == null) {
-            p.sendStringMessage(RED + "[Sphere] We detected an issue with your block choice!");
+            p.sendMessage(RED + "[Sphere] We detected an issue with your block choice!");
             return true;
         }
 
@@ -67,12 +67,12 @@ public class BrushCommand extends AbstractCommand implements Listener {
         try {
             radius = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            p.sendStringMessage(RED + "[Sphere] Please specify an integer radius.");
+            p.sendMessage(RED + "[Sphere] Please specify an integer radius.");
             return true;
         }
 
         if (radius > 10) {
-            p.sendStringMessage(RED + "[Sphere] Radius can't be larger than 10.");
+            p.sendMessage(RED + "[Sphere] Radius can't be larger than 10.");
             return true;
         }
 
@@ -80,13 +80,13 @@ public class BrushCommand extends AbstractCommand implements Listener {
         if (m == Material.WATER || m == Material.STATIONARY_WATER || m == Material.LAVA
                 || m == Material.STATIONARY_LAVA) {
 
-            p.sendStringMessage(RED + "[Sphere] You cant brush liquids!");
+            p.sendMessage(RED + "[Sphere] You cant brush liquids!");
             return true;
         }
 
         // Ensure it's a block
         if (!m.isBlock()) {
-            p.sendStringMessage(RED + "[Sphere] You must brush a block, not items!");
+            p.sendMessage(RED + "[Sphere] You must brush a block, not items!");
             return true;
         }
 
@@ -99,7 +99,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
 
         p.getItemInHand().setItemMeta(itemMeta);
 
-        p.sendStringMessage(GREEN + "Binded a " + m.name() + " brush with a " + radius + " block radius to this item!");
+        p.sendMessage(GREEN + "Binded a " + m.name() + " brush with a " + radius + " block radius to this item!");
 
         return true;
     }
@@ -156,7 +156,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
         try {
             radius = Integer.parseInt(i.get(2));
         } catch (NumberFormatException nfe) {
-            p.sendStringMessage(RED + "[Sphere] We detected an issue with your radius!");
+            p.sendMessage(RED + "[Sphere] We detected an issue with your radius!");
             return;
         }
 

@@ -17,7 +17,7 @@ public class TimeCommand extends AbstractCommand {
         }
 
         if (args.length != 1) {
-            player.sendStringMessage(YELLOW + "Say /time day|night|normal");
+            player.sendMessage(YELLOW + "Say /time day|night|normal");
             return false;
         }
 
@@ -25,13 +25,13 @@ public class TimeCommand extends AbstractCommand {
 
         if ("day".equalsIgnoreCase(time)) {
             player.setPlayerTime(6000, false);
-            player.sendStringMessage(YELLOW + "Time set to day");
+            player.sendMessage(YELLOW + "Time set to day");
         } else if ("night".equalsIgnoreCase(time)) {
             player.setPlayerTime(18000, false);
-            player.sendStringMessage(YELLOW + "Time set to night");
+            player.sendMessage(YELLOW + "Time set to night");
         } else if ("normal".equalsIgnoreCase(time)) {
             player.resetPlayerTime();
-            player.sendStringMessage(YELLOW + "Time set to normal");
+            player.sendMessage(YELLOW + "Time set to normal");
         }
 
         return true;

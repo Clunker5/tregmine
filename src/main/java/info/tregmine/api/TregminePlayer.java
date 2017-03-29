@@ -147,10 +147,10 @@ public class TregminePlayer extends PlayerDelegate {
         badges.put(badge, badgeLevel);
 
         if (badgeLevel == 1) {
-            sendStringMessage(ChatColor.GOLD + "Congratulations! You've been awarded " + "the " + badge.getName()
+            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " + "the " + badge.getName()
                     + " badge of honor: " + message);
         } else {
-            sendStringMessage(ChatColor.GOLD + "Congratulations! You've been awarded " + "the level " + ChatColor.GREEN
+            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " + "the level " + ChatColor.GREEN
                     + badgeLevel + " " + ChatColor.GOLD + badge.getName() + "badge of honor: " + message);
         }
     }
@@ -797,7 +797,7 @@ public class TregminePlayer extends PlayerDelegate {
         if (this.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
             if (punish == true) {
                 this.setFireTicks(100);
-                this.sendStringMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You are hardwarned!");
+                this.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You are hardwarned!");
             }
             return false;
         }
@@ -822,7 +822,7 @@ public class TregminePlayer extends PlayerDelegate {
         if (perm == Zone.Permission.Banned) { // If banned then return false
             if (punish == true) {
                 this.setFireTicks(100);
-                this.sendStringMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You are banned from this zone!");
+                this.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You are banned from this zone!");
             }
             return false;
         }
@@ -866,13 +866,13 @@ public class TregminePlayer extends PlayerDelegate {
             if (lot != null && zone != null) { // Lot Error Message
 
                 this.setFireTicks(100);
-                this.sendStringMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
+                this.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                         + "You do not have sufficient permissions in " + lot.getName() + ".");
 
             } else { // Zone Error Message
 
                 this.setFireTicks(100);
-                this.sendStringMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
+                this.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                         + "You do not have sufficient permissions in " + zone.getName() + ".");
 
             }
@@ -1138,18 +1138,18 @@ public class TregminePlayer extends PlayerDelegate {
     public void sendNotification(Notification notif, BaseComponent... message) {
         if (notif != null && notif != Notification.NONE) {
             playSound(getLocation(), notif.getSound(), 2F, 1F);
-            sendSpigotMessage(message);
+            sendMessage(message);
         } else {
-            sendSpigotMessage(message);
+            sendMessage(message);
         }
     }
 
     public void sendNotification(Notification notif, BaseComponent message) {
         if (notif != null && notif != Notification.NONE) {
             playSound(getLocation(), notif.getSound(), 2F, 1F);
-            sendSpigotMessage(message);
+            sendMessage(message);
         } else {
-            sendSpigotMessage(message);
+            sendMessage(message);
         }
     }
 
@@ -1251,7 +1251,7 @@ public class TregminePlayer extends PlayerDelegate {
         Entity v = getVehicle();
         if (v != null && v instanceof Horse) {
             if (!worldNamePortions[0].equalsIgnoreCase("world")) {
-                this.sendStringMessage(ChatColor.RED + "Can not teleport with horse! Sorry!");
+                this.sendMessage(ChatColor.RED + "Can not teleport with horse! Sorry!");
                 return;
             }
 

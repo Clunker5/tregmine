@@ -27,7 +27,7 @@ public class SetupListener implements Listener {
             String text = event.getMessage();
             event.setCancelled(true);
             if ("no".equalsIgnoreCase(text)) {
-                player.sendStringMessage(ChatColor.GREEN + "You have now joined Tregmine "
+                player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine "
                         + "and can talk with other players! Say Hi! :)");
                 event.setMessage("%cancel%");
                 player.setChatState(TregminePlayer.ChatState.CHAT);
@@ -47,8 +47,8 @@ public class SetupListener implements Listener {
                         IPlayerDAO pld = ctx.getPlayerDAO();
                         TregminePlayer inviterPlayer = pld.getPlayer(inviter);
                         if (inviterPlayer == null) {
-                            player.sendStringMessage(ChatColor.RED + "You entered an invalid invite code. Please type");
-                            player.sendStringMessage(ChatColor.RED + "a valid invite code or type no to skip.");
+                            player.sendMessage(ChatColor.RED + "You entered an invalid invite code. Please type");
+                            player.sendMessage(ChatColor.RED + "a valid invite code or type no to skip.");
                             return;
                         }
                         IInviteDAO invdao = ctx.getInviteDAO();
@@ -56,9 +56,9 @@ public class SetupListener implements Listener {
                         IWalletDAO waldao = ctx.getWalletDAO();
                         waldao.add(inviterPlayer, 10000);
                         waldao.insertTransaction(0, inviterPlayer.getId(), 10000);
-                        player.sendStringMessage(
+                        player.sendMessage(
                                 ChatColor.GREEN + inviterPlayer.getChatNameNoColor() + " has recieved their reward.");
-                        player.sendStringMessage(ChatColor.GREEN + "You have now joined Tregmine "
+                        player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine "
                                 + "and can talk with other players! Say Hi! :)");
                         player.setChatState(TregminePlayer.ChatState.CHAT);
                         Tregmine.LOGGER.info("[SETUP] " + player.getChatName().getText() + " joined the server.");
@@ -68,10 +68,10 @@ public class SetupListener implements Listener {
                         MentorCommand.findMentor(plugin, player);
                     } catch (DAOException e) {
                         e.printStackTrace();
-                        player.sendStringMessage(ChatColor.RED + "Sorry, please try again later.");
+                        player.sendMessage(ChatColor.RED + "Sorry, please try again later.");
                     }
                 } catch (NumberFormatException e) {
-                    player.sendStringMessage(ChatColor.RED + "You must either enter no or a numeric invite code.");
+                    player.sendMessage(ChatColor.RED + "You must either enter no or a numeric invite code.");
                     return;
                 }
             }
@@ -84,21 +84,21 @@ public class SetupListener implements Listener {
         event.setCancelled(true);
 
         String text = event.getMessage();
-        player.sendStringMessage(text);
+        player.sendMessage(text);
 
         Tregmine.LOGGER.info("[SETUP] <" + player.getChatNameNoHover() + "> " + text);
 
         try (IContext ctx = plugin.createContext()) {
             if ("yes".equalsIgnoreCase(text)) {
-                // player.sendStringMessage("");
-                // player.sendStringMessage(ChatColor.GREEN + "You have now
+                // player.sendMessage("");
+                // player.sendMessage(ChatColor.GREEN + "You have now
                 // joined Tregmine "
                 // + "and can talk with other players! Say Hi! :)");
                 // player.setChatState(TregminePlayer.ChatState.CHAT);
                 player.setRank(Rank.TOURIST);
-                player.sendStringMessage(
+                player.sendMessage(
                         "[SETUP] " + ChatColor.GREEN + "Did somebody invite you to the server? If so,");
-                player.sendStringMessage("[SETUP] " + ChatColor.GREEN + "enter the invite code now. If not, say 'no'");
+                player.sendMessage("[SETUP] " + ChatColor.GREEN + "enter the invite code now. If not, say 'no'");
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
                 playerDAO.updatePlayer(player);
 
@@ -114,7 +114,7 @@ public class SetupListener implements Listener {
 
                 // MentorCommand.findMentor(plugin, player);
             } else if ("no".equalsIgnoreCase(text)) {
-                player.sendStringMessage(ChatColor.YELLOW + "Unfortunately Tregmine has an "
+                player.sendMessage(ChatColor.YELLOW + "Unfortunately Tregmine has an "
                         + "age limit of 13 years and older. Your account has been flagged as a child.");
 
                 player.setChatState(TregminePlayer.ChatState.CHAT);
@@ -128,7 +128,7 @@ public class SetupListener implements Listener {
 
                 Tregmine.LOGGER.info("[SETUP] " + player.getChatNameNoHover() + " has been marked as a child.");
             } else {
-                player.sendStringMessage(ChatColor.RED + "Please say \"yes\" or \"no\". "
+                player.sendMessage(ChatColor.RED + "Please say \"yes\" or \"no\". "
                         + "You will not be able to talk to other players until you do.");
             }
         } catch (DAOException e) {
@@ -151,15 +151,15 @@ public class SetupListener implements Listener {
 
         Tregmine.LOGGER.info("[SETUP] " + player.getName() + " is a new player!");
 
-        player.sendStringMessage(ChatColor.YELLOW + "Welcome to Tregmine!");
-        player.sendStringMessage(ChatColor.YELLOW + "This is an age restricted server. "
+        player.sendMessage(ChatColor.YELLOW + "Welcome to Tregmine!");
+        player.sendMessage(ChatColor.YELLOW + "This is an age restricted server. "
                 + "Please confirm that you are 13 years or older by typing \"yes\". "
                 + "If you are younger than 13, please leave this server, or " + "type \"no\" to quit.");
-        player.sendStringMessage(ChatColor.YELLOW + "You will not be able to talk "
+        player.sendMessage(ChatColor.YELLOW + "You will not be able to talk "
                 + "to other players until you've verified your age.");
         TextComponent msg = new TextComponent(ChatColor.RED + "" + ChatColor.UNDERLINE + "Are you 13 years or older?");
         msg.setHoverEvent(this.plugin.buildHover(ChatColor.AQUA + "Because we are a " + ChatColor.GOLD + "COPPA"
                 + ChatColor.AQUA + " compliant server, we must enforce the age requirement."));
-        player.sendSpigotMessage(msg);
+        player.sendMessage(msg);
     }
 }

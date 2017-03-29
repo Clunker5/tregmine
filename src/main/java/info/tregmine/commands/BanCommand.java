@@ -35,11 +35,11 @@ public class BanCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (!player.getRank().canBan()) {
-            player.sendStringMessage(DARK_AQUA + "You don't have permission to do that command.");
+            player.sendMessage(DARK_AQUA + "You don't have permission to do that command.");
             return true;
         }
         if (args.length < 2) {
-            player.sendStringMessage(DARK_AQUA + "/ban <player> <message>");
+            player.sendMessage(DARK_AQUA + "/ban <player> <message>");
             return true;
         }
 

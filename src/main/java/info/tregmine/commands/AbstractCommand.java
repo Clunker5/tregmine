@@ -35,12 +35,12 @@ public abstract class AbstractCommand implements CommandExecutor {
     }
 
     public void insufficientPerms(TregminePlayer player) {
-        player.sendStringMessage(ChatColor.DARK_RED + "You have insufficient permissions for /" + this.command + ".");
+        player.sendMessage(ChatColor.DARK_RED + "You have insufficient permissions for /" + this.command + ".");
     }
 
     public void invalidArguments(TregminePlayer player, String arguments) {
-        player.sendStringMessage(ChatColor.RED + "Invalid arguments passed for /" + this.command + ".");
-        player.sendStringMessage(ChatColor.RED + "The proper syntax is: " + ChatColor.GOLD + arguments);
+        player.sendMessage(ChatColor.RED + "Invalid arguments passed for /" + this.command + ".");
+        player.sendMessage(ChatColor.RED + "The proper syntax is: " + ChatColor.GOLD + arguments);
     }
 
     @Override
@@ -48,7 +48,7 @@ public abstract class AbstractCommand implements CommandExecutor {
         if (sender instanceof Player) {
             TregminePlayer player = tregmine.getPlayer((Player) sender);
             if (!player.getRank().canUseCommands()) {
-                player.sendStringMessage(ChatColor.RED + "Please complete setup before " + "continuing.");
+                player.sendMessage(ChatColor.RED + "Please complete setup before " + "continuing.");
                 return true;
             }
 

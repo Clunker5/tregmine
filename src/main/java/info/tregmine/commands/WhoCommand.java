@@ -73,9 +73,9 @@ public class WhoCommand extends AbstractCommand {
         }
         String playerList = sb.toString();
 
-        player.sendStringMessage(padString(DARK_PURPLE + "Player List", 55));
-        player.sendStringMessage(playerList);
-        player.sendStringMessage(padString(DARK_PURPLE + Integer.toString(players.size()) + " players online", 55));
+        player.sendMessage(padString(DARK_PURPLE + "Player List", 55));
+        player.sendMessage(playerList);
+        player.sendMessage(padString(DARK_PURPLE + Integer.toString(players.size()) + " players online", 55));
         return true;
     }
 
@@ -90,11 +90,11 @@ public class WhoCommand extends AbstractCommand {
         TregminePlayer whoPlayer = candidates.get(0);
 
         if (whoPlayer == null) {
-            player.sendStringMessage(RED + "That player is not online right now.");
+            player.sendMessage(RED + "That player is not online right now.");
             return true;
         }
         if (whoPlayer.isOnline() != true) {
-            player.sendStringMessage(RED + "That player is not online right now.");
+            player.sendMessage(RED + "That player is not online right now.");
             return true;
         }
 
@@ -133,29 +133,29 @@ public class WhoCommand extends AbstractCommand {
 
             long balance = walletDAO.balance(whoPlayer);
 
-            player.sendStringMessage(DARK_GRAY + "******************** " + DARK_PURPLE + "PLAYER INFO" + DARK_GRAY
+            player.sendMessage(DARK_GRAY + "******************** " + DARK_PURPLE + "PLAYER INFO" + DARK_GRAY
                     + " ********************");
             player.getSpigot().sendMessage(new TextComponent(GOLD + "Player: " + GRAY), whoPlayer.getChatName());
-            player.sendStringMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
-            player.sendStringMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
-            player.sendStringMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
-            player.sendStringMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
-            player.sendStringMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
-            player.sendStringMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
-            player.sendStringMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
-            player.sendStringMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
-            player.sendStringMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
-            player.sendStringMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
-            player.sendStringMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
+            player.sendMessage(GOLD + "World: " + GRAY + whoPlayer.getWorld().getName());
+            player.sendMessage(GOLD + "Coords: " + GRAY + X2 + ", " + Y2 + ", " + Z2);
+            player.sendMessage(GOLD + "Channel: " + GRAY + whoPlayer.getChatChannel());
+            player.sendMessage(GOLD + "Wallet: " + GRAY + balance + " Tregs.");
+            player.sendMessage(GOLD + "Health: " + GRAY + whoPlayer.getHealth());
+            player.sendMessage(GOLD + "Country: " + GRAY + whoPlayer.getCountry());
+            player.sendMessage(GOLD + "City: " + GRAY + whoPlayer.getCity());
+            player.sendMessage(GOLD + "IP Address: " + GRAY + whoPlayer.getIp());
+            player.sendMessage(GOLD + "Port: " + GRAY + whoPlayer.getAddress().getPort());
+            player.sendMessage(GOLD + "Gamemode: " + GRAY + whoPlayer.getGameMode().toString().toLowerCase());
+            player.sendMessage(GOLD + "Level: " + GRAY + whoPlayer.getLevel());
             if (aliasList != null) {
-                player.sendStringMessage(GOLD + "Aliases: " + aliasList);
+                player.sendMessage(GOLD + "Aliases: " + aliasList);
             }
             if (whoPlayer.hasFlag(Flags.INVISIBLE)) {
                 if (player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN) {
-                    player.sendStringMessage(BLUE + "This player is invisible.");
+                    player.sendMessage(BLUE + "This player is invisible.");
                 }
             }
-            player.sendStringMessage(DARK_GRAY + "*************************************" + "*****************");
+            player.sendMessage(DARK_GRAY + "*************************************" + "*****************");
 
             LOGGER.info(player.getName() + " used /who on player " + whoPlayer.getName());
         } catch (DAOException e) {
@@ -184,8 +184,8 @@ public class WhoCommand extends AbstractCommand {
 
                 String playerList = sb.toString();
 
-                player.sendStringMessage(padString(DARK_PURPLE + "Player List for World: " + world.getName(), 55));
-                player.sendSpigotMessage(new TextComponent(playerList));
+                player.sendMessage(padString(DARK_PURPLE + "Player List for World: " + world.getName(), 55));
+                player.sendMessage(new TextComponent(playerList));
             }
         }
 

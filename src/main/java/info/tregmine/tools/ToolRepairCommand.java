@@ -19,7 +19,7 @@ public class ToolRepairCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String args[]) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         try (IContext dbCtx = tregmine.createContext()) {
@@ -27,7 +27,7 @@ public class ToolRepairCommand extends AbstractCommand {
                 List<String> lore = player.getItemInHand().getItemMeta().getLore();
 
                 if (!lore.get(1).equalsIgnoreCase("0/1000")) {
-                    player.sendStringMessage(ChatColor.AQUA + "Must have 0 durability to repair!");
+                    player.sendMessage(ChatColor.AQUA + "Must have 0 durability to repair!");
                     return true;
                 }
 
@@ -42,21 +42,21 @@ public class ToolRepairCommand extends AbstractCommand {
                         meta.setLore(lore);
                         player.getItemInHand().setItemMeta(meta);
 
-                        player.sendStringMessage(ChatColor.AQUA + "Tool has been repaired!");
+                        player.sendMessage(ChatColor.AQUA + "Tool has been repaired!");
                         return true;
                     } else {
-                        player.sendStringMessage(ChatColor.RED + "Can not afford 10,000 tregs to repair this tool!");
+                        player.sendMessage(ChatColor.RED + "Can not afford 10,000 tregs to repair this tool!");
                         return true;
                     }
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                player.sendStringMessage(ChatColor.RED + "You can't repair that!");
+                player.sendMessage(ChatColor.RED + "You can't repair that!");
                 return true;
             }
         } catch (DAOException e) {
-            player.sendStringMessage(ChatColor.RED + "Something bad happened! D:");
+            player.sendMessage(ChatColor.RED + "Something bad happened! D:");
             return true;
         }
     }

@@ -17,22 +17,22 @@ public class UpdateCommand extends AbstractCommand {
         String version;
         if (args.length == 1) {
             version = args[0];
-            player.sendStringMessage(ChatColor.AQUA + "Searching for Version " + version);
+            player.sendMessage(ChatColor.AQUA + "Searching for Version " + version);
         } else {
             version = tregmine.getDescription().getVersion();
-            player.sendStringMessage(ChatColor.AQUA + "No Arguments detected, Searching for latest: " + version);
+            player.sendMessage(ChatColor.AQUA + "No Arguments detected, Searching for latest: " + version);
         }
 
         try (IContext ctx = tregmine.createContext()) {
             IMotdDAO motdDAO = ctx.getMotdDAO();
             String message = motdDAO.getUpdates(version);
             if (message == null) {
-                player.sendStringMessage(ChatColor.AQUA + "Version not found!");
+                player.sendMessage(ChatColor.AQUA + "Version not found!");
                 return true;
             }
             String[] lines = message.split("::");
             for (String line : lines) {
-                player.sendStringMessage(ChatColor.GOLD + line);
+                player.sendMessage(ChatColor.GOLD + line);
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);

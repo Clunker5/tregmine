@@ -19,12 +19,12 @@ public class BadgeCommand extends AbstractCommand {
 
             Map<Badge, Integer> badges = player.getBadges();
             if (badges.isEmpty()) {
-                player.sendStringMessage(ChatColor.AQUA + "You currently have no badges!");
+                player.sendMessage(ChatColor.AQUA + "You currently have no badges!");
                 return true;
             }
 
             for (Map.Entry<Badge, Integer> badge : badges.entrySet()) {
-                player.sendStringMessage(ChatColor.AQUA + badge.getKey().name() + " - Level " + badge.getValue());
+                player.sendMessage(ChatColor.AQUA + badge.getKey().name() + " - Level " + badge.getValue());
             }
 
         } else if (args.length == 2 && "list".equalsIgnoreCase(args[0])) {
@@ -43,7 +43,7 @@ public class BadgeCommand extends AbstractCommand {
             }
 
             if (target == null) {
-                player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+                player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
                 return true;
             }
             Map<Badge, Integer> badges = target.getBadges();
@@ -55,7 +55,7 @@ public class BadgeCommand extends AbstractCommand {
             }
 
             for (Map.Entry<Badge, Integer> badge : badges.entrySet()) {
-                player.sendStringMessage(ChatColor.AQUA + badge.getKey().name() + " - Level " + badge.getValue());
+                player.sendMessage(ChatColor.AQUA + badge.getKey().name() + " - Level " + badge.getValue());
             }
 
         } else if (args[0].equalsIgnoreCase("give") && args.length == 2) {
@@ -71,7 +71,7 @@ public class BadgeCommand extends AbstractCommand {
                 target = null;
             }
             if (target == null) {
-                player.sendStringMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+                player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
                 return true;
             }
 

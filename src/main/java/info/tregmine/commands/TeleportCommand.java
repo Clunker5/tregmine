@@ -27,7 +27,7 @@ public class TeleportCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         Rank rank = player.getRank();
@@ -44,13 +44,13 @@ public class TeleportCommand extends AbstractCommand {
 
         List<TregminePlayer> candidates = tregmine.matchPlayer(name);
         if (candidates.size() != 1) {
-            player.sendStringMessage(RED + "Can't find user.");
+            player.sendMessage(RED + "Can't find user.");
             return true;
         }
 
         TregminePlayer target = candidates.get(0);
         if (target.getWorld().getName().equalsIgnoreCase("vanilla") || target.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
@@ -58,9 +58,9 @@ public class TeleportCommand extends AbstractCommand {
         }
 
         if (target.hasFlag(TregminePlayer.Flags.TPSHIELD) && !player.getRank().canOverrideTeleportShield()) {
-            player.sendStringMessage(RED + target.getName() + AQUA + "'s teloptical deflector absorbed all motion. "
+            player.sendMessage(RED + target.getName() + AQUA + "'s teloptical deflector absorbed all motion. "
                     + "Teleportation failed.");
-            target.sendStringMessage(
+            target.sendMessage(
                     player.getName() + AQUA + "'s teleportation spell " + "cannot bypass your sophisticated defenses.");
             return true;
         }
@@ -70,19 +70,19 @@ public class TeleportCommand extends AbstractCommand {
         String targetWorldName = targetWorld.getName();
         String sourceWorldName = sourceWorld.getName();
         if (!sourceWorldName.equalsIgnoreCase(targetWorldName) && !rank.canTeleportBetweenWorlds()) {
-            player.sendStringMessage(RED + "The user is in another world called " + BLUE + targetWorld.getName() + ".");
+            player.sendMessage(RED + "The user is in another world called " + BLUE + targetWorld.getName() + ".");
             return true;
         }
 
         double distance = MathUtil.calcDistance2d(player.getLocation(), target.getLocation());
         if (distance <= rank.getTeleportDistanceLimit()) {
             player.setLastPos(player.getLocation());
-            player.sendStringMessage(AQUA + "You started teleport to " + target.getName() + AQUA + " in " + BLUE
+            player.sendMessage(AQUA + "You started teleport to " + target.getName() + AQUA + " in " + BLUE
                     + targetWorld.getName() + ".");
 
             scheduler.scheduleSyncDelayedTask(tregmine, new TeleportTask(target, player), rank.getTeleportTimeout());
         } else {
-            player.sendStringMessage(
+            player.sendMessage(
                     RED + "Your teleportation spell is not strong " + "enough for the longer distances.");
         }
 
@@ -102,7 +102,7 @@ public class TeleportCommand extends AbstractCommand {
         public void run() {
 
             if (!from.canBeHere(to.getLocation()).getBoolean()) {
-                from.sendSpigotMessage(new TextComponent(RED + "You do not have permission for the location of "),
+                from.sendMessage(new TextComponent(RED + "You do not have permission for the location of "),
                         to.decideVS(from));
                 return;
             }
@@ -110,7 +110,7 @@ public class TeleportCommand extends AbstractCommand {
             double distance = MathUtil.calcDistance2d(from.getLocation(), to.getLocation());
 
             if (distance > from.getRank().getTeleportDistanceLimit()) {
-                from.sendStringMessage(RED + "Your teleportation spell is not strong enough for this long distance!");
+                from.sendMessage(RED + "Your teleportation spell is not strong enough for this long distance!");
                 return;
             }
 
@@ -118,7 +118,7 @@ public class TeleportCommand extends AbstractCommand {
             from.setNoDamageTicks(200);
 
             if (!from.getRank().canDoHiddenTeleport()) {
-                to.sendStringMessage(AQUA + from.getName() + " teleported to you!");
+                to.sendMessage(AQUA + from.getName() + " teleported to you!");
                 PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 from.addPotionEffect(ef);
             }

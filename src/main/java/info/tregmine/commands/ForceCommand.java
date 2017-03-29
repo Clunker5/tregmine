@@ -23,7 +23,7 @@ public class ForceCommand extends AbstractCommand {
             return false;
         }
         if (!player.getRank().canForceChannel()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot force players into channels.");
+            player.sendMessage(ChatColor.RED + "You cannot force players into channels.");
             return true;
         }
         String playerPattern = args[0];
@@ -31,22 +31,22 @@ public class ForceCommand extends AbstractCommand {
 
         List<TregminePlayer> matches = tregmine.matchPlayer(playerPattern);
         if (matches.size() > 1) {
-            player.sendStringMessage(ChatColor.RED + "Your player name is too broad. Please narrow your search term and try again.");
+            player.sendMessage(ChatColor.RED + "Your player name is too broad. Please narrow your search term and try again.");
             return true;
         }
 
         if (matches.size() == 0) {
-            player.sendStringMessage(ChatColor.RED + "The player specified is not online or does not exist.");
+            player.sendMessage(ChatColor.RED + "The player specified is not online or does not exist.");
             return true;
         }
 
         TregminePlayer toPlayer = matches.get(0);
 
         if (toPlayer.hasFlag(TregminePlayer.Flags.FORCESHIELD) && !player.getRank().canOverrideForceShield()) {
-            toPlayer.sendSpigotMessage(new TextComponent((toPlayer.canVS())
+            toPlayer.sendMessage(new TextComponent((toPlayer.canVS())
                     ? ChatColor.AQUA + "" + player.getChatNameStaff() + " tried to force you into a channel!"
                     : ChatColor.AQUA + "" + player.getChatName() + " tried to force you into a channel!"));
-            player.sendSpigotMessage(new TextComponent((toPlayer.canVS())
+            player.sendMessage(new TextComponent((toPlayer.canVS())
                     ? ChatColor.AQUA + "Can not force " + toPlayer.getChatNameStaff() + " into a channel!"
                     : ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!"));
             return true;
@@ -54,22 +54,22 @@ public class ForceCommand extends AbstractCommand {
         String oldChannel = player.getChatChannel();
         player.setChatChannel(channel);
         toPlayer.setChatChannel(channel);
-        toPlayer.sendSpigotMessage(new TextComponent(YELLOW + ""), player.decideVS(player),
+        toPlayer.sendMessage(new TextComponent(YELLOW + ""), player.decideVS(player),
                 new TextComponent(" forced you into channel " + channel.toUpperCase()));
-        toPlayer.sendStringMessage(YELLOW + "Write /channel global to switch back to " + "the global chat.");
-        player.sendStringMessage(YELLOW + "You are now in a forced chat " + channel.toUpperCase() + " with "
+        toPlayer.sendMessage(YELLOW + "Write /channel global to switch back to " + "the global chat.");
+        player.sendMessage(YELLOW + "You are now in a forced chat " + channel.toUpperCase() + " with "
                 + toPlayer.decideVS(player) + ".");
         LOGGER.info(player.getName() + " FORCED CHAT WITH " + toPlayer.getDisplayName() + " IN CHANNEL "
                 + channel.toUpperCase());
 
         for (TregminePlayer players : tregmine.getOnlinePlayers()) {
             if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendSpigotMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and "
+                players.sendMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and "
                         + toPlayer.getChatName() + ChatColor.YELLOW + " have left channel " + oldChannel));
-                players.sendSpigotMessage(player.decideVS(players), new TextComponent(YELLOW + " and "),
+                players.sendMessage(player.decideVS(players), new TextComponent(YELLOW + " and "),
                         toPlayer.decideVS(players), new TextComponent(YELLOW + " have left channel " + oldChannel));
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendSpigotMessage(player.decideVS(players), new TextComponent(YELLOW + " and "),
+                players.sendMessage(player.decideVS(players), new TextComponent(YELLOW + " and "),
                         toPlayer.decideVS(players), new TextComponent(YELLOW + " have joined channel " + channel));
             }
         }

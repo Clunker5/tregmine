@@ -19,7 +19,7 @@ public class DiscordCommand extends AbstractCommand {
     }
 
     private void badArgs(TregminePlayer s) {
-        s.sendStringMessage(ChatColor.RED + "Please specify one of the following: " + argOptions);
+        s.sendMessage(ChatColor.RED + "Please specify one of the following: " + argOptions);
     }
 
     @Override
@@ -49,19 +49,19 @@ public class DiscordCommand extends AbstractCommand {
                             IDiscordDAO ddao = ctx.getDiscordDAO();
                             long linked = ddao.isLinked(sender);
                             if (linked != -1) {
-                                sender.sendStringMessage(ChatColor.RED + "Already linked to `" + ChatColor.ITALIC
+                                sender.sendMessage(ChatColor.RED + "Already linked to `" + ChatColor.ITALIC
                                         + usernameFor(linked) + ChatColor.RESET + ChatColor.RED + "`");
                                 return true;
                             }
                             long dID = this.tregmine.getDiscordSRV().getDiscordIDAndDeregisterCode(codeSubmitted);
                             boolean success = ddao.link(sender, dID);
                             if (success) {
-                                sender.sendStringMessage(ChatColor.GREEN + "Successfully linked to `" + ChatColor.ITALIC
+                                sender.sendMessage(ChatColor.GREEN + "Successfully linked to `" + ChatColor.ITALIC
                                         + usernameFor(dID) + ChatColor.RESET + ChatColor.GREEN + "`");
                                 this.tregmine.getDiscordSRV().getAPI().getUserById(dID + "").getPrivateChannel()
                                         .sendMessage("Successfully linked to `" + sender.getName() + "`");
                             } else {
-                                sender.sendStringMessage(
+                                sender.sendMessage(
                                         ChatColor.RED + "Failed to link to `" + ChatColor.ITALIC + usernameFor(dID)
                                                 + ChatColor.RESET + ChatColor.RED + "`. Are you already linked?");
                             }
@@ -70,7 +70,7 @@ public class DiscordCommand extends AbstractCommand {
                         }
                     }
                 } catch (NumberFormatException e) {
-                    sender.sendStringMessage(ChatColor.RED + "Please submit a valid integer.");
+                    sender.sendMessage(ChatColor.RED + "Please submit a valid integer.");
                     e.printStackTrace();
                 }
                 break;
@@ -79,13 +79,13 @@ public class DiscordCommand extends AbstractCommand {
                     IDiscordDAO ddao = ctx.getDiscordDAO();
                     long userid = ddao.isLinked(sender);
                     if (userid == -1) {
-                        sender.sendStringMessage(ChatColor.RED + "You are not linked to a discord user.");
+                        sender.sendMessage(ChatColor.RED + "You are not linked to a discord user.");
                     } else {
                         ddao.unlink(sender);
                         User usr = this.tregmine.getDiscordSRV().getAPI().getUserById(userid + "");
                         usr.getPrivateChannel().sendMessage(
                                 "You've been unlinked from `" + sender.getName() + "` - You can now link to another user.");
-                        sender.sendStringMessage(ChatColor.GREEN + "You've been unlinked from `" + usr.getName()
+                        sender.sendMessage(ChatColor.GREEN + "You've been unlinked from `" + usr.getName()
                                 + "`. You can now link to another user.");
 
                     }
@@ -105,7 +105,7 @@ public class DiscordCommand extends AbstractCommand {
             IDiscordDAO ddao = ctx.getDiscordDAO();
             long linked = ddao.isLinked(s);
             if (linked != -1) {
-                s.sendStringMessage(ChatColor.RED + "Already linked to `" + ChatColor.ITALIC + usernameFor(linked)
+                s.sendMessage(ChatColor.RED + "Already linked to `" + ChatColor.ITALIC + usernameFor(linked)
                         + ChatColor.RESET + ChatColor.RED + "`");
                 return;
             } else {
@@ -115,7 +115,7 @@ public class DiscordCommand extends AbstractCommand {
         }
 
         this.tregmine.getDiscordSRV().sendConfirmationCode(discordID);
-        s.sendStringMessage(ChatColor.AQUA + "Please check your Discord DMs for further instructions.");
+        s.sendMessage(ChatColor.AQUA + "Please check your Discord DMs for further instructions.");
 
     }
 

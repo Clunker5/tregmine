@@ -50,26 +50,26 @@ public class BankListener implements Listener {
         String[] args = event.getMessage().split(" ");
         String message = event.getMessage();
         event.setMessage("%cancel%");
-        player.sendSpigotMessage(new TextComponent(ChatColor.AQUA + "[BANK] " + ChatColor.WHITE + "<"),
+        player.sendMessage(new TextComponent(ChatColor.AQUA + "[BANK] " + ChatColor.WHITE + "<"),
                 player.getChatName(), new TextComponent(ChatColor.WHITE + "> " + ChatColor.AQUA + message));
         event.setCancelled(true);
 
         if ("help".equalsIgnoreCase(args[0])) {
-            player.sendStringMessage(ChatColor.RED + "[BANK] " + "Type \"exit\" to go back to chat");
-            player.sendStringMessage(
+            player.sendMessage(ChatColor.RED + "[BANK] " + "Type \"exit\" to go back to chat");
+            player.sendMessage(
                     ChatColor.GREEN + "[BANK] " + "Type \"withdraw x\" to withdraw x from your account");
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.GREEN + "[BANK] " + "Type \"deposit x\" to deposit x into your account, \n"
                             + "if you do not have an account, a new one will be created.");
-            player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "Type \"balance\" to check your current balance");
-            player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "Type \"account x\" to switch account number, \n"
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"balance\" to check your current balance");
+            player.sendMessage(ChatColor.GREEN + "[BANK] " + "Type \"account x\" to switch account number, \n"
                     + "or type \"account\" to see your account number");
-            player.sendStringMessage(
+            player.sendMessage(
                     ChatColor.GREEN + "[BANK] " + "Type \"pin [change|x]\" to verify or change your pin, \n"
                             + "or just type \"pin\" to view your pin");
             return;
         } else if ("exit".equalsIgnoreCase(args[0])) {
-            player.sendStringMessage("Thanks for stopping by, you're now in chat!");
+            player.sendMessage("Thanks for stopping by, you're now in chat!");
             player.setChatState(ChatState.CHAT);
             accounts.remove(player);
             bankingPlayers.remove(player);
@@ -93,11 +93,11 @@ public class BankListener implements Listener {
 
             if ("withdraw".equalsIgnoreCase(args[0])) {
                 if (acct == null) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] Open an account by making an deposit.");
+                    player.sendMessage(ChatColor.RED + "[BANK] Open an account by making an deposit.");
                     return;
                 }
                 if (!acct.isVerified()) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
+                    player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
                     return;
                 }
 
@@ -112,16 +112,16 @@ public class BankListener implements Listener {
                             acct.setVerified(true);
                             accounts.put(player, acct);
 
-                            player.sendStringMessage(ChatColor.AQUA + "[BANK] " + "You withdrew " + ChatColor.GOLD
+                            player.sendMessage(ChatColor.AQUA + "[BANK] " + "You withdrew " + ChatColor.GOLD
                                     + amount + ChatColor.AQUA + ChatColor.AQUA + " tregs from your bank.");
-                            player.sendStringMessage(ChatColor.AQUA + "[BANK] " + "You now have " + ChatColor.GOLD
+                            player.sendMessage(ChatColor.AQUA + "[BANK] " + "You now have " + ChatColor.GOLD
                                     + acct.getBalance() + " tregs in your bank");
                         } else {
-                            player.sendStringMessage(
+                            player.sendMessage(
                                     ChatColor.RED + "[BANK] " + "You do not have that much money in your bank");
                         }
                     } catch (NumberFormatException e) {
-                        player.sendStringMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
+                        player.sendMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
                     }
                 }
 
@@ -132,7 +132,7 @@ public class BankListener implements Listener {
                 }
 
                 if (acct != null && !acct.isVerified()) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
+                    player.sendMessage(ChatColor.RED + "[BANK] Please verify pin before continuing.");
                     return;
                 }
 
@@ -140,7 +140,7 @@ public class BankListener implements Listener {
                 try {
                     amount = Long.parseLong(args[1]);
                 } catch (NumberFormatException e) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
+                    player.sendMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
                     return;
                 }
 
@@ -152,11 +152,11 @@ public class BankListener implements Listener {
                     dao.createAccount(acct, player.getId());
                     accounts.put(player, acct);
 
-                    player.sendStringMessage(ChatColor.AQUA + "[BANK] " + "You created a new account with a "
+                    player.sendMessage(ChatColor.AQUA + "[BANK] " + "You created a new account with a "
                             + "balance of " + ChatColor.GOLD + amount + ChatColor.AQUA + " tregs");
-                    player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "Your account number is " + ChatColor.GOLD
+                    player.sendMessage(ChatColor.GREEN + "[BANK] " + "Your account number is " + ChatColor.GOLD
                             + acct.getAccountNumber());
-                    player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "Your pin number is " + ChatColor.GOLD
+                    player.sendMessage(ChatColor.GREEN + "[BANK] " + "Your pin number is " + ChatColor.GOLD
                             + acct.getPin() + ChatColor.GREEN + " WRITE IT DOWN!");
                 }
 
@@ -168,31 +168,31 @@ public class BankListener implements Listener {
                     acct.setVerified(true);
                     accounts.put(player, acct);
 
-                    player.sendStringMessage(ChatColor.AQUA + "[BANK] " + "You deposited " + ChatColor.GOLD + amount
+                    player.sendMessage(ChatColor.AQUA + "[BANK] " + "You deposited " + ChatColor.GOLD + amount
                             + ChatColor.AQUA + " tregs " + "into your account");
                 } else {
-                    player.sendStringMessage(
+                    player.sendMessage(
                             ChatColor.RED + "[BANK] " + "You do not have enough money to deposit that much.");
                 }
 
                 return;
             } else if ("balance".equalsIgnoreCase(args[0])) {
                 if (acct == null) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] Open an account by making an deposit.");
+                    player.sendMessage(ChatColor.RED + "[BANK] Open an account by making an deposit.");
                     return;
                 }
                 if (!acct.isVerified()) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] " + "Please verify pin before continuing.");
+                    player.sendMessage(ChatColor.RED + "[BANK] " + "Please verify pin before continuing.");
                     return;
                 }
 
-                player.sendStringMessage(ChatColor.AQUA + "[BANK] " + "Your account balance is " + ChatColor.GOLD
+                player.sendMessage(ChatColor.AQUA + "[BANK] " + "Your account balance is " + ChatColor.GOLD
                         + acct.getBalance() + ChatColor.AQUA + " tregs");
 
                 return;
             } else if ("account".equalsIgnoreCase(args[0])) {
                 if (args.length == 1) {
-                    player.sendStringMessage(ChatColor.GREEN + "[BANK] + Your account " + "number is " + ChatColor.GOLD
+                    player.sendMessage(ChatColor.GREEN + "[BANK] + Your account " + "number is " + ChatColor.GOLD
                             + acct.getAccountNumber());
                     return;
                 } else if (args.length == 2) {
@@ -205,49 +205,49 @@ public class BankListener implements Listener {
 
                     Account newAccount = dao.getAccount(bank, i);
                     if (newAccount == null) {
-                        player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "No such account: " + i);
+                        player.sendMessage(ChatColor.GREEN + "[BANK] " + "No such account: " + i);
                         return;
                     }
 
                     accounts.put(player, newAccount);
-                    player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "Switched to account " + i);
+                    player.sendMessage(ChatColor.GREEN + "[BANK] " + "Switched to account " + i);
                     return;
                 }
             } else if ("pin".equalsIgnoreCase(args[0])) {
                 if (acct == null) {
-                    player.sendStringMessage(ChatColor.RED + "[BANK] Open an account by making an deposit.");
+                    player.sendMessage(ChatColor.RED + "[BANK] Open an account by making an deposit.");
                     return;
                 }
                 if (args.length == 1) {
                     if (acct.getPlayerId() != player.getId()) {
-                        player.sendStringMessage(
+                        player.sendMessage(
                                 ChatColor.RED + "[BANK] To recieve the pin from another player's account, "
                                         + " you must get it directly from that player.");
                     }
-                    player.sendStringMessage(
+                    player.sendMessage(
                             ChatColor.GREEN + "[BANK] + Your pin " + "number is " + ChatColor.GOLD + acct.getPin());
                     return;
                 }
                 if ("change".equalsIgnoreCase(args[1])) {
                     if (!acct.isVerified()) {
-                        player.sendStringMessage(
+                        player.sendMessage(
                                 ChatColor.RED + "[BANK] " + "Account must be verified before changing pin");
                         return;
                     }
 
                     String s = args[2];
                     if (s.length() > 4) {
-                        player.sendStringMessage(ChatColor.RED + "[BANK] " + "Pin must be 4 digits long");
+                        player.sendMessage(ChatColor.RED + "[BANK] " + "Pin must be 4 digits long");
                         return;
                     } else {
                         dao.setPin(acct, s);
                         acct.setPin(s);
-                        player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "Changed pin to " + ChatColor.GOLD + s);
+                        player.sendMessage(ChatColor.GREEN + "[BANK] " + "Changed pin to " + ChatColor.GOLD + s);
                         return;
                     }
                 } else {
                     if (acct.isVerified()) {
-                        player.sendStringMessage(ChatColor.GREEN + "[BANK] " + "No need, the account is verified");
+                        player.sendMessage(ChatColor.GREEN + "[BANK] " + "No need, the account is verified");
                         return;
                     }
 
@@ -255,19 +255,19 @@ public class BankListener implements Listener {
                     try {
                         i = Integer.parseInt(args[1]);
                     } catch (NumberFormatException e) {
-                        player.sendStringMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
+                        player.sendMessage(ChatColor.RED + "[BANK] " + args[1] + " is not a number");
                         return;
                     }
 
                     if (i == Integer.parseInt(acct.getPin())) {
                         accounts.get(player).setVerified(true);
-                        player.sendStringMessage(ChatColor.GREEN + "[BANK] Correct Pin");
+                        player.sendMessage(ChatColor.GREEN + "[BANK] Correct Pin");
                     } else {
-                        player.sendStringMessage(ChatColor.RED + "[BANK] Incorrect pin");
+                        player.sendMessage(ChatColor.RED + "[BANK] Incorrect pin");
                     }
                 }
             } else {
-                player.sendStringMessage(ChatColor.RED + "Unknown command: " + args[0]);
+                player.sendMessage(ChatColor.RED + "Unknown command: " + args[0]);
                 return;
             }
 
@@ -315,7 +315,7 @@ public class BankListener implements Listener {
             } else {
                 String name = lot.getName().split("\\.")[0];
                 player.setChatState(ChatState.BANK);
-                player.sendStringMessage(
+                player.sendMessage(
                         ChatColor.GREEN + "[BANK] " + "Welcome to " + name + "! Type \"help\" for help.");
                 bankingPlayers.put(player, bank);
                 accounts.remove(player);
@@ -353,11 +353,11 @@ public class BankListener implements Listener {
             if (player.getChatState() == ChatState.BANK && currentBank != null && currentBank.getId() == bank.getId()) {
 
                 player.setChatState(ChatState.CHAT);
-                player.sendStringMessage(ChatColor.GREEN + "Thanks for stopping by, you're now in chat!");
+                player.sendMessage(ChatColor.GREEN + "Thanks for stopping by, you're now in chat!");
                 bankingPlayers.remove(player);
                 accounts.remove(player);
             } else {
-                player.sendStringMessage(ChatColor.RED + "You cannot left click until you are in the bank.");
+                player.sendMessage(ChatColor.RED + "You cannot left click until you are in the bank.");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);

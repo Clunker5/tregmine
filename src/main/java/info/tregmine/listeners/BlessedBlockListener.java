@@ -85,7 +85,7 @@ public class BlessedBlockListener implements Listener {
 
             if (blessedBlocks.get(loc) != null || blessedBlocks.get(loc1) != null) {
 
-                player.sendStringMessage(ChatColor.RED + "You can't place a hopper under a blessed chest.");
+                player.sendMessage(ChatColor.RED + "You can't place a hopper under a blessed chest.");
                 event.setCancelled(true);
             }
         }
@@ -121,7 +121,7 @@ public class BlessedBlockListener implements Listener {
                 }
                 TregminePlayer blockOwner = plugin.getPlayer(owner);
                 if (blockOwner.isOnline()) {
-                    blockOwner.sendSpigotMessage(
+                    blockOwner.sendMessage(
                             new TextComponent(ChatColor.AQUA + "One of your blocks at X" + loc.getBlockX() + " Y"
                                     + loc.getBlockY() + " Z" + loc.getBlockZ() + " has been unblessed by "),
                             player.getChatName());
@@ -129,7 +129,7 @@ public class BlessedBlockListener implements Listener {
                 IWalletDAO walletDAO = ctx.getWalletDAO();
                 walletDAO.add(blockOwner, 25000);
                 blessDAO.delete(loc);
-                player.sendStringMessage(ChatColor.AQUA + "You unblessed a block at X" + loc.getBlockX() + " Y"
+                player.sendMessage(ChatColor.AQUA + "You unblessed a block at X" + loc.getBlockX() + " Y"
                         + loc.getBlockY() + " Z" + loc.getBlockZ() + "");
                 Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
                 blessedBlocks.remove(loc);
@@ -143,13 +143,13 @@ public class BlessedBlockListener implements Listener {
                 && player.getRank().canBless() && ALLOWED_MATERIALS.contains(block.getType())) {
             int targetId = player.getBlessTarget();
             if (targetId == 0) {
-                player.sendStringMessage(ChatColor.RED + "Use /bless [name] first!");
+                player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
                 return;
             }
 
             TregminePlayer target = plugin.getPlayerOffline(targetId);
             if (target == null) {
-                player.sendStringMessage(ChatColor.RED + "Use /bless [name] first!");
+                player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
                 return;
             }
 
@@ -159,9 +159,9 @@ public class BlessedBlockListener implements Listener {
                     IWalletDAO walletDAO = ctx.getWalletDAO();
 
                     if (walletDAO.take(player, amount)) {
-                        player.sendStringMessage(ChatColor.LIGHT_PURPLE + (amount + " tregs was taken from you"));
+                        player.sendMessage(ChatColor.LIGHT_PURPLE + (amount + " tregs was taken from you"));
                     } else {
-                        player.sendStringMessage(ChatColor.RED + "You need " + amount + " tregs");
+                        player.sendMessage(ChatColor.RED + "You need " + amount + " tregs");
                         return;
                     }
                 } catch (DAOException e) {
@@ -174,7 +174,7 @@ public class BlessedBlockListener implements Listener {
                 target.sendNotification(Notification.BLESS,
                         new TextComponent(ChatColor.AQUA + "Your god blessed it in your name!"));
             }
-            player.sendSpigotMessage(new TextComponent(ChatColor.AQUA + "You blessed for "), target.getChatNameStaff(),
+            player.sendMessage(new TextComponent(ChatColor.AQUA + "You blessed for "), target.getChatNameStaff(),
                     new TextComponent("."));
             Tregmine.LOGGER.info(player.getName() + " Blessed a block " + loc + " to " + target.getName() + ".");
 
@@ -202,13 +202,13 @@ public class BlessedBlockListener implements Listener {
                 int id = blessedBlocks.get(loc);
                 TregminePlayer target = plugin.getPlayerOffline(id);
                 if (id != player.getId()) {
-                    player.sendSpigotMessage(new TextComponent(ChatColor.YELLOW + "Blessed to: "), target.getChatName(),
+                    player.sendMessage(new TextComponent(ChatColor.YELLOW + "Blessed to: "), target.getChatName(),
                             new TextComponent("."));
                     if (!player.getRank().canInspectInventories()) {
                         event.setCancelled(true);
                     }
                 } else {
-                    player.sendStringMessage(ChatColor.AQUA + "Blessed to you.");
+                    player.sendMessage(ChatColor.AQUA + "Blessed to you.");
                 }
             }
         }

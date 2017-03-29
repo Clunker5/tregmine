@@ -44,15 +44,15 @@ public class FillCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (args.length == 0) {
-            player.sendStringMessage(RED + "Please specify the material");
+            player.sendMessage(RED + "Please specify the material");
             return true;
         }
         if (!player.getRank().canFill()) {
-            player.sendStringMessage(ChatColor.RED + "You don't have the permissions to fill.");
+            player.sendMessage(ChatColor.RED + "You don't have the permissions to fill.");
             return true;
         }
 
@@ -70,7 +70,7 @@ public class FillCommand extends AbstractCommand {
             Undo undo = new Undo(world, blocks, 100000);
             undo.setScheduleState(scheduler, scheduler.scheduleSyncRepeatingTask(tregmine, undo, 0, 1));
 
-            player.sendStringMessage(DARK_AQUA + "Undo in progress.");
+            player.sendMessage(DARK_AQUA + "Undo in progress.");
 
             return true;
         }
@@ -79,12 +79,12 @@ public class FillCommand extends AbstractCommand {
 
         if (args.length > 0 && "paste".equals(args[0])) {
             if (b1 == null) {
-                player.sendStringMessage(DARK_AQUA + "Specify the point where you want to paste.");
+                player.sendMessage(DARK_AQUA + "Specify the point where you want to paste.");
                 return true;
             }
 
             double theta = args.length > 1 ? Double.parseDouble(args[1]) * Math.PI / 180.0 : 0.0;
-            player.sendStringMessage(DARK_AQUA + "Rotating " + theta + " radians.");
+            player.sendMessage(DARK_AQUA + "Rotating " + theta + " radians.");
 
             World world = player.getWorld();
             SavedBlocks blocks = copyHistory.get(player);
@@ -95,7 +95,7 @@ public class FillCommand extends AbstractCommand {
             Paster paster = new Paster(undoHistory, player, world, b1, blocks, theta, 100000);
             paster.setScheduleState(scheduler, scheduler.scheduleSyncRepeatingTask(tregmine, paster, 0, 1));
 
-            player.sendStringMessage(DARK_AQUA + "Paste in progress.");
+            player.sendMessage(DARK_AQUA + "Paste in progress.");
 
             return true;
         }
@@ -103,7 +103,7 @@ public class FillCommand extends AbstractCommand {
         Block b2 = player.getFillBlock2();
 
         if (b1 == null || b2 == null) {
-            player.sendStringMessage(DARK_AQUA + "You need to select two corners!");
+            player.sendMessage(DARK_AQUA + "You need to select two corners!");
             return true;
         }
 
@@ -111,7 +111,7 @@ public class FillCommand extends AbstractCommand {
         AbstractFiller filler = null;
         if (args.length > 0 && "copy".equals(args[0])) {
             filler = new Copy(tregmine, copyHistory, player, b1, b2, 100000);
-            player.sendStringMessage(DARK_AQUA + "Copied selected area.");
+            player.sendMessage(DARK_AQUA + "Copied selected area.");
         }
 
         // otherwise, try regular fills
@@ -123,11 +123,11 @@ public class FillCommand extends AbstractCommand {
             if (mat != null && toMat == null) {
 
                 if (!player.isOp() && !mat.toItemStack().getType().isBlock()) {
-                    player.sendStringMessage(RED + "Disabled!");
+                    player.sendMessage(RED + "Disabled!");
                     return true;
                 }
 
-                player.sendStringMessage(
+                player.sendMessage(
                         "You filled with " + DARK_AQUA + mat.toString() + "(" + mat.getItemType().name() + ")");
 
                 if (command.equals("fill")) {
@@ -147,12 +147,12 @@ public class FillCommand extends AbstractCommand {
             if (mat != null && toMat != null) {
 
                 if (!player.isOp() && !mat.toItemStack().getType().isBlock()) {
-                    player.sendStringMessage(RED + "Disabled!");
+                    player.sendMessage(RED + "Disabled!");
                     return true;
 
                 }
 
-                player.sendStringMessage("You replaced " + DARK_AQUA + mat.toString() + "(" + mat.getItemType().name() + ")"
+                player.sendMessage("You replaced " + DARK_AQUA + mat.toString() + "(" + mat.getItemType().name() + ")"
                         + BLUE + "with" + DARK_AQUA + toMat.toString() + "(" + toMat.getItemType().name() + ")");
 
                 if (command.equals("fill")) {
@@ -172,18 +172,18 @@ public class FillCommand extends AbstractCommand {
         }
 
         if (filler == null) {
-            player.sendStringMessage(RED + "Invalid command!");
+            player.sendMessage(RED + "Invalid command!");
             return false;
         }
 
         if (filler.getTotalVolume() > MAX_FILL_SIZE) {
-            player.sendStringMessage(DARK_AQUA + "Selected area is too big (" + filler.getTotalVolume() + ")!");
+            player.sendMessage(DARK_AQUA + "Selected area is too big (" + filler.getTotalVolume() + ")!");
             return true;
         }
 
         // execute action
         if (filler != null) {
-            player.sendStringMessage(DARK_AQUA + "Total volume is " + filler.getTotalVolume() + ".");
+            player.sendMessage(DARK_AQUA + "Total volume is " + filler.getTotalVolume() + ".");
             filler.setScheduleState(scheduler, scheduler.scheduleSyncRepeatingTask(tregmine, filler, 0, 1));
         }
 

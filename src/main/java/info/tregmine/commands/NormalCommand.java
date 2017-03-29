@@ -11,7 +11,7 @@ public class NormalCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
-        player.sendStringMessage(ChatColor.YELLOW
+        player.sendMessage(ChatColor.YELLOW
                 + "You don't want to become normal, or you'll end up like this! https://media.giphy.com/media/2ZvQhiW2dup20/giphy.gif");
         // if (player.getRank() == Rank.JUNIOR_ADMIN ||
         // player.getRank() == Rank.SENIOR_ADMIN) {

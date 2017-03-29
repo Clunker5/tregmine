@@ -45,9 +45,9 @@ public class MailCommand extends AbstractCommand {
                 IMailDAO mail = ctx.getMailDAO();
                 boolean success = mail.sendMail(player, args[1], msg);
                 if (success) {
-                    player.sendStringMessage(ChatColor.AQUA + "Message sent successfully! :)");
+                    player.sendMessage(ChatColor.AQUA + "Message sent successfully! :)");
                 } else {
-                    player.sendStringMessage(ChatColor.RED + "Message failed, check the username and send again.");
+                    player.sendMessage(ChatColor.RED + "Message failed, check the username and send again.");
                 }
             } catch (DAOException e) {
                 throw new RuntimeException(e);
@@ -55,7 +55,7 @@ public class MailCommand extends AbstractCommand {
             return true;
         } else if (args[0].contains("delete")) {
             if (getArgs(args) < 2) {
-                player.sendStringMessage(ChatColor.RED + "You must specify what to delete!");
+                player.sendMessage(ChatColor.RED + "You must specify what to delete!");
             } else {
                 try (IContext ctx = tregmine.createContext()) {
                     IMailDAO mail = ctx.getMailDAO();
@@ -63,14 +63,14 @@ public class MailCommand extends AbstractCommand {
                     int toInt = Integer.parseInt(args[1]);
                     boolean success = mail.deleteMail(player.getName(), toInt);
                     if (success) {
-                        player.sendStringMessage(ChatColor.AQUA + "Message deleted successfully! :)");
+                        player.sendMessage(ChatColor.AQUA + "Message deleted successfully! :)");
                     } else {
-                        player.sendStringMessage(ChatColor.RED + "Delete failed, check the id and try again.");
+                        player.sendMessage(ChatColor.RED + "Delete failed, check the id and try again.");
                     }
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 } catch (NumberFormatException e) {
-                    player.sendStringMessage(ChatColor.RED + "You must input a number.");
+                    player.sendMessage(ChatColor.RED + "You must input a number.");
                 }
             }
             return true;
@@ -81,11 +81,11 @@ public class MailCommand extends AbstractCommand {
                 messages = mail.getAllMail(player.getName());
 
                 if (messages.size() == 0) {
-                    player.sendStringMessage(ChatColor.AQUA + "You haven't received any messages.");
+                    player.sendMessage(ChatColor.AQUA + "You haven't received any messages.");
                 } else if (messages.size() == 1) {
-                    player.sendStringMessage(ChatColor.AQUA + "You have " + messages.size() + " message.");
+                    player.sendMessage(ChatColor.AQUA + "You have " + messages.size() + " message.");
                 } else {
-                    player.sendStringMessage(ChatColor.AQUA + "You have " + messages.size() + " messages.");
+                    player.sendMessage(ChatColor.AQUA + "You have " + messages.size() + " messages.");
                 }
             } catch (DAOException e) {
                 throw new RuntimeException(e);
@@ -94,7 +94,7 @@ public class MailCommand extends AbstractCommand {
         } else if (args[0].contains("tbt")) {
             if (player.getIsStaff()) {
                 if (getArgs(args) < 2) {
-                    player.sendStringMessage(ChatColor.RED + "You must provide a player");
+                    player.sendMessage(ChatColor.RED + "You must provide a player");
                 } else {
                     try (IContext ctx = tregmine.createContext()) {
                         IMailDAO mail = ctx.getMailDAO();
@@ -105,7 +105,7 @@ public class MailCommand extends AbstractCommand {
                         } else {
                             suffix = "letters";
                         }
-                        player.sendStringMessage(ChatColor.AQUA + args[1] + " has received " + amount + " " + suffix
+                        player.sendMessage(ChatColor.AQUA + args[1] + " has received " + amount + " " + suffix
                                 + " during their time on Tregmine.");
                     } catch (DAOException e) {
                         throw new RuntimeException(e);
@@ -121,7 +121,7 @@ public class MailCommand extends AbstractCommand {
                     } else {
                         suffix = "letters";
                     }
-                    player.sendStringMessage(ChatColor.AQUA + "You have received " + amount + " " + suffix
+                    player.sendMessage(ChatColor.AQUA + "You have received " + amount + " " + suffix
                             + " during your time on Tregmine.");
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
@@ -134,12 +134,12 @@ public class MailCommand extends AbstractCommand {
                 IMailDAO mail = ctx.getMailDAO();
                 messages = mail.getAllMail(player.getName());
                 for (String[] message : messages) {
-                    player.sendStringMessage(
+                    player.sendMessage(
                             ChatColor.AQUA + "You have a message from " + message[0] + " [ID " + message[4] + "]");
-                    player.sendStringMessage(ChatColor.AQUA + "\"" + message[3].trim() + "\"");
+                    player.sendMessage(ChatColor.AQUA + "\"" + message[3].trim() + "\"");
                 }
                 if (messages.size() == 0) {
-                    player.sendStringMessage(ChatColor.AQUA + "You haven't received any messages.");
+                    player.sendMessage(ChatColor.AQUA + "You haven't received any messages.");
                 }
             } catch (DAOException e) {
                 throw new RuntimeException(e);
@@ -166,7 +166,7 @@ public class MailCommand extends AbstractCommand {
                     + "/mail tbt";
         }
         for (String msg : help) {
-            player.sendStringMessage(msg);
+            player.sendMessage(msg);
         }
     }
 
@@ -179,7 +179,7 @@ public class MailCommand extends AbstractCommand {
             }
             TregminePlayer receiverUser = candidates.get(0);
             TregminePlayer senderUser = candidates1.get(0);
-            receiverUser.sendSpigotMessage(senderUser.decideVS(receiverUser),
+            receiverUser.sendMessage(senderUser.decideVS(receiverUser),
                     new TextComponent(ChatColor.AQUA + " sent you a message! Use /mail read to view it. "));
             return true;
         } else {
@@ -189,7 +189,7 @@ public class MailCommand extends AbstractCommand {
                 return false;
             }
             TregminePlayer receiverUser = candidates.get(0);
-            receiverUser.sendStringMessage(ChatColor.AQUA + sender + " sent you a message! Use /mail read to view it.");
+            receiverUser.sendMessage(ChatColor.AQUA + sender + " sent you a message! Use /mail read to view it.");
             return false;
         }
     }

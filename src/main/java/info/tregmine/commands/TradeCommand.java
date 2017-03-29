@@ -50,7 +50,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
             return false;
         }
         if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
-            player.sendStringMessage(RED + "A trade is already in progress!");
+            player.sendMessage(RED + "A trade is already in progress!");
             return true;
         }
 
@@ -65,19 +65,19 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
         TregminePlayer target = candidates.get(0);
         if (target.getChatState() != TregminePlayer.ChatState.CHAT) {
-            player.sendStringMessage(RED + target.getName() + "is in a trade!");
+            player.sendMessage(RED + target.getName() + "is in a trade!");
             return true;
         }
 
         if (target.getId() == player.getId()) {
-            player.sendStringMessage(RED + "You cannot trade with yourself!");
+            player.sendMessage(RED + "You cannot trade with yourself!");
             return true;
         }
 
         double distance = MathUtil.calcDistance2d(player.getLocation(), target.getLocation());
 
         if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) && (distance > player.getRank().getTradeDistance(player))) {
-            player.sendStringMessage(RED + "You can only trade with people less than "
+            player.sendMessage(RED + "You can only trade with people less than "
                     + player.getRank().getTradeDistance(player) + " blocks away.");
             return true;
         }
@@ -97,17 +97,17 @@ public class TradeCommand extends AbstractCommand implements Listener {
         player.setChatState(TregminePlayer.ChatState.TRADE);
         target.setChatState(TregminePlayer.ChatState.TRADE);
 
-        player.sendStringMessage(YELLOW + "[Trade] You are now trading with " + target.getName() + YELLOW
+        player.sendMessage(YELLOW + "[Trade] You are now trading with " + target.getName() + YELLOW
                 + ". What do you want " + "to offer?");
         String extra = "";
         if (isIllegal) {
             extra = ChatColor.RED + "[Trade] Warning! " + player.getName() + " has sent an item that has the " + type
                     + " flag! This means you cannot sell it, use it to buy tools, and using it to craft will result in the product being flagged as well.";
         }
-        target.sendStringMessage(YELLOW + "[Trade] You are now in a trade with " + player.getName() + YELLOW
+        target.sendMessage(YELLOW + "[Trade] You are now in a trade with " + player.getName() + YELLOW
                 + ". To exit, type \"quit\".");
         if (isIllegal) {
-            target.sendStringMessage(extra);
+            target.sendMessage(extra);
         }
 
         return true;
@@ -123,8 +123,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
         }
 
         if (ctx.inventory.getContents().length == 0) {
-            ctx.firstPlayer.sendStringMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
-            ctx.secondPlayer.sendStringMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
+            ctx.firstPlayer.sendMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
+            ctx.secondPlayer.sendMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
             ctx.firstPlayer.setChatState(ChatState.CHAT);
             ctx.secondPlayer.setChatState(ChatState.CHAT);
             activeTrades.remove(ctx.firstPlayer);
@@ -133,9 +133,9 @@ public class TradeCommand extends AbstractCommand implements Listener {
         }
         TregminePlayer target = ctx.secondPlayer;
 
-        target.sendStringMessage(tradePre + player.getName() + " " + YELLOW + " is offering: ");
+        target.sendMessage(tradePre + player.getName() + " " + YELLOW + " is offering: ");
 
-        player.sendStringMessage("[Trade] You are offering: ");
+        player.sendMessage("[Trade] You are offering: ");
 
         ItemStack[] contents = ctx.inventory.getContents();
         for (ItemStack i : contents) {
@@ -173,29 +173,29 @@ public class TradeCommand extends AbstractCommand implements Listener {
             if (material == Material.EXP_BOTTLE && xpValue > 0
                     && ExpListener.ITEM_NAME.equals(materialMeta.getDisplayName())) {
 
-                target.sendStringMessage(tradePre + amount + " XP Bottle holding " + xpValue + " levels");
-                player.sendStringMessage(tradePre + amount + " XP Bottle holding " + xpValue + " levels");
+                target.sendMessage(tradePre + amount + " XP Bottle holding " + xpValue + " levels");
+                player.sendMessage(tradePre + amount + " XP Bottle holding " + xpValue + " levels");
             } else if (enchantments.size() > 0) {
-                target.sendStringMessage(tradePre + " Enchanted " + material.toString() + " with: ");
-                player.sendStringMessage(tradePre + " Enchanted " + material.toString() + " with: ");
+                target.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
+                player.sendMessage(tradePre + " Enchanted " + material.toString() + " with: ");
                 try (IContext dbCtx = tregmine.createContext()) {
                     IEnchantmentDAO enchantDAO = dbCtx.getEnchantmentDAO();
                     for (Enchantment i : enchantments.keySet()) {
                         String enchantName = enchantDAO.localize(i.getName());
-                        target.sendStringMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
-                        player.sendStringMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
+                        target.sendMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
+                        player.sendMessage("- " + enchantName + " Level: " + enchantments.get(i).toString());
                     }
                 } catch (DAOException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                target.sendStringMessage(tradePre + amount + " " + material.toString());
-                player.sendStringMessage(tradePre + amount + " " + material.toString());
+                target.sendMessage(tradePre + amount + " " + material.toString());
+                player.sendMessage(tradePre + amount + " " + material.toString());
             }
         }
 
-        target.sendStringMessage(YELLOW + "[Trade] To make a bid, type \"bid <tregs>\". " + "For example: bid 1000");
-        player.sendStringMessage(YELLOW + "[Trade] Waiting for " + target.getName() + YELLOW
+        target.sendMessage(YELLOW + "[Trade] To make a bid, type \"bid <tregs>\". " + "For example: bid 1000");
+        player.sendMessage(YELLOW + "[Trade] Waiting for " + target.getName() + YELLOW
                 + " to make a bid. Type \"change\" to modify " + "your offer.");
 
         ctx.state = TradeState.BID;
@@ -244,15 +244,15 @@ public class TradeCommand extends AbstractCommand implements Listener {
                 firstInv.addItem(stack);
             }
 
-            first.sendStringMessage(YELLOW + "[Trade] Trade ended.");
-            second.sendStringMessage(YELLOW + "[Trade] Trade ended.");
+            first.sendMessage(YELLOW + "[Trade] Trade ended.");
+            second.sendMessage(YELLOW + "[Trade] Trade ended.");
         } else if ("bid".equalsIgnoreCase(args[0]) && args.length == 2) {
             if (second != player) {
-                player.sendStringMessage(RED + "[Trade] You can't make a bid!");
+                player.sendMessage(RED + "[Trade] You can't make a bid!");
                 return;
             }
             if (ctx.state != TradeState.BID) {
-                player.sendStringMessage(RED + "[Trade] You can't make a bid right now.");
+                player.sendMessage(RED + "[Trade] You can't make a bid right now.");
                 return;
             }
 
@@ -260,11 +260,11 @@ public class TradeCommand extends AbstractCommand implements Listener {
             try {
                 amount = Integer.parseInt(args[1]);
                 if (amount < 0) {
-                    player.sendStringMessage(RED + "[Trade] You have to bid an integer " + "number of tregs.");
+                    player.sendMessage(RED + "[Trade] You have to bid an integer " + "number of tregs.");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendStringMessage(RED + "[Trade] You have to bid an integer " + "number of tregs.");
+                player.sendMessage(RED + "[Trade] You have to bid an integer " + "number of tregs.");
                 return;
             }
 
@@ -273,23 +273,23 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
                 long balance = walletDAO.balance(second);
                 if (amount > balance) {
-                    player.sendStringMessage(RED + "[Trade] You only have " + balance + " tregs!");
+                    player.sendMessage(RED + "[Trade] You only have " + balance + " tregs!");
                     return;
                 }
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
 
-            first.sendStringMessage(tradePre + second.getName() + YELLOW + " bid " + amount
+            first.sendMessage(tradePre + second.getName() + YELLOW + " bid " + amount
                     + " tregs. Type \"accept\" to " + "proceed with the trade. Type \"change\" to modify "
                     + "your offer. Type \"quit\" to stop trading.");
-            second.sendStringMessage(YELLOW + "[Trade] You bid " + amount + " tregs.");
+            second.sendMessage(YELLOW + "[Trade] You bid " + amount + " tregs.");
 
             ctx.bid = amount;
             ctx.state = TradeState.CONSIDER_BID;
         } else if ("change".equalsIgnoreCase(args[0]) && args.length == 1) {
             if (first != player) {
-                player.sendStringMessage(RED + "[Trade] You can't change the offer!");
+                player.sendMessage(RED + "[Trade] You can't change the offer!");
                 return;
             }
 
@@ -297,7 +297,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
             ctx.state = TradeState.ITEM_SELECT;
         } else if ("accept".equals(args[0]) && args.length == 1) {
             if (first != player) {
-                player.sendStringMessage(RED + "[Trade] You can't accept an offer!");
+                player.sendMessage(RED + "[Trade] You can't accept an offer!");
                 return;
             }
 
@@ -322,9 +322,9 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
             if (p < t) {
                 int diff = t - p;
-                first.sendStringMessage(tradePre + second.getName() + YELLOW
+                first.sendMessage(tradePre + second.getName() + YELLOW
                         + " doesn't have enough inventory space, please wait a " + "minute and try again :)");
-                second.sendStringMessage(tradePre + "You need to remove " + diff
+                second.sendMessage(tradePre + "You need to remove " + diff
                         + " item stack(s) from your inventory to be able to recieve " + "the items!");
                 return;
             }
@@ -342,15 +342,15 @@ public class TradeCommand extends AbstractCommand implements Listener {
                     int tradeId = tradeDAO.insertTrade(first.getId(), second.getId(), ctx.bid);
                     tradeDAO.insertStacks(tradeId, contents);
 
-                    first.sendStringMessage(tradePre + ctx.bid + " tregs was " + "added to your wallet!");
-                    second.sendStringMessage(tradePre + ctx.bid + " tregs was " + "withdrawn to your wallet!");
+                    first.sendMessage(tradePre + ctx.bid + " tregs was " + "added to your wallet!");
+                    second.sendMessage(tradePre + ctx.bid + " tregs was " + "withdrawn to your wallet!");
 
                     if ((tradeDAO.getAmountofTrades(first.getId()) > 100)
                             && !(first.getBadgeLevel(Badge.MERCHANT) == 0)) {
                         first.awardBadgeLevel(Badge.MERCHANT, "For completing 100 transactions!");
                     }
                 } else {
-                    first.sendStringMessage(RED + "[Trade] Failed to withdraw " + ctx.bid + " from the wallet of "
+                    first.sendMessage(RED + "[Trade] Failed to withdraw " + ctx.bid + " from the wallet of "
                             + second.getName() + "!");
                     return;
                 }
@@ -375,9 +375,9 @@ public class TradeCommand extends AbstractCommand implements Listener {
             first.giveExp(5);
             second.giveExp(5);
         } else {
-            first.sendStringMessage(tradePre + WHITE + "<" + player.getName() + WHITE + "> " + text);
+            first.sendMessage(tradePre + WHITE + "<" + player.getName() + WHITE + "> " + text);
 
-            second.sendStringMessage(tradePre + WHITE + "<" + player.getName() + WHITE + "> " + text);
+            second.sendMessage(tradePre + WHITE + "<" + player.getName() + WHITE + "> " + text);
         }
     }
 
@@ -401,8 +401,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
             first.closeInventory();
         }
 
-        first.sendStringMessage(YELLOW + "[Trade] Trade ended due to portal use! Now that was silly...");
-        second.sendStringMessage(YELLOW + "[Trade] Trade ended due to portal use! Now that was silly...");
+        first.sendMessage(YELLOW + "[Trade] Trade ended due to portal use! Now that was silly...");
+        second.sendMessage(YELLOW + "[Trade] Trade ended due to portal use! Now that was silly...");
     }
 
     private enum TradeState {

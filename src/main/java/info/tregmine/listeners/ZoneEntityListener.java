@@ -73,7 +73,7 @@ public class ZoneEntityListener implements Listener {
                 TregminePlayer player = plugin.getPlayer((Player) e1);
 
                 player.setCombatLog(10);
-                player.sendStringMessage(
+                player.sendMessage(
                         ChatColor.RED + "You have been combat logged! Do NOT log out! 10 seconds remaining...");
 
                 Location location = player.getLocation();

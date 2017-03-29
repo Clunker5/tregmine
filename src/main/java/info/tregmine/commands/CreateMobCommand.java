@@ -19,7 +19,7 @@ public class CreateMobCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (!player.getRank().canSpawnMobs()) {
@@ -31,7 +31,7 @@ public class CreateMobCommand extends AbstractCommand {
             String mobName = args[0];
             mobType = EntityType.valueOf(mobName.toUpperCase());
         } catch (Exception e) {
-            player.sendStringMessage(RED + "Sorry, that mob doesn't exist.");
+            player.sendMessage(RED + "Sorry, that mob doesn't exist.");
             return true;
         }
 
@@ -56,8 +56,8 @@ public class CreateMobCommand extends AbstractCommand {
                 }
             }
 
-            player.sendStringMessage("Valid names are: ");
-            player.sendStringMessage(buf.toString());
+            player.sendMessage("Valid names are: ");
+            player.sendMessage(buf.toString());
 
             return true;
         }
@@ -80,7 +80,7 @@ public class CreateMobCommand extends AbstractCommand {
             }
         }
 
-        player.sendStringMessage(YELLOW + "You created " + amount + " " + mobType.toString() + ".");
+        player.sendMessage(YELLOW + "You created " + amount + " " + mobType.toString() + ".");
         LOGGER.info(player.getName() + " created " + amount + " " + mobType.toString());
 
         return true;

@@ -15,12 +15,12 @@ public class TpsCommand extends AbstractCommand {
         double tps = Lag.getTPS();
         double lagPercentage = Math.round((1.0D - tps / 20.0D) * 100.0D);
         if (isTpsGood(tps)) {
-            player.sendStringMessage(ChatColor.GREEN + "Server TPS: " + tps);
+            player.sendMessage(ChatColor.GREEN + "Server TPS: " + tps);
         }
         if (!isTpsGood(tps)) {
-            player.sendStringMessage(ChatColor.RED + "Server TPS: " + tps);
+            player.sendMessage(ChatColor.RED + "Server TPS: " + tps);
         }
-        player.sendStringMessage(ChatColor.BLUE + "Lag Percentage: " + lagPercentage);
+        player.sendMessage(ChatColor.BLUE + "Lag Percentage: " + lagPercentage);
         return true;
     }
 

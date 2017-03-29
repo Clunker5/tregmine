@@ -174,7 +174,7 @@ public class LumberListener implements Listener {
             if (Integer.parseInt(durability[0]) == 0) { // Leave the player with
                 // 1 durability point
                 if (running == true) {
-                    player.sendStringMessage(ChatColor.RED + "Out of durability, Stopping...");
+                    player.sendMessage(ChatColor.RED + "Out of durability, Stopping...");
                     running = false;
                 }
                 continue;
@@ -212,7 +212,7 @@ public class LumberListener implements Listener {
         }
 
         if (blocksBroken > 0) {
-            player.sendStringMessage("You lumber axed a tree containing " + blocksBroken + " logs!");
+            player.sendMessage("You lumber axed a tree containing " + blocksBroken + " logs!");
             Tregmine.LOGGER.info(player.getRealName() + " broke " + blocksBroken + " using LumberAxe!");
         }
     }

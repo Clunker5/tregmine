@@ -72,7 +72,7 @@ public class DamageListener implements Listener {
                     System.out.println("Crit chance: " + critical + " i: " + i);
                     if (i <= critical) {
                         event.setDamage(criticalDamage);
-                        player.sendStringMessage(newDamage + " = old, crit: " + criticalDamage);
+                        player.sendMessage(newDamage + " = old, crit: " + criticalDamage);
                     } else {
                         event.setDamage(newDamage);
                     }

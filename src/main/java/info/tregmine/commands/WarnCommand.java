@@ -36,7 +36,7 @@ public class WarnCommand extends AbstractCommand {
         }
 
         if (args.length < 3) {
-            player.sendStringMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
+            player.sendMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
             return true;
         }
 
@@ -49,7 +49,7 @@ public class WarnCommand extends AbstractCommand {
         } else if ("hard".equals(type)) {
             hard = true;
         } else {
-            player.sendStringMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
+            player.sendMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
             return true;
         }
 
@@ -61,11 +61,11 @@ public class WarnCommand extends AbstractCommand {
 
         TregminePlayer victim = candidates.get(0);
         if (hard) {
-            player.sendSpigotMessage(new TextComponent(GREEN + "You hardwarned "), victim.decideVS(player),
+            player.sendMessage(new TextComponent(GREEN + "You hardwarned "), victim.decideVS(player),
                     new TextComponent(GREEN + ": " + message));
             LOGGER.info(victim.getName() + " hardwarned by " + player.getName());
         } else {
-            player.sendSpigotMessage(new TextComponent(GREEN + "You warned "), victim.decideVS(player),
+            player.sendMessage(new TextComponent(GREEN + "You warned "), victim.decideVS(player),
                     new TextComponent(GREEN + ": " + message));
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }

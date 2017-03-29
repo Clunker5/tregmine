@@ -22,7 +22,7 @@ public class ItemCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendStringMessage(ChatColor.RED + "You cannot use that command in this world!");
+            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
         if (args.length == 0) {
@@ -43,7 +43,7 @@ public class ItemCommand extends AbstractCommand {
         }
 
         if (material == null) {
-            player.sendStringMessage(DARK_AQUA + "Sorry, the specified item was not found.");
+            player.sendMessage(DARK_AQUA + "Sorry, the specified item was not found.");
             return true;
         }
 
@@ -82,7 +82,7 @@ public class ItemCommand extends AbstractCommand {
         inv.addItem(item);
 
         String materialName = material.toString();
-        player.sendStringMessage("You received " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + ".");
+        player.sendMessage("You received " + amount + " of " + DARK_AQUA + materialName.toLowerCase() + ".");
         LOGGER.info(player.getName() + " SPAWNED " + amount + ":" + materialName);
 
         return true;

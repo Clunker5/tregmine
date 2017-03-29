@@ -58,7 +58,7 @@ public class PushNotificationAction implements WebHandler.Action {
             message = "Generic push notification from " + issuer.getChatNameNoHover() + ChatColor.WHITE + ".";
         }
 
-        subject.sendStringMessage(message);
+        subject.sendMessage(message);
         Tregmine.LOGGER.info("Push notification issued by " + issuer.getName() + "; sent to " + subject.getName()
                 + "; type=" + type);
     }

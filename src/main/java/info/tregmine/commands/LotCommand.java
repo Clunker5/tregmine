@@ -34,7 +34,7 @@ public class LotCommand extends AbstractCommand {
         }
 
         if (args.length < 3) {
-            player.sendStringMessage("syntax: /lot create [name] [owner]");
+            player.sendMessage("syntax: /lot create [name] [owner]");
             return;
         }
 
@@ -45,7 +45,7 @@ public class LotCommand extends AbstractCommand {
         String name = args[1] + "." + tzone.getName();
 
         if (world.lotExists(name)) {
-            player.sendStringMessage(RED + "A lot named " + name + " does already exist.");
+            player.sendMessage(RED + "A lot named " + name + " does already exist.");
             return;
         }
 
@@ -53,7 +53,7 @@ public class LotCommand extends AbstractCommand {
 
         TregminePlayer victim = tregmine.getPlayerOffline(playerName);
         if (victim == null) {
-            player.sendStringMessage(RED + "Player " + playerName + " was not found.");
+            player.sendMessage(RED + "Player " + playerName + " was not found.");
             return;
         }
 
@@ -64,7 +64,7 @@ public class LotCommand extends AbstractCommand {
             Block b1 = player.getZoneBlock1();
             Block b2 = player.getZoneBlock2();
             if (b1 == null || b2 == null) {
-                player.sendStringMessage("Please select two corners");
+                player.sendMessage("Please select two corners");
                 return;
             }
 
@@ -72,7 +72,7 @@ public class LotCommand extends AbstractCommand {
 
             Zone.Permission perm = zone.getUser(player);
             if (perm != Zone.Permission.Owner) {
-                player.sendStringMessage(
+                player.sendMessage(
                         RED + "You are not allowed to create lots in zone " + zone.getName() + " (" + perm + ").");
                 return;
             }
@@ -96,14 +96,14 @@ public class LotCommand extends AbstractCommand {
             try {
                 world.addLot(lot);
             } catch (IntersectionException e) {
-                player.sendStringMessage(RED + "The specified rectangle intersects an existing lot.");
+                player.sendMessage(RED + "The specified rectangle intersects an existing lot.");
                 return;
             }
 
             dao.addLot(lot);
             dao.addLotUser(lot.getId(), victim.getId());
 
-            player.sendStringMessage(GREEN + "[" + zone.getName() + "] Lot " + args[1] + "." + zone.getName()
+            player.sendMessage(GREEN + "[" + zone.getName() + "] Lot " + args[1] + "." + zone.getName()
                     + " created for player " + playerName + ".");
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -117,7 +117,7 @@ public class LotCommand extends AbstractCommand {
         }
 
         if (args.length < 2) {
-            player.sendStringMessage("syntax: /lot delete [name]");
+            player.sendMessage("syntax: /lot delete [name]");
             return;
         }
 
@@ -125,7 +125,7 @@ public class LotCommand extends AbstractCommand {
 
         Lot lot = world.getLot(name);
         if (lot == null) {
-            player.sendStringMessage(RED + "No lot named " + name + " found.");
+            player.sendMessage(RED + "No lot named " + name + " found.");
             return;
         }
 
@@ -138,7 +138,7 @@ public class LotCommand extends AbstractCommand {
         } else if (player.getRank().canModifyZones()) {
             // Admins etc.
         } else {
-            player.sendStringMessage(RED + "You are not an owner of lot " + lot.getName() + ".");
+            player.sendMessage(RED + "You are not an owner of lot " + lot.getName() + ".");
             return;
         }
 
@@ -150,7 +150,7 @@ public class LotCommand extends AbstractCommand {
 
             world.deleteLot(lot.getName());
 
-            player.sendStringMessage(GREEN + lot.getName() + " has been deleted.");
+            player.sendMessage(GREEN + lot.getName() + " has been deleted.");
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
@@ -163,7 +163,7 @@ public class LotCommand extends AbstractCommand {
         }
 
         if (args.length < 4) {
-            player.sendStringMessage("syntax: /lot flag [name] [flag] [true/false]");
+            player.sendMessage("syntax: /lot flag [name] [flag] [true/false]");
             return;
         }
 
@@ -171,12 +171,12 @@ public class LotCommand extends AbstractCommand {
 
         Lot lot = world.getLot(name);
         if (lot == null) {
-            player.sendStringMessage(RED + "No lot named " + name + " found.");
+            player.sendMessage(RED + "No lot named " + name + " found.");
             return;
         }
 
         if (!lot.isOwner(player)) {
-            player.sendStringMessage(RED + "Must be a lot owner!");
+            player.sendMessage(RED + "Must be a lot owner!");
             return;
         }
 
@@ -189,17 +189,17 @@ public class LotCommand extends AbstractCommand {
         }
 
         if (flag == null) {
-            player.sendStringMessage(RED + "Flag not found! Try the following:");
+            player.sendMessage(RED + "Flag not found! Try the following:");
 
             for (Lot.Flags i : Lot.Flags.values()) {
-                player.sendStringMessage(AQUA + i.name());
+                player.sendMessage(AQUA + i.name());
             }
             return;
         }
 
         if (flag == Lot.Flags.PVP && (player.getRank() != Rank.JUNIOR_ADMIN && player.getRank() != Rank.SENIOR_ADMIN)) {
 
-            player.sendStringMessage(RED + "This is an admin only flag, Please contact an admin!");
+            player.sendMessage(RED + "This is an admin only flag, Please contact an admin!");
             return;
         }
 
@@ -211,21 +211,21 @@ public class LotCommand extends AbstractCommand {
             if (player.getRank().canEditBanks()) {
                 if (value) {
                     lot.setFlag(flag);
-                    player.sendStringMessage(GREEN + "Added flag: " + flag.name());
+                    player.sendMessage(GREEN + "Added flag: " + flag.name());
                 } else {
                     lot.removeFlag(flag);
-                    player.sendStringMessage(GREEN + "Removed flag: " + flag.name());
+                    player.sendMessage(GREEN + "Removed flag: " + flag.name());
                 }
             } else {
-                player.sendStringMessage(ChatColor.RED + "Please see an admin to make a bank");
+                player.sendMessage(ChatColor.RED + "Please see an admin to make a bank");
             }
         } else {
             if (value) {
                 lot.setFlag(flag);
-                player.sendStringMessage(GREEN + "Added flag: " + flag.name());
+                player.sendMessage(GREEN + "Added flag: " + flag.name());
             } else {
                 lot.removeFlag(flag);
-                player.sendStringMessage(GREEN + "Removed flag: " + flag.name());
+                player.sendMessage(GREEN + "Removed flag: " + flag.name());
             }
         }
 
@@ -251,12 +251,12 @@ public class LotCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(TregminePlayer player, String[] args) {
         if (args.length == 0) {
-            player.sendStringMessage(ChatColor.RED + "Incorrect usage! Try:");
-            player.sendStringMessage(ChatColor.AQUA + "/lot create <lot name> <player>");
-            player.sendStringMessage(ChatColor.AQUA + "/lot addowner <lot name> <player>");
-            player.sendStringMessage(ChatColor.AQUA + "/lot delowner <lot name> <owner>");
-            player.sendStringMessage(ChatColor.AQUA + "/lot delete <lot name>");
-            player.sendStringMessage(ChatColor.AQUA + "/lot flag <lot name> <flag name> <true/false>");
+            player.sendMessage(ChatColor.RED + "Incorrect usage! Try:");
+            player.sendMessage(ChatColor.AQUA + "/lot create <lot name> <player>");
+            player.sendMessage(ChatColor.AQUA + "/lot addowner <lot name> <player>");
+            player.sendMessage(ChatColor.AQUA + "/lot delowner <lot name> <owner>");
+            player.sendMessage(ChatColor.AQUA + "/lot delete <lot name>");
+            player.sendMessage(ChatColor.AQUA + "/lot flag <lot name> <flag name> <true/false>");
             return true;
         }
 
@@ -287,7 +287,7 @@ public class LotCommand extends AbstractCommand {
         }
 
         if (args.length < 3) {
-            player.sendStringMessage("syntax: /lot addowner [name] [player]");
+            player.sendMessage("syntax: /lot addowner [name] [player]");
             return;
         }
 
@@ -295,7 +295,7 @@ public class LotCommand extends AbstractCommand {
 
         Lot lot = world.getLot(name);
         if (lot == null) {
-            player.sendStringMessage(RED + "No lot named " + name + " found.");
+            player.sendMessage(RED + "No lot named " + name + " found.");
             return;
         }
 
@@ -308,7 +308,7 @@ public class LotCommand extends AbstractCommand {
         } else if (player.getRank().canModifyZones()) {
             // Admins etc.
         } else {
-            player.sendStringMessage(RED + "You are not an owner of lot " + lot.getName() + ".");
+            player.sendMessage(RED + "You are not an owner of lot " + lot.getName() + ".");
             return;
         }
 
@@ -320,7 +320,7 @@ public class LotCommand extends AbstractCommand {
             candidate = tregmine.getPlayerOffline(args[2]);
             if (candidate == null) {
                 // give up
-                player.sendStringMessage(RED + "Player " + args[2] + " was not found.");
+                player.sendMessage(RED + "Player " + args[2] + " was not found.");
                 return;
             }
         } else {
@@ -333,25 +333,25 @@ public class LotCommand extends AbstractCommand {
             if ("addowner".equals(args[0])) {
 
                 if (lot.isOwner(candidate)) {
-                    player.sendSpigotMessage(new TextComponent(RED + ""), candidate.decideVS(player),
+                    player.sendMessage(new TextComponent(RED + ""), candidate.decideVS(player),
                             new TextComponent(RED + " is already an owner of lot " + name + "."));
                     return;
                 } else {
                     lot.addOwner(candidate);
                     dao.addLotUser(lot.getId(), candidate.getId());
-                    player.sendSpigotMessage(new TextComponent(GREEN + ""), candidate.decideVS(player),
+                    player.sendMessage(new TextComponent(GREEN + ""), candidate.decideVS(player),
                             new TextComponent(GREEN + " has been added as owner of " + lot.getName() + "."));
                 }
             } else if ("delowner".equals(args[0])) {
                 if (!lot.isOwner(candidate)) {
-                    player.sendSpigotMessage(new TextComponent(RED + ""), candidate.decideVS(player),
+                    player.sendMessage(new TextComponent(RED + ""), candidate.decideVS(player),
                             new TextComponent(RED + " is not an owner of lot " + name + "."));
                     return;
                 } else {
                     lot.deleteOwner(candidate);
                     dao.deleteLotUser(lot.getId(), candidate.getId());
 
-                    player.sendSpigotMessage(new TextComponent(GREEN + ""), candidate.decideVS(player),
+                    player.sendMessage(new TextComponent(GREEN + ""), candidate.decideVS(player),
                             new TextComponent(GREEN + " is no longer an owner of " + lot.getName() + "."));
                 }
             }

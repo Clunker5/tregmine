@@ -29,7 +29,7 @@ public class ChatListener implements Listener {
     public void onTregmineChat(TregmineChatEvent event) {
         TregminePlayer sender = event.getPlayer();
         if (sender.isMuted() && !sender.getMute().isExpired() && !sender.getMute().isCancelled()) {
-            sender.sendStringMessage(ChatColor.YELLOW + "You have been muted; Your mute will expire in "
+            sender.sendMessage(ChatColor.YELLOW + "You have been muted; Your mute will expire in "
                     + sender.getMute().secondsLeft() + " seconds.");
             event.setCancelled(true);
             return;
@@ -66,18 +66,18 @@ public class ChatListener implements Listener {
             if (curse == true) {
                 IPlayerDAO playerdao = ctx.getPlayerDAO();
                 if (sender.isCurseWarned()) {
-                    sender.sendSpigotMessage(new TextComponent(ChatColor.RED + "Hey! You shouldn't be cursing! "
+                    sender.sendMessage(new TextComponent(ChatColor.RED + "Hey! You shouldn't be cursing! "
                             + cursetotal * 50 + " Tregs have been removed from your account."));
                     IWalletDAO wallet = ctx.getWalletDAO();
                     wallet.take(sender, cursetotal * 50);
                 } else {
                     playerdao.updateProperty(sender, "cursewarned", "true");
-                    sender.sendSpigotMessage(new TextComponent(ChatColor.RED
+                    sender.sendMessage(new TextComponent(ChatColor.RED
                             + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account."));
                     sender.setCurseWarned(true);
                 }
                 if (avoided) {
-                    sender.sendSpigotMessage(new TextComponent(
+                    sender.sendMessage(new TextComponent(
                             ChatColor.RED + "You thought you were slick... Your chat has been cancelled."));
                     event.setCancelled(true);
                     plugin.addBlockedChat(event);
@@ -166,7 +166,7 @@ public class ChatListener implements Listener {
                 if (text.contains(to.getRealName()) && "GLOBAL".equalsIgnoreCase(senderChan)
                         && !"GLOBAL".equalsIgnoreCase(toChan)) {
 
-                    to.sendSpigotMessage(
+                    to.sendMessage(
                             new TextComponent(
                                     ChatColor.BLUE + "You were mentioned in GLOBAL by " + sender.getNameColor()),
                             sender.getChatName());
