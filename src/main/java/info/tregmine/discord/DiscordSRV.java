@@ -1,3 +1,7 @@
+/*
+ * Based off of the DiscordSRV plugin. https://github.com/Scarsz/DiscordSRV - Necessary attributions are in the LICENSE file
+ */
+
 package info.tregmine.discord;
 
 import info.tregmine.Tregmine;
