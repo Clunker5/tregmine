@@ -1,9 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -30,12 +29,12 @@ public class PromoteCommand extends AbstractCommand {
             server.getLogger().info("[PROMOTE] You must specify two arguments.");
             return true;
         }
-        List<TregminePlayer> candidate = tregmine.matchPlayer(args[0]);
+        List<GenericPlayer> candidate = tregmine.matchPlayer(args[0]);
         if (candidate.size() != 1) {
             server.getLogger().info(RED + "The player specified was not found. Please try again.");
             return true;
         }
-        TregminePlayer user = candidate.get(0);
+        GenericPlayer user = candidate.get(0);
 
         String getrank = args[1];
 
@@ -69,7 +68,7 @@ public class PromoteCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getRank() != Rank.SENIOR_ADMIN && !player.isOp()) {
             player.sendMessage(ChatColor.RED + "You certainly don't have permission to promote players!");
             return true;
@@ -113,12 +112,12 @@ public class PromoteCommand extends AbstractCommand {
             player.sendMessage(RED + "You have specified an invalid rank. Please try again.");
             return true;
         }
-        List<TregminePlayer> candidate = tregmine.matchPlayer(possibleuser);
+        List<GenericPlayer> candidate = tregmine.matchPlayer(possibleuser);
         if (candidate.size() != 1) {
             player.sendMessage(RED + "The player specified was not found. Please try again.");
             return true;
         }
-        TregminePlayer user = candidate.get(0);
+        GenericPlayer user = candidate.get(0);
         if (user.hasFlag(Flags.HARDWARNED)) {
             // Players with a hardwarn cannot be promoted using this command.
             // They must be promoted manually.

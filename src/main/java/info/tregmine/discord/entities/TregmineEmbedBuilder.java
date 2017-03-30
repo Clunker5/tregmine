@@ -1,6 +1,6 @@
 package info.tregmine.discord.entities;
 
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -12,7 +12,7 @@ import java.awt.*;
 public class TregmineEmbedBuilder {
 
     public static final String TREGMINE_FOOTER = "Made by TregBot with lots of love";
-    public static final String TREGMINE_FOOTER_ICON = DiscordSRV.selfUser.getAvatarUrl();
+    public static final String TREGMINE_FOOTER_ICON = Discord.selfUser.getAvatarUrl();
 
     public static Message errorEmbedForUser(String title, String description, User forUser) {
         return new MessageBuilder().append("(" + forUser.getAsMention() + ")").setEmbed(new

@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
@@ -28,7 +28,7 @@ public class ItemFrameListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer((Player) event.getDamager());
+        GenericPlayer player = plugin.getPlayer((Player) event.getDamager());
 
         if (!player.hasBlockPermission(event.getEntity().getLocation(), true)) {
             event.setCancelled(true);
@@ -50,7 +50,7 @@ public class ItemFrameListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getRightClicked().getLocation();
 

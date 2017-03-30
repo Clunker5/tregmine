@@ -1,6 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -17,17 +17,17 @@ import java.util.Random;
  * @author Joe Notaro (notaro1997)
  */
 public class LotteryCommand extends AbstractCommand {
-    public List<TregminePlayer> lottery;
+    public List<GenericPlayer> lottery;
     public int jackpot = 0;
 
     public LotteryCommand(Tregmine tregmine) {
         super(tregmine, "lottery");
 
-        lottery = new ArrayList<TregminePlayer>();
+        lottery = new ArrayList<>();
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String args[]) {
+    public boolean handlePlayer(GenericPlayer player, String args[]) {
         NumberFormat format = NumberFormat.getNumberInstance();
         int size = lottery.size();
         int amount = lottery.size() * 2000 + jackpot;
@@ -130,7 +130,7 @@ public class LotteryCommand extends AbstractCommand {
                     if (player.getRank().canChooseLottery()) {
                         if (size >= 2) {
                             Random random = new Random();
-                            TregminePlayer winner = lottery.get(random.nextInt(size));
+                            GenericPlayer winner = lottery.get(random.nextInt(size));
                             if (!winner.isOnline()) {
                                 player.sendMessage(ChatColor.RED + winner.getChatNameNoHover() + " won, "
                                         + "but is no longer online. Try again.");

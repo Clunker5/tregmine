@@ -1,9 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -24,7 +23,7 @@ public class WhoCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             return who(player);
         } else if (args.length == 1 && "world".equalsIgnoreCase(args[0])) {
@@ -57,13 +56,13 @@ public class WhoCommand extends AbstractCommand {
         return DARK_GRAY + buf.toString() + str + DARK_GRAY + buf.toString();
     }
 
-    private boolean who(TregminePlayer player) {
+    private boolean who(GenericPlayer player) {
         StringBuilder sb = new StringBuilder();
         String delim = "";
 
-        List<TregminePlayer> players = tregmine.getOnlinePlayers();
-        for (TregminePlayer online : players) {
-            if (online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+        List<GenericPlayer> players = tregmine.getOnlinePlayers();
+        for (GenericPlayer online : players) {
+            if (online.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 // players.remove(online);
                 continue;
             }
@@ -79,15 +78,15 @@ public class WhoCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean whoPlayer(TregminePlayer player, String[] args) {
+    private boolean whoPlayer(GenericPlayer player, String[] args) {
         String pattern = args[0];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             return true;
         }
 
-        TregminePlayer whoPlayer = candidates.get(0);
+        GenericPlayer whoPlayer = candidates.get(0);
 
         if (whoPlayer == null) {
             player.sendMessage(RED + "That player is not online right now.");
@@ -165,15 +164,15 @@ public class WhoCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean whoWorld(TregminePlayer player) {
+    private boolean whoWorld(GenericPlayer player) {
         for (World world : player.getServer().getWorlds()) {
             if (world.getPlayers().size() > 0) {
                 StringBuilder sb = new StringBuilder();
                 String delim = "";
 
                 for (Player pl : world.getPlayers()) {
-                    TregminePlayer p = tregmine.getPlayer(pl);
-                    if (p.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                    GenericPlayer p = tregmine.getPlayer(pl);
+                    if (p.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                         continue;
                     }
 

@@ -1,9 +1,9 @@
 package info.tregmine.discord.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.ChatState;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer.ChatState;
+import info.tregmine.discord.Discord;
 import net.dv8tion.jda.core.JDA;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -17,9 +17,9 @@ public class ChatListener implements Listener {
 
     JDA api;
     Tregmine plugin;
-    DiscordSRV srv;
+    Discord srv;
 
-    public ChatListener(DiscordSRV srv) {
+    public ChatListener(Discord srv) {
         this.srv = srv;
         this.api = this.srv.getAPI();
         this.plugin = this.srv.getPlugin();
@@ -46,7 +46,7 @@ public class ChatListener implements Listener {
                 && !this.plugin.getConfig().getBoolean("discord.bridge-functionality.forward-unsubscribed"))
             return;
 
-        TregminePlayer sender = plugin.getPlayer(event.getPlayer());
+        GenericPlayer sender = plugin.getPlayer(event.getPlayer());
         // if(sender.getChatChannel().toLowerCase() != "global"){
         // return;
         // }

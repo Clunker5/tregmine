@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -15,24 +14,24 @@ public class WatchChunksCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length < 1) {
             player.sendMessage("Your WatchChunks is set to "
-                    + (player.hasFlag(TregminePlayer.Flags.WATCHING_CHUNKS) ? "on" : "off") + ".");
+                    + (player.hasFlag(GenericPlayer.Flags.WATCHING_CHUNKS) ? "on" : "off") + ".");
             return true;
         }
 
         String state = args[0];
 
         if ("on".equalsIgnoreCase(state)) {
-            player.setFlag(TregminePlayer.Flags.WATCHING_CHUNKS);
+            player.setFlag(GenericPlayer.Flags.WATCHING_CHUNKS);
             player.sendMessage(AQUA + "Watching Chunks is now turned on for you.");
         } else if ("off".equalsIgnoreCase(state)) {
-            player.removeFlag(TregminePlayer.Flags.WATCHING_CHUNKS);
+            player.removeFlag(GenericPlayer.Flags.WATCHING_CHUNKS);
             player.sendMessage(AQUA + "Watching Chunks is now turned off for you.");
         } else if ("status".equalsIgnoreCase(state)) {
             player.sendMessage("Your Watching Chunks is set to "
-                    + (player.hasFlag(TregminePlayer.Flags.WATCHING_CHUNKS) ? "on" : "off") + ".");
+                    + (player.hasFlag(GenericPlayer.Flags.WATCHING_CHUNKS) ? "on" : "off") + ".");
         } else {
             player.sendMessage(
                     RED + "The commands are /watchchunks on, /watchchunks off and /watchchunks status.");

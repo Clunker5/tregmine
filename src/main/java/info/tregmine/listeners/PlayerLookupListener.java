@@ -1,10 +1,10 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.PlayerReport.Action;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -30,7 +30,7 @@ public class PlayerLookupListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.getPlayer().kickPlayer(ChatColor.RED + "Something went wrong");
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " + "in players map.");
@@ -61,9 +61,9 @@ public class PlayerLookupListener implements Listener {
             throw new RuntimeException(e);
         }
 
-        if (!player.hasFlag(TregminePlayer.Flags.HIDDEN_ANNOUNCEMENT)) {
-            if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
-                for (TregminePlayer to : plugin.getOnlinePlayers()) {
+        if (!player.hasFlag(GenericPlayer.Flags.HIDDEN_ANNOUNCEMENT)) {
+            if (player.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
+                for (GenericPlayer to : plugin.getOnlinePlayers()) {
                     if (to.getRank().canSeeHiddenInfo()) {
                         if (player.getCountry() != null) {
                             to.sendMessage(new TextComponent("Welcome "), player.getChatNameStaff(),
@@ -83,7 +83,7 @@ public class PlayerLookupListener implements Listener {
                     }
                 }
             } else {
-                if (player.getCountry() != null && !player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                if (player.getCountry() != null && !player.hasFlag(GenericPlayer.Flags.HIDDEN_LOCATION)) {
                     plugin.broadcast(new TextComponent(ChatColor.DARK_AQUA + "Welcome "), player.getChatName(),
                             new TextComponent(ChatColor.DARK_AQUA + " from " + player.getCountry() + "!"));
                 } else {
@@ -139,12 +139,12 @@ public class PlayerLookupListener implements Listener {
             if (aliases.size() > 1) {
                 Tregmine.LOGGER.info("Aliases: " + aliasList);
 
-                for (TregminePlayer current : plugin.getOnlinePlayers()) {
+                for (GenericPlayer current : plugin.getOnlinePlayers()) {
                     if (!current.getRank().canSeeAliases()) {
                         continue;
                     }
-                    if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)
-                            || player.hasFlag(TregminePlayer.Flags.HIDDEN_LOCATION)) {
+                    if (player.hasFlag(GenericPlayer.Flags.INVISIBLE)
+                            || player.hasFlag(GenericPlayer.Flags.HIDDEN_LOCATION)) {
                         continue;
                     }
                 }

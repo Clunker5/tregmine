@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IHomeDAO;
@@ -21,7 +20,7 @@ public class HomeCommand extends AbstractCommand {
         this.tregmine = tregmine;
     }
 
-    private boolean deleteHome(TregminePlayer player, String name) {
+    private boolean deleteHome(GenericPlayer player, String name) {
         if (!player.getRank().canSaveHome()) {
             return true;
         }
@@ -46,7 +45,7 @@ public class HomeCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             return teleport(player, "default");
         } else if ("save".equalsIgnoreCase(args[0])) {
@@ -93,8 +92,8 @@ public class HomeCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean list(TregminePlayer player, String playerName) {
-        TregminePlayer target = player;
+    private boolean list(GenericPlayer player, String playerName) {
+        GenericPlayer target = player;
         if (playerName != null) {
             if (!player.getRank().canVisitHomes()) {
                 return true;
@@ -133,7 +132,7 @@ public class HomeCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean save(TregminePlayer player, String name) {
+    private boolean save(GenericPlayer player, String name) {
         if (!player.getRank().canSaveHome()) {
             return true;
         }
@@ -164,7 +163,7 @@ public class HomeCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean teleport(TregminePlayer player, String name) {
+    private boolean teleport(GenericPlayer player, String name) {
         Location loc = null;
         try (IContext ctx = tregmine.createContext()) {
             IHomeDAO homeDAO = ctx.getHomeDAO();
@@ -198,12 +197,12 @@ public class HomeCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean teleportTo(TregminePlayer player, String playerName, String name) {
+    private boolean teleportTo(GenericPlayer player, String playerName, String name) {
         if (!player.getRank().canVisitHomes()) {
             player.sendMessage(RED + "You can't teleport to other player's homes");
         }
 
-        TregminePlayer target = tregmine.getPlayerOffline(playerName);
+        GenericPlayer target = tregmine.getPlayerOffline(playerName);
         if (target == null) {
             player.sendMessage(RED + playerName + " was not found in database.");
             return true;

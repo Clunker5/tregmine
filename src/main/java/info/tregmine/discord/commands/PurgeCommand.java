@@ -1,6 +1,7 @@
 package info.tregmine.discord.commands;
 
 import info.tregmine.Tregmine;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.DiscordUtil;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -24,21 +25,19 @@ public class PurgeCommand extends DiscordCommand {
         try {
             purgeIndex = Integer.parseInt(arguments);
         } catch (NumberFormatException e) {
-            new DiscordUtil().badNumber(message, 2, 100);
+            Discord.DISCORD_UTIL.badNumber(message, 2, 100);
             return true;
         }
         if (purgeIndex < 2 || purgeIndex > 100) {
-            new DiscordUtil().badNumber(message, 2, 100);
+            Discord.DISCORD_UTIL.badNumber(message, 2, 100);
             return true;
         }
         Message alert = TregmineEmbedBuilder.genericOperationEmbedForUser("Purging " + purgeIndex + " most recent messages...", "This message will self-destruct in 5 seconds.", message.getAuthor());
-        Message msg = new DiscordUtil().sendDestructiveMessage(message.getChannel(), alert, 5);
+        Discord.DISCORD_UTIL.sendDestructiveMessage(message.getChannel(), alert, 5);
         MessageHistory history = message.getChannel().getHistoryAround(message, purgeIndex + 1).complete();
         Thread t = new Thread(new Runnable() {
             public void run() {
                 for (Message m : history.getRetrievedHistory()) {
-                    System.out.print(m.getId());
-                    System.out.println(msg.getId());
                     try {
                         m.delete().complete(true);
                     } catch (RateLimitedException e) {

@@ -4,18 +4,18 @@ public class PlayerMute {
     private int duration;
     private long expiration;
     private boolean expires = true;
-    private TregminePlayer muter;
-    private TregminePlayer mutee;
+    private GenericPlayer muter;
+    private GenericPlayer mutee;
     private boolean isEnforced = true;
 
-    public PlayerMute(TregminePlayer p0, TregminePlayer p1) {
+    public PlayerMute(GenericPlayer p0, GenericPlayer p1) {
         this.muter = p0;
         this.mutee = p1;
         this.duration = -1;
         this.expires = false;
     }
 
-    public PlayerMute(TregminePlayer p0, TregminePlayer p1, int p2) {
+    public PlayerMute(GenericPlayer p0, GenericPlayer p1, int p2) {
         this.duration = p2 * 1000;
         this.muter = p0;
         this.mutee = p1;
@@ -34,11 +34,11 @@ public class PlayerMute {
         this.duration = p0 * 1000;
     }
 
-    public TregminePlayer getMutee() {
+    public GenericPlayer getMutee() {
         return this.mutee;
     }
 
-    public TregminePlayer getMuter() {
+    public GenericPlayer getMuter() {
         return this.muter;
     }
 

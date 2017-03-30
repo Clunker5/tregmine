@@ -1,15 +1,15 @@
 package info.tregmine.database;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 
 public interface IDiscordDAO {
-    TregminePlayer isLinked(long discordID);
+    GenericPlayer isLinked(long discordID);
 
-    long isLinked(TregminePlayer s);
+    long isLinked(GenericPlayer s);
 
-    boolean link(TregminePlayer s, long discordID);
+    boolean link(GenericPlayer s, long discordID);
 
     boolean unlink(long discordID);
 
-    boolean unlink(TregminePlayer s);
+    boolean unlink(GenericPlayer s);
 }

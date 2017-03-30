@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBlessedBlockDAO;
 import org.bukkit.Location;
@@ -50,7 +50,7 @@ public class DBBlessedBlockDAO implements IBlessedBlockDAO {
     }
 
     @Override
-    public void insert(TregminePlayer player, Location loc) throws DAOException {
+    public void insert(GenericPlayer player, Location loc) throws DAOException {
         String sql = "INSERT INTO blessedblock (player_id, blessedblock_checksum, "
                 + "blessedblock_x, blessedblock_y, blessedblock_z, blessedblock_world) ";
         sql += "VALUES (?, ?, ?, ?, ?, ?)";

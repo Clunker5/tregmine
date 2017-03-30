@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,18 +15,18 @@ public class AfkListener implements Listener {
         this.t = instance;
     }
 
-    TregminePlayer matchPlayer(Player player) {
+    GenericPlayer matchPlayer(Player player) {
         return t.getPlayer(player);
     }
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         if ((e.getDamager() instanceof Player)) {
-            TregminePlayer player = t.getPlayer((Player) e.getDamager());
+            GenericPlayer player = t.getPlayer((Player) e.getDamager());
             updateActivity(player);
         }
         if ((e.getEntity() instanceof Player)) {
-            TregminePlayer player = t.getPlayer((Player) e.getEntity());
+            GenericPlayer player = t.getPlayer((Player) e.getEntity());
             if (player.isAfk()) {
                 e.setCancelled(true);
             }
@@ -85,7 +85,7 @@ public class AfkListener implements Listener {
 
     @EventHandler
     public void onPlayerPickup(PlayerPickupItemEvent e) {
-        TregminePlayer a = matchPlayer(e.getPlayer());
+        GenericPlayer a = matchPlayer(e.getPlayer());
         if (a.isAfk()) {
             e.setCancelled(true);
         }
@@ -101,7 +101,7 @@ public class AfkListener implements Listener {
         updateActivity(matchPlayer(e.getPlayer()));
     }
 
-    void updateActivity(TregminePlayer player) {
+    void updateActivity(GenericPlayer player) {
         final long currentTime = System.currentTimeMillis();
         player.setLastOnlineActivity(currentTime);
     }

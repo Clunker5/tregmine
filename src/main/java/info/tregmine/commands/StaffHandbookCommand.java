@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IHandbookDAO;
@@ -18,7 +17,7 @@ public class StaffHandbookCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer a, String[] b) {
+    public boolean handlePlayer(GenericPlayer a, String[] b) {
         if (!a.getIsStaff()) {
             a.sendMessage(ChatColor.RED + "You don't need to read this, books are boring!");
             return true;

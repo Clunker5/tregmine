@@ -4,8 +4,8 @@ import com.google.common.collect.Maps;
 import info.tregmine.Tregmine;
 import info.tregmine.api.Account;
 import info.tregmine.api.Bank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.ChatState;
+import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer.ChatState;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class BankListener implements Listener {
     private Tregmine plugin;
-    private Map<TregminePlayer, Account> accounts = Maps.newHashMap();
-    private Map<TregminePlayer, Bank> bankingPlayers = Maps.newHashMap();
+    private Map<GenericPlayer, Account> accounts = Maps.newHashMap();
+    private Map<GenericPlayer, Bank> bankingPlayers = Maps.newHashMap();
 
     public BankListener(Tregmine plugin) {
         this.plugin = plugin;
@@ -37,7 +37,7 @@ public class BankListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getChatState() != ChatState.BANK) {
             return;
         }
@@ -287,7 +287,7 @@ public class BankListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         ZoneWorld world = plugin.getWorld(player.getWorld());
         Point p = new Point(block.getLocation().getBlockX(), block.getLocation().getBlockZ());
@@ -334,7 +334,7 @@ public class BankListener implements Listener {
         if (block.getType() != Material.IRON_BLOCK) {
             return;
         }
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         ZoneWorld world = plugin.getWorld(player.getWorld());
         Point p = new Point(block.getLocation().getBlockX(), block.getLocation().getBlockZ());

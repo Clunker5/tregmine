@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 
 import javax.mail.*;
@@ -17,7 +16,7 @@ public class SupportCommand extends AbstractCommand {
         super(tregmine, "support");
     }
 
-    public void email(String text, TregminePlayer p) {
+    public void email(String text, GenericPlayer p) {
         final String username = tregmine.getConfig().getString("support.user");
         final String password = tregmine.getConfig().getString("support.password");
         final List<?> to = tregmine.getConfig().getList("support.to");
@@ -56,7 +55,7 @@ public class SupportCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer p, String[] args) {
+    public boolean handlePlayer(GenericPlayer p, String[] args) {
         if (args.length == 0) {
             return false;
         }

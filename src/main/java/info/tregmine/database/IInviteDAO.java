@@ -1,7 +1,7 @@
 package info.tregmine.database;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 
 public interface IInviteDAO {
-    void addInvite(TregminePlayer inviter, TregminePlayer invitee) throws DAOException;
+    void addInvite(GenericPlayer inviter, GenericPlayer invitee) throws DAOException;
 }

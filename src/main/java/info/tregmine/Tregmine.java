@@ -7,7 +7,7 @@ import info.tregmine.api.util.TregmineFileUtil;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.exception.JDAFailedException;
 import info.tregmine.events.CallEventListener;
 import info.tregmine.events.TregmineChatEvent;
@@ -48,6 +48,9 @@ public class Tregmine extends JavaPlugin {
     public final static int AMOUNT = 0;
 
     public final static Logger LOGGER = Logger.getLogger("Minecraft");
+
+    public final TregmineConsolePlayer consolePlayer = new TregmineConsolePlayer(this);
+
     private static Boolean coreProtectEnabled = null;
     public Tregmine plugin;
     public String releaseType = "re";
@@ -56,8 +59,8 @@ public class Tregmine extends JavaPlugin {
     private IContextFactory contextFactory;
     private Server server;
     private WebServer webServer;
-    private Map<UUID, TregminePlayer> players;
-    private Map<Integer, TregminePlayer> playersById;
+    private Map<UUID, GenericPlayer> players;
+    private Map<Integer, GenericPlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
     private Map<Location, FishyBlock> fishyBlocks;
     private Map<Material, Integer> minedBlockPrices;
@@ -67,8 +70,8 @@ public class Tregmine extends JavaPlugin {
     private List<String> quitMessages;
     private List<String> bannedWords;
     private List<TregmineChatEvent> blockedChats;
-    private Queue<TregminePlayer> mentors;
-    private Queue<TregminePlayer> students;
+    private Queue<GenericPlayer> mentors;
+    private Queue<GenericPlayer> students;
     private boolean lockdown = false;
     private File configFile;
     private SecureRandom random = new SecureRandom();
@@ -88,7 +91,7 @@ public class Tregmine extends JavaPlugin {
     private int onlineJuniors = 0;
     private int onlineSeniors = 0;
     private int onlineTeachers = 0;
-    private DiscordSRV dsv;
+    private Discord dsv;
     private Lag lag = new Lag();
 
     public static boolean coreProtectEnabled() {
@@ -103,25 +106,25 @@ public class Tregmine extends JavaPlugin {
     }
 
     // End interject
-    public TregminePlayer addPlayer(Player srcPlayer, InetAddress addr) throws PlayerBannedException {
+    public GenericPlayer addPlayer(Player srcPlayer, InetAddress addr) throws PlayerBannedException {
         // if (players.containsKey(srcPlayer.getName())) {
         // return players.get(srcPlayer.getName());
         // }
-        TregminePlayer plr = players.get(srcPlayer.getName());
+        GenericPlayer plr = players.get(srcPlayer.getName());
         if (plr != null) {
             return plr;
         }
         try (IContext ctx = contextFactory.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
 
-            TregminePlayer player = playerDAO.getPlayer(srcPlayer.getPlayer());
+            GenericPlayer player = playerDAO.getPlayer(srcPlayer.getPlayer());
 
             if (player == null) {
                 player = playerDAO.createPlayer(srcPlayer);
             }
 
-            player.removeFlag(TregminePlayer.Flags.SOFTWARNED);
-            player.removeFlag(TregminePlayer.Flags.HARDWARNED);
+            player.removeFlag(GenericPlayer.Flags.SOFTWARNED);
+            player.removeFlag(GenericPlayer.Flags.HARDWARNED);
 
             IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
             List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
@@ -135,9 +138,9 @@ public class Tregmine extends JavaPlugin {
                 }
 
                 if (report.getAction() == PlayerReport.Action.SOFTWARN) {
-                    player.setFlag(TregminePlayer.Flags.SOFTWARNED);
+                    player.setFlag(GenericPlayer.Flags.SOFTWARNED);
                 } else if (report.getAction() == PlayerReport.Action.HARDWARN) {
-                    player.setFlag(TregminePlayer.Flags.HARDWARNED);
+                    player.setFlag(GenericPlayer.Flags.HARDWARNED);
                 } else if (report.getAction() == PlayerReport.Action.BAN) {
                     throw new PlayerBannedException(report.getMessage());
                 }
@@ -180,13 +183,13 @@ public class Tregmine extends JavaPlugin {
     }
 
     public void broadcast(BaseComponent a) {
-        for (TregminePlayer player : this.getOnlinePlayers()) {
+        for (GenericPlayer player : this.getOnlinePlayers()) {
             player.sendMessage(a);
         }
     }
 
     public void broadcast(BaseComponent... a) {
-        for (TregminePlayer player : this.getOnlinePlayers()) {
+        for (GenericPlayer player : this.getOnlinePlayers()) {
             player.sendMessage(a);
         }
     }
@@ -219,7 +222,7 @@ public class Tregmine extends JavaPlugin {
         return contextFactory;
     }
 
-    public DiscordSRV getDiscordSRV() {
+    public Discord getDiscordSRV() {
         return this.dsv;
     }
 
@@ -249,7 +252,7 @@ public class Tregmine extends JavaPlugin {
         this.lockdown = v;
     }
 
-    public Queue<TregminePlayer> getMentorQueue() {
+    public Queue<GenericPlayer> getMentorQueue() {
         return mentors;
     }
 
@@ -265,8 +268,8 @@ public class Tregmine extends JavaPlugin {
         return this.onlineJuniors;
     }
 
-    public List<TregminePlayer> getOnlinePlayers() {
-        List<TregminePlayer> players = new ArrayList<>();
+    public List<GenericPlayer> getOnlinePlayers() {
+        List<GenericPlayer> players = new ArrayList<>();
         for (Player player : server.getOnlinePlayers()) {
             players.add(getPlayer(player));
         }
@@ -286,11 +289,11 @@ public class Tregmine extends JavaPlugin {
         return this.onlineTeachers;
     }
 
-    public TregminePlayer getPlayer(int id) {
+    public GenericPlayer getPlayer(int id) {
         return playersById.get(id);
     }
 
-    public TregminePlayer getPlayer(Player player) {
+    public GenericPlayer getPlayer(Player player) {
         try {
             return players.get(player.getUniqueId());
         } catch (Exception e) {
@@ -300,7 +303,7 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public TregminePlayer getPlayer(String name) {
+    public GenericPlayer getPlayer(String name) {
         try {
             return players.get(name);
         } catch (Exception e) {
@@ -311,8 +314,8 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public TregminePlayer getPlayerOffline(int id) {
-        TregminePlayer plr = playersById.get(id);
+    public GenericPlayer getPlayerOffline(int id) {
+        GenericPlayer plr = playersById.get(id);
         if (plr != null) {
             return plr;
         }
@@ -325,8 +328,8 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public TregminePlayer getPlayerOffline(OfflinePlayer player) {
-        TregminePlayer plr = players.get(player.getUniqueId());
+    public GenericPlayer getPlayerOffline(OfflinePlayer player) {
+        GenericPlayer plr = players.get(player.getUniqueId());
         if (plr != null) {
             return plr;
         }
@@ -339,8 +342,8 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public TregminePlayer getPlayerOffline(String username) {
-        TregminePlayer plr = players.get(username);
+    public GenericPlayer getPlayerOffline(String username) {
+        GenericPlayer plr = players.get(username);
         if (plr != null) {
             return plr;
         }
@@ -353,11 +356,11 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public TregminePlayer getPlayerOffline(UUID uuid) {
+    public GenericPlayer getPlayerOffline(UUID uuid) {
         // if (players.containsKey(name)) {
         // return players.get(name);
         // }
-        TregminePlayer plr = players.get(uuid);
+        GenericPlayer plr = players.get(uuid);
         if (plr != null) {
             return plr;
         }
@@ -422,7 +425,7 @@ public class Tregmine extends JavaPlugin {
     // Player methods
     // ============================================================================
 
-    public Queue<TregminePlayer> getStudentQueue() {
+    public Queue<GenericPlayer> getStudentQueue() {
         return students;
     }
 
@@ -505,7 +508,7 @@ public class Tregmine extends JavaPlugin {
         return this.secondaryworld;
     }
 
-    public boolean isInVanilla(TregminePlayer player) {
+    public boolean isInVanilla(GenericPlayer player) {
         return player.getWorld() == this.vanillaWorld || player.getWorld() == this.vanillaEndWorld
                 || player.getWorld() == this.vanillaNetherWorld;
     }
@@ -528,15 +531,20 @@ public class Tregmine extends JavaPlugin {
         return 0;
     }
 
-    public List<TregminePlayer> matchPlayer(String pattern) {
+    public List<GenericPlayer> matchPlayer(String pattern) {
+        if(pattern.toLowerCase() == "console") {
+            List<GenericPlayer> list = new ArrayList<>();
+            list.add(this.consolePlayer);
+            return list;
+        }
         List<Player> matches = server.matchPlayer(pattern);
         if (matches.size() == 0) {
             return new ArrayList<>();
         }
 
-        List<TregminePlayer> decoratedMatches = new ArrayList<>();
+        List<GenericPlayer> decoratedMatches = new ArrayList<>();
         for (Player match : matches) {
-            TregminePlayer decoratedMatch = getPlayer(match);
+            GenericPlayer decoratedMatch = getPlayer(match);
             if (decoratedMatch == null) {
                 continue;
             }
@@ -556,7 +564,7 @@ public class Tregmine extends JavaPlugin {
         // Add a record of logout to db for all players
 
         try {
-            for (TregminePlayer player : getOnlinePlayers()) {
+            for (GenericPlayer player : getOnlinePlayers()) {
                 player.sendMessage(new TextComponent(ChatColor.GOLD + this.serverName + ChatColor.DARK_AQUA
                         + " may be shutting down soon! Please prepare to be kicked."));
                 player.saveInventory(player.getCurrentInventory());
@@ -762,7 +770,7 @@ public class Tregmine extends JavaPlugin {
             }
 
             @Override
-            public boolean isTarget(TregminePlayer player) {
+            public boolean isTarget(GenericPlayer player) {
                 return player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN;
             }
         });
@@ -774,7 +782,7 @@ public class Tregmine extends JavaPlugin {
             }
 
             @Override
-            public boolean isTarget(TregminePlayer player) {
+            public boolean isTarget(GenericPlayer player) {
                 return player.getRank() == Rank.GUARDIAN || player.getRank() == Rank.JUNIOR_ADMIN
                         || player.getRank() == Rank.SENIOR_ADMIN;
             }
@@ -787,7 +795,7 @@ public class Tregmine extends JavaPlugin {
             }
 
             @Override
-            public boolean isTarget(TregminePlayer player) {
+            public boolean isTarget(GenericPlayer player) {
                 return player.getRank() == Rank.CODER || player.getRank() == Rank.JUNIOR_ADMIN
                         || player.getRank() == Rank.SENIOR_ADMIN;
             }
@@ -896,7 +904,7 @@ public class Tregmine extends JavaPlugin {
         // recipes
 
         try {
-            for (TregminePlayer player : getOnlinePlayers()) {
+            for (GenericPlayer player : getOnlinePlayers()) {
                 player.sendMessage(ChatColor.AQUA + "Tregmine has been reloaded!");
             }
         } catch (Exception e) {
@@ -909,7 +917,7 @@ public class Tregmine extends JavaPlugin {
             @Override
             public void run() {
                 try {
-                    for (TregminePlayer player : getOnlinePlayers()) {
+                    for (GenericPlayer player : getOnlinePlayers()) {
                         if (player.getCombatLog() > 0) {
                             player.setCombatLog(player.getCombatLog() - 1);
 
@@ -927,7 +935,7 @@ public class Tregmine extends JavaPlugin {
         }, 20L, 20L);
         if (this.getConfig().getBoolean("discord.enabled")) {
             try {
-                this.dsv = new info.tregmine.discord.DiscordSRV(this);
+                this.dsv = new Discord(this);
             } catch (JDAFailedException e) {
                 e.printStackTrace();
             }
@@ -965,7 +973,7 @@ public class Tregmine extends JavaPlugin {
         Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
         for (Player player01 : players) {
             try {
-                TregminePlayer tp = addPlayer(player01, player01.getAddress().getAddress());
+                GenericPlayer tp = addPlayer(player01, player01.getAddress().getAddress());
                 if (tp.getRank() == Rank.TOURIST) {
                     students.offer(tp);
                 }
@@ -989,7 +997,7 @@ public class Tregmine extends JavaPlugin {
     // Zone methods
     // ============================================================================
 
-    public void reloadPlayer(TregminePlayer player) {
+    public void reloadPlayer(GenericPlayer player) {
         try {
             addPlayer(player.getDelegate(), player.getAddress().getAddress());
         } catch (PlayerBannedException e) {
@@ -997,7 +1005,7 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public void removePlayer(TregminePlayer player) {
+    public void removePlayer(GenericPlayer player) {
         try (IContext ctx = contextFactory.createContext()) {
             int onlinePlayerCount = 0;
             Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
@@ -1042,7 +1050,7 @@ public class Tregmine extends JavaPlugin {
         int j = 0;
         int s = 0;
         int t = 0;
-        for (TregminePlayer yeezy : this.getOnlinePlayers()) {
+        for (GenericPlayer yeezy : this.getOnlinePlayers()) {
             if (yeezy.getRank() == Rank.GUARDIAN)
                 g++;
             else if (yeezy.getRank() == Rank.JUNIOR_ADMIN)

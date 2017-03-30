@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -15,7 +14,7 @@ public class SendToCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 2) {
             return false;
         }
@@ -23,13 +22,13 @@ public class SendToCommand extends AbstractCommand {
             return true;
         }
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(args[0]);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(args[0]);
         if (candidates.size() != 1) {
             // TODO: List users
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
         Server server = tregmine.getServer();
         World world = server.getWorld(args[1]);
         if (world == null) {

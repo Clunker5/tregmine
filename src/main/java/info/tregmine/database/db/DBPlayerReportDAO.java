@@ -1,7 +1,7 @@
 package info.tregmine.database.db;
 
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IPlayerReportDAO;
 
@@ -21,7 +21,7 @@ public class DBPlayerReportDAO implements IPlayerReportDAO {
     }
 
     @Override
-    public List<PlayerReport> getReportsBySubject(TregminePlayer player) throws DAOException {
+    public List<PlayerReport> getReportsBySubject(GenericPlayer player) throws DAOException {
         String sql = "SELECT * FROM player_report ";
         sql += "WHERE subject_id = ? ";
         sql += "ORDER BY report_timestamp DESC";

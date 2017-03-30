@@ -1,6 +1,7 @@
 package info.tregmine.discord.commands;
 
 import info.tregmine.Tregmine;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.DiscordUtil;
 import info.tregmine.discord.entities.EmbedAlertType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
@@ -16,8 +17,8 @@ public class PingCommand extends DiscordCommand {
     @Override
     public boolean handleExecution(Message message, String arguments) {
         MessageChannel fromChannel = message.getChannel();
-        new DiscordUtil().flagDestructive(message);
-        new DiscordUtil().sendDestructiveMessage(fromChannel, TregmineEmbedBuilder.genericEmbedForUser(EmbedAlertType.PING.getDisplayName(), "All systems are A-OK!", EmbedAlertType.PING.getColor(), message.getAuthor()), 10);
+        Discord.DISCORD_UTIL.flagDestructive(message);
+        Discord.DISCORD_UTIL.sendDestructiveMessage(fromChannel, TregmineEmbedBuilder.genericEmbedForUser(EmbedAlertType.PING.getDisplayName(), "All systems are A-OK!", EmbedAlertType.PING.getColor(), message.getAuthor()), 10);
         return true;
     }
 

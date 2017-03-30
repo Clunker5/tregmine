@@ -1,7 +1,7 @@
 package info.tregmine.database.db;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IMailDAO;
 
@@ -102,9 +102,9 @@ public class DBMailDAO implements IMailDAO {
     }
 
     @Override
-    public boolean sendMail(TregminePlayer player, String sendTo, String message) throws DAOException {
+    public boolean sendMail(GenericPlayer player, String sendTo, String message) throws DAOException {
         String username = player.getName();
-        TregminePlayer receiver = this.tregmine.getPlayer(sendTo);
+        GenericPlayer receiver = this.tregmine.getPlayer(sendTo);
         if (receiver == null) {
             return false;
         }

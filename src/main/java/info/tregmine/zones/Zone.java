@@ -1,6 +1,6 @@
 package info.tregmine.zones;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.quadtree.Rectangle;
 
@@ -35,7 +35,7 @@ public class Zone {
         rects.add(rect);
     }
 
-    public void addUser(TregminePlayer player, Permission perm) {
+    public void addUser(GenericPlayer player, Permission perm) {
         users.put(player.getId(), perm);
     }
 
@@ -49,7 +49,7 @@ public class Zone {
         return false;
     }
 
-    public void deleteUser(TregminePlayer player) {
+    public void deleteUser(GenericPlayer player) {
         users.remove(player.getId());
     }
 
@@ -137,7 +137,7 @@ public class Zone {
         this.texture = texture;
     }
 
-    public Permission getUser(TregminePlayer player) {
+    public Permission getUser(GenericPlayer player) {
         return users.get(player.getId());
     }
 

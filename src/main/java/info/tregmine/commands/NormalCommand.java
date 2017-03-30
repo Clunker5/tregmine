@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 
 public class NormalCommand extends AbstractCommand {
@@ -10,7 +9,7 @@ public class NormalCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         player.sendMessage(ChatColor.YELLOW
                 + "You don't want to become normal, or you'll end up like this! https://media.giphy.com/media/2ZvQhiW2dup20/giphy.gif");
         // if (player.getRank() == Rank.JUNIOR_ADMIN ||

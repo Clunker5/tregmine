@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class FreezeCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -29,12 +28,12 @@ public class FreezeCommand extends AbstractCommand {
             return true;
         }
         String raw = args[0];
-        List<TregminePlayer> victims = plugin.matchPlayer(raw);
+        List<GenericPlayer> victims = plugin.matchPlayer(raw);
         if (victims.size() != 1) {
             player.sendMessage(ChatColor.RED + "That player is not online!");
             return true;
         }
-        TregminePlayer victim = victims.get(0);
+        GenericPlayer victim = victims.get(0);
         if (player.isInVanillaWorld()) {
             player.sendMessage(
                     ChatColor.RED + "You cannot freeze that player because they are in the vanilla world!");

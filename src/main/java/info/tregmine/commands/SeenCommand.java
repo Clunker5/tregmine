@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;
@@ -23,7 +22,7 @@ public class SeenCommand extends AbstractCommand {
             return false;
         }
 
-        TregminePlayer target = tregmine.getPlayerOffline(args[0]);
+        GenericPlayer target = tregmine.getPlayerOffline(args[0]);
         if (target == null) {
             server.getConsoleSender().sendMessage("Could not find player: " + args[0]);
             return true;
@@ -42,11 +41,11 @@ public class SeenCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 1) {
             return false;
         }
-        TregminePlayer target = null;
+        GenericPlayer target = null;
         try {
             target = tregmine.getPlayerOffline(args[0]);
         } catch (NullPointerException e) {

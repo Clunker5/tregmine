@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
@@ -27,7 +27,7 @@ public class DonationSigns implements Listener {
 
     @EventHandler
     public void donate(PlayerInteractEvent event) throws Exception {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_AIR) {
 
@@ -63,7 +63,7 @@ public class DonationSigns implements Listener {
             IWalletDAO wallet = ctx.getWalletDAO();
             Integer amount = Integer.parseInt(sign.getLine(1).trim());
             NumberFormat format = NumberFormat.getNumberInstance();
-            TregminePlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
+            GenericPlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
             if (receiver == null) {
                 player.sendMessage(ChatColor.RED + "The player on the sign does not exist!");
                 return;

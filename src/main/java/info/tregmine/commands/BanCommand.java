@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -33,7 +32,7 @@ public class BanCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canBan()) {
             player.sendMessage(DARK_AQUA + "You don't have permission to do that command.");
             return true;
@@ -46,13 +45,13 @@ public class BanCommand extends AbstractCommand {
         String pattern = args[0];
         String message = argsToMessage(args);
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: List users
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
 
         victim.kickPlayer(plugin, "Banned by " + player.getName() + ": " + message);
 

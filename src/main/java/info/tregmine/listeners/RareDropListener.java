@@ -2,8 +2,8 @@ package info.tregmine.listeners;
 
 import com.google.common.collect.Lists;
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.lore.Lore.Armor;
 import info.tregmine.api.lore.Lore.Sword;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -39,7 +39,7 @@ import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 
 public class RareDropListener implements Listener {
-    private static final List<TregminePlayer> players = Lists.newArrayList();
+    private static final List<GenericPlayer> players = Lists.newArrayList();
     private Tregmine plugin;
     private Random random = new Random();
     private Set<EntityType> mobs = EnumSet.of(EntityType.CREEPER, EntityType.SKELETON, EntityType.ZOMBIE,
@@ -59,7 +59,7 @@ public class RareDropListener implements Listener {
         this.plugin = plugin;
     }
 
-    public void drop(TregminePlayer player, EntityDeathEvent event) {
+    public void drop(GenericPlayer player, EntityDeathEvent event) {
         Material mat = null;
         if (random.nextInt(99) >= 74) {
             mat = this.getRandomArmor(); // 25% armor
@@ -223,7 +223,7 @@ public class RareDropListener implements Listener {
             }
         }
 
-        TregminePlayer player = plugin.getPlayer((Player) damager);
+        GenericPlayer player = plugin.getPlayer((Player) damager);
         if (players.contains(player)) {
             return;
         }
@@ -250,9 +250,9 @@ public class RareDropListener implements Listener {
 
     private class DropDelayTask implements Runnable {
 
-        private TregminePlayer player;
+        private GenericPlayer player;
 
-        public DropDelayTask(TregminePlayer player) {
+        public DropDelayTask(GenericPlayer player) {
             this.player = player;
         }
 

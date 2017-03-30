@@ -1,12 +1,11 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.ChatColor;
 
 public class OWCommand extends AbstractCommand {
     Tregmine tregmine;
-    TregminePlayer sender;
+    GenericPlayer sender;
 
     public OWCommand(Tregmine inst) {
         super(inst, "taxi");
@@ -14,7 +13,7 @@ public class OWCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!tregmine.hasSecondaryWorld()) {
             player.sendMessage(ChatColor.RED + "There's no old world on this server!");
             return true;

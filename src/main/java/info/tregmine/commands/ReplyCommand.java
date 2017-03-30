@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -30,7 +29,7 @@ public class ReplyCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length >= 1) {
 
             String message = argsToMessage(args);
@@ -45,7 +44,7 @@ public class ReplyCommand extends AbstractCommand {
             try (IContext ctx = tregmine.createContext()) {
                 IPlayerDAO playerDAO = ctx.getPlayerDAO();
 
-                List<TregminePlayer> candidates = tregmine.matchPlayer(lastMessenger);
+                List<GenericPlayer> candidates = tregmine.matchPlayer(lastMessenger);
 
                 if (candidates.size() != 1) {
                     player.sendNotification(Notification.COMMAND_FAIL,
@@ -53,7 +52,7 @@ public class ReplyCommand extends AbstractCommand {
                     return true;
                 }
 
-                TregminePlayer receivingPlayer = candidates.get(0);
+                GenericPlayer receivingPlayer = candidates.get(0);
 
                 boolean ignored;
                 ignored = playerDAO.doesIgnore(receivingPlayer, player);
@@ -67,7 +66,7 @@ public class ReplyCommand extends AbstractCommand {
                 // isn't
                 // invisible, to prevent /msg from giving away hidden players
                 // presence
-                if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
+                if (!receivingPlayer.hasFlag(GenericPlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
                     player.sendMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.getChatName(),
                             new TextComponent(GREEN + ": " + message));
                 }

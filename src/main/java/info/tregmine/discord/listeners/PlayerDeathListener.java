@@ -1,9 +1,9 @@
 package info.tregmine.discord.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer.Flags;
+import info.tregmine.discord.Discord;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,9 +12,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathListener implements Listener {
 
     Tregmine plugin;
-    private DiscordSRV srv;
+    private Discord srv;
 
-    public PlayerDeathListener(DiscordSRV srv) {
+    public PlayerDeathListener(Discord srv) {
         this.srv = srv;
         this.plugin = this.srv.getPlugin();
     }
@@ -25,7 +25,7 @@ public class PlayerDeathListener implements Listener {
         if (!this.plugin.getConfig().getBoolean("discord.bridge-functionality.death-message"))
             return;
 
-        TregminePlayer victim = plugin.getPlayer(event.getEntity());
+        GenericPlayer victim = plugin.getPlayer(event.getEntity());
         if (victim.hasFlag(Flags.INVISIBLE))
             return;
 

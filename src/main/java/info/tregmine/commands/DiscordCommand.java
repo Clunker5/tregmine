@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IDiscordDAO;
@@ -18,12 +17,12 @@ public class DiscordCommand extends AbstractCommand {
         this.tregmine = t;
     }
 
-    private void badArgs(TregminePlayer s) {
+    private void badArgs(GenericPlayer s) {
         s.sendMessage(ChatColor.RED + "Please specify one of the following: " + argOptions);
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer sender, String[] args) {
+    public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (args.length < 1) {
             badArgs(sender);
             return true;
@@ -100,7 +99,7 @@ public class DiscordCommand extends AbstractCommand {
         return true;
     }
 
-    private void linkPlayer(TregminePlayer s, String discordID) {
+    private void linkPlayer(GenericPlayer s, String discordID) {
         try (IContext ctx = this.tregmine.getContextFactory().createContext()) {
             IDiscordDAO ddao = ctx.getDiscordDAO();
             long linked = ddao.isLinked(s);

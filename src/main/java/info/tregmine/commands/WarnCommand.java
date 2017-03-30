@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -30,7 +29,7 @@ public class WarnCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canWarn()) {
             return true;
         }
@@ -53,13 +52,13 @@ public class WarnCommand extends AbstractCommand {
             return true;
         }
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: error message
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
         if (hard) {
             player.sendMessage(new TextComponent(GREEN + "You hardwarned "), victim.decideVS(player),
                     new TextComponent(GREEN + ": " + message));
@@ -72,9 +71,9 @@ public class WarnCommand extends AbstractCommand {
 
         victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
         if (hard) {
-            victim.setFlag(TregminePlayer.Flags.HARDWARNED);
+            victim.setFlag(GenericPlayer.Flags.HARDWARNED);
         } else {
-            victim.setFlag(TregminePlayer.Flags.SOFTWARNED);
+            victim.setFlag(GenericPlayer.Flags.SOFTWARNED);
         }
 
         try (IContext ctx = tregmine.createContext()) {

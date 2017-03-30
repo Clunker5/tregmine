@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IMentorLogDAO;
 
@@ -18,7 +18,7 @@ public class DBMentorLogDAO implements IMentorLogDAO {
     }
 
     @Override
-    public int getMentorLogId(TregminePlayer student, TregminePlayer mentor) throws DAOException {
+    public int getMentorLogId(GenericPlayer student, GenericPlayer mentor) throws DAOException {
         String sql = "SELECT * FROM mentorlog ";
         sql += "WHERE student_id = ? AND mentor_id = ?";
 
@@ -40,7 +40,7 @@ public class DBMentorLogDAO implements IMentorLogDAO {
     }
 
     @Override
-    public void insertMentorLog(TregminePlayer student, TregminePlayer mentor) throws DAOException {
+    public void insertMentorLog(GenericPlayer student, GenericPlayer mentor) throws DAOException {
         String sql = "INSERT INTO mentorlog (student_id, mentor_id, "
                 + "mentorlog_resumed, mentorlog_startedtime, mentorlog_completedtime, "
                 + "mentorlog_cancelledtime, mentorlog_status) ";

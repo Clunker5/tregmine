@@ -29,7 +29,7 @@ import java.util.*;
 
 import static org.bukkit.ChatColor.*;
 
-public class TregminePlayer extends PlayerDelegate {
+public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     // Persistent values
     private int id = 0;
     private UUID storedUuid = null;
@@ -62,8 +62,8 @@ public class TregminePlayer extends PlayerDelegate {
     private String host;
     private String city;
     private String country;
-    private TregminePlayer mentor;
-    private TregminePlayer student;
+    private GenericPlayer mentor;
+    private GenericPlayer student;
     private String currentInventory;
     private int combatLog;
     private long lastOnlineActivity;
@@ -134,14 +134,17 @@ public class TregminePlayer extends PlayerDelegate {
         this.plugin = instance;
     }
 
+    @Override
     public void addReport(String[] report) {
         this.reports.add(report);
     }
 
+    @Override
     public boolean alertedAfk() {
         return this.alertedAfk;
     }
 
+    @Override
     public void awardBadgeLevel(Badge badge, String message) {
         int badgeLevel = getBadgeLevel(badge) + 1;
         badges.put(badge, badgeLevel);
@@ -155,6 +158,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public BooleanStringReturn canBeHere(Location loc) {
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Zone zone = world.findZone(loc);
@@ -178,8 +182,8 @@ public class TregminePlayer extends PlayerDelegate {
             }
 
             // If zone has BlockWarned and user is warned
-            if (zone.hasFlag(Zone.Flags.BLOCK_WARNED) && (this.hasFlag(TregminePlayer.Flags.HARDWARNED)
-                    || this.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
+            if (zone.hasFlag(Zone.Flags.BLOCK_WARNED) && (this.hasFlag(GenericPlayer.Flags.HARDWARNED)
+                    || this.hasFlag(GenericPlayer.Flags.SOFTWARNED))) {
                 return new BooleanStringReturn(false,
                         ChatColor.RED + "[" + zone.getName() + "] You must not be warned to be here!");
             }
@@ -222,8 +226,9 @@ public class TregminePlayer extends PlayerDelegate {
         return new BooleanStringReturn(true, null);
     }
 
+    @Override
     public boolean canMentor() {
-        if (hasFlag(TregminePlayer.Flags.SOFTWARNED) || hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+        if (hasFlag(GenericPlayer.Flags.SOFTWARNED) || hasFlag(GenericPlayer.Flags.HARDWARNED)) {
 
             return false;
         }
@@ -231,14 +236,17 @@ public class TregminePlayer extends PlayerDelegate {
         return getRank().canMentor();
     }
 
+    @Override
     public boolean canVS() {
         return this.getRank().canViewPlayerStats();
     }
 
+    @Override
     public String causeOfDeath() {
         return this.deathcause;
     }
 
+    @Override
     public void checkActivity() {
         long autoafk = plugin.getConfig().getLong("general.afk.autoafk");
         if (!isAfk() && autoafk > 0 && lastOnlineActivity + autoafk * 1000 < System.currentTimeMillis()) {
@@ -247,7 +255,8 @@ public class TregminePlayer extends PlayerDelegate {
 
     }
 
-    public TextComponent decideVS(TregminePlayer canthey) {
+    @Override
+    public TextComponent decideVS(GenericPlayer canthey) {
         if (canthey.canVS()) {
             return this.getChatNameStaff();
         } else {
@@ -258,25 +267,30 @@ public class TregminePlayer extends PlayerDelegate {
     // java.lang.Object overrides
     @Override
     public boolean equals(Object obj) {
-        return ((TregminePlayer) obj).getId() == getId();
+        return ((GenericPlayer) obj).getId() == getId();
     }
 
+    @Override
     public boolean getAfkKick() {
         return AfkKick;
     }
 
+    @Override
     public void setAfkKick(boolean a) {
         this.AfkKick = a;
     }
 
+    @Override
     public PermissionAttachment getAttachment() {
         return this.attachment;
     }
 
+    @Override
     public void setAttachment(PermissionAttachment ment) {
         this.attachment = ment;
     }
 
+    @Override
     public int getBadgeLevel(Badge badge) {
         if (!hasBadge(badge)) {
             return 0;
@@ -285,30 +299,37 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public Map<Badge, Integer> getBadges() {
         return badges;
     }
 
+    @Override
     public void setBadges(Map<Badge, Integer> v) {
         this.badges = v;
     }
 
+    @Override
     public int getBlessTarget() {
         return blessTarget;
     }
 
+    @Override
     public void setBlessTarget(int v) {
         this.blessTarget = v;
     }
 
+    @Override
     public String getChatChannel() {
         return chatChannel;
     }
 
+    @Override
     public void setChatChannel(String v) {
         this.chatChannel = v;
     }
 
+    @Override
     public TextComponent getChatName() {
         TextComponent returns = new TextComponent(this.name);
         if (this.hasFlag(Flags.CHILD)) {
@@ -321,14 +342,17 @@ public class TregminePlayer extends PlayerDelegate {
         return returns;
     }
 
+    @Override
     public String getChatNameNoColor() {
         return ChatColor.stripColor(this.getChatNameNoHover());
     }
 
+    @Override
     public String getChatNameNoHover() {
         return name;
     }
 
+    @Override
     public TextComponent getChatNameStaff() {
         TextComponent returns = new TextComponent(this.name);
         String addon = "";
@@ -358,145 +382,180 @@ public class TregminePlayer extends PlayerDelegate {
         return returns;
     }
 
+    @Override
     public ChatState getChatState() {
         return chatState;
     }
 
+    @Override
     public void setChatState(ChatState v) {
         this.chatState = v;
     }
 
+    @Override
     public String getCity() {
         return city;
     }
 
+    @Override
     public void setCity(String v) {
         this.city = v;
     }
 
+    @Override
     public int getCombatLog() {
         return combatLog;
     }
 
+    @Override
     public void setCombatLog(int value) {
         this.combatLog = value;
     }
 
+    @Override
     public String getCountry() {
         return country;
     }
 
+    @Override
     public void setCountry(String v) {
         this.country = v;
     }
 
+    @Override
     public FishyBlock getCurrentFishyBlock() {
         return currentFishyBlock;
     }
 
+    @Override
     public void setCurrentFishyBlock(FishyBlock v) {
         this.currentFishyBlock = v;
     }
 
+    @Override
     public String getCurrentInventory() {
         return currentInventory;
     }
 
+    @Override
     public void setCurrentInventory(String inv) {
         this.currentInventory = inv;
     }
 
+    @Override
     public Zone getCurrentZone() {
         return currentZone;
     }
 
+    @Override
     public void setCurrentZone(Zone zone) {
         this.currentZone = zone;
     }
 
+    @Override
     public Block getFillBlock1() {
         return fillBlock1;
     }
 
     // block fill state
+    @Override
     public void setFillBlock1(Block v) {
         this.fillBlock1 = v;
     }
 
+    @Override
     public Block getFillBlock2() {
         return fillBlock2;
     }
 
+    @Override
     public void setFillBlock2(Block v) {
         this.fillBlock2 = v;
     }
 
+    @Override
     public int getFillBlockCounter() {
         return fillBlockCounter;
     }
 
+    @Override
     public void setFillBlockCounter(int v) {
         this.fillBlockCounter = v;
     }
 
+    @Override
     public int getFishyBuyCount() {
         return fishyBuyCount;
     }
 
+    @Override
     public void setFishyBuyCount(int v) {
         this.fishyBuyCount = v;
     }
 
+    @Override
     public boolean getFrozen() {
         return isFrozen;
     }
 
+    @Override
     public void setFrozen(boolean v) {
         isFrozen = v;
     }
 
+    @Override
     public int getGuardianRank() {
         return guardianRank;
     }
 
+    @Override
     public void setGuardianRank(int v) {
         this.guardianRank = v;
     }
 
+    @Override
     public GuardianState getGuardianState() {
         return guardianState;
     }
 
+    @Override
     public void setGuardianState(GuardianState v) {
         this.guardianState = v;
 
         setTemporaryChatName(getNameColor() + getRealName());
     }
 
+    @Override
     public String getHost() {
         return host;
     }
 
+    @Override
     public void setHost(String v) {
         this.host = v;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public void setId(int v) {
         this.id = v;
     }
 
+    @Override
     public String getIp() {
         return ip;
     }
 
+    @Override
     public void setIp(String v) {
         this.ip = v;
     }
 
+    @Override
     public boolean getIsAdmin() {
         boolean isStaff = false;
         if (rank == Rank.JUNIOR_ADMIN || rank == Rank.SENIOR_ADMIN || isOp()) {
@@ -505,58 +564,72 @@ public class TregminePlayer extends PlayerDelegate {
         return isStaff;
     }
 
+    @Override
     public boolean getIsStaff() {
         return Staff;
     }
 
+    @Override
     public String getKeyword() {
         return keyword;
     }
 
+    @Override
     public void setKeyword(String v) {
         this.keyword = v;
     }
 
+    @Override
     public String getLastMessenger() {
         return lastMessenger;
     }
 
+    @Override
     public void setLastMessenger(String messenger) {
         this.lastMessenger = messenger;
     }
 
+    @Override
     public long getLastOnlineActivity() {
         return lastOnlineActivity;
     }
 
+    @Override
     public void setLastOnlineActivity(long a) {
         lastOnlineActivity = a;
     }
 
+    @Override
     public Location getLastPos() {
         return this.lastpos;
     }
 
+    @Override
     public void setLastPos(Location pos) {
         this.lastpos = pos;
     }
 
-    public TregminePlayer getMentor() {
+    @Override
+    public GenericPlayer getMentor() {
         return mentor;
     }
 
-    public void setMentor(TregminePlayer v) {
+    @Override
+    public void setMentor(GenericPlayer v) {
         this.mentor = v;
     }
 
+    @Override
     public PlayerMute getMute() {
         return this.mute;
     }
 
+    @Override
     public void setMute(PlayerMute p0) {
         this.mute = p0;
     }
 
+    @Override
     public ChatColor getNameColor() {
         if (hasFlag(Flags.SOFTWARNED)) {
             return ChatColor.GRAY;
@@ -582,65 +655,80 @@ public class TregminePlayer extends PlayerDelegate {
         return plugin.getRankColor(rank);
     }
 
+    @Override
     public boolean getNewChunk() {
         return newChunk;
     }
 
+    @Override
     public void setNewChunk(boolean value) {
         this.newChunk = value;
     }
 
+    @Override
     public FishyBlock getNewFishyBlock() {
         return newFishyBlock;
     }
 
     // Fishy block state
+    @Override
     public void setNewFishyBlock(FishyBlock v) {
         this.newFishyBlock = v;
     }
 
+    @Override
     public Nickname getNickname() {
         return this.nickname;
     }
 
+    @Override
     public String getPasswordHash() {
         return password;
     }
 
+    @Override
     public void setPasswordHash(String v) {
         password = v;
     }
 
     // non-persistent state methods
 
+    @Override
     public int getPlayTime() {
         return playTime;
     }
 
+    @Override
     public void setPlayTime(int v) {
         this.playTime = v;
     }
 
+    @Override
     public Tregmine getPlugin() {
         return plugin;
     }
 
+    @Override
     public QuitCause getQuitCause() {
         return this.causeofquit;
     }
 
+    @Override
     public void setQuitCause(QuitCause q) {
         this.causeofquit = q;
     }
 
+    @Override
     public String getQuitMessage() {
         return quitMessage;
     }
 
+    @Override
     public void setQuitMessage(String v) {
         this.quitMessage = v;
     }
 
+    @Override
     public Rank getRank() {
         if (isTemporaryRank) {
             return temporaryRank;
@@ -649,6 +737,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public void setRank(Rank v) {
         this.rank = v;
         if (v == Rank.GUARDIAN || v == Rank.JUNIOR_ADMIN || v == Rank.SENIOR_ADMIN || v == Rank.CODER) {
@@ -657,107 +746,133 @@ public class TregminePlayer extends PlayerDelegate {
         setTemporaryChatName(getNameColor() + getRealName());
     }
 
+    @Override
     public String getRealName() {
         return realName;
     }
 
+    @Override
     public List<String[]> getReports() {
         return this.reports;
     }
 
+    @Override
     public int getReportTotal() {
         return this.reports.size();
     }
 
+    @Override
     public UUID getStoredUuid() {
         return storedUuid;
     }
 
+    @Override
     public void setStoredUuid(UUID v) {
         this.storedUuid = v;
     }
 
-    public TregminePlayer getStudent() {
+    @Override
+    public GenericPlayer getStudent() {
         return student;
     }
 
-    public void setStudent(TregminePlayer v) {
+    @Override
+    public void setStudent(GenericPlayer v) {
         this.student = v;
     }
 
+    @Override
     public int getTargetZoneId() {
         return targetZoneId;
     }
 
+    @Override
     public void setTargetZoneId(int v) {
         this.targetZoneId = v;
     }
 
+    @Override
     public int getTimeOnline() {
         return (int) ((new Date().getTime() - loginTime.getTime()) / 1000L);
     }
 
+    @Override
     public int getTotalBans() {
         return this.bans;
     }
 
+    @Override
     public void setTotalBans(int total) {
         this.bans = total;
     }
 
+    @Override
     public int getTotalHards() {
         return this.hardwarns;
     }
 
+    @Override
     public void setTotalHards(int total) {
         this.hardwarns = total;
     }
 
+    @Override
     public int getTotalKicks() {
         return this.kicks;
     }
 
+    @Override
     public void setTotalKicks(int total) {
         this.kicks = total;
     }
 
+    @Override
     public int getTotalSofts() {
         return this.softwarns;
     }
 
+    @Override
     public void setTotalSofts(int total) {
         this.softwarns = total;
     }
 
+    @Override
     public Rank getTrueRank() {
         return rank;
     }
 
+    @Override
     public Block getZoneBlock1() {
         return zoneBlock1;
     }
 
     // zones state
+    @Override
     public void setZoneBlock1(Block v) {
         this.zoneBlock1 = v;
     }
 
+    @Override
     public Block getZoneBlock2() {
         return zoneBlock2;
     }
 
+    @Override
     public void setZoneBlock2(Block v) {
         this.zoneBlock2 = v;
     }
 
+    @Override
     public int getZoneBlockCounter() {
         return zoneBlockCounter;
     }
 
+    @Override
     public void setZoneBlockCounter(int v) {
         this.zoneBlockCounter = v;
     }
 
+    @Override
     public void gotoWorld(Player player, Location loc, String success, String failure) {
         World world = loc.getWorld();
         Chunk chunk = world.getChunkAt(loc);
@@ -770,6 +885,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public boolean hasBadge(Badge badge) {
         return badges.containsKey(badge);
     }
@@ -781,6 +897,7 @@ public class TregminePlayer extends PlayerDelegate {
      * @param punish - Should it return an error message and set fire ticks
      * @return true or false
      */
+    @Override
     public boolean hasBlockPermission(Location loc, boolean punish) {
         ZoneWorld world = plugin.getWorld(loc.getWorld());
         Point point = new Point(loc.getBlockX(), loc.getBlockZ());
@@ -794,7 +911,7 @@ public class TregminePlayer extends PlayerDelegate {
             this.setCurrentZone(currentZone);
         }
 
-        if (this.hasFlag(TregminePlayer.Flags.HARDWARNED)) {
+        if (this.hasFlag(GenericPlayer.Flags.HARDWARNED)) {
             if (punish == true) {
                 this.setFireTicks(100);
                 this.sendMessage(ChatColor.RED + "[" + zone.getName() + "] " + "You are hardwarned!");
@@ -881,10 +998,12 @@ public class TregminePlayer extends PlayerDelegate {
         return false; // If they don't fit into any of that. Return false
     }
 
+    @Override
     public boolean hasCommandStatus(CommandStatus status) {
         return this.commandstatus.contains(status);
     }
 
+    @Override
     public boolean hasFlag(Flags flag) {
         return flags.contains(flag);
     }
@@ -894,23 +1013,28 @@ public class TregminePlayer extends PlayerDelegate {
         return getId();
     }
 
+    @Override
     public boolean hasNick() {
         return this.hasNick;
     }
 
+    @Override
     public boolean hasProperty(Property prop) {
         return properties.contains(prop);
     }
 
     // convenience methods
-    public void hidePlayer(TregminePlayer player) {
+    @Override
+    public void hidePlayer(GenericPlayer player) {
         hidePlayer(player.getDelegate());
     }
 
+    @Override
     public boolean isAfk() {
         return this.afk;
     }
 
+    @Override
     public void setAfk(boolean value) {
         if (value == true) {
             this.afk = true;
@@ -932,31 +1056,38 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public boolean isCombatLogged() {
         return combatLog > 0;
     }
 
+    @Override
     public boolean isCurseWarned() {
         return this.CurseWarned;
     }
 
+    @Override
     public void setCurseWarned(boolean a) {
         this.CurseWarned = a;
     }
 
+    @Override
     public boolean isHidden() {
         return this.hasFlag(Flags.INVISIBLE);
     }
 
+    @Override
     public boolean isInVanillaWorld() {
         return this.getWorld() == this.plugin.getVanillaWorld() || this.getWorld() == this.plugin.getVanillaNether()
                 || this.getWorld() == this.plugin.getVanillaEnd();
     }
 
+    @Override
     public boolean isMuted() {
         return this.muted;
     }
 
+    @Override
     public void setMuted(boolean p0) {
         this.muted = p0;
     }
@@ -966,6 +1097,7 @@ public class TregminePlayer extends PlayerDelegate {
         return valid;
     }
 
+    @Override
     public void setValid(boolean v) {
         this.valid = v;
     }
@@ -977,6 +1109,7 @@ public class TregminePlayer extends PlayerDelegate {
      *
      * @param save - Same current inventory
      */
+    @Override
     public void loadInventory(String name, boolean save) {
         try (IContext ctx = plugin.createContext()) {
             IInventoryDAO dao = ctx.getInventoryDAO();
@@ -1040,6 +1173,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public ChatColor RankColor() {
         // Gives admins, guardians a chat color
         if (rank == Rank.GUARDIAN) {
@@ -1052,18 +1186,22 @@ public class TregminePlayer extends PlayerDelegate {
 
     }
 
+    @Override
     public void removeCommandStatus(CommandStatus status) {
         this.commandstatus.remove(status);
     }
 
+    @Override
     public void removeFlag(Flags flag) {
         flags.remove(flag);
     }
 
+    @Override
     public void removeProperty(Property prop) {
         properties.remove(prop);
     }
 
+    @Override
     public void resetTimeOnline() {
         loginTime = new Date();
     }
@@ -1073,6 +1211,7 @@ public class TregminePlayer extends PlayerDelegate {
      *
      * @param name - Name of the new inventory
      */
+    @Override
     public void saveInventory(String name) {
         String inventory = name;
         if (name == null) {
@@ -1117,6 +1256,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public void sendNotification(Notification notif) {
         playSound(getLocation(), notif.getSound(), 2F, 1F);
     }
@@ -1135,6 +1275,7 @@ public class TregminePlayer extends PlayerDelegate {
      * @param message - The message to send the player with the notification
      * @throws IllegalArgumentException if both notif and message are null
      */
+    @Override
     public void sendNotification(Notification notif, BaseComponent... message) {
         if (notif != null && notif != Notification.NONE) {
             playSound(getLocation(), notif.getSound(), 2F, 1F);
@@ -1144,6 +1285,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public void sendNotification(Notification notif, BaseComponent message) {
         if (notif != null && notif != Notification.NONE) {
             playSound(getLocation(), notif.getSound(), 2F, 1F);
@@ -1153,14 +1295,17 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public void setAlerted(boolean a) {
         this.alertedAfk = a;
     }
 
+    @Override
     public void setCommandStatus(CommandStatus status) {
         this.commandstatus.add(status);
     }
 
+    @Override
     public void setCurrentTexture(String url) {
         /*
 		 * if (url == null) { this.texture =
@@ -1171,28 +1316,34 @@ public class TregminePlayer extends PlayerDelegate {
 		 */
     }
 
+    @Override
     public void setDeathCause(String a) {
         this.deathcause = a;
     }
 
+    @Override
     public void setFlag(Flags flag) {
         flags.add(flag);
     }
 
+    @Override
     public void setNick(Nickname n) {
         this.nickname = n;
         this.hasNick = true;
         this.name = n.getNickname();
     }
 
+    @Override
     public void setPassword(String newPassword) {
         password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
     }
 
+    @Override
     public void setProperty(Property prop) {
         properties.add(prop);
     }
 
+    @Override
     public void setSilentAfk(boolean value) {
         if (this.isHidden()) {
             return;
@@ -1211,6 +1362,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public void setStaff(boolean v) {
         this.Staff = v;
     }
@@ -1219,6 +1371,7 @@ public class TregminePlayer extends PlayerDelegate {
     // Tregmine Inventory Handling //
     // -----------------------------//
 
+    @Override
     public void setTemporaryChatName(String name) {
         this.name = name;
 
@@ -1231,6 +1384,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public void setTemporaryRank(Rank v) {
         this.temporaryRank = v;
         this.isTemporaryRank = true;
@@ -1240,10 +1394,12 @@ public class TregminePlayer extends PlayerDelegate {
         setTemporaryChatName(getNameColor() + getRealName());
     }
 
-    public void showPlayer(TregminePlayer player) {
+    @Override
+    public void showPlayer(GenericPlayer player) {
         showPlayer(player.getDelegate());
     }
 
+    @Override
     public void teleportWithHorse(Location loc) {
         World cWorld = loc.getWorld();
         String[] worldNamePortions = cWorld.getName().split("_");
@@ -1271,6 +1427,7 @@ public class TregminePlayer extends PlayerDelegate {
         }
     }
 
+    @Override
     public Zone updateCurrentZone() {
         Point pos = new Point(this.getLocation().getBlockX(), this.getLocation().getBlockZ());
         Zone localZone = this.getCurrentZone();
@@ -1284,25 +1441,9 @@ public class TregminePlayer extends PlayerDelegate {
         return currentZone;
     }
 
+    @Override
     public boolean verifyPassword(String attempt) {
         return BCrypt.checkpw(attempt, password);
-    }
-
-    public enum ChatState {
-        SETUP, CHAT, TRADE, SELL, FISHY_SETUP, FISHY_WITHDRAW, FISHY_BUY, BANK
-    }
-
-    // Flags are stored as integers - order must _NOT_ be changed
-    public enum Flags {
-        CHILD, TPSHIELD, SOFTWARNED, HARDWARNED, INVISIBLE, HIDDEN_LOCATION, FLY_ENABLED, FORCESHIELD, CHEST_LOG, HIDDEN_ANNOUNCEMENT, CHANNEL_VIEW, WATCHING_CHUNKS, AFK_KICK
-    }
-
-    public enum GuardianState {
-        ACTIVE, INACTIVE, QUEUED
-    }
-
-    public enum Property {
-        NICKNAME
     }
 
 }

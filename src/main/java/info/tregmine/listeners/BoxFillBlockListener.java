@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,7 +21,7 @@ public class BoxFillBlockListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (!player.getRank().canFill()) {
             return;
         }
@@ -40,7 +40,7 @@ public class BoxFillBlockListener implements Listener {
     @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
@@ -66,7 +66,7 @@ public class BoxFillBlockListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (!player.getRank().canFill()) {
             return;
         }

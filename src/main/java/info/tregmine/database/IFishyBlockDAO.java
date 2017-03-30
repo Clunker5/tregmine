@@ -1,7 +1,7 @@
 package info.tregmine.database;
 
 import info.tregmine.api.FishyBlock;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.Location;
 import org.bukkit.Server;
 
@@ -14,7 +14,7 @@ public interface IFishyBlockDAO {
 
     void insertCostChange(FishyBlock fishyBlock, int oldCost) throws DAOException;
 
-    void insertTransaction(FishyBlock fishyBlock, TregminePlayer player, TransactionType type, int amount)
+    void insertTransaction(FishyBlock fishyBlock, GenericPlayer player, TransactionType type, int amount)
             throws DAOException;
 
     Map<Location, FishyBlock> loadFishyBlocks(Server server) throws DAOException;

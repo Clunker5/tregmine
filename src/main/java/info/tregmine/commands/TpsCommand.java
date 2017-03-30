@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Lag;
-import info.tregmine.api.TregminePlayer;
 import org.bukkit.ChatColor;
 
 public class TpsCommand extends AbstractCommand {
@@ -11,7 +10,7 @@ public class TpsCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         double tps = Lag.getTPS();
         double lagPercentage = Math.round((1.0D - tps / 20.0D) * 100.0D);
         if (isTpsGood(tps)) {

@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IZonesDAO;
@@ -21,7 +20,7 @@ public class ZoneCommand extends AbstractCommand {
         super(tregmine, commandName);
     }
 
-    public void addUser(TregminePlayer player, String[] args) {
+    public void addUser(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -64,7 +63,7 @@ public class ZoneCommand extends AbstractCommand {
             return;
         }
 
-        TregminePlayer victim = tregmine.getPlayerOffline(userName);
+        GenericPlayer victim = tregmine.getPlayerOffline(userName);
         if (victim == null) {
             player.sendMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
             return;
@@ -85,14 +84,14 @@ public class ZoneCommand extends AbstractCommand {
         player.sendMessage(
                 RED + "[" + zone.getName() + "] " + String.format(addedConfirmation, userName, zoneName));
 
-        TregminePlayer player2 = tregmine.getPlayer(userName);
+        GenericPlayer player2 = tregmine.getPlayer(userName);
         if (player2 != null) {
             String addedNotification = perm.getAddedNotification();
             player2.sendMessage(RED + "[" + zone.getName() + "] " + String.format(addedNotification, zoneName));
         }
     }
 
-    public void changeValue(TregminePlayer player, String[] args) {
+    public void changeValue(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -180,7 +179,7 @@ public class ZoneCommand extends AbstractCommand {
         }
     }
 
-    public void createZone(TregminePlayer player, String[] args) {
+    public void createZone(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -238,7 +237,7 @@ public class ZoneCommand extends AbstractCommand {
         }
     }
 
-    public void deleteZone(TregminePlayer player, String[] args) {
+    public void deleteZone(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -268,7 +267,7 @@ public class ZoneCommand extends AbstractCommand {
         }
     }
 
-    public void delUser(TregminePlayer player, String[] args) {
+    public void delUser(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -294,7 +293,7 @@ public class ZoneCommand extends AbstractCommand {
             return;
         }
 
-        TregminePlayer victim = tregmine.getPlayerOffline(userName);
+        GenericPlayer victim = tregmine.getPlayerOffline(userName);
         if (victim == null) {
             player.sendMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
             return;
@@ -319,14 +318,14 @@ public class ZoneCommand extends AbstractCommand {
         player.sendMessage(
                 RED + "[" + zone.getName() + "] " + String.format(delConfirmation, userName, zoneName));
 
-        TregminePlayer player2 = tregmine.getPlayer(userName);
+        GenericPlayer player2 = tregmine.getPlayer(userName);
         if (player2 != null) {
             String delNotification = oldPerm.getDeletedNotification();
             player2.sendMessage(RED + "[" + zone.getName() + "] " + String.format(delNotification, zoneName));
         }
     }
 
-    public void flagZone(TregminePlayer player, String[] args) {
+    public void flagZone(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -393,7 +392,7 @@ public class ZoneCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if ("town".equals(command)) {
             if (args.length == 0) {
                 return false;
@@ -415,7 +414,7 @@ public class ZoneCommand extends AbstractCommand {
         }
 
         if (args.length == 0) {
-            return true;
+            return false;
         }
 
         if ("create".equals(args[0]) && player.getRank().canModifyZones()) {
@@ -468,7 +467,7 @@ public class ZoneCommand extends AbstractCommand {
         return false;
     }
 
-    public void zoneInfo(TregminePlayer player, String[] args) {
+    public void zoneInfo(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -519,7 +518,7 @@ public class ZoneCommand extends AbstractCommand {
             player.sendMessage(YELLOW + "Exit message: " + zone.getTextExit());
         } else if (show == 2) {
             for (Integer id : zone.getUsers()) {
-                TregminePlayer user = tregmine.getPlayerOffline(id);
+                GenericPlayer user = tregmine.getPlayerOffline(id);
                 Zone.Permission perm = zone.getUser(user);
                 player.sendMessage(new TextComponent(YELLOW + ""), user.getChatName(),
                         new TextComponent(YELLOW + " - " + perm));

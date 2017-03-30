@@ -5,8 +5,8 @@
 package info.tregmine.discord;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.discord.commands.CommandHandler;
 import info.tregmine.discord.entities.EmbedAlertType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class DiscordSRV {
+public class Discord {
     public static User selfUser;
     private JDA api;
     private Long startTime = System.nanoTime();
@@ -53,7 +53,9 @@ public class DiscordSRV {
     private Member selfMember;
     private CommandHandler commandHandler;
 
-    public DiscordSRV(Tregmine tregmine) throws JDAFailedException {
+    public static final DiscordUtil DISCORD_UTIL = new DiscordUtil();
+
+    public Discord(Tregmine tregmine) throws JDAFailedException {
         this.plugin = tregmine;
         // login to discord
         this.buildJda();
@@ -61,7 +63,7 @@ public class DiscordSRV {
             throw new JDAFailedException("Could not connect to the Discord API.");
         }
 
-        DiscordSRV.selfUser = this.api.getSelfUser();
+        Discord.selfUser = this.api.getSelfUser();
 
         // print the servers that the bot can see
         Tregmine.LOGGER.info("Discord: The following servers are visible: " + api.getGuilds().size());
@@ -174,7 +176,7 @@ public class DiscordSRV {
 
     public boolean checkPlayerIsVanished(Player player) {
         Boolean isVanished = false;
-        TregminePlayer check = plugin.getPlayer(player);
+        GenericPlayer check = plugin.getPlayer(player);
         if (check.hasFlag(Flags.INVISIBLE))
             isVanished = true;
         if (this.plugin.getConfig().getBoolean("discord.debug.events.player-vanish-lookup-reporting"))
@@ -305,7 +307,7 @@ public class DiscordSRV {
 
     public String getPrimaryGroup(Player player) {
         // Begin Tregmine interjection
-        TregminePlayer sender = this.plugin.getPlayer(player);
+        GenericPlayer sender = this.plugin.getPlayer(player);
         if (sender.getRank().getsDiscordRank()) {
             return sender.getRank().getProperDiscordName();
         } else {

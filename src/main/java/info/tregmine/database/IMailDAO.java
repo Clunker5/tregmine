@@ -1,6 +1,6 @@
 package info.tregmine.database;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface IMailDAO {
 
     int getMailTotalEver(String username) throws DAOException;
 
-    boolean sendMail(TregminePlayer player, String sendTo, String message) throws DAOException;
+    boolean sendMail(GenericPlayer player, String sendTo, String message) throws DAOException;
 }

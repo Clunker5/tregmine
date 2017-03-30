@@ -1,6 +1,6 @@
 package info.tregmine.events;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.zones.Zone;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
@@ -12,11 +12,11 @@ public final class PlayerZoneChangeEvent extends Event implements Cancellable {
     private boolean cancelled;
     private Location from;
     private Location to;
-    private TregminePlayer player;
+    private GenericPlayer player;
     private Zone oldZone;
     private Zone newZone;
 
-    public PlayerZoneChangeEvent(Location fromLoc, Location toLoc, TregminePlayer playerInvolved, Zone previousZone,
+    public PlayerZoneChangeEvent(Location fromLoc, Location toLoc, GenericPlayer playerInvolved, Zone previousZone,
                                  Zone currentZone) {
         this.from = fromLoc;
         this.to = toLoc;
@@ -58,7 +58,7 @@ public final class PlayerZoneChangeEvent extends Event implements Cancellable {
         this.oldZone = value;
     }
 
-    public TregminePlayer getPlayer() {
+    public GenericPlayer getPlayer() {
         return player;
     }
 

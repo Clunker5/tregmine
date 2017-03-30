@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
@@ -22,12 +21,12 @@ public class MentorCommand extends AbstractCommand {
         onlineTeachers = tregmine.getOnlineTeachers();
     }
 
-    public static void findMentor(Tregmine plugin, TregminePlayer student) {
+    public static void findMentor(Tregmine plugin, GenericPlayer student) {
         if (student.getRank() != Rank.UNVERIFIED && student.getRank() != Rank.TOURIST) {
             return;
         }
-        Queue<TregminePlayer> mentors = plugin.getMentorQueue();
-        TregminePlayer mentor = mentors.poll();
+        Queue<GenericPlayer> mentors = plugin.getMentorQueue();
+        GenericPlayer mentor = mentors.poll();
         if (mentor != null) {
             startMentoring(plugin, student, mentor);
         } else {
@@ -38,10 +37,10 @@ public class MentorCommand extends AbstractCommand {
                 student.sendMessage(YELLOW + "You will now be assigned "
                         + "a mentor to show you around, as soon as one becomes available.");
             }
-            Queue<TregminePlayer> students = plugin.getStudentQueue();
+            Queue<GenericPlayer> students = plugin.getStudentQueue();
             students.offer(student);
 
-            for (TregminePlayer p : plugin.getOnlinePlayers()) {
+            for (GenericPlayer p : plugin.getOnlinePlayers()) {
                 if (!p.canMentor()) {
                     continue;
                 }
@@ -52,7 +51,7 @@ public class MentorCommand extends AbstractCommand {
         }
     }
 
-    public static void startMentoring(Tregmine tregmine, TregminePlayer student, TregminePlayer mentor) {
+    public static void startMentoring(Tregmine tregmine, GenericPlayer student, GenericPlayer mentor) {
         student.setMentor(mentor);
         mentor.setStudent(student);
 
@@ -99,7 +98,7 @@ public class MentorCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         String action = "queue";
         if (args.length > 0) {
             action = args[0];
@@ -116,21 +115,21 @@ public class MentorCommand extends AbstractCommand {
                 return true;
             }
 
-            Queue<TregminePlayer> students = tregmine.getStudentQueue();
+            Queue<GenericPlayer> students = tregmine.getStudentQueue();
             if (students.size() > 0) {
-                TregminePlayer student = students.poll();
+                GenericPlayer student = students.poll();
                 startMentoring(tregmine, student, player);
                 return true;
             }
 
-            Queue<TregminePlayer> mentors = tregmine.getMentorQueue();
+            Queue<GenericPlayer> mentors = tregmine.getMentorQueue();
             mentors.offer(player);
 
             player.sendMessage(GREEN + "You are now part of the mentor queue. " + "You are number "
                     + mentors.size() + ". Type /mentor cancel " + "to opt out.");
         } else if ("cancel".equalsIgnoreCase(action)) {
             if (player.getRank() == Rank.TOURIST) {
-                TregminePlayer mentor = player.getMentor();
+                GenericPlayer mentor = player.getMentor();
 
                 try (IContext ctx = tregmine.createContext()) {
                     IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
@@ -148,7 +147,7 @@ public class MentorCommand extends AbstractCommand {
 
                 findMentor(tregmine, player);
             } else {
-                Queue<TregminePlayer> mentors = tregmine.getMentorQueue();
+                Queue<GenericPlayer> mentors = tregmine.getMentorQueue();
                 if (!mentors.contains(player)) {
                     player.sendMessage(RED + "You are not part of the mentor queue. "
                             + "If you have already been assigned a student, you cannot " + "abort the mentoring.");
@@ -163,7 +162,7 @@ public class MentorCommand extends AbstractCommand {
                 player.sendMessage(RED + "You do not have permission to mentor.");
                 return true;
             }
-            TregminePlayer student = player.getStudent();
+            GenericPlayer student = player.getStudent();
             if (student == null && tregmine.getOnlineTeachers() >= 3) {
                 player.sendMessage(RED + "You are not mentoring anyone right now.");
                 return true;

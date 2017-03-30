@@ -2,7 +2,7 @@
 package info.tregmine.api;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.api.GenericPlayer.Flags;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -29,7 +29,7 @@ public class Timer implements Runnable {
         }
         lastPoll = startTime;
         int count = 0;
-        for (TregminePlayer player : t.getOnlinePlayers()) {
+        for (GenericPlayer player : t.getOnlinePlayers()) {
             count++;
             if (skip1 > 0) {
                 skip1--;

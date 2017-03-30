@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -32,7 +31,7 @@ public class ActionCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             return false;
         }
@@ -136,7 +135,7 @@ public class ActionCommand extends AbstractCommand {
 
         Collection<? extends Player> players = server.getOnlinePlayers();
         for (Player tp : players) {
-            TregminePlayer to = tregmine.getPlayer(tp);
+            GenericPlayer to = tregmine.getPlayer(tp);
             if (!channel.equals(to.getChatChannel())) {
                 continue;
             }
@@ -155,9 +154,9 @@ public class ActionCommand extends AbstractCommand {
             TextComponent begin = new TextComponent("* ");
             TextComponent middle = new TextComponent(player.decideVS(to));
             TextComponent end = new TextComponent(" " + WHITE + msg);
-            to.getSpigot().sendMessage(begin, middle, end);
+            to.sendMessage(begin, middle, end);
         }
-
+        Tregmine.LOGGER.info("* " + player.getName() + " " + msg);
         return true;
     }
 }

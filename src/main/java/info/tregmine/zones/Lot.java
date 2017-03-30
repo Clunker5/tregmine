@@ -1,6 +1,6 @@
 package info.tregmine.zones;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.quadtree.Rectangle;
 
 import java.util.EnumSet;
@@ -21,11 +21,11 @@ public class Lot {
         this.flags = EnumSet.noneOf(Flags.class);
     }
 
-    public void addOwner(TregminePlayer player) {
+    public void addOwner(GenericPlayer player) {
         owners.add(player.getId());
     }
 
-    public void deleteOwner(TregminePlayer player) {
+    public void deleteOwner(GenericPlayer player) {
         owners.remove(player.getId());
     }
 
@@ -69,7 +69,7 @@ public class Lot {
         return flags.contains(flag);
     }
 
-    public boolean isOwner(TregminePlayer player) {
+    public boolean isOwner(GenericPlayer player) {
         return owners.contains(player.getId());
     }
 

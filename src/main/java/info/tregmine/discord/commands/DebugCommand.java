@@ -1,6 +1,7 @@
 package info.tregmine.discord.commands;
 
 import info.tregmine.Tregmine;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.DiscordUtil;
 import info.tregmine.discord.RandomString;
 import net.dv8tion.jda.core.entities.Message;
@@ -39,11 +40,11 @@ public class DebugCommand extends DiscordCommand {
                     return true;
                 }
                 if (junkToSend < 1) {
-                    new DiscordUtil().badNumber(message, 1, false);
+                    Discord.DISCORD_UTIL.badNumber(message, 1, false);
                     return true;
                 }
                 RandomString strBldr = new RandomString(10);
-                new DiscordUtil().flagDestructive(message, 5);
+                Discord.DISCORD_UTIL.flagDestructive(message, 5);
                 Thread t = new Thread(new Runnable() {
                     public void run() {
                         while (junkToSend != 0) {

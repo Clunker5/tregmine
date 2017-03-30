@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
@@ -16,7 +15,7 @@ public class SummonCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName() == "vanilla") {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -27,12 +26,12 @@ public class SummonCommand extends AbstractCommand {
 
         String pattern = args[0];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             player.sendMessage(RED + "Can't find user.");
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
         if (victim.getWorld().getName() == "vanilla") {
             player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
             return true;

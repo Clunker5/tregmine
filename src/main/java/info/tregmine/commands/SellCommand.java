@@ -1,6 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
 import info.tregmine.events.TregminePortalEvent;
@@ -27,32 +27,32 @@ import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.YELLOW;
 
 public class SellCommand extends AbstractCommand implements Listener {
-    private Map<TregminePlayer, Inventory> inventories;
+    private Map<GenericPlayer, Inventory> inventories;
 
     public SellCommand(Tregmine tregmine) {
         super(tregmine, "sell");
 
-        inventories = new HashMap<TregminePlayer, Inventory>();
+        inventories = new HashMap<>();
 
         PluginManager pluginMgm = tregmine.getServer().getPluginManager();
         pluginMgm.registerEvents(this, tregmine);
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (this.tregmine.getConfig().getBoolean("general.economy.minefortregs")) {
             player.sendMessage(
                     ChatColor.RED + "The server has decided to use the mining system to obtain tregs.");
             return true;
         }
-        if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
+        if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
             player.sendMessage(RED + "A trade is already in progress!");
             return true;
         }
 
         Server server = tregmine.getServer();
 
-        player.setChatState(TregminePlayer.ChatState.SELL);
+        player.setChatState(GenericPlayer.ChatState.SELL);
         player.sendMessage(YELLOW + "[Sell] Welcome to the Federal Reserve " + " of Tregmine!");
         player.sendMessage(YELLOW + "[Sell] What do you want to sell?");
 
@@ -66,7 +66,7 @@ public class SellCommand extends AbstractCommand implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        TregminePlayer player = tregmine.getPlayer((Player) event.getPlayer());
+        GenericPlayer player = tregmine.getPlayer((Player) event.getPlayer());
 
         Inventory inventory = inventories.get(player);
         if (inventory == null) {
@@ -117,14 +117,14 @@ public class SellCommand extends AbstractCommand implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.SELL) {
+        GenericPlayer player = tregmine.getPlayer(event.getPlayer());
+        if (player.getChatState() != GenericPlayer.ChatState.SELL) {
             return;
         }
 
         Inventory inventory = inventories.get(player);
         if (inventory == null) {
-            player.setChatState(TregminePlayer.ChatState.CHAT);
+            player.setChatState(GenericPlayer.ChatState.CHAT);
             return;
         }
 
@@ -133,7 +133,7 @@ public class SellCommand extends AbstractCommand implements Listener {
         String text = event.getMessage();
 
         if ("quit".equalsIgnoreCase(text)) {
-            player.setChatState(TregminePlayer.ChatState.CHAT);
+            player.setChatState(GenericPlayer.ChatState.CHAT);
             inventories.remove(player);
 
             // Restore contents to player inventory
@@ -184,29 +184,29 @@ public class SellCommand extends AbstractCommand implements Listener {
             }
 
             // Finalize
-            player.setChatState(TregminePlayer.ChatState.CHAT);
+            player.setChatState(GenericPlayer.ChatState.CHAT);
             inventories.remove(player);
         }
     }
 
     @EventHandler
     public void sellPlayerDeath(PlayerDeathEvent event) {
-        TregminePlayer player = tregmine.getPlayer(event.getEntity());
+        GenericPlayer player = tregmine.getPlayer(event.getEntity());
         if (!inventories.containsKey(player))
             return;
 
-        player.setChatState(TregminePlayer.ChatState.CHAT);
+        player.setChatState(GenericPlayer.ChatState.CHAT);
         inventories.remove(player);
         player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
     }
 
     @EventHandler
     public void sellPlayerPortal(TregminePortalEvent event) {
-        TregminePlayer player = event.getPlayer();
+        GenericPlayer player = event.getPlayer();
         if (!inventories.containsKey(player))
             return;
 
-        player.setChatState(TregminePlayer.ChatState.CHAT);
+        player.setChatState(GenericPlayer.ChatState.CHAT);
         inventories.remove(player);
         player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
     }

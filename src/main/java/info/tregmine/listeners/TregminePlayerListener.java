@@ -36,30 +36,30 @@ import java.util.*;
 
 public class TregminePlayerListener implements Listener {
     private Tregmine plugin;
-    private Map<Item, TregminePlayer> droppedItems;
+    private Map<Item, GenericPlayer> droppedItems;
     public TregminePlayerListener(Tregmine instance) {
         this.plugin = instance;
 
-        droppedItems = new HashMap<Item, TregminePlayer>();
+        droppedItems = new HashMap<>();
     }
 
     private void activateGuardians() {
         // Identify all guardians and categorize them based on their current
         // state
         Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
-        Set<TregminePlayer> guardians = new HashSet<TregminePlayer>();
-        List<TregminePlayer> activeGuardians = new ArrayList<TregminePlayer>();
-        List<TregminePlayer> inactiveGuardians = new ArrayList<TregminePlayer>();
-        List<TregminePlayer> queuedGuardians = new ArrayList<TregminePlayer>();
+        Set<GenericPlayer> guardians = new HashSet<GenericPlayer>();
+        List<GenericPlayer> activeGuardians = new ArrayList<GenericPlayer>();
+        List<GenericPlayer> inactiveGuardians = new ArrayList<GenericPlayer>();
+        List<GenericPlayer> queuedGuardians = new ArrayList<GenericPlayer>();
         for (Player srvPlayer : players) {
-            TregminePlayer guardian = plugin.getPlayer(srvPlayer.getName());
+            GenericPlayer guardian = plugin.getPlayer(srvPlayer.getName());
             if (guardian == null || guardian.getRank() != Rank.GUARDIAN) {
                 continue;
             }
 
-            TregminePlayer.GuardianState state = guardian.getGuardianState();
+            GenericPlayer.GuardianState state = guardian.getGuardianState();
             if (state == null) {
-                state = TregminePlayer.GuardianState.QUEUED;
+                state = GenericPlayer.GuardianState.QUEUED;
             }
 
             switch (state) {
@@ -74,7 +74,7 @@ public class TregminePlayerListener implements Listener {
                     break;
             }
 
-            guardian.setGuardianState(TregminePlayer.GuardianState.QUEUED);
+            guardian.setGuardianState(GenericPlayer.GuardianState.QUEUED);
             guardians.add(guardian);
         }
 
@@ -86,7 +86,7 @@ public class TregminePlayerListener implements Listener {
         // There are not enough guardians active, we need to activate a few more
         if (activeGuardians.size() <= idealCount) {
             // Make a pool of every "willing" guardian currently online
-            List<TregminePlayer> activationList = new ArrayList<TregminePlayer>();
+            List<GenericPlayer> activationList = new ArrayList<GenericPlayer>();
             activationList.addAll(activeGuardians);
             activationList.addAll(queuedGuardians);
 
@@ -108,32 +108,32 @@ public class TregminePlayerListener implements Listener {
 
             // If there are more than necessarry guardians online, only activate
             // the most highly ranked.
-            Set<TregminePlayer> activationSet;
+            Set<GenericPlayer> activationSet;
             if (activationList.size() > idealCount) {
                 Collections.sort(activationList, new RankComparator());
-                activationSet = new HashSet<TregminePlayer>(activationList.subList(0, idealCount));
+                activationSet = new HashSet<>(activationList.subList(0, idealCount));
             } else {
-                activationSet = new HashSet<TregminePlayer>(activationList);
+                activationSet = new HashSet<>(activationList);
             }
 
             // Perform activation
             StringBuffer globalMessage = new StringBuffer();
             String delim = "";
-            for (TregminePlayer guardian : activationSet) {
-                guardian.setGuardianState(TregminePlayer.GuardianState.ACTIVE);
+            for (GenericPlayer guardian : activationSet) {
+                guardian.setGuardianState(GenericPlayer.GuardianState.ACTIVE);
                 globalMessage.append(delim);
                 globalMessage.append(guardian.getName());
                 delim = ", ";
             }
 
-            Set<TregminePlayer> oldActiveGuardians = new HashSet<TregminePlayer>(activeGuardians);
+            Set<GenericPlayer> oldActiveGuardians = new HashSet<GenericPlayer>(activeGuardians);
             if (!activationSet.containsAll(oldActiveGuardians) || activationSet.size() != oldActiveGuardians.size()) {
 
                 plugin.getServer().broadcastMessage(ChatColor.BLUE + "Active guardians are: " + globalMessage
                         + ". Please contact any of them if you need help.");
 
                 // Notify previously active guardian of their state change
-                for (TregminePlayer guardian : activeGuardians) {
+                for (GenericPlayer guardian : activeGuardians) {
                     if (!activationSet.contains(guardian)) {
                         guardian.sendMessage(ChatColor.BLUE
                                 + "You are no longer on active duty, and should not respond to help requests, unless asked by an admin or active guardian.");
@@ -141,7 +141,7 @@ public class TregminePlayerListener implements Listener {
                 }
 
                 // Notify previously inactive guardians of their state change
-                for (TregminePlayer guardian : inactiveGuardians) {
+                for (GenericPlayer guardian : inactiveGuardians) {
                     if (activationSet.contains(guardian)) {
                         guardian.sendMessage(ChatColor.BLUE
                                 + "You have been restored to active duty and should respond to help requests.");
@@ -149,7 +149,7 @@ public class TregminePlayerListener implements Listener {
                 }
 
                 // Notify previously queued guardians of their state change
-                for (TregminePlayer guardian : queuedGuardians) {
+                for (GenericPlayer guardian : queuedGuardians) {
                     if (activationSet.contains(guardian)) {
                         guardian.sendMessage(
                                 ChatColor.BLUE + "You are now on active duty and should respond to help requests.");
@@ -161,7 +161,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getEntity());
+        GenericPlayer player = plugin.getPlayer(event.getEntity());
         player.setLastPos(player.getLocation());
     }
 
@@ -179,7 +179,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerBlockMove(PlayerMoveBlockEvent event) {
-        TregminePlayer player = event.getPlayer();
+        GenericPlayer player = event.getPlayer();
 
         // To add player.hasBadge for a flight badge when made
         if (player.getRank().canFly() && player.isFlying() && player.isSprinting()) {
@@ -202,7 +202,7 @@ public class TregminePlayerListener implements Listener {
                 return;
             }
             OfflinePlayer owner = skull.getOwningPlayer();
-            TregminePlayer skullowner = plugin.getPlayerOffline(owner);
+            GenericPlayer skullowner = plugin.getPlayerOffline(owner);
             if (skullowner != null) {
                 ChatColor C = skullowner.getNameColor();
                 player.sendMessage(ChatColor.AQUA + "This is " + C + owner + "'s " + ChatColor.AQUA + "head!");
@@ -215,7 +215,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = this.plugin.getPlayer(event.getPlayer());
 
         if (player.getGameMode() == GameMode.CREATIVE) {
             event.setCancelled(true);
@@ -237,7 +237,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerFlight(PlayerToggleFlightEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getRank().canModifyZones()) {
             return;
         }
@@ -246,7 +246,7 @@ public class TregminePlayerListener implements Listener {
             event.setCancelled(true);
         }
 
-        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) || player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+        if (player.hasFlag(GenericPlayer.Flags.HARDWARNED) || player.hasFlag(GenericPlayer.Flags.SOFTWARNED)) {
 
             event.setCancelled(true);
         }
@@ -308,7 +308,7 @@ public class TregminePlayerListener implements Listener {
                         }
                         List<String> lore = new ArrayList<String>();
                         lore.add(Created.CREATIVE.toColorString());
-                        TregminePlayer p = this.plugin.getPlayer(player);
+                        GenericPlayer p = this.plugin.getPlayer(player);
                         if (line2.contains("by: ") && !line2.contains(p.getChatNameNoHover())) {
                             lore.add(line2 + ", " + p.getChatNameNoHover());
                         } else {
@@ -323,7 +323,7 @@ public class TregminePlayerListener implements Listener {
             }
         }
 
-        TregminePlayer p = plugin.getPlayer(player);
+        GenericPlayer p = plugin.getPlayer(player);
         if (p == null) {
             Tregmine.LOGGER.info(player.getName() + " was not found in player map.");
             return;
@@ -337,7 +337,7 @@ public class TregminePlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
@@ -382,12 +382,12 @@ public class TregminePlayerListener implements Listener {
         }
 
         // Handle invisibility, if set
-        List<TregminePlayer> players = plugin.getOnlinePlayers();
-        if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+        List<GenericPlayer> players = plugin.getOnlinePlayers();
+        if (player.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
             player.sendMessage(ChatColor.YELLOW + "You are now invisible!");
 
             // Hide the new player from all existing players
-            for (TregminePlayer current : players) {
+            for (GenericPlayer current : players) {
                 if (!current.getRank().canVanish()) {
                     current.hidePlayer(player);
                 } else {
@@ -395,7 +395,7 @@ public class TregminePlayerListener implements Listener {
                 }
             }
         } else {
-            for (TregminePlayer current : players) {
+            for (GenericPlayer current : players) {
                 current.showPlayer(player);
             }
         }
@@ -410,8 +410,8 @@ public class TregminePlayerListener implements Listener {
         }
 
         // Hide currently invisible players from the player that just signed on
-        for (TregminePlayer current : players) {
-            if (current.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+        for (GenericPlayer current : players) {
+            if (current.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 player.hidePlayer(current);
             } else {
                 player.showPlayer(current);
@@ -436,11 +436,11 @@ public class TregminePlayerListener implements Listener {
         }
 
         // Check if the player is allowed to fly
-        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) || player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+        if (player.hasFlag(GenericPlayer.Flags.HARDWARNED) || player.hasFlag(GenericPlayer.Flags.SOFTWARNED)) {
             player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
-            if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
+            if (player.hasFlag(GenericPlayer.Flags.FLY_ENABLED)) {
                 player.sendMessage("Flying: Allowed and Enabled! Toggle flying with /fly");
                 player.setAllowFlight(true);
             } else {
@@ -519,7 +519,7 @@ public class TregminePlayerListener implements Listener {
             // Try to find a mentor for tourists that rejoin
             MentorCommand.findMentor(plugin, player);
         } else if (player.canMentor()) {
-            Queue<TregminePlayer> students = plugin.getStudentQueue();
+            Queue<GenericPlayer> students = plugin.getStudentQueue();
             if (students.size() > 0) {
                 player.sendMessage(
                         ChatColor.YELLOW + "Mentors are needed! " + "Type /mentor to offer your services!");
@@ -539,7 +539,7 @@ public class TregminePlayerListener implements Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
 
-        TregminePlayer player;
+        GenericPlayer player;
 
         try {
             player = plugin.addPlayer(event.getPlayer(), event.getAddress());
@@ -553,7 +553,7 @@ public class TregminePlayerListener implements Listener {
         }
 
         if (player.getRank() == Rank.UNVERIFIED) {
-            player.setChatState(TregminePlayer.ChatState.SETUP);
+            player.setChatState(GenericPlayer.ChatState.SETUP);
         }
 
         if (player.getLocation().getWorld().getName().matches("world_the_end")) {
@@ -591,13 +591,13 @@ public class TregminePlayerListener implements Listener {
         }
 
         if (player.getRank() == Rank.GUARDIAN) {
-            player.setGuardianState(TregminePlayer.GuardianState.QUEUED);
+            player.setGuardianState(GenericPlayer.GuardianState.QUEUED);
         }
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = this.plugin.getPlayer(event.getPlayer());
         if (player.getFrozen()) {
             event.setCancelled(true);
         }
@@ -608,7 +608,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = this.plugin.getPlayer(event.getPlayer());
 
         if (player.getGameMode() == GameMode.CREATIVE) {
             event.setCancelled(true);
@@ -626,7 +626,7 @@ public class TregminePlayerListener implements Listener {
 
         try (IContext ctx = plugin.createContext()) {
             Item item = event.getItem();
-            TregminePlayer droppedBy = droppedItems.get(item);
+            GenericPlayer droppedBy = droppedItems.get(item);
 
             if (droppedBy != null && droppedBy.getId() != player.getId()) {
                 ItemStack stack = item.getItemStack();
@@ -650,7 +650,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " + "in players map when quitting.");
             return;
@@ -678,7 +678,7 @@ public class TregminePlayerListener implements Listener {
 
         // Look if there are any students being mentored by the exiting player
         if (player.getStudent() != null) {
-            TregminePlayer student = player.getStudent();
+            GenericPlayer student = player.getStudent();
 
             try (IContext ctx = plugin.createContext()) {
                 IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
@@ -696,7 +696,7 @@ public class TregminePlayerListener implements Listener {
 
             MentorCommand.findMentor(plugin, student);
         } else if (player.getMentor() != null) {
-            TregminePlayer mentor = player.getMentor();
+            GenericPlayer mentor = player.getMentor();
 
             try (IContext ctx = plugin.createContext()) {
                 IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
@@ -720,7 +720,7 @@ public class TregminePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawnSave(PlayerRespawnEvent event) {
-        TregminePlayer p = plugin.getPlayer(event.getPlayer());
+        GenericPlayer p = plugin.getPlayer(event.getPlayer());
         p.saveInventory(p.getCurrentInventory());
     }
 
@@ -730,7 +730,7 @@ public class TregminePlayerListener implements Listener {
         // + event.getMessage());
     }
 
-    private static class RankComparator implements Comparator<TregminePlayer> {
+    private static class RankComparator implements Comparator<GenericPlayer> {
         private int order;
 
         public RankComparator() {
@@ -742,7 +742,7 @@ public class TregminePlayerListener implements Listener {
         }
 
         @Override
-        public int compare(TregminePlayer a, TregminePlayer b) {
+        public int compare(GenericPlayer a, GenericPlayer b) {
             return order * (a.getGuardianRank() - b.getGuardianRank());
         }
     }

@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.Location;
 
 import static org.bukkit.ChatColor.*;
@@ -12,7 +11,7 @@ public class PositionCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         Location loc = player.getLocation();
         Location spawn = player.getWorld().getSpawnLocation();
         double distance = info.tregmine.api.math.MathUtil.calcDistance2d(spawn, loc);

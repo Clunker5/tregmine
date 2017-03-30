@@ -1,11 +1,11 @@
 package info.tregmine.database;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 
 public interface IMentorLogDAO {
-    int getMentorLogId(TregminePlayer student, TregminePlayer mentor) throws DAOException;
+    int getMentorLogId(GenericPlayer student, GenericPlayer mentor) throws DAOException;
 
-    void insertMentorLog(TregminePlayer student, TregminePlayer mentor) throws DAOException;
+    void insertMentorLog(GenericPlayer student, GenericPlayer mentor) throws DAOException;
 
     void updateMentorLogChannel(int mentorLogId, String channel) throws DAOException;
 

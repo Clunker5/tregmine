@@ -2,8 +2,8 @@ package info.tregmine.web;
 
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -46,7 +46,7 @@ public class PlayerKickAction implements WebHandler.Action {
 
     @Override
     public void queryGameState(Tregmine tregmine) {
-        TregminePlayer subject = tregmine.getPlayer(subjectId);
+        GenericPlayer subject = tregmine.getPlayer(subjectId);
         if (subject == null) {
             status = false;
             error = "Subject not found.";
@@ -54,7 +54,7 @@ public class PlayerKickAction implements WebHandler.Action {
             return;
         }
 
-        TregminePlayer issuer = tregmine.getPlayer(issuerId);
+        GenericPlayer issuer = tregmine.getPlayer(issuerId);
         if (issuer == null) {
             issuer = tregmine.getPlayerOffline(issuerId);
         }

@@ -1,8 +1,8 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.*;
 import info.tregmine.events.TregmineChatEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -27,7 +27,7 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onTregmineChat(TregmineChatEvent event) {
-        TregminePlayer sender = event.getPlayer();
+        GenericPlayer sender = event.getPlayer();
         if (sender.isMuted() && !sender.getMute().isExpired() && !sender.getMute().isCancelled()) {
             sender.sendMessage(ChatColor.YELLOW + "You have been muted; Your mute will expire in "
                     + sender.getMute().secondsLeft() + " seconds.");
@@ -84,8 +84,8 @@ public class ChatListener implements Listener {
                     return;
                 }
             }
-            for (TregminePlayer to : plugin.getOnlinePlayers()) {
-                if (to.getChatState() == TregminePlayer.ChatState.SETUP) {
+            for (GenericPlayer to : plugin.getOnlinePlayers()) {
+                if (to.getChatState() == GenericPlayer.ChatState.SETUP) {
                     continue;
                 }
 
@@ -97,9 +97,9 @@ public class ChatListener implements Listener {
 
                 ChatColor txtColor = ChatColor.WHITE;
 
-                for (TregminePlayer online : plugin.getOnlinePlayers()) {
+                for (GenericPlayer online : plugin.getOnlinePlayers()) {
 
-                    if (text.contains(online.getRealName()) && !online.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+                    if (text.contains(online.getRealName()) && !online.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                         if (text.toLowerCase().contains("@" + online.getRealName())) {
 
                             text = text.replaceAll("@" + online.getRealName(), ChatColor.ITALIC + ""
@@ -138,7 +138,7 @@ public class ChatListener implements Listener {
                 } else {
                     sendername = sender.getChatName();
                 }
-                if (senderChan.equalsIgnoreCase(toChan) || to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
+                if (senderChan.equalsIgnoreCase(toChan) || to.hasFlag(GenericPlayer.Flags.CHANNEL_VIEW)) {
 
                     if (event.isWebChat()) {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {

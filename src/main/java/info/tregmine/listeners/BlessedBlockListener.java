@@ -1,8 +1,8 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBlessedBlockDAO;
 import info.tregmine.database.IContext;
@@ -78,7 +78,7 @@ public class BlessedBlockListener implements Listener {
                 return;
             }
         } else if (block.getType() == Material.HOPPER) {
-            TregminePlayer player = plugin.getPlayer(event.getPlayer());
+            GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
             Location loc = block.getLocation();
             Location loc1 = loc.subtract(new Vector(0, 1, 0));
@@ -108,7 +108,7 @@ public class BlessedBlockListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && player.getItemInHand().getType() == Material.FEATHER
                 && player.getRank().canUnbless() && ALLOWED_MATERIALS.contains(block.getType())) {
             Location loc = block.getLocation();
@@ -119,7 +119,7 @@ public class BlessedBlockListener implements Listener {
                 if (owner == -1) {
                     return;
                 }
-                TregminePlayer blockOwner = plugin.getPlayer(owner);
+                GenericPlayer blockOwner = plugin.getPlayer(owner);
                 if (blockOwner.isOnline()) {
                     blockOwner.sendMessage(
                             new TextComponent(ChatColor.AQUA + "One of your blocks at X" + loc.getBlockX() + " Y"
@@ -147,7 +147,7 @@ public class BlessedBlockListener implements Listener {
                 return;
             }
 
-            TregminePlayer target = plugin.getPlayerOffline(targetId);
+            GenericPlayer target = plugin.getPlayerOffline(targetId);
             if (target == null) {
                 player.sendMessage(ChatColor.RED + "Use /bless [name] first!");
                 return;
@@ -200,7 +200,7 @@ public class BlessedBlockListener implements Listener {
             Map<Location, Integer> blessedBlocks = plugin.getBlessedBlocks();
             if (blessedBlocks.get(loc) != null) {
                 int id = blessedBlocks.get(loc);
-                TregminePlayer target = plugin.getPlayerOffline(id);
+                GenericPlayer target = plugin.getPlayerOffline(id);
                 if (id != player.getId()) {
                     player.sendMessage(new TextComponent(ChatColor.YELLOW + "Blessed to: "), target.getChatName(),
                             new TextComponent("."));

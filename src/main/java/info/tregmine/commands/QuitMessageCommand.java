@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -27,7 +26,7 @@ public class QuitMessageCommand extends AbstractCommand {
         return buf.toString();
     }
 
-    private boolean getElseMsg(TregminePlayer player, String[] args) {
+    private boolean getElseMsg(GenericPlayer player, String[] args) {
         if (args.length > 3) {
             player.sendMessage(RED + "Correct Usage: /quitmessage player get <player>");
             return true;
@@ -35,12 +34,12 @@ public class QuitMessageCommand extends AbstractCommand {
 
         String pattern = args[2];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
 
         if (victim == null) {
             return true;
@@ -52,7 +51,7 @@ public class QuitMessageCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean getOwnMsg(TregminePlayer player) {
+    private boolean getOwnMsg(GenericPlayer player) {
         if (!player.getRank().canSetQuitMessage()) {
             return true;
         }
@@ -63,7 +62,7 @@ public class QuitMessageCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             return getOwnMsg(player);
         }
@@ -79,7 +78,7 @@ public class QuitMessageCommand extends AbstractCommand {
         }
     }
 
-    private boolean help(TregminePlayer player, String[] args) {
+    private boolean help(GenericPlayer player, String[] args) {
         if (player.getRank().canSetOthersQuitMessage()) {
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
             player.sendMessage(GRAY + "Get your Quit Message: " + GREEN + "/quitmessage");
@@ -103,7 +102,7 @@ public class QuitMessageCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean setElseMsg(TregminePlayer player, String[] args) {
+    private boolean setElseMsg(GenericPlayer player, String[] args) {
         if (!player.getRank().canSetOthersQuitMessage()) {
             return true;
         }
@@ -115,12 +114,12 @@ public class QuitMessageCommand extends AbstractCommand {
 
         String pattern = args[2];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
 
         if (victim == null) {
             return true;
@@ -157,7 +156,7 @@ public class QuitMessageCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean setOwnMsg(TregminePlayer player, String[] args) {
+    private boolean setOwnMsg(GenericPlayer player, String[] args) {
         if (!player.getRank().canSetQuitMessage()) {
             return true;
         }

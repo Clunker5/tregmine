@@ -1,9 +1,9 @@
 package info.tregmine.discord.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer.Flags;
+import info.tregmine.discord.Discord;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,9 +18,9 @@ public class PlayerJoinLeaveListener implements Listener {
 
     Map<Player, Boolean> playerStatusIsOnline = new HashMap<Player, Boolean>();
     private Tregmine plugin;
-    private DiscordSRV srv;
+    private Discord srv;
 
-    public PlayerJoinLeaveListener(DiscordSRV srv) {
+    public PlayerJoinLeaveListener(Discord srv) {
         this.srv = srv;
         this.plugin = this.srv.getPlugin();
     }
@@ -29,16 +29,16 @@ public class PlayerJoinLeaveListener implements Listener {
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         // If player is OP & update is available tell them
         // This is foolishness.
-        // if (event.getPlayer().isOp() && DiscordSRV.updateIsAvailable)
+        // if (event.getPlayer().isOp() && Discord.updateIsAvailable)
         // event.getPlayer().sendMessage(ChatColor.AQUA + "An update to
-        // DiscordSRV is available. Download it at
+        // Discord is available. Download it at
         // http://dev.bukkit.org/bukkit-plugins/discordsrv/");
 
         // Make sure join messages enabled
         if (!this.plugin.getConfig().getBoolean("discord.bridge-functionality.join-leave.join.enabled"))
             return;
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player.hasFlag(Flags.INVISIBLE)) {
             return;
         }
@@ -60,7 +60,7 @@ public class PlayerJoinLeaveListener implements Listener {
         if (!this.plugin.getConfig().getBoolean("discord.bridge-functionality.join-leave.leave.enabled"))
             return;
 
-        TregminePlayer player = plugin.getPlayerOffline(event.getPlayer());
+        GenericPlayer player = plugin.getPlayerOffline(event.getPlayer());
         if (player.hasFlag(Flags.INVISIBLE)) {
             return;
         }

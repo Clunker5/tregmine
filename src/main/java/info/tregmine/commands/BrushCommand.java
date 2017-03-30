@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,7 +31,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer p, String[] args) {
+    public boolean handlePlayer(GenericPlayer p, String[] args) {
         if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
             p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -47,7 +46,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
         }
 
         // Check if an item in hand.
-        if (p.getItemInHand().getAmount() == 0) {
+        if (p.getItemInHand().getAmount() == 0 || p.getItemInHand().getType() == Material.AIR) {
             p.sendMessage(RED + "[Sphere] No item to bind to in hand!");
             return true;
         }
@@ -124,7 +123,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) {
-        TregminePlayer p = tregmine.getPlayer(e.getPlayer());
+        GenericPlayer p = tregmine.getPlayer(e.getPlayer());
         if (!p.getRank().canBrush()) {
             return;
         }

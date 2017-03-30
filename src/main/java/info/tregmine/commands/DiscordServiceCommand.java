@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.dv8tion.jda.core.entities.Icon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +24,7 @@ public class DiscordServiceCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer sender, String[] args) {
+    public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (args.length == 0) {
             if (!sender.isOp())
                 sender.sendMessage("/discordsrv toggle/subscribe/unsubscribe");
@@ -75,7 +74,7 @@ public class DiscordServiceCommand extends AbstractCommand {
             BufferedReader br = new BufferedReader(fr);
 
             List<String> discordsrvMessages = new ArrayList<>();
-            discordsrvMessages.add(ChatColor.RED + "Lines for DiscordSRV from latest.log:");
+            discordsrvMessages.add(ChatColor.RED + "Lines for Discord from latest.log:");
             Boolean done = false;
             while (!done) {
                 String line = null;

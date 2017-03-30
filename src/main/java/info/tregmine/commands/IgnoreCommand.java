@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -15,7 +14,7 @@ public class IgnoreCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String args[]) {
+    public boolean handlePlayer(GenericPlayer player, String args[]) {
         List<String> ignoredPeople;
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -47,7 +46,7 @@ public class IgnoreCommand extends AbstractCommand {
             if (!player.getRank().canViewIgnored())
                 return false;
 
-            TregminePlayer target = tregmine.getPlayerOffline(args[1]);
+            GenericPlayer target = tregmine.getPlayerOffline(args[1]);
 
             if (target == null) {
                 player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[1]);
@@ -72,7 +71,7 @@ public class IgnoreCommand extends AbstractCommand {
             return true;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
 
-            TregminePlayer target = tregmine.getPlayerOffline(args[1]);
+            GenericPlayer target = tregmine.getPlayerOffline(args[1]);
 
             if (target == null) {
                 player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[1]);

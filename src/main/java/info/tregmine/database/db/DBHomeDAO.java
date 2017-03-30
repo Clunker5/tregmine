@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IHomeDAO;
 import org.bukkit.Location;
@@ -64,12 +64,12 @@ public class DBHomeDAO implements IHomeDAO {
     }
 
     @Override
-    public Location getHome(TregminePlayer player) throws DAOException {
+    public Location getHome(GenericPlayer player) throws DAOException {
         return getHome(player.getId(), null, player.getServer());
     }
 
     @Override
-    public Location getHome(TregminePlayer player, String name) throws DAOException {
+    public Location getHome(GenericPlayer player, String name) throws DAOException {
         return getHome(player.getId(), name, player.getServer());
     }
 
@@ -97,7 +97,7 @@ public class DBHomeDAO implements IHomeDAO {
     }
 
     @Override
-    public void insertHome(TregminePlayer player, String name, Location loc) throws DAOException {
+    public void insertHome(GenericPlayer player, String name, Location loc) throws DAOException {
         String sql = "INSERT INTO player_home (player_id, home_name, "
                 + "home_x, home_y, home_z, home_yaw, home_pitch, home_world, "
                 + "home_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

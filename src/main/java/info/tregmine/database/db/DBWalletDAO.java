@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IWalletDAO;
 import org.bukkit.ChatColor;
@@ -19,7 +19,7 @@ public class DBWalletDAO implements IWalletDAO {
     }
 
     @Override
-    public boolean add(TregminePlayer player, long amount) throws DAOException {
+    public boolean add(GenericPlayer player, long amount) throws DAOException {
         String sql = "UPDATE player SET player_wallet = player_wallet + ? " + "WHERE player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -34,7 +34,7 @@ public class DBWalletDAO implements IWalletDAO {
     }
 
     @Override
-    public long balance(TregminePlayer player) throws DAOException {
+    public long balance(GenericPlayer player) throws DAOException {
         String sql = "SELECT player_wallet FROM player WHERE player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -54,7 +54,7 @@ public class DBWalletDAO implements IWalletDAO {
     }
 
     @Override
-    public String formattedBalance(TregminePlayer player) throws DAOException {
+    public String formattedBalance(GenericPlayer player) throws DAOException {
         NumberFormat nf = NumberFormat.getNumberInstance();
         return ChatColor.GOLD + nf.format(balance(player)) + ChatColor.WHITE + " Tregs";
     }
@@ -76,7 +76,7 @@ public class DBWalletDAO implements IWalletDAO {
     }
 
     @Override
-    public boolean take(TregminePlayer player, long amount) throws DAOException {
+    public boolean take(GenericPlayer player, long amount) throws DAOException {
         String sql = "UPDATE player SET player_wallet = player_wallet - ? " + "WHERE player_id = ?";
 
         long newBalance = balance(player) - amount;

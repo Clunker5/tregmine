@@ -143,8 +143,8 @@ discord:
     # %playermax% = maximum player count
     # %date% = current date
     # %totalplayers% = total amount of players to ever join the main world
-    # %uptimemins% = amount of minutes since DiscordSRV has started
-    # %uptimehours% = amount of hours since DiscordSRV has started
+    # %uptimemins% = amount of minutes since Discord has started
+    # %uptimehours% = amount of hours since Discord has started
     # %motd% = motto of the day of the server
     # %serverversion% = server version such as Spigot-1.9
     # %freememory% = free memory of the JVM in MB

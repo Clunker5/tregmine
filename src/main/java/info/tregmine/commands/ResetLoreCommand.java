@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class ResetLoreCommand extends AbstractCommand {
     Tregmine plugin;
-    TregminePlayer player;
+    GenericPlayer player;
 
     public ResetLoreCommand(Tregmine instance) {
         super(instance, "resetlore");
@@ -20,7 +19,7 @@ public class ResetLoreCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer sender, String[] args) {
+    public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (sender.getWorld().getName().equalsIgnoreCase("vanilla") || sender.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;

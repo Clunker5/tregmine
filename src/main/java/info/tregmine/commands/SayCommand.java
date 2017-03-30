@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.discord.entities.EmbedAlertType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -44,7 +43,7 @@ public class SayCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canBeGod()) {
             return true;
         }
@@ -66,7 +65,7 @@ public class SayCommand extends AbstractCommand {
 
         Collection<? extends Player> players = server.getOnlinePlayers();
         for (Player p : players) {
-            TregminePlayer current = tregmine.getPlayer(p);
+            GenericPlayer current = tregmine.getPlayer(p);
             if (current.getRank().canBeGod()) {
                 current.sendMessage(new TextComponent(DARK_AQUA + "/say used by: "), player.getChatName());
             }

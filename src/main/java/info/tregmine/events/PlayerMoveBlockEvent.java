@@ -1,6 +1,6 @@
 package info.tregmine.events;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -11,9 +11,9 @@ public final class PlayerMoveBlockEvent extends Event implements Cancellable {
     private boolean cancelled;
     private Location from;
     private Location to;
-    private TregminePlayer player;
+    private GenericPlayer player;
 
-    public PlayerMoveBlockEvent(Location fromLoc, Location toLoc, TregminePlayer playerInvolved) {
+    public PlayerMoveBlockEvent(Location fromLoc, Location toLoc, GenericPlayer playerInvolved) {
         this.from = fromLoc;
         this.to = toLoc;
         this.player = playerInvolved;
@@ -36,7 +36,7 @@ public final class PlayerMoveBlockEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public TregminePlayer getPlayer() {
+    public GenericPlayer getPlayer() {
         return player;
     }
 

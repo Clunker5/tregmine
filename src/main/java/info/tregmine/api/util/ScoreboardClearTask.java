@@ -1,6 +1,6 @@
 package info.tregmine.api.util;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
@@ -8,13 +8,13 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 public class ScoreboardClearTask implements Runnable {
-    private TregminePlayer player;
+    private GenericPlayer player;
 
-    private ScoreboardClearTask(TregminePlayer player) {
+    private ScoreboardClearTask(GenericPlayer player) {
         this.player = player;
     }
 
-    public static void start(Plugin plugin, TregminePlayer player) {
+    public static void start(Plugin plugin, GenericPlayer player) {
         Runnable runnable = new ScoreboardClearTask(player);
 
         Server server = Bukkit.getServer();

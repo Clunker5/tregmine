@@ -1,9 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Nickname;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Property;
+import info.tregmine.api.GenericPlayer.Property;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class ChangeNameCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 2) {
             return false;
         }

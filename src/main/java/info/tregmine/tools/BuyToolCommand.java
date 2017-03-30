@@ -1,6 +1,7 @@
 package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.commands.AbstractCommand;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ public class BuyToolCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         PlayerInventory inv = player.getInventory();
         Material price = Material.DIAMOND_BLOCK;
         int total = 16;

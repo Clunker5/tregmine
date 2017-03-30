@@ -1,9 +1,9 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Badge;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.ChatState;
+import info.tregmine.api.GenericPlayer.ChatState;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.database.*;
 import info.tregmine.events.TregminePortalEvent;
@@ -33,23 +33,23 @@ public class TradeCommand extends AbstractCommand implements Listener {
     String tradePre = YELLOW + "[Trade] ";
     String type = "";
     boolean isIllegal = false;
-    private Map<TregminePlayer, TradeContext> activeTrades;
+    private Map<GenericPlayer, TradeContext> activeTrades;
 
     public TradeCommand(Tregmine tregmine) {
         super(tregmine, "trade");
 
-        activeTrades = new HashMap<TregminePlayer, TradeContext>();
+        activeTrades = new HashMap<>();
 
         PluginManager pluginMgm = tregmine.getServer().getPluginManager();
         pluginMgm.registerEvents(this, tregmine);
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 1) {
             return false;
         }
-        if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
+        if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
             player.sendMessage(RED + "A trade is already in progress!");
             return true;
         }
@@ -57,14 +57,14 @@ public class TradeCommand extends AbstractCommand implements Listener {
         Server server = tregmine.getServer();
         String pattern = args[0];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: error message
             return true;
         }
 
-        TregminePlayer target = candidates.get(0);
-        if (target.getChatState() != TregminePlayer.ChatState.CHAT) {
+        GenericPlayer target = candidates.get(0);
+        if (target.getChatState() != GenericPlayer.ChatState.CHAT) {
             player.sendMessage(RED + target.getName() + "is in a trade!");
             return true;
         }
@@ -76,7 +76,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
         double distance = MathUtil.calcDistance2d(player.getLocation(), target.getLocation());
 
-        if (!target.hasFlag(TregminePlayer.Flags.INVISIBLE) && (distance > player.getRank().getTradeDistance(player))) {
+        if (!target.hasFlag(GenericPlayer.Flags.INVISIBLE) && (distance > player.getRank().getTradeDistance(player))) {
             player.sendMessage(RED + "You can only trade with people less than "
                     + player.getRank().getTradeDistance(player) + " blocks away.");
             return true;
@@ -94,8 +94,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
         activeTrades.put(player, ctx);
         activeTrades.put(target, ctx);
 
-        player.setChatState(TregminePlayer.ChatState.TRADE);
-        target.setChatState(TregminePlayer.ChatState.TRADE);
+        player.setChatState(GenericPlayer.ChatState.TRADE);
+        target.setChatState(GenericPlayer.ChatState.TRADE);
 
         player.sendMessage(YELLOW + "[Trade] You are now trading with " + target.getName() + YELLOW
                 + ". What do you want " + "to offer?");
@@ -115,7 +115,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        TregminePlayer player = tregmine.getPlayer((Player) event.getPlayer());
+        GenericPlayer player = tregmine.getPlayer((Player) event.getPlayer());
         TradeContext ctx = activeTrades.get(player);
 
         if (ctx == null) {
@@ -131,7 +131,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
             activeTrades.remove(ctx.secondPlayer);
             return;
         }
-        TregminePlayer target = ctx.secondPlayer;
+        GenericPlayer target = ctx.secondPlayer;
 
         target.sendMessage(tradePre + player.getName() + " " + YELLOW + " is offering: ");
 
@@ -203,8 +203,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        TregminePlayer player = tregmine.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.TRADE) {
+        GenericPlayer player = tregmine.getPlayer(event.getPlayer());
+        if (player.getChatState() != GenericPlayer.ChatState.TRADE) {
             return;
         }
 
@@ -215,8 +215,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
             return;
         }
 
-        TregminePlayer first = ctx.firstPlayer;
-        TregminePlayer second = ctx.secondPlayer;
+        GenericPlayer first = ctx.firstPlayer;
+        GenericPlayer second = ctx.secondPlayer;
 
         String text = event.getMessage();
         String[] args = text.split(" ");
@@ -226,8 +226,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
         // Tregmine.LOGGER.info("state: " + ctx.state);
 
         if ("quit".equals(args[0]) && args.length == 1) {
-            first.setChatState(TregminePlayer.ChatState.CHAT);
-            second.setChatState(TregminePlayer.ChatState.CHAT);
+            first.setChatState(GenericPlayer.ChatState.CHAT);
+            second.setChatState(GenericPlayer.ChatState.CHAT);
             activeTrades.remove(first);
             activeTrades.remove(second);
             if (ctx.state == TradeState.ITEM_SELECT) {
@@ -367,8 +367,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
             }
 
             // Finalize
-            first.setChatState(TregminePlayer.ChatState.CHAT);
-            second.setChatState(TregminePlayer.ChatState.CHAT);
+            first.setChatState(GenericPlayer.ChatState.CHAT);
+            second.setChatState(GenericPlayer.ChatState.CHAT);
             activeTrades.remove(first);
             activeTrades.remove(second);
 
@@ -388,11 +388,11 @@ public class TradeCommand extends AbstractCommand implements Listener {
             return;
         }
 
-        TregminePlayer first = ctx.firstPlayer;
-        TregminePlayer second = ctx.secondPlayer;
+        GenericPlayer first = ctx.firstPlayer;
+        GenericPlayer second = ctx.secondPlayer;
 
-        first.setChatState(TregminePlayer.ChatState.CHAT);
-        second.setChatState(TregminePlayer.ChatState.CHAT);
+        first.setChatState(GenericPlayer.ChatState.CHAT);
+        second.setChatState(GenericPlayer.ChatState.CHAT);
 
         activeTrades.remove(first);
         activeTrades.remove(second);
@@ -411,8 +411,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
     private static class TradeContext {
         Inventory inventory;
-        TregminePlayer firstPlayer;
-        TregminePlayer secondPlayer;
+        GenericPlayer firstPlayer;
+        GenericPlayer secondPlayer;
         TradeState state;
         int bid;
     }

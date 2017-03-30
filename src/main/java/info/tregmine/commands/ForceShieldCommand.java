@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -15,24 +14,24 @@ public class ForceShieldCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length < 1) {
             player.sendMessage("Your forceblock is set to "
-                    + (player.hasFlag(TregminePlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
+                    + (player.hasFlag(GenericPlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
             return true;
         }
 
         String state = args[0];
 
         if ("on".equalsIgnoreCase(state)) {
-            player.setFlag(TregminePlayer.Flags.FORCESHIELD);
+            player.setFlag(GenericPlayer.Flags.FORCESHIELD);
             player.sendMessage(AQUA + "Channel Forcing is now blocked for you.");
         } else if ("off".equalsIgnoreCase(state)) {
-            player.removeFlag(TregminePlayer.Flags.FORCESHIELD);
+            player.removeFlag(GenericPlayer.Flags.FORCESHIELD);
             player.sendMessage(AQUA + "Channel Forcing is now allowed for you.");
         } else if ("status".equalsIgnoreCase(state)) {
             player.sendMessage("Your forceblock is set to "
-                    + (player.hasFlag(TregminePlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
+                    + (player.hasFlag(GenericPlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
         } else {
             player.sendMessage(RED + "The commands are /forceblock on, /forceblock off and /forceblock status.");
         }

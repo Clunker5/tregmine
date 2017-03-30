@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.coreprotect.TregmineCoreProtectAPI;
 import info.tregmine.database.*;
 import org.bukkit.GameMode;
@@ -27,7 +27,7 @@ public class TregmineBlockListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         Block block = event.getBlock();
         Material material = block.getType();
 
@@ -81,7 +81,7 @@ public class TregmineBlockListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (event.getBlock().getType().equals(Material.LAVA)) {
             if (!player.getRank().canPlaceBannedBlocks()) {
                 event.setCancelled(true);

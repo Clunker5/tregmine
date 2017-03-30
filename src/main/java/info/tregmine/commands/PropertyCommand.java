@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -13,9 +12,9 @@ import java.util.List;
 public class PropertyCommand extends AbstractCommand {
     private Tregmine a;
     // b is the sender and d is the target.
-    private TregminePlayer b;
-    private List<TregminePlayer> e;
-    private TregminePlayer d;
+    private GenericPlayer b;
+    private List<GenericPlayer> e;
+    private GenericPlayer d;
     private String[] c;
 
     public PropertyCommand(Tregmine instance) {
@@ -24,7 +23,7 @@ public class PropertyCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String args[]) {
+    public boolean handlePlayer(GenericPlayer player, String args[]) {
         b = player;
         c = args;
         if (!b.getIsAdmin()) {

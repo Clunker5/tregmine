@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +25,7 @@ public class DamageListener implements Listener {
     public void onDamage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player))
             return;
-        TregminePlayer player = plugin.getPlayer((Player) event.getDamager());
+        GenericPlayer player = plugin.getPlayer((Player) event.getDamager());
 
         ItemStack item = player.getItemInHand();
         if (item.hasItemMeta()) {
@@ -87,7 +87,7 @@ public class DamageListener implements Listener {
     public void onTakeDamage(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player))
             return;
-        TregminePlayer player = plugin.getPlayer((Player) event.getEntity());
+        GenericPlayer player = plugin.getPlayer((Player) event.getEntity());
 
         ItemStack[] armor = player.getEquipment().getArmorContents();
         int armorBonus = 0;

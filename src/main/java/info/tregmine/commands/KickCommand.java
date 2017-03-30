@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -40,13 +39,13 @@ public class KickCommand extends AbstractCommand {
 
         String pattern = args[0];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: error message
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
 
         // server.broadcastMessage("GOD kicked " + victim.getChatName() + ".");
         plugin.broadcast(new TextComponent(GOLD + "" + ITALIC + "GOD" + RESET + "" + AQUA + " kicked "),
@@ -57,7 +56,7 @@ public class KickCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canKick()) {
             return false;
         }
@@ -69,13 +68,13 @@ public class KickCommand extends AbstractCommand {
         String pattern = args[0];
         String message = argsToMessage(args);
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(pattern);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
             // TODO: error message
             return true;
         }
 
-        TregminePlayer victim = candidates.get(0);
+        GenericPlayer victim = candidates.get(0);
         plugin.broadcast(new TextComponent(player.getChatName(), new TextComponent(AQUA + " kicked "),
                 victim.getChatName(), new TextComponent(AQUA + ": " + message)));
         LOGGER.info(victim.getName() + " kicked by " + player.getName());

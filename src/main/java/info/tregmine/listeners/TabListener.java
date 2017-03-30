@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
@@ -28,8 +28,8 @@ public class TabListener implements Listener// , TabCompleter
         List<String> nonOps = new ArrayList<String>();
         List<String> result = new ArrayList<String>();
 
-        for (TregminePlayer player : plugin.getOnlinePlayers()) {
-            if (!player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+        for (GenericPlayer player : plugin.getOnlinePlayers()) {
+            if (!player.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 nonOps.add(player.getName());
             }
         }

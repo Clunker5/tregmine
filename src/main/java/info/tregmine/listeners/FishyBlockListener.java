@@ -2,7 +2,7 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.FishyBlock;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.*;
 import info.tregmine.database.IFishyBlockDAO.TransactionType;
 import info.tregmine.quadtree.Point;
@@ -79,7 +79,7 @@ public class FishyBlockListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         Block block = event.getBlock();
         Location loc = block.getLocation();
@@ -129,7 +129,7 @@ public class FishyBlockListener implements Listener {
             FishyBlock currentFishyBlock = player.getCurrentFishyBlock();
             if (currentFishyBlock.getId() == fishyBlock.getId()) {
                 player.setCurrentFishyBlock(null);
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 event.setCancelled(true);
             }
         }
@@ -138,10 +138,10 @@ public class FishyBlockListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.FISHY_SETUP
-                && player.getChatState() != TregminePlayer.ChatState.FISHY_WITHDRAW
-                && player.getChatState() != TregminePlayer.ChatState.FISHY_BUY) {
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getChatState() != GenericPlayer.ChatState.FISHY_SETUP
+                && player.getChatState() != GenericPlayer.ChatState.FISHY_WITHDRAW
+                && player.getChatState() != GenericPlayer.ChatState.FISHY_BUY) {
             return;
         }
         String message = event.getMessage();
@@ -157,11 +157,11 @@ public class FishyBlockListener implements Listener {
                 player.getChatName(), new TextComponent(ChatColor.WHITE + "> " + text));
         event.setCancelled(true);
 
-        if (player.getChatState() == TregminePlayer.ChatState.FISHY_SETUP) {
+        if (player.getChatState() == GenericPlayer.ChatState.FISHY_SETUP) {
 
             FishyBlock newFishyBlock = player.getNewFishyBlock();
             if (newFishyBlock == null) {
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 return;
             }
@@ -183,7 +183,7 @@ public class FishyBlockListener implements Listener {
                     fishyBlocks.put(newFishyBlock.getSignLocation(), newFishyBlock);
 
                     player.setNewFishyBlock(null);
-                    player.setChatState(TregminePlayer.ChatState.CHAT);
+                    player.setChatState(GenericPlayer.ChatState.CHAT);
                     event.setCancelled(true);
                     // Create info sign
                     World world = player.getWorld();
@@ -200,7 +200,7 @@ public class FishyBlockListener implements Listener {
                     return;
                 }
             }
-        } else if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW) {
+        } else if (player.getChatState() == GenericPlayer.ChatState.FISHY_WITHDRAW) {
             FishyBlock fishyBlock = player.getCurrentFishyBlock();
 
             if ("changecost".equalsIgnoreCase(textSplit[0])) {
@@ -230,7 +230,7 @@ public class FishyBlockListener implements Listener {
 
                 player.sendMessage(ChatColor.GREEN + "Cost changed to " + cost + " tregs.");
 
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
 
@@ -285,7 +285,7 @@ public class FishyBlockListener implements Listener {
                     player.sendMessage(ChatColor.GREEN + "" + added + " items withdrawn successfully.");
                 }
 
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 player.setCurrentFishyBlock(null);
                 event.setCancelled(true);
                 updateSign(player.getWorld(), fishyBlock);
@@ -299,13 +299,13 @@ public class FishyBlockListener implements Listener {
                 }
             } else if ("quit".equalsIgnoreCase(textSplit[0])) {
                 player.sendMessage(ChatColor.GREEN + "Quitting without action.");
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             } else {
                 player.sendMessage(ChatColor.RED + "Type withdraw, changecost or quit.");
             }
-        } else if (player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
+        } else if (player.getChatState() == GenericPlayer.ChatState.FISHY_BUY) {
             FishyBlock fishyBlock = player.getCurrentFishyBlock();
 
             if ("buy".equalsIgnoreCase(textSplit[0])) {
@@ -381,7 +381,7 @@ public class FishyBlockListener implements Listener {
                         player.sendMessage(ChatColor.GREEN + "" + added + " items added to your inventory.");
                     }
 
-                    TregminePlayer seller = plugin.getPlayerOffline(fishyBlock.getPlayerId());
+                    GenericPlayer seller = plugin.getPlayerOffline(fishyBlock.getPlayerId());
 
                     if (walletDAO.take(player, cost)) {
                         walletDAO.add(seller, cost);
@@ -400,12 +400,12 @@ public class FishyBlockListener implements Listener {
 
                 player.setCurrentFishyBlock(null);
                 player.setFishyBuyCount(0);
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 updateSign(player.getWorld(), fishyBlock);
             } else if ("quit".equalsIgnoreCase(textSplit[0])) {
                 player.sendMessage(ChatColor.GREEN + "Quitting without buying.");
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 event.setCancelled(true);
                 player.setCurrentFishyBlock(null);
             } else {
@@ -424,8 +424,8 @@ public class FishyBlockListener implements Listener {
 
         Map<Location, FishyBlock> fishyBlocks = plugin.getFishyBlocks();
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
             return;
         }
 
@@ -444,8 +444,8 @@ public class FishyBlockListener implements Listener {
                 return;
             }
 
-            if (player.getChatState() == TregminePlayer.ChatState.FISHY_WITHDRAW
-                    || player.getChatState() == TregminePlayer.ChatState.FISHY_BUY) {
+            if (player.getChatState() == GenericPlayer.ChatState.FISHY_WITHDRAW
+                    || player.getChatState() == GenericPlayer.ChatState.FISHY_BUY) {
 
                 event.setCancelled(true);
                 return;
@@ -597,7 +597,7 @@ public class FishyBlockListener implements Listener {
                             + "sold by this block.");
                     player.sendMessage(ChatColor.YELLOW + "Type \"quit\" to exit without doing anything.");
 
-                    player.setChatState(TregminePlayer.ChatState.FISHY_WITHDRAW);
+                    player.setChatState(GenericPlayer.ChatState.FISHY_WITHDRAW);
                     player.setCurrentFishyBlock(fishyBlock);
                 }
             }
@@ -610,7 +610,7 @@ public class FishyBlockListener implements Listener {
                         + " tregs. Type \"buy x\" to buy, " + "with x being the number of items you want to buy. Type "
                         + "\"quit\" to exit without buying anything.");
 
-                player.setChatState(TregminePlayer.ChatState.FISHY_BUY);
+                player.setChatState(GenericPlayer.ChatState.FISHY_BUY);
                 player.setCurrentFishyBlock(fishyBlock);
             }
         } else if (block.getType() == Material.OBSIDIAN) {
@@ -731,7 +731,7 @@ public class FishyBlockListener implements Listener {
                 newFishyBlock.setMaterial(material);
                 newFishyBlock.setEnchantments(enchantments);
 
-                player.setChatState(TregminePlayer.ChatState.FISHY_SETUP);
+                player.setChatState(GenericPlayer.ChatState.FISHY_SETUP);
 
                 if (material.getData() != 0) {
                     player.sendMessage(ChatColor.GREEN + "This fishy block will sell "
@@ -768,7 +768,7 @@ public class FishyBlockListener implements Listener {
         }
     }
 
-    private int transferToInventory(FishyBlock fishyBlock, TregminePlayer player, int num) {
+    private int transferToInventory(FishyBlock fishyBlock, GenericPlayer player, int num) {
         MaterialData type = fishyBlock.getMaterial();
         Material material = type.getItemType();
 
@@ -842,7 +842,7 @@ public class FishyBlockListener implements Listener {
                 // signBlock.getState().setData(new
                 // MaterialData(Material.WALL_SIGN));
 
-                TregminePlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
+                GenericPlayer player = plugin.getPlayerOffline(fishyBlock.getPlayerId());
                 MaterialData material = fishyBlock.getMaterial();
 
                 Sign sign = (Sign) signBlock.getState();

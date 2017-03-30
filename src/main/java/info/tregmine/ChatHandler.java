@@ -1,6 +1,6 @@
 package info.tregmine;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.events.TregmineChatEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
@@ -42,7 +42,7 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
      * Do not call directly! Calls are synchronized by
      * WebServer.executeChatAction.
      **/
-    public void broadcastToWeb(TregminePlayer sender, String channel, String text) {
+    public void broadcastToWeb(GenericPlayer sender, String channel, String text) {
         try {
             JSONObject obj = new JSONObject();
             obj.put("action", "msg");
@@ -118,14 +118,14 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
                 }
 
                 WebServer server = tregmine.getWebServer();
-                Map<String, TregminePlayer> authTokens = server.getAuthTokens();
+                Map<String, GenericPlayer> authTokens = server.getAuthTokens();
                 if (authTokens.get(authToken) == null) {
                     Tregmine.LOGGER.info("Auth token " + authToken + " not found.");
                     socket.sendSystemMessage("Auth token not found.");
                     return;
                 }
 
-                TregminePlayer sender = authTokens.get(authToken);
+                GenericPlayer sender = authTokens.get(authToken);
 
                 Date kickTime = kickedPlayers.get(sender.getId());
                 if (kickTime != null) {
@@ -150,9 +150,9 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
         }
     }
 
-    public boolean isOnline(TregminePlayer player) {
+    public boolean isOnline(GenericPlayer player) {
         for (ChatSocket socket : sockets) {
-            TregminePlayer current = socket.getPlayer();
+            GenericPlayer current = socket.getPlayer();
             if (current == null) {
                 continue;
             }
@@ -168,9 +168,9 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
      * Do not call directly! Calls are synchronized by
      * WebServer.executeChatAction.
      **/
-    public void kickPlayer(TregminePlayer sender, TregminePlayer victim, String message) {
+    public void kickPlayer(GenericPlayer sender, GenericPlayer victim, String message) {
         for (ChatSocket socket : sockets) {
-            TregminePlayer current = socket.getPlayer();
+            GenericPlayer current = socket.getPlayer();
             if (current == null) {
                 continue;
             }
@@ -184,10 +184,10 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
         }
     }
 
-    public List<TregminePlayer> listPlayers() {
-        List<TregminePlayer> players = new ArrayList<TregminePlayer>();
+    public List<GenericPlayer> listPlayers() {
+        List<GenericPlayer> players = new ArrayList<GenericPlayer>();
         for (ChatSocket socket : sockets) {
-            TregminePlayer current = socket.getPlayer();
+            GenericPlayer current = socket.getPlayer();
             if (current == null) {
                 continue;
             }
@@ -206,18 +206,18 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
     public static class ChatSocket extends WebSocketAdapter {
         private ChatHandler handler;
         private Session session;
-        private TregminePlayer player;
+        private GenericPlayer player;
 
         public ChatSocket(ChatHandler handler) {
             this.handler = handler;
             this.player = null;
         }
 
-        public TregminePlayer getPlayer() {
+        public GenericPlayer getPlayer() {
             return player;
         }
 
-        public void setPlayer(TregminePlayer v) {
+        public void setPlayer(GenericPlayer v) {
             this.player = v;
         }
 

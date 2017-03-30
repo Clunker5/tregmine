@@ -1,6 +1,6 @@
 package info.tregmine;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.web.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -19,7 +19,7 @@ public class WebServer implements Runnable {
     private Server webServer;
     private WebHandler webHandler;
     private ChatHandler chatHandler;
-    private Map<String, TregminePlayer> authTokens;
+    private Map<String, GenericPlayer> authTokens;
     private BlockingQueue<ChatAction> messageQueue;
     private Thread thread = null;
     private boolean running = true;
@@ -84,7 +84,7 @@ public class WebServer implements Runnable {
         messageQueue.offer(msg);
     }
 
-    public Map<String, TregminePlayer> getAuthTokens() {
+    public Map<String, GenericPlayer> getAuthTokens() {
         return authTokens;
     }
 
@@ -96,7 +96,7 @@ public class WebServer implements Runnable {
         return webHandler;
     }
 
-    public boolean isPlayerOnWeb(TregminePlayer player) {
+    public boolean isPlayerOnWeb(GenericPlayer player) {
         return chatHandler.isOnline(player);
     }
 
@@ -147,11 +147,11 @@ public class WebServer implements Runnable {
     }
 
     public static class ChatMessage implements ChatAction {
-        private TregminePlayer sender;
+        private GenericPlayer sender;
         private String channel;
         private String text;
 
-        public ChatMessage(TregminePlayer sender, String channel, String text) {
+        public ChatMessage(GenericPlayer sender, String channel, String text) {
             this.sender = sender;
             this.channel = channel;
             this.text = text;
@@ -166,7 +166,7 @@ public class WebServer implements Runnable {
             return channel;
         }
 
-        public TregminePlayer getSender() {
+        public GenericPlayer getSender() {
             return sender;
         }
 
@@ -242,11 +242,11 @@ public class WebServer implements Runnable {
     }
 
     public static class KickAction implements ChatAction {
-        private TregminePlayer sender;
-        private TregminePlayer victim;
+        private GenericPlayer sender;
+        private GenericPlayer victim;
         private String message;
 
-        public KickAction(TregminePlayer sender, TregminePlayer victim, String message) {
+        public KickAction(GenericPlayer sender, GenericPlayer victim, String message) {
             this.sender = sender;
             this.victim = victim;
             this.message = message;

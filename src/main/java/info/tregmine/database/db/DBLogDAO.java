@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.ILogDAO;
 import org.bukkit.Location;
@@ -24,7 +24,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public Set<String> getAliases(TregminePlayer player) throws DAOException {
+    public Set<String> getAliases(GenericPlayer player) throws DAOException {
         String sql = "SELECT DISTINCT player_name FROM player " + "INNER JOIN player_login USING (player_id) "
                 + "WHERE login_ip = ? ";
 
@@ -47,7 +47,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public Date getLastSeen(TregminePlayer player) throws DAOException {
+    public Date getLastSeen(GenericPlayer player) throws DAOException {
         String sql = "SELECT * FROM player_login WHERE player_id= ? ";
         sql += "ORDER BY login_timestamp DESC LIMIT 1";
 
@@ -68,7 +68,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public void insertChatMessage(TregminePlayer player, String channel, String message) throws DAOException {
+    public void insertChatMessage(GenericPlayer player, String channel, String message) throws DAOException {
         String sql = "INSERT INTO player_chatlog (player_id, chatlog_timestamp, "
                 + "chatlog_channel, chatlog_message) ";
         sql += "VALUES (?, unix_timestamp(), ?, ?)";
@@ -84,7 +84,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public void insertGiveLog(TregminePlayer sender, TregminePlayer recipient, ItemStack stack) throws DAOException {
+    public void insertGiveLog(GenericPlayer sender, GenericPlayer recipient, ItemStack stack) throws DAOException {
         String sql = "INSERT INTO player_givelog (sender_id, recipient_id, "
                 + "givelog_material, givelog_data, givelog_meta, " + "givelog_count, givelog_timestamp) ";
         sql += "VALUES (?, ?, ?, ?, ?, ?, unix_timestamp())";
@@ -109,7 +109,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public void insertLogin(TregminePlayer player, boolean logout, int onlinePlayers) throws DAOException {
+    public void insertLogin(GenericPlayer player, boolean logout, int onlinePlayers) throws DAOException {
         String sql = "INSERT INTO player_login (player_id, login_timestamp, "
                 + "login_action, login_country, login_city, login_ip, " + "login_hostname, login_onlineplayers) ";
         sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?)";
@@ -129,7 +129,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public void insertOreLog(TregminePlayer player, Location loc, Material material) throws DAOException {
+    public void insertOreLog(GenericPlayer player, Location loc, Material material) throws DAOException {
         String sql = "INSERT INTO player_orelog (player_id, orelog_material, "
                 + "orelog_timestamp, orelog_x, orelog_y, orelog_z, orelog_world) ";
         sql += "VALUES (?, ?, unix_timestamp(), ?, ?, ?, ?)";
@@ -148,7 +148,7 @@ public class DBLogDAO implements ILogDAO {
     }
 
     @Override
-    public void insertWarpLog(TregminePlayer player, int warpId) throws DAOException {
+    public void insertWarpLog(GenericPlayer player, int warpId) throws DAOException {
         String sql = "INSERT INTO warp_log (player_id, warp_id, log_timestamp) ";
         sql += "VALUES (?, ?, unix_timestamp())";
 

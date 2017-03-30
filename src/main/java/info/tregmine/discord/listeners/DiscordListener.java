@@ -1,7 +1,7 @@
 package info.tregmine.discord.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -19,10 +19,10 @@ public class DiscordListener extends ListenerAdapter {
 
     String lastMessageSent = "";
     private Server server;
-    private DiscordSRV srv;
+    private Discord srv;
     private Tregmine plugin;
 
-    public DiscordListener(DiscordSRV srv) {
+    public DiscordListener(Discord srv) {
         this.srv = srv;
         this.plugin = this.srv.getPlugin();
         this.server = this.plugin.getServer();

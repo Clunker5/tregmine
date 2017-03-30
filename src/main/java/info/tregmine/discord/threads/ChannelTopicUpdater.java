@@ -1,10 +1,10 @@
 package info.tregmine.discord.threads;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Lag;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Flags;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.api.GenericPlayer.Flags;
+import info.tregmine.discord.Discord;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.utils.PermissionUtil;
@@ -19,9 +19,9 @@ public class ChannelTopicUpdater extends Thread {
 
     JDA api;
     Tregmine plugin;
-    DiscordSRV srv;
+    Discord srv;
 
-    public ChannelTopicUpdater(DiscordSRV srv) {
+    public ChannelTopicUpdater(Discord srv) {
         this.srv = srv;
         this.api = this.srv.getAPI();
         this.plugin = this.srv.getPlugin();
@@ -34,7 +34,7 @@ public class ChannelTopicUpdater extends Thread {
 
         int onlineplayers = this.srv.getOnlinePlayers().size();
         for (Player online : this.srv.getOnlinePlayers()) {
-            TregminePlayer player = plugin.getPlayer(online);
+            GenericPlayer player = plugin.getPlayer(online);
             if (player.hasFlag(Flags.INVISIBLE))
                 onlineplayers = onlineplayers - 1;
         }

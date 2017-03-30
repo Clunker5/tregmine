@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -15,28 +14,28 @@ public class ChannelViewCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canChannelView()) {
             return true;
         }
 
         if (args.length < 1) {
             player.sendMessage("Your ChannelView is set to "
-                    + (player.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");
+                    + (player.hasFlag(GenericPlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");
             return true;
         }
 
         String state = args[0];
 
         if ("on".equalsIgnoreCase(state)) {
-            player.setFlag(TregminePlayer.Flags.CHANNEL_VIEW);
+            player.setFlag(GenericPlayer.Flags.CHANNEL_VIEW);
             player.sendMessage(AQUA + "Channel View display is now turned on for you.");
         } else if ("off".equalsIgnoreCase(state)) {
-            player.removeFlag(TregminePlayer.Flags.CHANNEL_VIEW);
+            player.removeFlag(GenericPlayer.Flags.CHANNEL_VIEW);
             player.sendMessage(AQUA + "Channel View display is now turned off for you.");
         } else if ("status".equalsIgnoreCase(state)) {
             player.sendMessage("Your Channel View display is set to "
-                    + (player.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");
+                    + (player.hasFlag(GenericPlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");
         } else {
             player.sendMessage(
                     RED + "The commands are /channelview on, /channelview off and /channelview status.");

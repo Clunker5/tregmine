@@ -1,7 +1,7 @@
 package info.tregmine.database.db;
 
 import info.tregmine.api.FishyBlock;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IFishyBlockDAO;
 import org.bukkit.Location;
@@ -128,7 +128,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO {
     }
 
     @Override
-    public void insertTransaction(FishyBlock fishyBlock, TregminePlayer player, TransactionType type, int amount)
+    public void insertTransaction(FishyBlock fishyBlock, GenericPlayer player, TransactionType type, int amount)
             throws DAOException {
         String sql = "INSERT INTO fishyblock_transaction (fishyblock_id, "
                 + "player_id, transaction_type, transaction_timestamp, "

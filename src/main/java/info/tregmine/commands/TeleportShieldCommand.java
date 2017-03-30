@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -15,28 +14,28 @@ public class TeleportShieldCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canShieldTeleports()) {
             return true;
         }
 
         if (args.length < 1) {
             player.sendMessage(
-                    "Your tpblock is set to " + (player.hasFlag(TregminePlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
+                    "Your tpblock is set to " + (player.hasFlag(GenericPlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
             return true;
         }
 
         String state = args[0];
 
         if ("on".equalsIgnoreCase(state)) {
-            player.setFlag(TregminePlayer.Flags.TPSHIELD);
+            player.setFlag(GenericPlayer.Flags.TPSHIELD);
             player.sendMessage(AQUA + "Teleportation is now blocked to you.");
         } else if ("off".equalsIgnoreCase(state)) {
-            player.removeFlag(TregminePlayer.Flags.TPSHIELD);
+            player.removeFlag(GenericPlayer.Flags.TPSHIELD);
             player.sendMessage(AQUA + "Teleportation is now allowed to you.");
         } else if ("status".equalsIgnoreCase(state)) {
             player.sendMessage(
-                    "Your tpblock is set to " + (player.hasFlag(TregminePlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
+                    "Your tpblock is set to " + (player.hasFlag(GenericPlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
         } else {
             player.sendMessage(RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
         }

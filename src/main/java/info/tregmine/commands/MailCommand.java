@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMailDAO;
@@ -34,7 +33,7 @@ public class MailCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             sendHelp(player);
             return true;
@@ -151,7 +150,7 @@ public class MailCommand extends AbstractCommand {
         }
     }
 
-    public void sendHelp(TregminePlayer player) {
+    public void sendHelp(GenericPlayer player) {
         String[] help = new String[6];
         help[0] = ChatColor.AQUA + "****Tregmine Internal****";
         help[1] = ChatColor.AQUA + "To send a message, type " + ChatColor.GRAY + "/mail send <player> <message>";
@@ -172,23 +171,23 @@ public class MailCommand extends AbstractCommand {
 
     public boolean sendMailNotification(boolean isWeb, String receiver, String sender, Tregmine tregmine) {
         if (!isWeb) {
-            List<TregminePlayer> candidates1 = tregmine.matchPlayer(sender);
-            List<TregminePlayer> candidates = tregmine.matchPlayer(receiver);
+            List<GenericPlayer> candidates1 = tregmine.matchPlayer(sender);
+            List<GenericPlayer> candidates = tregmine.matchPlayer(receiver);
             if (candidates.size() != 1 || candidates1.size() != 1) {
                 return false;
             }
-            TregminePlayer receiverUser = candidates.get(0);
-            TregminePlayer senderUser = candidates1.get(0);
+            GenericPlayer receiverUser = candidates.get(0);
+            GenericPlayer senderUser = candidates1.get(0);
             receiverUser.sendMessage(senderUser.decideVS(receiverUser),
                     new TextComponent(ChatColor.AQUA + " sent you a message! Use /mail read to view it. "));
             return true;
         } else {
             // Web, even though its not implemented.
-            List<TregminePlayer> candidates = tregmine.matchPlayer(receiver);
+            List<GenericPlayer> candidates = tregmine.matchPlayer(receiver);
             if (candidates.size() != 1) {
                 return false;
             }
-            TregminePlayer receiverUser = candidates.get(0);
+            GenericPlayer receiverUser = candidates.get(0);
             receiverUser.sendMessage(ChatColor.AQUA + sender + " sent you a message! Use /mail read to view it.");
             return false;
         }

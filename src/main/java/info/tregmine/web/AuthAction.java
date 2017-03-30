@@ -3,8 +3,8 @@ package info.tregmine.web;
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
 import info.tregmine.WebServer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -26,7 +26,7 @@ public class AuthAction implements WebHandler.Action {
         this.playerId = playerId;
     }
 
-    private boolean checkForBan(Tregmine tregmine, TregminePlayer player) {
+    private boolean checkForBan(Tregmine tregmine, GenericPlayer player) {
         try (IContext ctx = tregmine.createContext()) {
             IPlayerReportDAO reportDAO = ctx.getPlayerReportDAO();
             List<PlayerReport> reports = reportDAO.getReportsBySubject(player);
@@ -80,12 +80,12 @@ public class AuthAction implements WebHandler.Action {
     @Override
     public void queryGameState(Tregmine tregmine) {
         WebServer server = tregmine.getWebServer();
-        Map<String, TregminePlayer> authTokens = server.getAuthTokens();
+        Map<String, GenericPlayer> authTokens = server.getAuthTokens();
 
         // look for existing tokens
-        for (Map.Entry<String, TregminePlayer> entry : authTokens.entrySet()) {
+        for (Map.Entry<String, GenericPlayer> entry : authTokens.entrySet()) {
             String currentToken = entry.getKey();
-            TregminePlayer currentPlayer = entry.getValue();
+            GenericPlayer currentPlayer = entry.getValue();
             if (currentPlayer.getId() == playerId) {
                 if (!checkForBan(tregmine, currentPlayer)) {
                     token = currentToken;
@@ -103,7 +103,7 @@ public class AuthAction implements WebHandler.Action {
         }
 
         // otherwise, retrieve player from db...
-        TregminePlayer player = tregmine.getPlayerOffline(playerId);
+        GenericPlayer player = tregmine.getPlayerOffline(playerId);
         if (player == null) {
             found = false;
             return;

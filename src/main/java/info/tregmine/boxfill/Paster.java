@@ -1,6 +1,6 @@
 package info.tregmine.boxfill;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class Paster implements Runnable {
     private History undoHistory;
-    private TregminePlayer player;
+    private GenericPlayer player;
     private World world;
     private Block base;
     private SavedBlocks blocks;
@@ -28,7 +28,7 @@ public class Paster implements Runnable {
 
     private int i;
 
-    public Paster(History undoHistory, TregminePlayer player, World world, Block base, SavedBlocks blocks, double theta,
+    public Paster(History undoHistory, GenericPlayer player, World world, Block base, SavedBlocks blocks, double theta,
                   int workSize) {
         this.undoHistory = undoHistory;
         this.player = player;

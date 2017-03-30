@@ -1,6 +1,6 @@
 package info.tregmine.discord.listeners;
 
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 
 public class AchievementListener implements Listener {
 
-    private DiscordSRV srv;
+    private Discord srv;
 
-    public AchievementListener(DiscordSRV srv) {
+    public AchievementListener(Discord srv) {
         this.srv = srv;
     }
 

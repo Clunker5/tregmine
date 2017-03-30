@@ -1,8 +1,8 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TargetBlock;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.returns.BooleanStringReturn;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,7 +31,7 @@ public class CompassListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         ItemStack heldItem = player.getItemInHand();
         if (heldItem.getType() != Material.COMPASS) {
             return;

@@ -18,7 +18,7 @@ import java.util.List;
 public class TregmineLookup extends Lookup {
 
     public static List<String[]> block_lookup_api(Block block) {
-        ArrayList result = new ArrayList();
+        ArrayList<String[]> result = new ArrayList<String[]>();
 
         try {
             if (block == null) {
@@ -46,14 +46,13 @@ public class TregmineLookup extends Lookup {
                 int result_type = rs.getInt("type");
                 int result_data = rs.getInt("data");
                 int result_rolled_back = rs.getInt("rolled_back");
-                if (Config.player_id_cache_reversed.get(Integer.valueOf(result_userid)) == null) {
+                if (Config.player_id_cache_reversed.get(result_userid) == null) {
                     Database.loadUserName(connection, result_userid);
                 }
 
-                String result_user = Config.player_id_cache_reversed.get(Integer.valueOf(result_userid));
+                String result_user = Config.player_id_cache_reversed.get(result_userid);
                 String line = result_time + "," + result_user + "," + x + "." + y + "." + z + "," + result_type + "," + result_data + "," + result_action + "," + result_rolled_back + "," + wid + ",";
-                String[] ldata = Functions.toStringArray(line);
-                result.add(ldata);
+                result.add(Functions.toStringArray(line));
             }
 
             rs.close();

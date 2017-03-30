@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 
 public class VanillaCommand extends AbstractCommand {
@@ -13,7 +12,7 @@ public class VanillaCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer sender, String[] args) {
+    public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (plugin.getVanillaWorld() == null) {
             sender.sendMessage(ChatColor.RED + "The server does not have the vanilla world enabled.");
             return true;

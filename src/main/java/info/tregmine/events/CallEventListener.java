@@ -1,7 +1,7 @@
 package info.tregmine.events;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
@@ -25,7 +25,7 @@ public class CallEventListener implements Listener {
         if (event.getMessage().equalsIgnoreCase("/afk")) {
             return;
         } else {
-            TregminePlayer sender = plugin.getPlayer(event.getPlayer().getPlayer());
+            GenericPlayer sender = plugin.getPlayer(event.getPlayer().getPlayer());
             if (sender.isAfk()) {
                 sender.setAfk(false);
             }
@@ -51,7 +51,7 @@ public class CallEventListener implements Listener {
     // Triggers when a player changes lot
     @EventHandler
     public void PlayerLotChangeEventListener(PlayerMoveEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         if (player == null) {
             event.getPlayer().kickPlayer(ChatColor.RED + "Something went wrong!");
@@ -95,7 +95,7 @@ public class CallEventListener implements Listener {
     // Triggers when a player moves position, not head.
     @EventHandler
     public void PlayerMoveBlockEventListener(PlayerMoveEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         if (player == null) {
             event.getPlayer().kickPlayer("Something went wrong!");
@@ -115,7 +115,7 @@ public class CallEventListener implements Listener {
     // Triggers when the player changes zone
     @EventHandler
     public void PlayerZoneChangeEventListener(PlayerMoveEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         if (player == null) {
             event.getPlayer().kickPlayer("Something went wrong!");
@@ -159,8 +159,8 @@ public class CallEventListener implements Listener {
     // Triggers on a server chat event
     @EventHandler
     public void TregmineChatEventListener(AsyncPlayerChatEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getChatState() != TregminePlayer.ChatState.CHAT) {
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
             return;
         }
 

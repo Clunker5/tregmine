@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -29,7 +28,7 @@ public class MsgCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
 
         if (args.length < 2) {
             return false;
@@ -42,14 +41,15 @@ public class MsgCommand extends AbstractCommand {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
 
             for (String possiblePlayer : receivingPlayers) {
-                List<TregminePlayer> candidates = tregmine.matchPlayer(possiblePlayer);
+                List<GenericPlayer> candidates = tregmine.matchPlayer(possiblePlayer);
 
                 if (candidates.size() != 1) {
                     player.sendNotification(Notification.COMMAND_FAIL,
                             new TextComponent(ChatColor.RED + "No player found by the name of " + possiblePlayer));
+                    return true;
                 }
 
-                TregminePlayer receivingPlayer = candidates.get(0);
+                GenericPlayer receivingPlayer = candidates.get(0);
 
                 boolean ignored;
                 ignored = playerDAO.doesIgnore(receivingPlayer, player);
@@ -63,7 +63,7 @@ public class MsgCommand extends AbstractCommand {
                 // isn't
                 // invisible, to prevent /msg from giving away hidden players
                 // presence
-                if (!receivingPlayer.hasFlag(TregminePlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
+                if (!receivingPlayer.hasFlag(GenericPlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
                     player.sendMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.decideVS(player),
                             new TextComponent(GREEN + ": " + message));
                 } else {

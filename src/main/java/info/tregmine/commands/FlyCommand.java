@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -16,8 +15,8 @@ public class FlyCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String args[]) {
-        if (player.hasFlag(TregminePlayer.Flags.HARDWARNED) || player.hasFlag(TregminePlayer.Flags.SOFTWARNED)) {
+    public boolean handlePlayer(GenericPlayer player, String args[]) {
+        if (player.hasFlag(GenericPlayer.Flags.HARDWARNED) || player.hasFlag(GenericPlayer.Flags.SOFTWARNED)) {
             player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         }
@@ -28,14 +27,14 @@ public class FlyCommand extends AbstractCommand {
         if (!player.getRank().canFly())
             return false;
 
-        if (player.hasFlag(TregminePlayer.Flags.FLY_ENABLED)) {
+        if (player.hasFlag(GenericPlayer.Flags.FLY_ENABLED)) {
             player.sendMessage(ChatColor.YELLOW + "Flying Disabled!");
-            player.removeFlag(TregminePlayer.Flags.FLY_ENABLED);
+            player.removeFlag(GenericPlayer.Flags.FLY_ENABLED);
             player.setAllowFlight(false);
         } else {
 
             player.sendMessage(ChatColor.YELLOW + "Flying Enabled!");
-            player.setFlag(TregminePlayer.Flags.FLY_ENABLED);
+            player.setFlag(GenericPlayer.Flags.FLY_ENABLED);
             player.setAllowFlight(true);
         }
 

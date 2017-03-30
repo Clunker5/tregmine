@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerMute;
-import info.tregmine.api.TregminePlayer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -14,7 +13,7 @@ public class MuteCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canMute()) {
             player.sendMessage(ChatColor.RED + "You aren't allowed to mute players.");
             return true;
@@ -27,7 +26,7 @@ public class MuteCommand extends AbstractCommand {
             player.sendMessage(ChatColor.YELLOW + "Player not found; Check the spelling and try again");
             return true;
         }
-        TregminePlayer mutee = tregmine.getPlayer(args[0]);
+        GenericPlayer mutee = tregmine.getPlayer(args[0]);
         if (!mutee.getRank().canBeMuted()) {
             player.sendMessage(new TextComponent(ChatColor.RED + "You cannot mute "), mutee.decideVS(player),
                     new TextComponent(ChatColor.RED + " because their rank bypasses muting."));

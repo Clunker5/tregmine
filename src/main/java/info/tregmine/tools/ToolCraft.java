@@ -1,7 +1,7 @@
 package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +26,7 @@ public class ToolCraft implements Listener {
         if (event.isRepair())
             return;
         if (event.getView().getPlayer() instanceof Player) {
-            TregminePlayer player = plugin.getPlayer((Player) event.getView().getPlayer());
+            GenericPlayer player = plugin.getPlayer((Player) event.getView().getPlayer());
             if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
                 return;
             }

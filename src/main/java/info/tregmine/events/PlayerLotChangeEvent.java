@@ -1,6 +1,6 @@
 package info.tregmine.events;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.zones.Lot;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
@@ -12,11 +12,11 @@ public final class PlayerLotChangeEvent extends Event implements Cancellable {
     private boolean cancelled;
     private Location from;
     private Location to;
-    private TregminePlayer player;
+    private GenericPlayer player;
     private Lot oldLot;
     private Lot newLot;
 
-    public PlayerLotChangeEvent(Location fromLoc, Location toLoc, TregminePlayer playerInvolved, Lot previousLot,
+    public PlayerLotChangeEvent(Location fromLoc, Location toLoc, GenericPlayer playerInvolved, Lot previousLot,
                                 Lot currentLot) {
         this.from = fromLoc;
         this.to = toLoc;
@@ -58,7 +58,7 @@ public final class PlayerLotChangeEvent extends Event implements Cancellable {
         this.oldLot = value;
     }
 
-    public TregminePlayer getPlayer() {
+    public GenericPlayer getPlayer() {
         return player;
     }
 

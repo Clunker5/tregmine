@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -49,7 +49,7 @@ public class ExpListener implements Listener {
 
         int experience = Integer.parseInt(splitLore[2]);
 
-        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = this.plugin.getPlayer(event.getPlayer());
         player.setLevel(player.getLevel() + experience);
 
         Inventory inv = player.getInventory();
@@ -73,7 +73,7 @@ public class ExpListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getLevel() < 2) {
             return;
         }
@@ -119,7 +119,7 @@ public class ExpListener implements Listener {
             return;
         }
 
-        TregminePlayer player = this.plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = this.plugin.getPlayer(event.getPlayer());
         if (!player.getRank().canBottleXP()) {
             return;
         }

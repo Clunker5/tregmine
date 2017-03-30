@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
@@ -26,7 +25,7 @@ public abstract class NotifyCommand extends AbstractCommand {
     protected abstract ChatColor getColor();
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             return false;
         }
@@ -42,7 +41,7 @@ public abstract class NotifyCommand extends AbstractCommand {
                     new TextComponent(" " + WHITE + msg));
         }
 
-        for (TregminePlayer to : tregmine.getOnlinePlayers()) {
+        for (GenericPlayer to : tregmine.getOnlinePlayers()) {
             if (!isTarget(to)) {
                 continue;
             }
@@ -53,5 +52,5 @@ public abstract class NotifyCommand extends AbstractCommand {
         return true;
     }
 
-    protected abstract boolean isTarget(TregminePlayer player);
+    protected abstract boolean isTarget(GenericPlayer player);
 }

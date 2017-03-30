@@ -1,8 +1,8 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.commands.MentorCommand;
 import info.tregmine.database.*;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,8 +21,8 @@ public class SetupListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
-        if (player.getChatState() == TregminePlayer.ChatState.SETUP && player.getRank() == Rank.TOURIST) {
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
+        if (player.getChatState() == GenericPlayer.ChatState.SETUP && player.getRank() == Rank.TOURIST) {
             // Player is on second stage.
             String text = event.getMessage();
             event.setCancelled(true);
@@ -30,7 +30,7 @@ public class SetupListener implements Listener {
                 player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine "
                         + "and can talk with other players! Say Hi! :)");
                 event.setMessage("%cancel%");
-                player.setChatState(TregminePlayer.ChatState.CHAT);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
                 Tregmine.LOGGER.info("[SETUP] " + player.getChatName().getText() + " joined the server.");
 
                 plugin.broadcast(new TextComponent(ChatColor.GREEN + "Welcome to Tregmine, "), player.getChatName(),
@@ -45,7 +45,7 @@ public class SetupListener implements Listener {
                     // not, try again.
                     try (IContext ctx = this.plugin.createContext()) {
                         IPlayerDAO pld = ctx.getPlayerDAO();
-                        TregminePlayer inviterPlayer = pld.getPlayer(inviter);
+                        GenericPlayer inviterPlayer = pld.getPlayer(inviter);
                         if (inviterPlayer == null) {
                             player.sendMessage(ChatColor.RED + "You entered an invalid invite code. Please type");
                             player.sendMessage(ChatColor.RED + "a valid invite code or type no to skip.");
@@ -60,7 +60,7 @@ public class SetupListener implements Listener {
                                 ChatColor.GREEN + inviterPlayer.getChatNameNoColor() + " has recieved their reward.");
                         player.sendMessage(ChatColor.GREEN + "You have now joined Tregmine "
                                 + "and can talk with other players! Say Hi! :)");
-                        player.setChatState(TregminePlayer.ChatState.CHAT);
+                        player.setChatState(GenericPlayer.ChatState.CHAT);
                         Tregmine.LOGGER.info("[SETUP] " + player.getChatName().getText() + " joined the server.");
                         plugin.broadcast(new TextComponent(ChatColor.GREEN + "Welcome to Tregmine, "),
                                 player.getChatName(), new TextComponent(ChatColor.GREEN + "!"));
@@ -77,7 +77,7 @@ public class SetupListener implements Listener {
             }
             return;
         }
-        if (player.getChatState() != TregminePlayer.ChatState.SETUP) {
+        if (player.getChatState() != GenericPlayer.ChatState.SETUP) {
             return;
         }
 
@@ -117,8 +117,8 @@ public class SetupListener implements Listener {
                 player.sendMessage(ChatColor.YELLOW + "Unfortunately Tregmine has an "
                         + "age limit of 13 years and older. Your account has been flagged as a child.");
 
-                player.setChatState(TregminePlayer.ChatState.CHAT);
-                player.setFlag(TregminePlayer.Flags.CHILD);
+                player.setChatState(GenericPlayer.ChatState.CHAT);
+                player.setFlag(GenericPlayer.Flags.CHILD);
                 plugin.broadcast(player.getChatName(),
                         new TextComponent(ChatColor.YELLOW + " is a child; Please be aware when sending messages."));
                 player.setRank(Rank.TOURIST);
@@ -138,14 +138,14 @@ public class SetupListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.getPlayer().kickPlayer("Something went wrong");
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " + "in players map.");
             return;
         }
 
-        if (player.getChatState() != TregminePlayer.ChatState.SETUP) {
+        if (player.getChatState() != GenericPlayer.ChatState.SETUP) {
             return;
         }
 

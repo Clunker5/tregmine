@@ -1,6 +1,6 @@
 package info.tregmine.events;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -11,9 +11,9 @@ public final class TregminePortalEvent extends Event implements Cancellable {
     private boolean cancelled;
     private World from;
     private World to;
-    private TregminePlayer player;
+    private GenericPlayer player;
 
-    public TregminePortalEvent(World from, World to, TregminePlayer playerInvolved) {
+    public TregminePortalEvent(World from, World to, GenericPlayer playerInvolved) {
         this.from = from;
         this.to = to;
         this.player = playerInvolved;
@@ -36,7 +36,7 @@ public final class TregminePortalEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public TregminePlayer getPlayer() {
+    public GenericPlayer getPlayer() {
         return player;
     }
 

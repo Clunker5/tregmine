@@ -2,7 +2,7 @@ package info.tregmine.web;
 
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.Server;
 import org.eclipse.jetty.server.Request;
 import org.json.JSONException;
@@ -39,14 +39,14 @@ public class PlayerReloadInventoryAction implements WebHandler.Action {
 
     @Override
     public void queryGameState(Tregmine tregmine) {
-        TregminePlayer subject = tregmine.getPlayer(subjectId);
+        GenericPlayer subject = tregmine.getPlayer(subjectId);
         if (subject == null) {
             status = false;
             error = "Subject not found or not online.";
             return;
         }
 
-        TregminePlayer issuer = tregmine.getPlayerOffline(issuerId);
+        GenericPlayer issuer = tregmine.getPlayerOffline(issuerId);
 
         if (subject.isOnline()) {
             subject.loadInventory(subject.getCurrentInventory(), false);

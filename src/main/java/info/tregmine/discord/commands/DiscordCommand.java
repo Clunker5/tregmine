@@ -1,7 +1,7 @@
 package info.tregmine.discord.commands;
 
 import info.tregmine.Tregmine;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
 
@@ -11,7 +11,7 @@ public class DiscordCommand implements IDiscordCommand {
 
     @SuppressWarnings("unused")
     protected Tregmine plugin;
-    protected DiscordSRV discord;
+    protected Discord discord;
     private String name;
     private String syntax;
     private String description;

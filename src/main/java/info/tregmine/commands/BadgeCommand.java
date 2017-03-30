@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Badge;
-import info.tregmine.api.TregminePlayer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
@@ -14,7 +13,10 @@ public class BadgeCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String args[]) {
+    public boolean handlePlayer(GenericPlayer player, String args[]) {
+        if(args.length == 0){
+            return false;
+        }
         if (args.length == 1 && "list".equalsIgnoreCase(args[0])) {
 
             Map<Badge, Integer> badges = player.getBadges();
@@ -33,7 +35,7 @@ public class BadgeCommand extends AbstractCommand {
                 return true;
             }
 
-            TregminePlayer target;
+            GenericPlayer target;
             try {
                 target = tregmine.getPlayerOffline(args[0]);
             } catch (Exception e) {
@@ -62,18 +64,14 @@ public class BadgeCommand extends AbstractCommand {
             if (!player.getRank().canGiveBadges()) {
                 return true;
             }
-            TregminePlayer target;
+            GenericPlayer target;
             try {
                 target = tregmine.getPlayerOffline(args[1]);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                target = null;
-            }
-            if (target == null) {
+            } catch (Exception e){
                 player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
                 return true;
             }
+            
 
         }
         return true;

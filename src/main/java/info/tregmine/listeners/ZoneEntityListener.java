@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -70,7 +70,7 @@ public class ZoneEntityListener implements Listener {
 
                 ZoneWorld world = plugin.getWorld(e1.getWorld());
 
-                TregminePlayer player = plugin.getPlayer((Player) e1);
+                GenericPlayer player = plugin.getPlayer((Player) e1);
 
                 player.setCombatLog(10);
                 player.sendMessage(
@@ -122,7 +122,7 @@ public class ZoneEntityListener implements Listener {
 
         ZoneWorld world = plugin.getWorld(entity.getWorld());
 
-        TregminePlayer player = plugin.getPlayer((Player) event.getEntity());
+        GenericPlayer player = plugin.getPlayer((Player) event.getEntity());
 
         Location location = player.getLocation();
         Point pos = new Point(location.getBlockX(), location.getBlockZ());

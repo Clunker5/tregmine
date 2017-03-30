@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
@@ -33,7 +33,7 @@ public class PistonListener implements Listener {
 
         for (Block b : event.getBlocks()) {
             for (Integer i : owner) {
-                TregminePlayer p = plugin.getPlayerOffline(i);
+                GenericPlayer p = plugin.getPlayerOffline(i);
                 if (!p.hasBlockPermission(b.getLocation(), false)) {
                     event.setCancelled(true);
                 }
@@ -52,7 +52,7 @@ public class PistonListener implements Listener {
         Set<Integer> owner = lot.getOwners();
 
         for (Integer i : owner) {
-            TregminePlayer p = plugin.getPlayerOffline(i);
+            GenericPlayer p = plugin.getPlayerOffline(i);
             if (!p.hasBlockPermission(event.getBlock().getLocation(), false)) {
                 event.setCancelled(true);
             }

@@ -1,16 +1,16 @@
 package info.tregmine.database;
 
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.InventoryAccess;
-import info.tregmine.api.TregminePlayer;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 public interface IInventoryDAO {
-    void createInventory(TregminePlayer player, String inventoryName, String type) throws DAOException;
+    void createInventory(GenericPlayer player, String inventoryName, String type) throws DAOException;
 
-    int fetchInventory(TregminePlayer player, String inventoryName, String type) throws DAOException;
+    int fetchInventory(GenericPlayer player, String inventoryName, String type) throws DAOException;
 
     List<InventoryAccess> getAccessLog(int inventoryId, int count) throws DAOException;
 
@@ -20,18 +20,18 @@ public interface IInventoryDAO {
 
     ItemStack[] getStacks(int inventoryId, int size) throws DAOException;
 
-    void insertAccessLog(TregminePlayer player, int inventoryId) throws DAOException;
+    void insertAccessLog(GenericPlayer player, int inventoryId) throws DAOException;
 
-    void insertChangeLog(TregminePlayer player, int inventoryId, int slot, ItemStack slotContent,
+    void insertChangeLog(GenericPlayer player, int inventoryId, int slot, ItemStack slotContent,
                          ChangeType type) throws DAOException;
 
-    int insertInventory(TregminePlayer player, Location loc, InventoryType type) throws DAOException;
+    int insertInventory(GenericPlayer player, Location loc, InventoryType type) throws DAOException;
 
     void insertStacks(int inventoryId, ItemStack[] contents) throws DAOException;
 
-    void loadInventory(TregminePlayer player, int inventoryID, String type) throws DAOException;
+    void loadInventory(GenericPlayer player, int inventoryID, String type) throws DAOException;
 
-    void saveInventory(TregminePlayer player, int inventoryID, String type) throws DAOException;
+    void saveInventory(GenericPlayer player, int inventoryID, String type) throws DAOException;
 
     enum ChangeType {
         ADD, REMOVE

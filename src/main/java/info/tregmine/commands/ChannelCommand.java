@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
@@ -13,7 +12,7 @@ public class ChannelCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 1) {
             return false;
         }
@@ -25,14 +24,14 @@ public class ChannelCommand extends AbstractCommand {
         player.sendMessage(YELLOW + "Write /channel global to switch to " + "the global chat.");
         player.setChatChannel(channel);
 
-        if (player.hasFlag(TregminePlayer.Flags.INVISIBLE))
+        if (player.hasFlag(GenericPlayer.Flags.INVISIBLE))
             return true; // Doesn't announce channel change if invisible.
 
         if (oldchannel.equalsIgnoreCase(channel)) {
             return true;
         }
 
-        for (TregminePlayer players : tregmine.getOnlinePlayers()) {
+        for (GenericPlayer players : tregmine.getOnlinePlayers()) {
             if (oldchannel.equalsIgnoreCase(players.getChatChannel())) {
                 players.sendMessage(player.decideVS(player),
                         new TextComponent(ChatColor.YELLOW + " has left channel " + oldchannel));

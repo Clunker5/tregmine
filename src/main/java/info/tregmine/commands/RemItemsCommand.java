@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.math.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,7 +22,7 @@ public class RemItemsCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(final TregminePlayer p, String[] args) {
+    public boolean handlePlayer(final GenericPlayer p, String[] args) {
         if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
             p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -78,7 +77,7 @@ public class RemItemsCommand extends AbstractCommand {
         return true;
     }
 
-    void worldItemRemover(final TregminePlayer p) {
+    void worldItemRemover(final GenericPlayer p) {
 
         final World world = p.getLocation().getWorld();
 

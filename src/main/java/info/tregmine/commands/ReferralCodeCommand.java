@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.ChatColor;
 
 public class ReferralCodeCommand extends AbstractCommand {
@@ -11,7 +10,7 @@ public class ReferralCodeCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer sender, String[] args) {
+    public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (sender.getRank().canHaveReferralCode()) {
             sender.sendMessage(ChatColor.YELLOW + "Your referral code is " + sender.getId());
         } else {

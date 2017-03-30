@@ -1,16 +1,16 @@
 package info.tregmine.discord.threads;
 
 import info.tregmine.Tregmine;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 
 import java.io.*;
 
 public class ServerLogWatcher extends Thread {
 
     private Tregmine plugin;
-    private DiscordSRV srv;
+    private Discord srv;
 
-    public ServerLogWatcher(DiscordSRV srv) {
+    public ServerLogWatcher(Discord srv) {
         this.srv = srv;
         this.plugin = this.srv.getPlugin();
     }

@@ -1,8 +1,8 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.InventoryAccess;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.lore.Created;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -46,7 +46,7 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer((Player) event.getPlayer());
+        GenericPlayer player = plugin.getPlayer((Player) event.getPlayer());
 
         Inventory inv = event.getInventory();
         for (ItemStack item : player.getInventory().getContents()) {
@@ -148,7 +148,7 @@ public class InventoryListener implements Listener {
         if (!(event.getPlayer() instanceof Player)) {
             return;
         }
-        TregminePlayer player = plugin.getPlayer((Player) event.getPlayer());
+        GenericPlayer player = plugin.getPlayer((Player) event.getPlayer());
         if (player.getGameMode() == GameMode.CREATIVE
                 && (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld())) {
             event.setCancelled(true);
@@ -195,7 +195,7 @@ public class InventoryListener implements Listener {
                     }
                 }
 
-                if (others > 0 && player.hasFlag(TregminePlayer.Flags.CHEST_LOG)) {
+                if (others > 0 && player.hasFlag(GenericPlayer.Flags.CHEST_LOG)) {
                     player.sendMessage(ChatColor.YELLOW + "Last accessed by:");
                     SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
                     int i = 0;
@@ -204,7 +204,7 @@ public class InventoryListener implements Listener {
                             if (i > 2) {
                                 break;
                             }
-                            TregminePlayer p = plugin.getPlayerOffline(access.getPlayerId());
+                            GenericPlayer p = plugin.getPlayerOffline(access.getPlayerId());
                             TextComponent message = new TextComponent(
                                     ChatColor.YELLOW + " on " + dfm.format(access.getTimestamp()) + ".");
                             player.sendMessage(p.getChatName(), message);

@@ -1,6 +1,7 @@
 package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TregminePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,10 +27,10 @@ public class PortalListener implements Listener {
             Material.PISTON_EXTENSION, Material.BEDROCK, Material.ENDER_PORTAL_FRAME, Material.CHEST, Material.HOPPER,
             Material.MOB_SPAWNER, Material.DROPPER, Material.DISPENSER, Material.FURNACE, Material.BREWING_STAND);
     private Tregmine plugin;
-    private Map<TregminePlayer, GravityTask> gravityTasks = null;
+    private Map<GenericPlayer, GravityTask> gravityTasks = null;
     public PortalListener(Tregmine instance) {
         this.plugin = instance;
-        this.gravityTasks = new HashMap<TregminePlayer, GravityTask>();
+        this.gravityTasks = new HashMap<>();
     }
 
     public void clearUp(PlayerQuitEvent event) {
@@ -49,7 +50,7 @@ public class PortalListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             return;
         }
@@ -80,7 +81,7 @@ public class PortalListener implements Listener {
             return;
         }
 
-        TregminePlayer p = plugin.getPlayer(event.getPlayer());
+        GenericPlayer p = plugin.getPlayer(event.getPlayer());
         if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
             return;
         }
@@ -145,7 +146,7 @@ public class PortalListener implements Listener {
     }
 
     public static class GravityTask implements Runnable {
-        private TregminePlayer player;
+        private GenericPlayer player;
         private Location srcLocation;
         private Location dstLocation;
         private FallingBlock currentBlock = null;
@@ -154,7 +155,7 @@ public class PortalListener implements Listener {
 
         private BukkitTask task = null;
 
-        public GravityTask(TregminePlayer player) {
+        public GravityTask(GenericPlayer player) {
             this.player = player;
         }
 

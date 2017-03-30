@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
@@ -13,7 +12,7 @@ public class InventoryCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -34,12 +33,12 @@ public class InventoryCommand extends AbstractCommand {
             return true;
         }
         if ("reload".equalsIgnoreCase(args[0]) && args.length == 3) {
-            List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
+            List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
                 player.sendMessage(ChatColor.RED + "Player: " + args[1] + " not found!");
                 return true;
             }
-            TregminePlayer candidate = candidates.get(0);
+            GenericPlayer candidate = candidates.get(0);
             boolean state = "true".equalsIgnoreCase(args[2]);
 
             if (state) {
@@ -53,12 +52,12 @@ public class InventoryCommand extends AbstractCommand {
         }
 
         if ("inspect".equalsIgnoreCase(args[0]) && args.length == 2) {
-            List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
+            List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
                 player.sendMessage(ChatColor.RED + "Player: " + args[1] + " not found!");
                 return true;
             }
-            TregminePlayer candidate = candidates.get(0);
+            GenericPlayer candidate = candidates.get(0);
             player.openInventory(candidate.getInventory());
             player.sendMessage(new TextComponent(ChatColor.GREEN + "Inspecting "), candidate.decideVS(player),
                     new TextComponent("'s inventory!"));

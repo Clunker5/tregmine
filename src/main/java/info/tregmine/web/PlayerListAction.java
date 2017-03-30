@@ -2,7 +2,7 @@ package info.tregmine.web;
 
 import info.tregmine.Tregmine;
 import info.tregmine.WebHandler;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.eclipse.jetty.server.Request;
 import org.json.JSONException;
 import org.json.JSONWriter;
@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class PlayerListAction implements WebHandler.Action {
-    private List<TregminePlayer> players;
+    private List<GenericPlayer> players;
 
     public PlayerListAction() {
     }
@@ -21,13 +21,13 @@ public class PlayerListAction implements WebHandler.Action {
         try {
             JSONWriter json = new JSONWriter(writer);
             json.array();
-            for (TregminePlayer player : players) {
+            for (GenericPlayer player : players) {
                 Tregmine.LOGGER.info("Web: " + player.getName() + " - ID: " + player.getId());
                 json.object().key("id").value(player.getId()).key("name").value(player.getName()).key("rank")
                         .value(player.getRank().toString()).key("softwarned")
-                        .value(player.hasFlag(TregminePlayer.Flags.SOFTWARNED)).key("hardwarned")
-                        .value(player.hasFlag(TregminePlayer.Flags.HARDWARNED)).key("hidden")
-                        .value(player.hasFlag(TregminePlayer.Flags.INVISIBLE)).key("playtime")
+                        .value(player.hasFlag(GenericPlayer.Flags.SOFTWARNED)).key("hardwarned")
+                        .value(player.hasFlag(GenericPlayer.Flags.HARDWARNED)).key("hidden")
+                        .value(player.hasFlag(GenericPlayer.Flags.INVISIBLE)).key("playtime")
                         .value(player.getTimeOnline()).endObject();
             }
             json.endArray();

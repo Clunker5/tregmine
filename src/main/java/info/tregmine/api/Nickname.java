@@ -7,7 +7,7 @@ import java.util.*;
 public class Nickname {
 
     // Base values
-    private TregminePlayer owner;
+    private GenericPlayer owner;
 
     // Nickname
     private String nickname;
@@ -24,7 +24,7 @@ public class Nickname {
     private String spacer = "$";
     private String breakcolor = ";;";
 
-    public Nickname(TregminePlayer player, String setnickname) {
+    public Nickname(GenericPlayer player, String setnickname) {
         this.owner = player;
         this.showNickFlag = !this.owner.getRank().canHaveHiddenNickname();
         this.nickname = setnickname;
@@ -111,11 +111,11 @@ public class Nickname {
         return this.nickname;
     }
 
-    public TregminePlayer getOwner() {
+    public GenericPlayer getOwner() {
         return this.owner;
     }
 
-    public void setOwner(TregminePlayer newowner) {
+    public void setOwner(GenericPlayer newowner) {
         this.owner = newowner;
     }
 

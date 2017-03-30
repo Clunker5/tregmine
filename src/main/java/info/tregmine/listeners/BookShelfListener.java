@@ -31,7 +31,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IInventoryDAO;
@@ -56,7 +56,7 @@ import java.util.Map;
 
 public class BookShelfListener implements Listener {
     private Tregmine plugin;
-    private Map<TregminePlayer, Inventory> openInventories;
+    private Map<GenericPlayer, Inventory> openInventories;
     private Map<Location, ItemStack[]> inventories;
     private Map<Inventory, Location> locations;
 
@@ -83,7 +83,7 @@ public class BookShelfListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         Location loc = block.getLocation();
 
         try (IContext ctx = plugin.createContext()) {
@@ -110,7 +110,7 @@ public class BookShelfListener implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        TregminePlayer player = plugin.getPlayer((Player) event.getPlayer());
+        GenericPlayer player = plugin.getPlayer((Player) event.getPlayer());
 
         Inventory inv = openInventories.get(player);
 
@@ -165,7 +165,7 @@ public class BookShelfListener implements Listener {
 
     @EventHandler
     public void onSignBook(PlayerEditBookEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         if (event.isSigning()) {
             BookMeta meta = event.getNewBookMeta();

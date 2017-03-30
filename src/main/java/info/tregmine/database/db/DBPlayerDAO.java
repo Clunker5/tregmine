@@ -2,9 +2,10 @@ package info.tregmine.database.db;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.Property;
+import info.tregmine.api.GenericPlayer.Property;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IPlayerDAO;
 import org.bukkit.entity.Player;
@@ -29,10 +30,10 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public TregminePlayer createPlayer(Player wrap) throws DAOException {
+    public GenericPlayer createPlayer(Player wrap) throws DAOException {
         String sql = "INSERT INTO player (player_uuid, player_name, player_rank, player_keywords) VALUE (?, ?, ?, ?)";
 
-        TregminePlayer player = new TregminePlayer(wrap, plugin);
+        GenericPlayer player = new TregminePlayer(wrap, plugin);
         player.setStoredUuid(player.getUniqueId());
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -59,7 +60,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public boolean doesIgnore(TregminePlayer player, TregminePlayer victim) throws DAOException {
+    public boolean doesIgnore(GenericPlayer player, GenericPlayer victim) throws DAOException {
         String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -91,7 +92,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public Map<Badge, Integer> getBadges(TregminePlayer player) throws DAOException {
+    public Map<Badge, Integer> getBadges(GenericPlayer player) throws DAOException {
         String sql = "SELECT * FROM player_badge " + "WHERE player_id = ?";
 
         Map<Badge, Integer> badges = new EnumMap<Badge, Integer>(Badge.class);
@@ -114,7 +115,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public List<String> getIgnored(TregminePlayer to) throws DAOException {
+    public List<String> getIgnored(GenericPlayer to) throws DAOException {
         String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -146,7 +147,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public List<String> getKeywords(TregminePlayer to) throws DAOException {
+    public List<String> getKeywords(GenericPlayer to) throws DAOException {
         String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -175,10 +176,10 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public TregminePlayer getPlayer(int id) throws DAOException {
+    public GenericPlayer getPlayer(int id) throws DAOException {
         String sql = "SELECT * FROM player WHERE player_id = ?";
 
-        TregminePlayer player = null;
+        GenericPlayer player = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -212,7 +213,7 @@ public class DBPlayerDAO implements IPlayerDAO {
                 }
 
                 int flags = rs.getInt("player_flags");
-                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
                     if ((flags & (1 << flag.ordinal())) != 0) {
                         player.setFlag(flag);
                     }
@@ -228,7 +229,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public TregminePlayer getPlayer(Player wrap) throws DAOException {
+    public GenericPlayer getPlayer(Player wrap) throws DAOException {
         String sql = "SELECT * FROM player WHERE player_uuid = ?";
         String sql1 = "UPDATE `player` SET player_name = ? WHERE player_uuid = ?";
         try (PreparedStatement stmt1 = conn.prepareStatement(sql1)) {
@@ -238,7 +239,7 @@ public class DBPlayerDAO implements IPlayerDAO {
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
-        TregminePlayer player;
+        GenericPlayer player;
         if (wrap != null) {
             player = new TregminePlayer(wrap, plugin);
         } else {
@@ -276,7 +277,7 @@ public class DBPlayerDAO implements IPlayerDAO {
                 }
 
                 int flags = rs.getInt("player_flags");
-                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
                     if ((flags & (1 << flag.ordinal())) != 0) {
                         player.setFlag(flag);
                     }
@@ -292,10 +293,10 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public TregminePlayer getPlayer(String username) throws DAOException {
+    public GenericPlayer getPlayer(String username) throws DAOException {
         String sql = "SELECT * FROM player WHERE player_name = ?";
 
-        TregminePlayer player = null;
+        GenericPlayer player = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
@@ -329,7 +330,7 @@ public class DBPlayerDAO implements IPlayerDAO {
                 }
 
                 int flags = rs.getInt("player_flags");
-                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
                     if ((flags & (1 << flag.ordinal())) != 0) {
                         player.setFlag(flag);
                     }
@@ -345,10 +346,10 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public TregminePlayer getPlayer(UUID id) throws DAOException {
+    public GenericPlayer getPlayer(UUID id) throws DAOException {
         String sql = "SELECT * FROM player WHERE player_uuid = ?";
 
-        TregminePlayer player = null;
+        GenericPlayer player = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id.toString());
@@ -381,7 +382,7 @@ public class DBPlayerDAO implements IPlayerDAO {
                 }
 
                 int flags = rs.getInt("player_flags");
-                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
                     if ((flags & (1 << flag.ordinal())) != 0) {
                         player.setFlag(flag);
                     }
@@ -396,7 +397,7 @@ public class DBPlayerDAO implements IPlayerDAO {
         return player;
     }
 
-    private void loadReports(TregminePlayer player) throws DAOException {
+    private void loadReports(GenericPlayer player) throws DAOException {
         String sql = "SELECT * FROM player_report WHERE subject_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
@@ -422,7 +423,7 @@ public class DBPlayerDAO implements IPlayerDAO {
         }
     }
 
-    private void loadSettings(TregminePlayer player) throws DAOException {
+    private void loadSettings(GenericPlayer player) throws DAOException {
         String sql = "SELECT * FROM player_property WHERE player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -475,7 +476,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     // }
 
     @Override
-    public void updateBadges(TregminePlayer player) throws DAOException {
+    public void updateBadges(GenericPlayer player) throws DAOException {
         Map<Badge, Integer> dbBadges = player.getBadges();
         Map<Badge, Integer> memBadges = getBadges(player);
 
@@ -535,7 +536,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public void updateIgnore(TregminePlayer player, List<String> update) throws DAOException {
+    public void updateIgnore(GenericPlayer player, List<String> update) throws DAOException {
         String sql = "UPDATE player SET player_ignore = ? " + "WHERE player_id = ?";
 
         StringBuilder buffer = new StringBuilder();
@@ -557,7 +558,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public void updateKeywords(TregminePlayer player, List<String> update) throws DAOException {
+    public void updateKeywords(GenericPlayer player, List<String> update) throws DAOException {
         String sql = "UPDATE player SET player_keywords = ? " + "WHERE player_id = ?";
 
         StringBuilder buffer = new StringBuilder();
@@ -579,13 +580,13 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public void updatePlayer(TregminePlayer player) throws DAOException {
+    public void updatePlayer(GenericPlayer player) throws DAOException {
         String sql = "UPDATE player SET player_uuid = ?, player_password = ?, "
                 + "player_rank = ?, player_flags = ?, player_inventory = ? ";
         sql += "WHERE player_id = ?";
 
         int flags = 0;
-        for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+        for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
             flags |= player.hasFlag(flag) ? 1 << flag.ordinal() : 0;
         }
 
@@ -603,23 +604,23 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public void updatePlayerInfo(TregminePlayer player) throws DAOException {
+    public void updatePlayerInfo(GenericPlayer player) throws DAOException {
         updateProperty(player, "quitmessage", player.getQuitMessage());
     }
 
     @Override
-    public void updatePlayerKeyword(TregminePlayer player) throws DAOException {
+    public void updatePlayerKeyword(GenericPlayer player) throws DAOException {
         updateProperty(player, "keyword", player.getKeyword());
     }
 
     @Override
-    public void updatePlayTime(TregminePlayer player) throws DAOException {
+    public void updatePlayTime(GenericPlayer player) throws DAOException {
         int playTime = player.getPlayTime() + player.getTimeOnline();
         updateProperty(player, "playtime", String.valueOf(playTime));
     }
 
     @Override
-    public void updateProperty(TregminePlayer player, String key, String value) throws DAOException {
+    public void updateProperty(GenericPlayer player, String key, String value) throws DAOException {
         String sqlInsert = "REPLACE INTO player_property (player_id, "
                 + "property_key, property_value) VALUE (?, ?, ?)";
 

@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IInviteDAO;
 
@@ -17,7 +17,7 @@ public class DBInviteDAO implements IInviteDAO {
     }
 
     @Override
-    public void addInvite(TregminePlayer inviter, TregminePlayer invitee) throws DAOException {
+    public void addInvite(GenericPlayer inviter, GenericPlayer invitee) throws DAOException {
         String sql = "INSERT INTO player_referlog (inviter_id, invitee_id) VALUES (?, ?)";
         try (PreparedStatement stmt = c.prepareStatement(sql)) {
             stmt.setInt(1, inviter.getId());

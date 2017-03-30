@@ -1,9 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Bank;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IBankDAO;
 import info.tregmine.database.IContext;
@@ -27,7 +26,7 @@ public class LotCommand extends AbstractCommand {
         super(tregmine, "lot");
     }
 
-    public void createLot(TregminePlayer player, String[] args) {
+    public void createLot(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -51,7 +50,7 @@ public class LotCommand extends AbstractCommand {
 
         String playerName = args[2];
 
-        TregminePlayer victim = tregmine.getPlayerOffline(playerName);
+        GenericPlayer victim = tregmine.getPlayerOffline(playerName);
         if (victim == null) {
             player.sendMessage(RED + "Player " + playerName + " was not found.");
             return;
@@ -110,7 +109,7 @@ public class LotCommand extends AbstractCommand {
         }
     }
 
-    public void deleteLot(TregminePlayer player, String[] args) {
+    public void deleteLot(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -156,7 +155,7 @@ public class LotCommand extends AbstractCommand {
         }
     }
 
-    public void flagLot(TregminePlayer player, String[] args) {
+    public void flagLot(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -249,7 +248,7 @@ public class LotCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             player.sendMessage(ChatColor.RED + "Incorrect usage! Try:");
             player.sendMessage(ChatColor.AQUA + "/lot create <lot name> <player>");
@@ -280,7 +279,7 @@ public class LotCommand extends AbstractCommand {
         return false;
     }
 
-    public void setLotOwner(TregminePlayer player, String[] args) {
+    public void setLotOwner(GenericPlayer player, String[] args) {
         ZoneWorld world = tregmine.getWorld(player.getWorld());
         if (world == null) {
             return;
@@ -313,8 +312,8 @@ public class LotCommand extends AbstractCommand {
         }
 
         // try partial matching
-        List<TregminePlayer> candidates = tregmine.matchPlayer(args[2]);
-        TregminePlayer candidate = null;
+        List<GenericPlayer> candidates = tregmine.matchPlayer(args[2]);
+        GenericPlayer candidate = null;
         if (candidates.size() != 1) {
             // try exact matching
             candidate = tregmine.getPlayerOffline(args[2]);

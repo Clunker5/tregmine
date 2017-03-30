@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -18,7 +17,7 @@ public class VanishCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -28,7 +27,7 @@ public class VanishCommand extends AbstractCommand {
         }
 
         if (args.length == 0) {
-            if (player.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+            if (player.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 player.sendMessage(DARK_AQUA + "You are currently invisible.");
             } else {
                 player.sendMessage(DARK_AQUA + "You are currently visible.");
@@ -40,17 +39,17 @@ public class VanishCommand extends AbstractCommand {
         String state = args[0];
         boolean vanish = false;
         if ("on".equalsIgnoreCase(state)) {
-            player.setFlag(TregminePlayer.Flags.INVISIBLE);
+            player.setFlag(GenericPlayer.Flags.INVISIBLE);
             vanish = true;
         } else if ("off".equalsIgnoreCase(state)) {
-            player.removeFlag(TregminePlayer.Flags.INVISIBLE);
+            player.removeFlag(GenericPlayer.Flags.INVISIBLE);
             vanish = false;
         } else {
             return false;
         }
 
-        List<TregminePlayer> players = tregmine.getOnlinePlayers();
-        for (TregminePlayer current : players) {
+        List<GenericPlayer> players = tregmine.getOnlinePlayers();
+        for (GenericPlayer current : players) {
             if (vanish && !current.getRank().canVanish()) {
                 current.hidePlayer(player);
             } else {

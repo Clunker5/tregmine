@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
@@ -16,7 +15,7 @@ public class SendBackCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -29,12 +28,12 @@ public class SendBackCommand extends AbstractCommand {
             player.sendMessage(ChatColor.RED + "Arguments error: /sendback <player name>");
             return true;
         }
-        List<TregminePlayer> players = plugin.matchPlayer(args[0]);
+        List<GenericPlayer> players = plugin.matchPlayer(args[0]);
         if (players.size() != 1) {
             player.sendMessage(ChatColor.RED + "Player is not online!");
             return true;
         }
-        TregminePlayer target = players.get(0);
+        GenericPlayer target = players.get(0);
         if (target.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "The player specified is in the vanilla world!");
             return true;

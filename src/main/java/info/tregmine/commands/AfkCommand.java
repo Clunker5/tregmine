@@ -1,7 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer;
 
 public class AfkCommand extends AbstractCommand {
 
@@ -10,7 +10,7 @@ public class AfkCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.isAfk()) {
             player.setAfk(false);
         } else {

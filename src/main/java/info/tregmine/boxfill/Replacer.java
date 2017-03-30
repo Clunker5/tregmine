@@ -1,18 +1,18 @@
 package info.tregmine.boxfill;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.block.Block;
 import org.bukkit.material.MaterialData;
 
 public class Replacer extends AbstractFiller {
     private History history;
-    private TregminePlayer player;
+    private GenericPlayer player;
     private MaterialData match;
     private MaterialData item;
     private SavedBlocks currentJob;
 
-    public Replacer(Tregmine plugin, History history, TregminePlayer player, Block block1, Block block2,
+    public Replacer(Tregmine plugin, History history, GenericPlayer player, Block block1, Block block2,
                     MaterialData match, MaterialData item, int workSize) {
         super(plugin, block1, block2, workSize);
 

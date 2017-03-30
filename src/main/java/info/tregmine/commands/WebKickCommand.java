@@ -1,9 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.WebServer;
 import info.tregmine.api.PlayerReport;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
@@ -28,7 +27,7 @@ public class WebKickCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!player.getRank().canKick()) {
             return false;
         }
@@ -41,7 +40,7 @@ public class WebKickCommand extends AbstractCommand {
         String pattern = args[0];
         String message = argsToMessage(args);
 
-        TregminePlayer victim = tregmine.getPlayerOffline(pattern);
+        GenericPlayer victim = tregmine.getPlayerOffline(pattern);
         if (victim == null) {
             // TODO: error message
             return true;

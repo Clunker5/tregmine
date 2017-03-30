@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
@@ -23,17 +23,17 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onLoadChunk(ChunkLoadEvent event) {
         Chunk loadedChunk = event.getChunk();
-        List<TregminePlayer> playersInChunk = new ArrayList<TregminePlayer>();
+        List<GenericPlayer> playersInChunk = new ArrayList<GenericPlayer>();
 
         for (Entity entity : loadedChunk.getEntities()) {
             if (entity instanceof Player) {
-                TregminePlayer playerInChunk = plugin.getPlayer((Player) entity);
+                GenericPlayer playerInChunk = plugin.getPlayer((Player) entity);
                 playersInChunk.add(playerInChunk);
             }
         }
 
-        for (TregminePlayer player : playersInChunk) {
-            if (!player.hasFlag(TregminePlayer.Flags.WATCHING_CHUNKS)) {
+        for (GenericPlayer player : playersInChunk) {
+            if (!player.hasFlag(GenericPlayer.Flags.WATCHING_CHUNKS)) {
                 continue;
             }
 

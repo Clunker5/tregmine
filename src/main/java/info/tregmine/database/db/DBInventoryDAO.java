@@ -1,8 +1,8 @@
 package info.tregmine.database.db;
 
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.InventoryAccess;
 import info.tregmine.api.Tools;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IInventoryDAO;
 import org.bukkit.Location;
@@ -34,7 +34,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public void createInventory(TregminePlayer player, String inventoryName, String type) throws DAOException {
+    public void createInventory(GenericPlayer player, String inventoryName, String type) throws DAOException {
         String sql = "INSERT INTO playerinventory (player_id, "
                 + "playerinventory_name, playerinventory_type) VALUES (?,?,?)";
 
@@ -49,7 +49,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public int fetchInventory(TregminePlayer player, String inventoryName, String type) throws DAOException {
+    public int fetchInventory(GenericPlayer player, String inventoryName, String type) throws DAOException {
         String sql = "SELECT * FROM playerinventory " + "WHERE playerinventory_name = ? "
                 + "AND playerinventory_type = ? " + "AND player_id = ?";
 
@@ -185,7 +185,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public void insertAccessLog(TregminePlayer player, int inventoryId) throws DAOException {
+    public void insertAccessLog(GenericPlayer player, int inventoryId) throws DAOException {
         String sql = "INSERT INTO inventory_accesslog (inventory_id, " + "player_id, accesslog_timestamp) ";
         sql += "VALUES (?, ?, unix_timestamp())";
 
@@ -199,7 +199,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public void insertChangeLog(TregminePlayer player, int inventoryId, int slot, ItemStack slotContent,
+    public void insertChangeLog(GenericPlayer player, int inventoryId, int slot, ItemStack slotContent,
                                 IInventoryDAO.ChangeType type) throws DAOException {
         String sql = "INSERT INTO inventory_changelog (inventory_id, "
                 + "player_id, changelog_timestamp, changelog_slot, changelog_material, "
@@ -228,7 +228,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public int insertInventory(TregminePlayer player, Location loc, InventoryType type) throws DAOException {
+    public int insertInventory(GenericPlayer player, Location loc, InventoryType type) throws DAOException {
         String sql = "INSERT INTO inventory (player_id, inventory_checksum, "
                 + "inventory_x, inventory_y, inventory_z, inventory_world, " + "inventory_type) ";
         sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -312,7 +312,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public void loadInventory(TregminePlayer player, int inventoryID, String type) throws DAOException {
+    public void loadInventory(GenericPlayer player, int inventoryID, String type) throws DAOException {
         String sql = "SELECT * FROM playerinventory_item " + "WHERE playerinventory_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -382,7 +382,7 @@ public class DBInventoryDAO implements IInventoryDAO {
     }
 
     @Override
-    public void saveInventory(TregminePlayer player, int inventoryID, String type) throws DAOException {
+    public void saveInventory(GenericPlayer player, int inventoryID, String type) throws DAOException {
         String sqlDelete = "DELETE FROM playerinventory_item " + "WHERE playerinventory_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {

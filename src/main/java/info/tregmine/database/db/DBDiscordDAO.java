@@ -1,6 +1,6 @@
 package info.tregmine.database.db;
 
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IDiscordDAO;
 
@@ -18,7 +18,7 @@ public class DBDiscordDAO implements IDiscordDAO {
     }
 
     @Override
-    public TregminePlayer isLinked(long discordID) {
+    public GenericPlayer isLinked(long discordID) {
         try {
             PreparedStatement stmt = this.conn.prepareStatement("SELECT 1 FROM player_discord WHERE discord_id = ?");
             stmt.setLong(1, discordID);
@@ -41,7 +41,7 @@ public class DBDiscordDAO implements IDiscordDAO {
     }
 
     @Override
-    public long isLinked(TregminePlayer s) {
+    public long isLinked(GenericPlayer s) {
         try {
             java.sql.PreparedStatement stmt = this.conn
                     .prepareStatement("SELECT discord_id FROM player_discord WHERE player_id = ?");
@@ -59,7 +59,7 @@ public class DBDiscordDAO implements IDiscordDAO {
     }
 
     @Override
-    public boolean link(TregminePlayer s, long discordID) {
+    public boolean link(GenericPlayer s, long discordID) {
         if (isLinked(s) != -1)
             return false;
         if (discordID == -1)
@@ -91,7 +91,7 @@ public class DBDiscordDAO implements IDiscordDAO {
     }
 
     @Override
-    public boolean unlink(TregminePlayer s) {
+    public boolean unlink(GenericPlayer s) {
         if (isLinked(s) == -1)
             return false;
         try {

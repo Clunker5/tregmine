@@ -1,19 +1,14 @@
 package info.tregmine.discord;
 
-import info.tregmine.Tregmine;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.requests.RestAction;
 
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class DiscordUtil {
-
-    private HashMap<Integer, Object> container = new HashMap<Integer, Object>();
 
     public DiscordUtil sendDestructiveMessage(MessageChannel channel, String message) {
         Thread t = new Thread(new Runnable() {
@@ -67,7 +62,7 @@ public class DiscordUtil {
         return this;
     }
 
-    public DiscordUtil sendDestructiveMessageWithDuration(MessageChannel channel, MessageEmbed embed, int duration) {
+    public DiscordUtil sendDestructiveMessage(MessageChannel channel, MessageEmbed embed, int duration) {
         Thread t = new Thread(new Runnable() {
             public void run() {
 
@@ -85,7 +80,7 @@ public class DiscordUtil {
         return this;
     }
 
-    public DiscordUtil sendDestructiveMessageWithDuration(MessageChannel channel, Message message, int duration) {
+    public DiscordUtil sendDestructiveMessage(MessageChannel channel, Message message, int duration) {
         Thread t = new Thread(new Runnable() {
             public void run() {
 
@@ -117,43 +112,6 @@ public class DiscordUtil {
             }
         });
         t.start();
-    }
-
-    public Message sendDestructiveMessage(MessageChannel channel, Message message, int seconds) {
-        RestAction<Message> sent = channel.sendMessage(message);
-        final int id = ThreadLocalRandom.current().nextInt(1931, 49284 + 1);
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                container.put(id, sent.complete());
-                try {
-                    Thread.sleep(seconds * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ((Message) container.get(id)).delete().complete();
-                return;
-            }
-        });
-        t.start();
-        return (Message) container.get(id);
-    }
-
-    public Message sendDestructiveMessage(MessageChannel channel, MessageEmbed embed, int seconds) {
-        RestAction<Message> sent = channel.sendMessage(embed);
-        final int id = ThreadLocalRandom.current().nextInt(49286, 69284 + 1);
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                container.put(id, sent.complete());
-                try {
-                    Thread.sleep(seconds * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ((Message) container.get(id)).delete().complete();
-            }
-        });
-        t.start();
-        return (Message) container.get(id);
     }
 
     public DiscordUtil flagDestructive(Message message) {
@@ -212,7 +170,7 @@ public class DiscordUtil {
 
     public boolean canManage(Message message) {
         boolean isPrivate = message.getChannelType() == ChannelType.PRIVATE;
-        boolean isSelf = message.getAuthor().getId() == DiscordSRV.selfUser.getId();
+        boolean isSelf = message.getAuthor().getId() == Discord.selfUser.getId();
         return !isPrivate || isSelf;
     }
 

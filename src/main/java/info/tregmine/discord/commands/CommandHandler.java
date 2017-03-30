@@ -1,7 +1,7 @@
 package info.tregmine.discord.commands;
 
 import info.tregmine.Tregmine;
-import info.tregmine.discord.DiscordSRV;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.DiscordUtil;
 import info.tregmine.discord.entities.ExecutorHashMap;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class CommandHandler extends ListenerAdapter {
 
-    private DiscordSRV srv;
+    private Discord srv;
     private Tregmine plugin;
 
     private ExecutorHashMap<String, IDiscordCommand> executors = new ExecutorHashMap<String, IDiscordCommand>();
 
-    public CommandHandler(DiscordSRV srv) {
+    public CommandHandler(Discord srv) {
         this.srv = srv;
         this.srv.getAPI().addEventListener(this);
         this.plugin = this.srv.getPlugin();
@@ -40,7 +40,7 @@ public class CommandHandler extends ListenerAdapter {
         String[] components = event.getMessage().getContent().split(" ", 2);
         IDiscordCommand command = this.executors.get(components[0]);
         if (command == null) {
-            new DiscordUtil().flagDestructive(event.getMessage());
+            Discord.DISCORD_UTIL.flagDestructive(event.getMessage());
             unknownCommand(event.getChannel(), components[0], event.getAuthor());
             return;
         }
@@ -52,7 +52,7 @@ public class CommandHandler extends ListenerAdapter {
                 break;
             }
             if (!accessible) {
-                new DiscordUtil().flagDestructive(event.getMessage());
+                Discord.DISCORD_UTIL.flagDestructive(event.getMessage());
                 insufficientPerms(event.getChannel(), components[0], event.getAuthor());
                 return;
             }
@@ -73,11 +73,11 @@ public class CommandHandler extends ListenerAdapter {
     }
 
     private void unknownCommand(MessageChannel channel, String command, User author) {
-        new DiscordUtil().sendDestructiveMessage(channel, TregmineEmbedBuilder.errorEmbedForUser("Command Not Found", "Sorry, `" + command + "` is not a valid command.", author));
+        Discord.DISCORD_UTIL.sendDestructiveMessage(channel, TregmineEmbedBuilder.errorEmbedForUser("Command Not Found", "Sorry, `" + command + "` is not a valid command.", author));
     }
 
     private void insufficientPerms(MessageChannel channel, String command, User author) {
-        new DiscordUtil().sendDestructiveMessage(channel, TregmineEmbedBuilder.errorEmbedForUser("Insufficient Permissions", "Sorry, you don't have authorization to perform `" + command + "`", author));
+        Discord.DISCORD_UTIL.sendDestructiveMessage(channel, TregmineEmbedBuilder.errorEmbedForUser("Insufficient Permissions", "Sorry, you don't have authorization to perform `" + command + "`", author));
     }
 
 }

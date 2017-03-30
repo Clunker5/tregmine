@@ -1,10 +1,9 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
-import info.tregmine.api.TregminePlayer.ChatState;
-import info.tregmine.api.TregminePlayer.Flags;
+import info.tregmine.api.GenericPlayer.ChatState;
+import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -21,7 +20,7 @@ public class SkipMentorCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getRank() != Rank.SENIOR_ADMIN && player.getRank() != Rank.JUNIOR_ADMIN
                 && player.getRank() != Rank.GUARDIAN) {
             player.sendMessage(RED
@@ -35,12 +34,12 @@ public class SkipMentorCommand extends AbstractCommand {
         }
         // The checks have finished, perform the command
         String possibleuser = args[0];
-        List<TregminePlayer> candidate = tregmine.matchPlayer(possibleuser);
+        List<GenericPlayer> candidate = tregmine.matchPlayer(possibleuser);
         if (candidate.size() != 1) {
             player.sendMessage(RED + "The player specified was not found. Please try again.");
             return true;
         }
-        TregminePlayer user = candidate.get(0);
+        GenericPlayer user = candidate.get(0);
         if (user.hasFlag(Flags.HARDWARNED)) {
             // Players with a hardwarn cannot be promoted using this command.
             // They must be promoted manually.

@@ -526,7 +526,7 @@ public enum Rank {
         }
     }
 
-    public int getTradeDistance(TregminePlayer player) {
+    public int getTradeDistance(GenericPlayer player) {
         if (this == JUNIOR_ADMIN || this == SENIOR_ADMIN) {
             return 1000;
         } else if (this == GUARDIAN) {

@@ -1,7 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.TregmineConsolePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -26,19 +26,23 @@ public abstract class AbstractCommand implements CommandExecutor {
         return command;
     }
 
+    /**This is the default console-method, which uses a slimmed-down TregminePlayer to function.
+     * It is not recommended to leave this as the default, mostly due to the fact that many things
+     * do not work with this compatibility layer due to the fact that this is not a real player.
+     */
     public boolean handleOther(Server server, String[] args) {
+        return handlePlayer(new TregmineConsolePlayer(this.tregmine), args);
+    }
+
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         return false;
     }
 
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
-        return false;
-    }
-
-    public void insufficientPerms(TregminePlayer player) {
+    public void insufficientPerms(GenericPlayer player) {
         player.sendMessage(ChatColor.DARK_RED + "You have insufficient permissions for /" + this.command + ".");
     }
 
-    public void invalidArguments(TregminePlayer player, String arguments) {
+    public void invalidArguments(GenericPlayer player, String arguments) {
         player.sendMessage(ChatColor.RED + "Invalid arguments passed for /" + this.command + ".");
         player.sendMessage(ChatColor.RED + "The proper syntax is: " + ChatColor.GOLD + arguments);
     }
@@ -46,7 +50,7 @@ public abstract class AbstractCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
-            TregminePlayer player = tregmine.getPlayer((Player) sender);
+            GenericPlayer player = tregmine.getPlayer((Player) sender);
             if (!player.getRank().canUseCommands()) {
                 player.sendMessage(ChatColor.RED + "Please complete setup before " + "continuing.");
                 return true;

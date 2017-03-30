@@ -1,6 +1,7 @@
 package info.tregmine.discord.commands;
 
 import info.tregmine.Tregmine;
+import info.tregmine.discord.Discord;
 import info.tregmine.discord.DiscordUtil;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -33,7 +34,7 @@ public class HelpCommand extends DiscordCommand {
             }
             builder.setColor(Color.MAGENTA).setTitle("Command Index", null).setFooter(TregmineEmbedBuilder.TREGMINE_FOOTER, TregmineEmbedBuilder.TREGMINE_FOOTER_ICON)
                     .setDescription(helper);
-            new DiscordUtil().sendDestructiveMessageWithDuration(message.getChannel(), TregmineEmbedBuilder.wrapEmbed(builder.build(), message.getAuthor()), 10).flagDestructive(message, 10);
+            Discord.DISCORD_UTIL.sendDestructiveMessage(message.getChannel(), TregmineEmbedBuilder.wrapEmbed(builder.build(), message.getAuthor()), 10).flagDestructive(message, 10);
 
             return true;
         } else {
@@ -43,14 +44,14 @@ public class HelpCommand extends DiscordCommand {
             }
             IDiscordCommand command = this.plugin.getDiscordSRV().getCommandHandler().getExecutors().get(commandInput);
             if (command == null) {
-                new DiscordUtil().sendDestructiveMessage(message.getChannel(), TregmineEmbedBuilder.errorEmbedForUser("Command Not Found", "Sorry, `" + commandInput + "` is not a valid command. See `!help` for a list of commands.", message.getAuthor()));
+                Discord.DISCORD_UTIL.sendDestructiveMessage(message.getChannel(), TregmineEmbedBuilder.errorEmbedForUser("Command Not Found", "Sorry, `" + commandInput + "` is not a valid command. See `!help` for a list of commands.", message.getAuthor()));
             }
             EmbedBuilder builder = new EmbedBuilder(null);
             String helper = "";
             helper += "**" + command.getSyntax() + "**: " + command.getDescription() + "\n";
             builder.setColor(Color.MAGENTA).setTitle("Command Index", null).setFooter(TregmineEmbedBuilder.TREGMINE_FOOTER, TregmineEmbedBuilder.TREGMINE_FOOTER_ICON)
                     .setDescription(helper);
-            new DiscordUtil().sendDestructiveMessageWithDuration(message.getChannel(), TregmineEmbedBuilder.wrapEmbed(builder.build(), message.getAuthor()), 10).flagDestructive(message, 10);
+            Discord.DISCORD_UTIL.sendDestructiveMessage(message.getChannel(), TregmineEmbedBuilder.wrapEmbed(builder.build(), message.getAuthor()), 10).flagDestructive(message, 10);
             return true;
         }
     }

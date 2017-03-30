@@ -1,8 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.math.MathUtil;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -25,7 +24,7 @@ public class TeleportCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
@@ -42,22 +41,22 @@ public class TeleportCommand extends AbstractCommand {
         BukkitScheduler scheduler = server.getScheduler();
         String name = args[0];
 
-        List<TregminePlayer> candidates = tregmine.matchPlayer(name);
+        List<GenericPlayer> candidates = tregmine.matchPlayer(name);
         if (candidates.size() != 1) {
             player.sendMessage(RED + "Can't find user.");
             return true;
         }
 
-        TregminePlayer target = candidates.get(0);
+        GenericPlayer target = candidates.get(0);
         if (target.getWorld().getName().equalsIgnoreCase("vanilla") || target.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
-        if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+        if (target.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
             return true;
         }
 
-        if (target.hasFlag(TregminePlayer.Flags.TPSHIELD) && !player.getRank().canOverrideTeleportShield()) {
+        if (target.hasFlag(GenericPlayer.Flags.TPSHIELD) && !player.getRank().canOverrideTeleportShield()) {
             player.sendMessage(RED + target.getName() + AQUA + "'s teloptical deflector absorbed all motion. "
                     + "Teleportation failed.");
             target.sendMessage(
@@ -90,10 +89,10 @@ public class TeleportCommand extends AbstractCommand {
     }
 
     private static class TeleportTask implements Runnable {
-        private TregminePlayer to;
-        private TregminePlayer from;
+        private GenericPlayer to;
+        private GenericPlayer from;
 
-        public TeleportTask(TregminePlayer to, TregminePlayer from) {
+        public TeleportTask(GenericPlayer to, GenericPlayer from) {
             this.to = to;
             this.from = from;
         }

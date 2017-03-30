@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 
 public class SpawnCommand extends AbstractCommand {
     public SpawnCommand(Tregmine tregmine) {
@@ -9,7 +8,7 @@ public class SpawnCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         player.teleportWithHorse(player.getWorld().getSpawnLocation());
         return true;
     }

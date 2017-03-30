@@ -1,6 +1,7 @@
 package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.commands.AbstractCommand;
 import org.bukkit.ChatColor;
@@ -14,7 +15,7 @@ public class ToolSpawnCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String args[]) {
+    public boolean handlePlayer(GenericPlayer player, String args[]) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;

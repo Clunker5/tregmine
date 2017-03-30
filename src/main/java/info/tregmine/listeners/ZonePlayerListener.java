@@ -1,8 +1,8 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.util.ScoreboardClearTask;
 import info.tregmine.events.PlayerLotChangeEvent;
 import info.tregmine.quadtree.Point;
@@ -37,12 +37,12 @@ public class ZonePlayerListener implements Listener {
         this.plugin = instance;
     }
 
-    private void bannedMessage(Zone currentZone, TregminePlayer player) {
+    private void bannedMessage(Zone currentZone, GenericPlayer player) {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + "You are banned from "
                 + currentZone.getName() + ".");
     }
 
-    private void blockedMessage(Zone currentZone, TregminePlayer player) {
+    private void blockedMessage(Zone currentZone, GenericPlayer player) {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] " + "You are blocked from "
                 + currentZone.getName() + ".");
     }
@@ -104,7 +104,7 @@ public class ZonePlayerListener implements Listener {
             }
         }
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         for (Block block : areaofeffect) {
             Block block_under = block.getWorld().getBlockAt(block.getX(), block.getY() - 1, block.getZ());
@@ -119,7 +119,7 @@ public class ZonePlayerListener implements Listener {
         }
     }
 
-    private void disallowedMessage(Zone currentZone, TregminePlayer player) {
+    private void disallowedMessage(Zone currentZone, GenericPlayer player) {
         player.sendMessage(ChatColor.RED + "[" + currentZone.getName() + "] "
                 + "You are not allowed in this zone. Contact the zone owner.");
     }
@@ -130,7 +130,7 @@ public class ZonePlayerListener implements Listener {
         if (event.getClickedBlock() == null || !event.getClickedBlock().getType().equals(Material.CHEST))
             return;
 
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (!player.getRank().canForceOpenChests())
             return;
 
@@ -149,7 +149,7 @@ public class ZonePlayerListener implements Listener {
         }
     }
 
-    private void movePlayerBack(TregminePlayer player, Location movingFrom, Location movingTo) {
+    private void movePlayerBack(GenericPlayer player, Location movingFrom, Location movingTo) {
         Vector a = new Vector(movingFrom.getX(), movingFrom.getY(), movingFrom.getZ());
 
         Vector b = new Vector(movingTo.getX(), movingTo.getY(), movingTo.getZ());
@@ -167,7 +167,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
@@ -216,7 +216,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onBlockDamage(BlockDamageEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
@@ -274,7 +274,7 @@ public class ZonePlayerListener implements Listener {
             return;
         }
 
-        TregminePlayer player = plugin.getPlayer((Player) event.getRemover());
+        GenericPlayer player = plugin.getPlayer((Player) event.getRemover());
 
         if (!player.hasBlockPermission(player.getLocation(), true)) {
             event.setCancelled(true);
@@ -283,7 +283,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlock().getLocation();
 
@@ -294,7 +294,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
 
         Location location = event.getBlockClicked().getLocation();
 
@@ -305,7 +305,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         ZoneWorld world = plugin.getWorld(player.getWorld());
         World cWorld = player.getWorld();
 
@@ -366,7 +366,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
@@ -441,7 +441,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.getPlayer().kickPlayer("Something went wrong");
             Tregmine.LOGGER.info(event.getPlayer().getName() + " was not found " + "in players map (PlayerMoveEvent).");
@@ -483,8 +483,8 @@ public class ZonePlayerListener implements Listener {
                     // If blockWarned is true, and they are either hardwarned
                     // or softwarned then get them out of there with an error.
                     else if (currentZone.hasFlag(Zone.Flags.BLOCK_WARNED)
-                            && (player.hasFlag(TregminePlayer.Flags.HARDWARNED)
-                            || player.hasFlag(TregminePlayer.Flags.SOFTWARNED))) {
+                            && (player.hasFlag(GenericPlayer.Flags.HARDWARNED)
+                            || player.hasFlag(GenericPlayer.Flags.SOFTWARNED))) {
                         blockedMessage(currentZone, player);
                         movePlayerBack(player, movingFrom, movingTo);
                         return;
@@ -558,7 +558,7 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        TregminePlayer player = plugin.getPlayer(event.getPlayer());
+        GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             event.setCancelled(true);
             return;
@@ -642,8 +642,8 @@ public class ZonePlayerListener implements Listener {
         }
     }
 
-    private void welcomeMessage(Zone currentZone, TregminePlayer player, Zone.Permission perm) {
-        if (player.getChatState() == TregminePlayer.ChatState.SETUP) {
+    private void welcomeMessage(Zone currentZone, GenericPlayer player, Zone.Permission perm) {
+        if (player.getChatState() == GenericPlayer.ChatState.SETUP) {
             return;
         }
 

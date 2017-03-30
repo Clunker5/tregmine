@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -19,7 +18,7 @@ public class WalletCommand extends AbstractCommand {
         super(tregmine, "wallet");
     }
 
-    private boolean balance(TregminePlayer player) {
+    private boolean balance(GenericPlayer player) {
         try (IContext ctx = tregmine.createContext()) {
             IWalletDAO walletDAO = ctx.getWalletDAO();
 
@@ -36,7 +35,7 @@ public class WalletCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean donate(TregminePlayer player, TregminePlayer target, int amount) {
+    private boolean donate(GenericPlayer player, GenericPlayer target, int amount) {
         if (MathUtil.calcDistance2d(player.getLocation(), target.getLocation()) > 5) {
             if (player.canSee(target.getDelegate())) {
                 player.sendMessage(
@@ -68,7 +67,7 @@ public class WalletCommand extends AbstractCommand {
         return true;
     }
 
-    private boolean give(TregminePlayer player, TregminePlayer target, int amount) {
+    private boolean give(GenericPlayer player, GenericPlayer target, int amount) {
         if (MathUtil.calcDistance2d(player.getLocation(), target.getLocation()) > 5) {
             if (player.canSee(target.getDelegate())) {
                 player.sendMessage(
@@ -101,7 +100,7 @@ public class WalletCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(TregminePlayer player, String[] args) {
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             player.sendMessage(RED + "Incorrect usage! Try:");
             player.sendMessage(AQUA + "/wallet tell <player>");
@@ -131,16 +130,16 @@ public class WalletCommand extends AbstractCommand {
                 return true;
             }
 
-            List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
+            List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
                 player.sendMessage(RED + "Unknown Player: " + args[1]);
                 return true;
             }
 
-            TregminePlayer target = candidates.get(0);
+            GenericPlayer target = candidates.get(0);
 
             // Sneaky ;)
-            if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+            if (target.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 player.sendMessage(RED + "Unknown Player: " + args[1]);
                 return true;
             }
@@ -153,15 +152,15 @@ public class WalletCommand extends AbstractCommand {
                 return true;
             }
 
-            List<TregminePlayer> candidates = tregmine.matchPlayer(args[1]);
+            List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
                 player.sendMessage(RED + "Unknown Player: " + args[1]);
                 return true;
             }
 
-            TregminePlayer target = candidates.get(0);
+            GenericPlayer target = candidates.get(0);
 
-            if (target.hasFlag(TregminePlayer.Flags.INVISIBLE)) {
+            if (target.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 player.sendMessage(RED + "Unknown Player: " + args[1]);
                 return true;
             }
@@ -177,8 +176,8 @@ public class WalletCommand extends AbstractCommand {
         return false;
     }
 
-    private boolean tell(TregminePlayer player, String name) {
-        TregminePlayer target = tregmine.getPlayer(name);
+    private boolean tell(GenericPlayer player, String name) {
+        GenericPlayer target = tregmine.getPlayer(name);
         if (target == null) {
             player.sendMessage(RED + "Usage: /wallet tell <player>");
             return true;

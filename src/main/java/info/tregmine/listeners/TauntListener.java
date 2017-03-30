@@ -1,7 +1,7 @@
 package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -45,7 +45,7 @@ public class TauntListener implements Listener {
         }
         PlayerDeathEvent e = (PlayerDeathEvent) event;
         Player player = (Player) event.getEntity();
-        TregminePlayer player2 = plugin.getPlayer(player);
+        GenericPlayer player2 = plugin.getPlayer(player);
         if (player2.causeOfDeath() != "adminkilled") {
             return;
         }
@@ -60,7 +60,7 @@ public class TauntListener implements Listener {
         }
         PlayerDeathEvent e = (PlayerDeathEvent) event;
         Player player = (Player) event.getEntity();
-        TregminePlayer player2 = plugin.getPlayer(player);
+        GenericPlayer player2 = plugin.getPlayer(player);
         if (player2.causeOfDeath() != "suicide") {
             return;
         }
@@ -74,7 +74,7 @@ public class TauntListener implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        TregminePlayer player2 = plugin.getPlayer(player);
+        GenericPlayer player2 = plugin.getPlayer(player);
         PlayerDeathEvent e = (PlayerDeathEvent) event;
 
         Random rand = new Random();
