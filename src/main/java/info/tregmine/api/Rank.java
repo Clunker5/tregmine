@@ -9,7 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Rank {
-    UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR, GUARDIAN, CODER, BUILDER, JUNIOR_ADMIN, SENIOR_ADMIN;
+    UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR("Donator"), GUARDIAN("Guardian"), CODER("Coder"), BUILDER("Builder"), JUNIOR_ADMIN("Junior Admin"), SENIOR_ADMIN("Senior Admin");
+
+    private String discordEquivalent = "UNSETDONTUSEMEPLEASE";
+
+    private Rank(String discord){
+        this.discordEquivalent = discord;
+    }
+
+    private Rank(){
+
+    }
 
     public static Rank fromString(String value) {
         for (Rank rank : Rank.values()) {
@@ -19,6 +29,10 @@ public enum Rank {
         }
 
         return null;
+    }
+
+    public String getDiscordEquivalent(){
+        return this.discordEquivalent;
     }
 
     public boolean arePickupsLogged() {

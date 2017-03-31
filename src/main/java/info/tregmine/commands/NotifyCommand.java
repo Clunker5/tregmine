@@ -1,15 +1,19 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
 import static org.bukkit.ChatColor.WHITE;
 
 public abstract class NotifyCommand extends AbstractCommand {
-    public NotifyCommand(Tregmine tregmine, String command) {
+    public NotifyCommand(Tregmine tregmine, String command, Rank... targets) {
         super(tregmine, command);
+        this.targets = targets;
     }
+
+    protected Rank[] targets;
 
     private String argsToMessage(String[] args) {
         StringBuffer buf = new StringBuffer();
@@ -48,6 +52,8 @@ public abstract class NotifyCommand extends AbstractCommand {
             to.sendMessage(new TextComponent(getColor() + " + "), player.decideVS(to),
                     new TextComponent(" " + WHITE + msg));
         }
+
+        this.tregmine.getDiscordSRV().notifyRank(player.getName(), msg, this.targets);
 
         return true;
     }

@@ -7,6 +7,7 @@ package info.tregmine.discord;
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.Flags;
+import info.tregmine.api.Rank;
 import info.tregmine.discord.commands.CommandHandler;
 import info.tregmine.discord.entities.EmbedAlertType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
@@ -15,13 +16,11 @@ import info.tregmine.discord.listeners.*;
 import info.tregmine.discord.threads.ChannelTopicUpdater;
 import info.tregmine.discord.threads.ServerLogWatcher;
 import info.tregmine.discord.threads.ServerLogWatcherHelper;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.impl.MemberImpl;
+import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.utils.PermissionUtil;
@@ -480,6 +479,24 @@ public class Discord {
             unsubscribedPlayers.remove(uniqueId.toString());
         if (!subscribed && !unsubscribedPlayers.contains(uniqueId.toString()))
             unsubscribedPlayers.add(uniqueId.toString());
+    }
+
+    public void notifyRank(String from, String message, Rank... rank){
+        List<Member> notified = new ArrayList<>();
+        for(Rank r : rank){
+            List<Role> roles = this.guild.getRolesByName(r.getDiscordEquivalent(), true);
+            if(roles.size() < 1){
+                return;
+            }
+            Role role = roles.get(0);
+            for(Member member : this.guild.getMembersWithRoles(role)){
+                if(!member.getUser().hasPrivateChannel())
+                    member.getUser().openPrivateChannel().complete();
+                MessageEmbed embed = TregmineEmbedBuilder.genericEmbed("From " + from, message, Color.ORANGE);
+                embed = new EmbedBuilder(embed).setAuthor(r.getDiscordEquivalent() + " Alert", null, null).build();
+                member.getUser().getPrivateChannel().sendMessage(embed).complete();
+            }
+        }
     }
 
     public void startServerLogWatcher() {

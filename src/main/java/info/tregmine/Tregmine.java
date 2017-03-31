@@ -763,7 +763,10 @@ public class Tregmine extends JavaPlugin {
 
         // Declaration of all commands
 
-        getCommand("admins").setExecutor(new NotifyCommand(this, "admins") {
+        getCommand("admins").setExecutor(new NotifyCommand(this, "admins", Rank.JUNIOR_ADMIN, Rank.SENIOR_ADMIN) {
+
+
+
             @Override
             public ChatColor getColor() {
                 return plugin.getRankColor(Rank.JUNIOR_ADMIN);
@@ -773,9 +776,11 @@ public class Tregmine extends JavaPlugin {
             public boolean isTarget(GenericPlayer player) {
                 return player.getRank() == Rank.JUNIOR_ADMIN || player.getRank() == Rank.SENIOR_ADMIN;
             }
+
+
         });
 
-        getCommand("guardians").setExecutor(new NotifyCommand(this, "guardians") {
+        getCommand("guardians").setExecutor(new NotifyCommand(this, "guardians", Rank.GUARDIAN, Rank.JUNIOR_ADMIN, Rank.SENIOR_ADMIN) {
             @Override
             public ChatColor getColor() {
                 return plugin.getRankColor(Rank.GUARDIAN);
@@ -788,7 +793,7 @@ public class Tregmine extends JavaPlugin {
             }
         });
 
-        getCommand("coders").setExecutor(new NotifyCommand(this, "coders") {
+        getCommand("coders").setExecutor(new NotifyCommand(this, "coders", Rank.CODER, Rank.JUNIOR_ADMIN, Rank.SENIOR_ADMIN) {
             @Override
             public ChatColor getColor() {
                 return plugin.getRankColor(Rank.CODER);
