@@ -440,7 +440,7 @@ public class TregminePlayerListener implements Listener {
             player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
         } else if (rank.canFly()) {
-            if (player.hasFlag(GenericPlayer.Flags.FLY_ENABLED)) {
+            if (player.hasFlag(GenericPlayer.Flags.FLY_ENABLED) || player.getGameMode() == GameMode.SPECTATOR) {
                 player.sendMessage("Flying: Allowed and Enabled! Toggle flying with /fly");
                 player.setAllowFlight(true);
             } else {
