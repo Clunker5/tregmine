@@ -24,7 +24,7 @@ public class AchievementListener implements Listener {
         if (event == null || event.getAchievement() == null || event.getPlayer() == null)
             return;
 
-        this.srv.sendMessage(this.srv.getChatChannel(),
+        this.srv.getChatChannel().sendMessage(
                 ChatColor.stripColor(
                         this.srv.getPlugin().getConfig().getString("discord.bridge-functionality.achievements.format")
                                 .replace("%username%", event.getPlayer().getName())
