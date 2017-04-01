@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
@@ -10,59 +11,48 @@ import org.bukkit.ChatColor;
 import java.util.List;
 
 public class PropertyCommand extends AbstractCommand {
-    private Tregmine a;
-    // b is the sender and d is the target.
-    private GenericPlayer b;
-    private List<GenericPlayer> e;
-    private GenericPlayer d;
-    private String[] c;
+    private Tregmine plugin;
 
-    public PropertyCommand(Tregmine instance) {
-        super(instance, "property");
-        a = instance;
+    public PropertyCommand(Tregmine plugin) {
+        super(plugin, "property");
+        this.plugin = plugin;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String args[]) {
-        b = player;
-        c = args;
-        if (!b.getIsAdmin()) {
-            b.sendMessage(ChatColor.RED + "You're not allowed to change player properties!");
+        if (player.getRank() != Rank.SENIOR_ADMIN) {
+            player.sendMessage(ChatColor.RED + "You're not allowed to change player properties!");
             return true;
         }
-        if (c.length <= 2) {
-            b.sendMessage(ChatColor.RED + "You gave the wrong amount of arguments.");
-            b.sendMessage(ChatColor.RED + "/property <target player> <key> <value>");
+        if (args.length <= 2) {
+            player.sendMessage(ChatColor.RED + "You gave the wrong amount of arguments.");
+            player.sendMessage(ChatColor.RED + "/property <target player> <key> <value>");
             return true;
         }
-        e = a.matchPlayer(c[0]);
-        if (e.size() != 1) {
-            b.sendMessage(ChatColor.RED + "The target player specified does not exist");
+        List<GenericPlayer> matches = this.plugin.matchPlayer(args[0]);
+        if (matches.size() != 1) {
+            player.sendMessage(ChatColor.RED + "The target player specified does not exist");
             return true;
         }
-        d = e.get(0);
-        String j = "";
-        for (String i : c) {
-            if (i.equals(c[0])) {
-
-            } else if (i.equals(c[1])) {
-
+        GenericPlayer target = matches.get(0);
+        String updatedValue = "";
+        for (String value : args) {
+            if (value.equals(args[0]) || value.equals(args[1]))
+                continue;
+            if (value.length() == 0) {
+                updatedValue = value;
             } else {
-                if (j.length() == 0) {
-                    j = i;
-                } else {
-                    j += " " + i;
-                }
+                updatedValue += " " + value;
             }
         }
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO h = ctx.getPlayerDAO();
-            h.updateProperty(d, c[1], j);
-            d.sendMessage(new TextComponent(ChatColor.GOLD + c[1] + ChatColor.GREEN + " has been set to "
-                    + ChatColor.GOLD + j + ChatColor.GREEN + " for " + ChatColor.GOLD + d.getName()));
+            h.updateProperty(target, args[1], updatedValue);
+            player.sendMessage(new TextComponent(ChatColor.GOLD + args[1] + ChatColor.GREEN + " has been set to "
+                    + ChatColor.GOLD + updatedValue + ChatColor.GREEN + " for " + ChatColor.GOLD + player.getName()));
         } catch (DAOException g) {
             g.printStackTrace();
-            d.sendMessage(ChatColor.RED + "Something went wrong!");
+            player.sendMessage(ChatColor.RED + "Something went wrong!");
             return true;
         }
 
