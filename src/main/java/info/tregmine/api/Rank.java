@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public enum Rank {
@@ -197,11 +198,11 @@ public enum Rank {
     }
 
     public List<GameMode> getPermittedGamemodes() {
-        List<GameMode> modes = new ArrayList<GameMode>();
+        if (this == JUNIOR_ADMIN || this == SENIOR_ADMIN)
+            return Arrays.asList(GameMode.values());
+        List<GameMode> modes = new ArrayList<>();
         if (this.canUseCreative())
             modes.add(GameMode.CREATIVE);
-        if (this == JUNIOR_ADMIN || this == SENIOR_ADMIN)
-            modes.add(GameMode.SPECTATOR);
         if (this != UNVERIFIED && this != TOURIST && this != SETTLER && this != RESIDENT) {
             modes.add(GameMode.ADVENTURE);
             modes.add(GameMode.SURVIVAL);
