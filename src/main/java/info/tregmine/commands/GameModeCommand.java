@@ -35,11 +35,19 @@ public class GameModeCommand extends AbstractCommand {
         } else {
             //Generic Mode!
             if (args.length != 1) {
-                player.sendMessage(ChatColor.RED + "You must specify a gamemode to switch to!");
+                String modes = "";
+                for(GameMode m : GameMode.values()){
+                    ChatColor color =
+                            player.getRank().getPermittedGamemodes().contains(m) ? ChatColor.GREEN : ChatColor.RED;
+                    modes += m.name().toLowerCase() + " ";
+                }
+                player.sendMessage(ChatColor.AQUA + "Gamemodes available: " + modes);
                 return true;
             }
-            GameMode switchTo = GameMode.valueOf(args[0].toUpperCase());
-            if (switchTo == null) {
+            GameMode switchTo;
+            try {
+               switchTo = GameMode.valueOf(args[0].toUpperCase());
+            }catch(IllegalArgumentException e){
                 player.sendMessage(ChatColor.RED + "The specified gamemode does not exist!");
                 return true;
             }
