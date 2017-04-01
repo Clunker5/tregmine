@@ -106,6 +106,7 @@ public class ChannelTopicUpdater extends Thread {
                     this.srv.getConsoleChannel().getManager().setTopic(consoleTopic).complete();
 
                 Thread.sleep(rate);
+            } catch (InterruptedException e){
             } catch (Exception e) {
                 e.printStackTrace();
             }
