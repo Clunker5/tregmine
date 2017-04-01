@@ -8,6 +8,8 @@ import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.api.Rank;
+import info.tregmine.commands.DiscordCommand;
+import info.tregmine.commands.DiscordServiceCommand;
 import info.tregmine.discord.commands.CommandHandler;
 import info.tregmine.discord.entities.EmbedAlertType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
@@ -23,6 +25,7 @@ import net.dv8tion.jda.core.entities.impl.MemberImpl;
 import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.requests.RestAction;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -141,6 +144,9 @@ public class Discord {
                     && !PermissionUtil.checkPermission(consoleChannel, selfMember, Permission.MESSAGE_READ))
                 Tregmine.LOGGER.warning("The bot does not have access to read messages in " + consoleChannel.getName());
         }
+        // initialize commands
+        this.plugin.getCommand("discord").setExecutor(new DiscordCommand(this.plugin));
+        this.plugin.getCommand("discordsrv").setExecutor(new DiscordServiceCommand(this.plugin));
     }
 
     public void broadcastMessageToMinecraftServer(String message) {
@@ -350,14 +356,16 @@ public class Discord {
             serverLogWatcherHelper.interrupt();
         serverLogWatcherHelper = null;
 
+        if(channelTopicUpdater != null && !channelTopicUpdater.isInterrupted())
+            channelTopicUpdater.interrupt();
+        channelTopicUpdater = null;
+
         // server shutdown message
         if (chatChannel != null
                 && this.plugin.getConfig().getBoolean("discord.bridge-functionality.start-stop.shutdown.enabled"))
-            sendMessage(this.chatChannel,
-                    /*new TregmineEmbedBuilder().createEmbed(EmbedAlertType.STATUS_UPDATE,
-							*/
+            this.chatChannel.sendMessage(
                     TregmineEmbedBuilder.genericEmbed(EmbedAlertType.STATUS_UPDATE.getDisplayName(), plugin.getConfig().getString("discord.bridge-functionality.start-stop.shutdown.message"),
-                            Color.RED));
+                            Color.RED)).complete();
 
         // disconnect from discord
         try {
@@ -366,21 +374,52 @@ public class Discord {
             Tregmine.LOGGER.info("Discord shutting down before logged in");
         }
         api = null;
+    }
 
-        // save unsubscribed users
-        if (new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").exists())
-            new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt").delete();
-        String players = "";
-        for (String id : unsubscribedPlayers)
-            players += id + "\n";
-        if (players.length() > 0) {
-            players = players.substring(0, players.length() - 1);
-            try {
-                FileUtils.writeStringToFile(new File(this.plugin.getDataFolder(), "discord_unsubscribed.txt"), players);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
+
+        // player achievement events
+        if (this.plugin.getConfig().getBoolean("discord.bridge-functionality.achievements.enabled")) {
+            if(this.achievementListener == null){
+                this.achievementListener = new AchievementListener(this.plugin);
+                this.plugin.getServer().getPluginManager().registerEvents(this.achievementListener, this.plugin);
+            }
+        }
+
+        // - chat channel
+        if (this.plugin.getConfig().getBoolean("discord.bridge-functionality.discord-to-minecraft")
+                || this.plugin.getConfig().getBoolean("discord.bridge-functionality.minecraft-to-discord")) {
+            if (!testChannel(chatChannel))
+                Tregmine.LOGGER.warning("Channel \"" + chatChannel + "\" was not accessible");
+            if (testChannel(chatChannel)
+                    && !PermissionUtil.checkPermission(chatChannel, selfMember, Permission.MESSAGE_WRITE))
+                Tregmine.LOGGER.warning("The bot does not have access to send messages in " + chatChannel.getName());
+            if (testChannel(chatChannel)
+                    && !PermissionUtil.checkPermission(chatChannel, selfMember, Permission.MESSAGE_READ))
+                // !PermissionUtil.checkPermission(channel, self. null,
+                // Permission.MESSAGE_WRITE)
+                // !PermissionUtil.checkPermission(
+                Tregmine.LOGGER.warning("The bot does not have access to read messages in " + chatChannel.getName());
+        }
+        // - console channel
+        if (consoleChannel != null) {
+            if (!testChannel(consoleChannel))
+                Tregmine.LOGGER.warning("Channel \"" + consoleChannel + "\" was not accessible");
+            if (testChannel(consoleChannel)
+                    && !PermissionUtil.checkPermission(consoleChannel, selfMember, Permission.MESSAGE_WRITE))
+                Tregmine.LOGGER.warning("The bot does not have access to send messages in " + consoleChannel.getName());
+            if (testChannel(consoleChannel)
+                    && !PermissionUtil.checkPermission(consoleChannel, selfMember, Permission.MESSAGE_READ))
+                Tregmine.LOGGER.warning("The bot does not have access to read messages in " + consoleChannel.getName());
+        }
+
+        startServerLogWatcher();
+        serverLogWatcherHelper = new ServerLogWatcherHelper(this);
+        serverLogWatcherHelper.start();
+
+        channelTopicUpdater = new ChannelTopicUpdater(this);
+        channelTopicUpdater.start();
     }
 
     public CommandHandler getCommandHandler() {
@@ -412,26 +451,27 @@ public class Discord {
         }
     }
 
-    public void sendMessage(TextChannel channel, MessageEmbed embed) {
-        if (api == null || channel == null
-                || (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
-                || !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))) {
-            Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
-            return;
         }
-        channel.sendMessage(embed).complete();
     }
 
-    public void sendMessage(TextChannel channel, String message) {
-        sendMessage(channel, message, true);
+    /**
+     * @deprecated Use JDA sendMessage instead.
+     */
+    @Deprecated
+    public RestAction<Message> sendMessage(TextChannel channel, String message) {
+        return sendMessage(channel, message, true);
     }
 
-    public void sendMessage(TextChannel channel, String message, boolean editMessage) {
+    /**
+     * @deprecated Use JDA sendMessage instead.
+     */
+    @Deprecated
+    public RestAction<Message> sendMessage(TextChannel channel, String message, boolean editMessage) {
         if (api == null || channel == null
                 || (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
                 || !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))) {
             Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
-            return;
+            return null;
         }
 
         message = ChatColor.stripColor(message).replaceAll("[&§][0-9a-fklmnor]", "") // removing
@@ -453,32 +493,29 @@ public class Discord {
             for (String phrase : this.plugin.getConfig().getStringList("discord.bridge-functionality.censor-phrases"))
                 message = message.replace(phrase, "");
 
-        String overflow = null;
         if (message.length() > 2000) {
             Tregmine.LOGGER.warning("Tried sending message with length of " + message.length() + " ("
                     + (message.length() - 2000) + " over limit)");
-            overflow = message.substring(1999);
             message = message.substring(0, 1999);
         }
 
-        channel.sendMessage(message).complete();
-        if (overflow != null)
-            sendMessage(channel, overflow, editMessage);
+        return channel.sendMessage(message);
     }
 
-    public void sendMessageToChatChannel(String message) {
-        sendMessage(chatChannel, message);
+    /**
+     * @deprecated use JDA sendMessage instead.
+     */
+    @Deprecated
+    public RestAction<Message> sendMessageToChatChannel(String message) {
+        return sendMessage(chatChannel, message);
     }
 
-    public void sendMessageToConsoleChannel(String message) {
-        sendMessage(consoleChannel, message);
-    }
-
-    public void setSubscribed(UUID uniqueId, boolean subscribed) {
-        if (subscribed && unsubscribedPlayers.contains(uniqueId.toString()))
-            unsubscribedPlayers.remove(uniqueId.toString());
-        if (!subscribed && !unsubscribedPlayers.contains(uniqueId.toString()))
-            unsubscribedPlayers.add(uniqueId.toString());
+    /**
+     * @deprecated use JDA sendMessage instead.
+     */
+    @Deprecated
+    public RestAction<Message> sendMessageToConsoleChannel(String message) {
+        return sendMessage(consoleChannel, message);
     }
 
     public void notifyRank(String from, String message, Rank... rank){
