@@ -412,20 +412,21 @@ public class Discord {
      * @deprecated Use JDA sendMessage instead.
      */
     @Deprecated
-    public RestAction<Message> sendMessage(TextChannel channel, String message) {
-        return sendMessage(channel, message, true);
+    public void sendMessage(TextChannel channel, String message) {
+        sendMessage(channel, message, true);
+        return;
     }
 
     /**
      * @deprecated Use JDA sendMessage instead.
      */
     @Deprecated
-    public RestAction<Message> sendMessage(TextChannel channel, String message, boolean editMessage) {
+    public void sendMessage(TextChannel channel, String message, boolean editMessage) {
         if (api == null || channel == null
                 || (!PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_READ)
                 || !PermissionUtil.checkPermission(channel, selfMember, Permission.MESSAGE_WRITE))) {
             Tregmine.LOGGER.warning("DSV: No Read/Write Permissions!");
-            return null;
+            return;
         }
 
         message = ChatColor.stripColor(message).replaceAll("[&§][0-9a-fklmnor]", "") // removing
@@ -453,23 +454,23 @@ public class Discord {
             message = message.substring(0, 1999);
         }
 
-        return channel.sendMessage(message);
+        channel.sendMessage(message).complete();
     }
 
     /**
      * @deprecated use JDA sendMessage instead.
      */
     @Deprecated
-    public RestAction<Message> sendMessageToChatChannel(String message) {
-        return sendMessage(chatChannel, message);
+    public void sendMessageToChatChannel(String message) {
+        sendMessage(chatChannel, message);
     }
 
     /**
      * @deprecated use JDA sendMessage instead.
      */
     @Deprecated
-    public RestAction<Message> sendMessageToConsoleChannel(String message) {
-        return sendMessage(consoleChannel, message);
+    public void sendMessageToConsoleChannel(String message) {
+        sendMessage(consoleChannel, message);
     }
 
     public void notifyRank(String from, String message, Rank... rank){
