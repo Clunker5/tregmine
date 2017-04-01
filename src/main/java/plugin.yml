@@ -43,6 +43,9 @@ commands:
   discord:
     description: Interact with discord.
     usage: /discord [link|verify|unlink] [discordID|confcode]
+  discordsrv:
+    description: Interact with discord internals.
+    usage: /discordsrv [setpicture|reload|debug]
   survival:
     description: Switch to survival mode (admins and builders only)
     usage: /survival

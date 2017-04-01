@@ -1,6 +1,8 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
+import info.tregmine.discord.exception.JDAFailedException;
 import net.dv8tion.jda.core.entities.Icon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,19 +19,20 @@ import java.util.List;
 public class DiscordServiceCommand extends AbstractCommand {
 
     private Tregmine plugin;
+    private final String args = ChatColor.AQUA + "/discordsrv [setpicture|reload|debug]";
 
     public DiscordServiceCommand(Tregmine tregmine) {
-        super(tregmine, "discordservice");
+        super(tregmine, "discordsrv");
         this.plugin = tregmine;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (args.length == 0) {
-            if (!sender.isOp())
-                sender.sendMessage("/discordsrv toggle/subscribe/unsubscribe");
+            if (sender.getRank() != Rank.JUNIOR_ADMIN && sender.getRank() != Rank.SENIOR_ADMIN)
+                sender.sendMessage(ChatColor.RED + "This command is admins-only!");
             else
-                sender.sendMessage("/discordsrv setpicture/reload/rebuild/debug/toggle/subscribe/unsubscribe");
+                sender.sendMessage(this.args);
             return true;
         }
         if (args[0].equalsIgnoreCase("setpicture")) {
@@ -100,33 +103,7 @@ public class DiscordServiceCommand extends AbstractCommand {
             }
             return true;
         }
-        if (args[0].equalsIgnoreCase("rebuild")) {
-            if (!sender.isOp())
-                return true;
-            // buildJda();
-            sender.sendMessage("Disabled because no workie");
-            return true;
-        }
-
-        if (!(sender instanceof Player))
-            return true;
-        Player senderPlayer = (Player) sender;
-        if (args[0].equalsIgnoreCase("toggle")) {
-            Boolean subscribed = this.plugin.getDiscordSRV().getSubscribed(senderPlayer.getUniqueId());
-            this.plugin.getDiscordSRV().setSubscribed(senderPlayer.getUniqueId(), !subscribed);
-
-            String subscribedMessage = this.plugin.getDiscordSRV().getSubscribed(senderPlayer.getUniqueId())
-                    ? "subscribed" : "unsubscribed";
-            sender.sendMessage(ChatColor.AQUA + "You have been " + subscribedMessage + " to Discord messages.");
-        }
-        if (args[0].equalsIgnoreCase("subscribe")) {
-            this.plugin.getDiscordSRV().setSubscribed(senderPlayer.getUniqueId(), true);
-            sender.sendMessage(ChatColor.AQUA + "You have been subscribed to Discord messages.");
-        }
-        if (args[0].equalsIgnoreCase("unsubscribe")) {
-            this.plugin.getDiscordSRV().setSubscribed(senderPlayer.getUniqueId(), false);
-            sender.sendMessage(ChatColor.AQUA + "You are no longer subscribed to Discord messages.");
-        }
+        sender.sendMessage(this.args);
         return true;
     }
 
