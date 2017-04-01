@@ -140,8 +140,6 @@ public interface GenericPlayer extends GenericDelegate{
 
     void setIp(String v);
 
-    boolean getIsAdmin();
-
     boolean getIsStaff();
 
     String getKeyword();

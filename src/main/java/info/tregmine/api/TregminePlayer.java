@@ -556,15 +556,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
-    public boolean getIsAdmin() {
-        boolean isStaff = false;
-        if (rank == Rank.JUNIOR_ADMIN || rank == Rank.SENIOR_ADMIN || isOp()) {
-            isStaff = true;
-        }
-        return isStaff;
-    }
-
-    @Override
     public boolean getIsStaff() {
         return Staff;
     }

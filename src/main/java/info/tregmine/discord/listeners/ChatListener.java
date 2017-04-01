@@ -47,10 +47,7 @@ public class ChatListener implements Listener {
             return;
 
         GenericPlayer sender = plugin.getPlayer(event.getPlayer());
-        // if(sender.getChatChannel().toLowerCase() != "global"){
-        // return;
-        // }
-        if (sender.getChatChannel().toUpperCase() != "GLOBAL") {
+        if (!sender.getChatChannel().equalsIgnoreCase("global")) {
             return;
         }
 
@@ -61,7 +58,7 @@ public class ChatListener implements Listener {
         if (event.getMessage().toLowerCase().contains("%cancel%")) {
             return;
         }
-        String name = "";
+        String name;
         if (sender.hasNick()) {
             name = sender.getNickname().getNicknamePlaintext();
         } else {
@@ -74,6 +71,6 @@ public class ChatListener implements Listener {
                 .replace("%time%", new Date().toString());
 
         message = this.srv.convertMentionsFromNames(message);
-        this.srv.sendMessage(this.srv.getChatChannel(), message);
+        this.srv.getChatChannel().sendMessage(message).complete();
     }
 }

@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.potion.PotionEffect;
@@ -18,7 +19,7 @@ public class KillCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getIsAdmin()) {
+        if (player.getRank() != Rank.SENIOR_ADMIN) {
             player.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
             return true;
         }
@@ -29,9 +30,6 @@ public class KillCommand extends AbstractCommand {
         if (args.length != 1) {
             player.sendMessage(ChatColor.RED + "Invalid arguments - Use /kill player");
             return true;
-        }
-        if (!player.isOp()) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to kill people!");
         }
         if (player.getWorld().getName() == "vanilla") {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");

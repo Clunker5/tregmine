@@ -1166,11 +1166,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public boolean getIsAdmin() {
-        return true;
-    }
-
-    @Override
     public boolean getIsStaff() {
         return true;
     }

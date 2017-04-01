@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +25,7 @@ public class ResetLoreCommand extends AbstractCommand {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
-        if (!sender.getIsAdmin()) {
+        if (sender.getRank() != Rank.SENIOR_ADMIN) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to reset lores.");
             return true;
         }

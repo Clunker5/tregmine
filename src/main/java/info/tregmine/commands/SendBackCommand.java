@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
@@ -20,7 +21,7 @@ public class SendBackCommand extends AbstractCommand {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
-        if (!player.getIsAdmin()) {
+        if (player.getRank() != Rank.SENIOR_ADMIN) {
             player.sendMessage(ChatColor.RED + "You don't have permission to send a player back!");
             return true;
         }

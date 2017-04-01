@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import org.bukkit.ChatColor;
 
 public class LockdownCommand extends AbstractCommand {
@@ -13,7 +14,7 @@ public class LockdownCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getIsAdmin()) {
+        if (player.getRank() != Rank.SENIOR_ADMIN) {
             player.sendMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
             return true;
         }
