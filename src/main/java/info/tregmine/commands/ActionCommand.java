@@ -157,7 +157,7 @@ public class ActionCommand extends AbstractCommand {
             to.sendMessage(begin, middle, end);
         }
         Tregmine.LOGGER.info("* " + player.getName() + " " + msg);
-        this.tregmine.getDiscordSRV().sendMessageToChatChannel("**" + player.getName() + "** " + msg);
+        this.tregmine.getDiscordSRV().getChatChannel().sendMessage("**" + player.getName() + "** " + msg).complete();
         return true;
     }
 }
