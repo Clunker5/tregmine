@@ -376,51 +376,7 @@ public class Discord {
         api = null;
     }
 
-            }
-        }
 
-        // player achievement events
-        if (this.plugin.getConfig().getBoolean("discord.bridge-functionality.achievements.enabled")) {
-            if(this.achievementListener == null){
-                this.achievementListener = new AchievementListener(this.plugin);
-                this.plugin.getServer().getPluginManager().registerEvents(this.achievementListener, this.plugin);
-            }
-        }
-
-        // - chat channel
-        if (this.plugin.getConfig().getBoolean("discord.bridge-functionality.discord-to-minecraft")
-                || this.plugin.getConfig().getBoolean("discord.bridge-functionality.minecraft-to-discord")) {
-            if (!testChannel(chatChannel))
-                Tregmine.LOGGER.warning("Channel \"" + chatChannel + "\" was not accessible");
-            if (testChannel(chatChannel)
-                    && !PermissionUtil.checkPermission(chatChannel, selfMember, Permission.MESSAGE_WRITE))
-                Tregmine.LOGGER.warning("The bot does not have access to send messages in " + chatChannel.getName());
-            if (testChannel(chatChannel)
-                    && !PermissionUtil.checkPermission(chatChannel, selfMember, Permission.MESSAGE_READ))
-                // !PermissionUtil.checkPermission(channel, self. null,
-                // Permission.MESSAGE_WRITE)
-                // !PermissionUtil.checkPermission(
-                Tregmine.LOGGER.warning("The bot does not have access to read messages in " + chatChannel.getName());
-        }
-        // - console channel
-        if (consoleChannel != null) {
-            if (!testChannel(consoleChannel))
-                Tregmine.LOGGER.warning("Channel \"" + consoleChannel + "\" was not accessible");
-            if (testChannel(consoleChannel)
-                    && !PermissionUtil.checkPermission(consoleChannel, selfMember, Permission.MESSAGE_WRITE))
-                Tregmine.LOGGER.warning("The bot does not have access to send messages in " + consoleChannel.getName());
-            if (testChannel(consoleChannel)
-                    && !PermissionUtil.checkPermission(consoleChannel, selfMember, Permission.MESSAGE_READ))
-                Tregmine.LOGGER.warning("The bot does not have access to read messages in " + consoleChannel.getName());
-        }
-
-        startServerLogWatcher();
-        serverLogWatcherHelper = new ServerLogWatcherHelper(this);
-        serverLogWatcherHelper.start();
-
-        channelTopicUpdater = new ChannelTopicUpdater(this);
-        channelTopicUpdater.start();
-    }
 
     public CommandHandler getCommandHandler() {
         return this.commandHandler;
@@ -451,8 +407,6 @@ public class Discord {
         }
     }
 
-        }
-    }
 
     /**
      * @deprecated Use JDA sendMessage instead.
