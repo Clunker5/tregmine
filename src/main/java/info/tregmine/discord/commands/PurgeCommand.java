@@ -15,8 +15,11 @@ public class PurgeCommand extends DiscordCommand {
 
     private int purgeIndex = 0;
 
+    private Tregmine plugin;
+
     public PurgeCommand(Tregmine tregmine) {
         super(tregmine, "!purge", "!purge [Integer]", "Utility for cleaning out cluttered channels");
+        this.plugin = tregmine;
     }
 
     @Override
@@ -35,25 +38,7 @@ public class PurgeCommand extends DiscordCommand {
         Message alert = TregmineEmbedBuilder.genericOperationEmbedForUser("Purging " + purgeIndex + " most recent messages...", "This message will self-destruct in 5 seconds.", message.getAuthor());
         Discord.DISCORD_UTIL.sendDestructiveMessage(message.getChannel(), alert, 5);
         MessageHistory history = message.getChannel().getHistoryAround(message, purgeIndex + 1).complete();
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                for (Message m : history.getRetrievedHistory()) {
-                    try {
-                        m.delete().complete(true);
-                    } catch (RateLimitedException e) {
-                        try {
-                            Thread.sleep(10000);
-                            m.delete().complete(true);
-                            continue;
-                        } catch (InterruptedException | RateLimitedException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                }
-                return;
-            }
-        });
-        t.start();
+        message.getTextChannel().deleteMessages(history.getRetrievedHistory()).complete();
         return true;
     }
 
