@@ -25,22 +25,12 @@ public class CreateMobCommand extends AbstractCommand {
             return true;
         }
 
-        EntityType mobType;
+        EntityType mobType = null;
         try {
             String mobName = args[0];
             mobType = EntityType.valueOf(mobName.toUpperCase());
         } catch (Exception e) {
             player.sendMessage(RED + "Sorry, that mob doesn't exist.");
-            return true;
-        }
-
-        int amount = 1;
-        try {
-            amount = Integer.parseInt(args[1]);
-        } catch (NumberFormatException e) {
-            amount = 1;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            amount = 1;
         }
 
         if (mobType == null) {
@@ -59,6 +49,15 @@ public class CreateMobCommand extends AbstractCommand {
             player.sendMessage(buf.toString());
 
             return true;
+        }
+
+        int amount;
+        try {
+            amount = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            amount = 1;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            amount = 1;
         }
 
         World world = player.getWorld();
