@@ -29,7 +29,8 @@ dependencies {
 }
 
 jar {
-	baseName = "tregmine"
+  def appendage = System.getenv("BUILD_NUMBER") ? "-" + System.getenv("BUILD_NUMBER") : ""
+	baseName = "tregmine" + appendage
 	from('src/main/java') {
    	include 'plugin.yml'
 		include 'config.yml'
