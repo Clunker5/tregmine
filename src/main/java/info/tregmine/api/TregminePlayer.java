@@ -73,6 +73,9 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     private PermissionAttachment attachment;
     private PlayerMute mute = null;
     private boolean muted = false;
+
+    private String namePreAfkAppendage;
+
     // Reports
     private List<String[]> reports = new ArrayList<String[]>();
     private int kicks = 0;
@@ -1032,17 +1035,20 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
             if (!this.isHidden()) {
                 this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
                         new TextComponent(RESET + "" + BLUE + " is now afk."));
+                this.plugin.getDiscordSRV().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is now afk.").complete();
             }
             String oldname = getChatNameNoHover();
+            this.namePreAfkAppendage = oldname;
             setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
         } else if (value == false) {
             final long currentTime = System.currentTimeMillis();
             this.setLastOnlineActivity(currentTime);
             this.afk = false;
-            setTemporaryChatName(getNameColor() + getRealName());
+            setTemporaryChatName(this.namePreAfkAppendage);
             if (!this.isHidden()) {
                 this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
                         new TextComponent(RESET + "" + GREEN + " is no longer afk."));
+                this.plugin.getDiscordSRV().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is no longer afk.").complete();
             }
         }
     }
