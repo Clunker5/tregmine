@@ -30,7 +30,7 @@ dependencies {
 
 jar {
   def appendage = System.getenv("BUILD_NUMBER") ? "-" + System.getenv("BUILD_NUMBER") : ""
-	baseName = "tregmine" + appendage
+	baseName = "tregmine" + appendage + "-NODEPS-SNAPSHOT"
 	from('src/main/java') {
    	include 'plugin.yml'
 		include 'config.yml'
@@ -40,7 +40,8 @@ jar {
 }
 
 shadowJar {
-    classifier = "withDependencies"
+		def appendage = System.getenv("BUILD_NUMBER") ? "-" + System.getenv("BUILD_NUMBER") : ""
+    classifier = appendage + "-WITHDEPS-SNAPSHOT"
 		from('src/main/java') {
 	   	include 'plugin.yml'
 			include 'config.yml'
