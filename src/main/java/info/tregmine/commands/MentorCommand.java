@@ -174,7 +174,7 @@ public class MentorCommand extends AbstractCommand {
                 return true;
             }
             GenericPlayer student = player.getStudent();
-            if (student == null && tregmine.getOnlineTeachers() >= 3) {
+            if (student == null && (player.getRank() == Rank.TOURIST || tregmine.getOnlineTeachers() <= 3)) {
                 player.sendMessage(RED + "You are not mentoring anyone right now.");
                 return true;
             }
