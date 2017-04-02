@@ -67,9 +67,11 @@ public class WarpCommand extends AbstractCommand {
 
         if (world.isChunkLoaded(chunk)) {
             long delay = player.getRank().getTeleportTimeout();
+            if(delay != 0)
+                player.sendMessage(AQUA + "You must now stand still and wait " + (delay / 20)
+                        + " seconds for the stars to align, " + "allowing you to warp");
 
-            player.sendMessage(AQUA + "You must now stand still and wait " + (delay / 20)
-                    + " seconds for the stars to align, " + "allowing you to warp");
+
 
             BukkitScheduler scheduler = server.getScheduler();
             scheduler.scheduleSyncDelayedTask(tregmine, new WarpTask(player, warpPoint), delay);
