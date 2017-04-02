@@ -78,7 +78,7 @@ public class IgnoreCommand extends AbstractCommand {
                 return true;
             }
 
-            if (target.getRank().canNotBeIgnored()) {
+            if (target.getRank().canNotBeIgnored() || target.getId() == player.getId()) {
                 player.sendMessage(ChatColor.RED + "Can not ignore this player!");
                 return true;
             }
