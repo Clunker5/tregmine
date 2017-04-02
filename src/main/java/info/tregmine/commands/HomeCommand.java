@@ -4,6 +4,7 @@ import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IHomeDAO;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -173,7 +174,7 @@ public class HomeCommand extends AbstractCommand {
         }
 
         if (loc == null) {
-            player.sendMessage(RED + "Telogric lift malfunctioned. " + "Teleportation failed.");
+            player.sendMessage(RED + "You don't have a home set. Set one with " + ChatColor.AQUA + "/home save");
             return true;
         }
 
