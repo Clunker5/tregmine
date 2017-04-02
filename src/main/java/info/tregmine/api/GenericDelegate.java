@@ -2,8 +2,8 @@ package info.tregmine.api;
 
 import info.tregmine.Tregmine;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.minecraft.server.v1_11_R1.EntityPlayer;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import net.minecraft.server.EntityPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
