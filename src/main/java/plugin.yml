@@ -153,9 +153,6 @@ commands:
   newspawn:
     description: Temporarily change the spawn on this map (admin only)
     usage: /newspawn
-  normal:
-    description: Become a normal player until you sign back on (admins, guardians and builders only)
-    usage: /normal
   nuke:
     description: Kill all mobs on this map (admins and guardians only)
     usage: /nuke
@@ -170,7 +167,7 @@ commands:
     usage: /pos
   promote:
     description: Promotes a user
-    usage: /promote
+    usage: /promote <user> <rank>
   property:
     description: Updates a player property (admin only)
     usage: /property <player> <key> <value>
