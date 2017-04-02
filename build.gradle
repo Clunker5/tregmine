@@ -40,7 +40,7 @@ jar {
 }
 
 shadowJar {
-		def appendage = System.getenv("BUILD_NUMBER") ? "-" + System.getenv("BUILD_NUMBER") : ""
+		def appendage = System.getenv("BUILD_NUMBER") ? System.getenv("BUILD_NUMBER") : ""
     classifier = appendage + "-WITHDEPS-SNAPSHOT"
 		from('src/main/java') {
 	   	include 'plugin.yml'
