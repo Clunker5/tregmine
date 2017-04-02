@@ -55,21 +55,16 @@ public class GiveCommand extends AbstractCommand {
         int amount;
         try {
             amount = Integer.parseInt(args[2]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            amount = 1;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             amount = 1;
         }
 
         int data;
         try {
             data = Integer.parseInt(args[3]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            data = 0;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             data = 0;
         }
-
         ItemStack item = new ItemStack(material, amount, (byte) data);
         if (item.getType() == Material.MONSTER_EGG || item.getType() == Material.NAME_TAG) {
             return false;
