@@ -25,7 +25,6 @@ public class PropertyCommand extends AbstractCommand {
             return true;
         }
         if (args.length <= 2) {
-            player.sendMessage(ChatColor.RED + "You gave the wrong amount of arguments.");
             player.sendMessage(ChatColor.RED + "/property <target player> <key> <value>");
             return true;
         }
@@ -35,11 +34,11 @@ public class PropertyCommand extends AbstractCommand {
             return true;
         }
         GenericPlayer target = matches.get(0);
-        String updatedValue = "";
+        String updatedValue = null;
         for (String value : args) {
             if (value.equals(args[0]) || value.equals(args[1]))
                 continue;
-            if (value.length() == 0) {
+            if (updatedValue == null) {
                 updatedValue = value;
             } else {
                 updatedValue += " " + value;
