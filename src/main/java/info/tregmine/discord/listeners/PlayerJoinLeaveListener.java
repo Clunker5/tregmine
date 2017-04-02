@@ -71,7 +71,9 @@ public class PlayerJoinLeaveListener implements Listener {
         // Player doesn't have silent quit, show quit message
         this.srv.sendMessage(this.srv.getChatChannel(),
                 this.plugin.getConfig().getString("discord.bridge-functionality.join-leave.leave.format")
-                        .replace("%username%", event.getPlayer().getName())
-                        .replace("%displayname%", ChatColor.stripColor(event.getPlayer().getDisplayName())));
+                        .replace("%username%",
+                                event.getPlayer().getName()
+                        )
+                        .replace("%displayname%", ChatColor.stripColor(event.getPlayer().getDisplayName())) + " - " + player.getQuitMessage());
     }
 }
