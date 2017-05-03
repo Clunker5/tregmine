@@ -903,6 +903,7 @@ public class Tregmine extends JavaPlugin {
         getCommand("chunkcount").setExecutor(new ChunkCountCommand(this));
         getCommand("rcode").setExecutor(new ReferralCodeCommand(this, "rcode"));
         getCommand("referralcode").setExecutor(new ReferralCodeCommand(this, "referralcode"));
+        getCommand("version").setExecutor(new VersionCommand(this));
         ToolCraftRegistry.RegisterRecipes(getServer()); // Registers all tool
         // recipes
 

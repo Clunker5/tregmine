@@ -22,7 +22,7 @@ dependencies {
 	compile "org.apache.commons:commons-lang3:3.5"
 	compile "org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT"
 	compile files('lib/coreprotect.jar')
-	compile files('lib/craftbukkit-api.jar')
+	compile files('lib/spigot.jar')
     compile "org.eclipse.jetty:jetty-server:9.4.0.RC3"
     compile "javax.mail:mail:1.4.7"
     compile "org.eclipse.jetty.websocket:websocket-server:9.4.0.RC3"
@@ -42,14 +42,18 @@ jar {
 }
 
 shadowJar {
-		def appendage = System.getenv("BUILD_NUMBER") ? System.getenv("BUILD_NUMBER") : ""
+	def appendage = System.getenv("BUILD_NUMBER") ? System.getenv("BUILD_NUMBER") : ""
     classifier = appendage + "-WITHDEPS-SNAPSHOT"
-		from('src/main/java') {
-	   	include 'plugin.yml'
-			include 'config.yml'
-			include 'GeoIPCity.dat'
-			include 'tregmine.sql'
-	 	}
+	from('src/main/java') {
+		include 'plugin.yml'
+		include 'config.yml'
+		include 'GeoIPCity.dat'
+		include 'tregmine.sql'
+	}
+	shadowJar {
+		relocate 'org.apache.commons', 'com.crevianstudios.sheinicke.MCDiscord.commons'
+		relocate 'org.bukkit.craftbukkit', 'org.bukkit.craftbukkit'
+	}
 }
 
 build {

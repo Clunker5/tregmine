@@ -3,13 +3,17 @@ package info.tregmine.listeners;
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
+import info.tregmine.commands.VersionCommand;
 import info.tregmine.database.*;
 import info.tregmine.events.TregmineChatEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -23,6 +27,16 @@ public class ChatListener implements Listener {
 
     private TextComponent createTC(String str) {
         return new TextComponent(str);
+    }
+
+    @EventHandler
+    public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
+        if(!event.getMessage().equalsIgnoreCase("/version")){
+            return;
+        }
+        event.setCancelled(true);
+        new VersionCommand(plugin).handlePlayer(this.plugin.getPlayer(event.getPlayer()), new String[0]);
+        return;
     }
 
     @EventHandler
