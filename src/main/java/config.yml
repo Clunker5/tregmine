@@ -20,6 +20,10 @@ db:
   url: jdbc:mysql://localhost:3306/tregmine_db?autoReconnect=true
   user: tregmine_db
   password: secure-password-here
+mongo:
+  ip: localhost
+  port: 27018
+  database: tregmine
 support:
   user: tregmine.mc@gmail.com
   password: yourpasswordherelolgtgbye

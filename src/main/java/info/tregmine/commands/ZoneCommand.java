@@ -63,7 +63,7 @@ public class ZoneCommand extends AbstractCommand {
             return;
         }
 
-        GenericPlayer victim = tregmine.getPlayerOffline(userName);
+        GenericPlayer victim = tregmine.getPlayerOfflineByName(userName);
         if (victim == null) {
             player.sendMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
             return;
@@ -293,7 +293,7 @@ public class ZoneCommand extends AbstractCommand {
             return;
         }
 
-        GenericPlayer victim = tregmine.getPlayerOffline(userName);
+        GenericPlayer victim = tregmine.getPlayerOfflineByName(userName);
         if (victim == null) {
             player.sendMessage(RED + "[" + zone.getName() + "] " + "Player " + userName + " was not found.");
             return;

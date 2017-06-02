@@ -63,7 +63,7 @@ public class DonationSigns implements Listener {
             IWalletDAO wallet = ctx.getWalletDAO();
             Integer amount = Integer.parseInt(sign.getLine(1).trim());
             NumberFormat format = NumberFormat.getNumberInstance();
-            GenericPlayer receiver = plugin.getPlayerOffline(sign.getLine(3).trim());
+            GenericPlayer receiver = plugin.getPlayerOfflineByName(sign.getLine(3).trim());
             if (receiver == null) {
                 player.sendMessage(ChatColor.RED + "The player on the sign does not exist!");
                 return;

@@ -23,8 +23,6 @@ public interface GenericPlayer extends GenericDelegate{
 
     boolean alertedAfk();
 
-    void awardBadgeLevel(Badge badge, String message);
-
     BooleanStringReturn canBeHere(Location loc);
 
     boolean canMentor();
@@ -48,12 +46,6 @@ public interface GenericPlayer extends GenericDelegate{
     PermissionAttachment getAttachment();
 
     void setAttachment(PermissionAttachment ment);
-
-    int getBadgeLevel(Badge badge);
-
-    Map<Badge, Integer> getBadges();
-
-    void setBadges(Map<Badge, Integer> v);
 
     int getBlessTarget();
 
@@ -132,9 +124,9 @@ public interface GenericPlayer extends GenericDelegate{
 
     void setHost(String v);
 
-    int getId();
+    String getId();
 
-    void setId(int v);
+    void setId(String v);
 
     String getIp();
 
@@ -253,8 +245,6 @@ public interface GenericPlayer extends GenericDelegate{
     void setZoneBlockCounter(int v);
 
     void gotoWorld(Player player, Location loc, String success, String failure);
-
-    boolean hasBadge(Badge badge);
 
     boolean hasBlockPermission(Location loc, boolean punish);
 

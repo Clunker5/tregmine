@@ -22,7 +22,7 @@ public class SeenCommand extends AbstractCommand {
             return false;
         }
 
-        GenericPlayer target = tregmine.getPlayerOffline(args[0]);
+        GenericPlayer target = tregmine.getPlayerOfflineByName(args[0]);
         if (target == null) {
             server.getConsoleSender().sendMessage("Could not find player: " + args[0]);
             return true;
@@ -47,7 +47,7 @@ public class SeenCommand extends AbstractCommand {
         }
         GenericPlayer target = null;
         try {
-            target = tregmine.getPlayerOffline(args[0]);
+            target = tregmine.getPlayerOfflineByName(args[0]);
         } catch (NullPointerException e) {
             player.sendMessage(
                     new TextComponent(ChatColor.RED + "That player was not found, check the spelling and try again."));

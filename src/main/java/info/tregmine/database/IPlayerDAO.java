@@ -1,7 +1,7 @@
 package info.tregmine.database;
 
-import info.tregmine.api.Badge;
 import info.tregmine.api.GenericPlayer;
+import info.tregmine.database.db.pojo.PlayerPOJO;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -13,21 +13,20 @@ public interface IPlayerDAO {
 
     boolean doesIgnore(GenericPlayer player, GenericPlayer victim) throws DAOException;
 
-    Map<Badge, Integer> getBadges(GenericPlayer player) throws DAOException;
-
     List<String> getIgnored(GenericPlayer to) throws DAOException;
 
     List<String> getKeywords(GenericPlayer to) throws DAOException;
 
-    GenericPlayer getPlayer(int id) throws DAOException;
+    GenericPlayer getPlayer(String id) throws DAOException;
 
     GenericPlayer getPlayer(Player player) throws DAOException;
 
-    GenericPlayer getPlayer(String username) throws DAOException;
+    @Deprecated
+    GenericPlayer getPlayerByUsername(String username) throws DAOException;
 
     GenericPlayer getPlayer(UUID id) throws DAOException;
 
-    void updateBadges(GenericPlayer player) throws DAOException;
+    GenericPlayer getPlayerByPOJO(PlayerPOJO playerPOJO);
 
     void updateIgnore(GenericPlayer player, List<String> update) throws DAOException;
 

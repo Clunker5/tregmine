@@ -40,7 +40,7 @@ public class WebKickCommand extends AbstractCommand {
         String pattern = args[0];
         String message = argsToMessage(args);
 
-        GenericPlayer victim = tregmine.getPlayerOffline(pattern);
+        GenericPlayer victim = tregmine.getPlayerOfflineByName(pattern);
         if (victim == null) {
             // TODO: error message
             return true;

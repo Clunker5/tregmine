@@ -10,16 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Rank {
-    UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR("Donator"), GUARDIAN("Guardian"), CODER("Coder"), BUILDER("Builder"), JUNIOR_ADMIN("Junior Admin"), SENIOR_ADMIN("Senior Admin");
+    UNVERIFIED("Unverified"), TOURIST("Tourist"), SETTLER("Settler"), RESIDENT("Resident"), DONATOR("Donator"), GUARDIAN("Guardian"), CODER("Coder"), BUILDER("Builder"), JUNIOR_ADMIN("Junior Admin"), SENIOR_ADMIN("Senior Admin");
 
     private String discordEquivalent = "UNSETDONTUSEMEPLEASE";
 
     private Rank(String discord){
         this.discordEquivalent = discord;
-    }
-
-    private Rank(){
-
     }
 
     public static Rank fromString(String value) {
@@ -456,33 +452,6 @@ public enum Rank {
         }
     }
 
-    public String getName(Tregmine t) {
-        ChatColor rankcolor = t.getRankColor(this);
-        if (this == UNVERIFIED) {
-            return rankcolor + "Unverified";
-        } else if (this == TOURIST) {
-            return rankcolor + "Tourist";
-        } else if (this == SETTLER) {
-            return rankcolor + "Settler";
-        } else if (this == RESIDENT) {
-            return rankcolor + "Resident";
-        } else if (this == DONATOR) {
-            return rankcolor + "Donator";
-        } else if (this == GUARDIAN) {
-            return rankcolor + "Guardian";
-        } else if (this == CODER) {
-            return rankcolor + "Coder";
-        } else if (this == BUILDER) {
-            return rankcolor + "Builder";
-        } else if (this == JUNIOR_ADMIN) {
-            return rankcolor + "Junior Admin";
-        } else if (this == SENIOR_ADMIN) {
-            return rankcolor + "Senior Admin";
-        } else {
-            return ChatColor.MAGIC + "ABCDEFGH";
-        }
-    }
-
     public double getPickupDistance() {
         if (this == JUNIOR_ADMIN || this == SENIOR_ADMIN) {
             return 5;
@@ -550,8 +519,6 @@ public enum Rank {
             return 1000;
         } else if (this == DONATOR) {
             return 200;
-        } else if (player.hasBadge(Badge.MERCHANT)) {
-            return 500;
         } else {
             return 100;
         }

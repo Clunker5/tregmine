@@ -100,7 +100,7 @@ public class HomeCommand extends AbstractCommand {
                 return true;
             }
 
-            target = tregmine.getPlayerOffline(playerName);
+            target = tregmine.getPlayerOfflineByName(playerName);
             if (target == null) {
                 player.sendMessage(RED + playerName + " was not found in database.");
                 return true;
@@ -203,7 +203,7 @@ public class HomeCommand extends AbstractCommand {
             player.sendMessage(RED + "You can't teleport to other player's homes");
         }
 
-        GenericPlayer target = tregmine.getPlayerOffline(playerName);
+        GenericPlayer target = tregmine.getPlayerOfflineByName(playerName);
         if (target == null) {
             player.sendMessage(RED + playerName + " was not found in database.");
             return true;

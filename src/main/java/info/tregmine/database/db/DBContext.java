@@ -2,27 +2,23 @@ package info.tregmine.database.db;
 
 import info.tregmine.Tregmine;
 import info.tregmine.database.*;
+import info.tregmine.database.db.pojo.PlayerPOJO;
+import org.mongodb.morphia.Datastore;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBContext implements IContext {
     private Connection conn;
+    private Datastore datastore;
     private Tregmine plugin;
+    private DBPlayerDAO playerDAO;
 
-    public DBContext(Connection conn, Tregmine instance) {
-        this.conn = conn;
+    public DBContext(Datastore datastore, Tregmine instance, Connection conn) {
+        this.datastore = datastore;
         this.plugin = instance;
-    }
-
-    @Override
-    public void close() {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-            }
-        }
+        this.playerDAO = new DBPlayerDAO(PlayerPOJO.class, datastore, this.plugin);
+        this.conn = conn;
     }
 
     @Override
@@ -116,7 +112,7 @@ public class DBContext implements IContext {
 
     @Override
     public IPlayerDAO getPlayerDAO() {
-        return new DBPlayerDAO(conn, plugin);
+        return this.playerDAO;
     }
 
     @Override
@@ -142,5 +138,10 @@ public class DBContext implements IContext {
     @Override
     public IZonesDAO getZonesDAO() {
         return new DBZonesDAO(conn);
+    }
+
+    @Override
+    public void close() {
+
     }
 }

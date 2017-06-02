@@ -7,6 +7,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IInventoryDAO;
 import info.tregmine.database.IPlayerDAO;
+import info.tregmine.database.db.pojo.PlayerPOJO;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
@@ -31,7 +32,7 @@ import static org.bukkit.ChatColor.*;
 
 public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     // Persistent values
-    private int id = 0;
+    private String id;
     private UUID storedUuid = null;
     private String name = null;
     private String realName = null;
@@ -45,7 +46,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     private Set<Flags> flags;
     private Set<CommandStatus> commandstatus;
     private Set<Property> properties;
-    private Map<Badge, Integer> badges;
     private Location lastpos = null;
     // Discord values
     private boolean alertedAfk;
@@ -120,20 +120,19 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         this.flags = EnumSet.noneOf(Flags.class);
         this.commandstatus = EnumSet.noneOf(CommandStatus.class);
         this.properties = EnumSet.noneOf(Property.class);
-        this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
 
     public TregminePlayer(UUID uuid, Tregmine instance, String uname) {
         super(null);
         this.name = uname;
+        this.storedUuid = uuid;
         this.realName = uname;
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
         this.commandstatus = EnumSet.noneOf(CommandStatus.class);
         this.properties = EnumSet.noneOf(Property.class);
-        this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
     }
 
@@ -145,20 +144,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public boolean alertedAfk() {
         return this.alertedAfk;
-    }
-
-    @Override
-    public void awardBadgeLevel(Badge badge, String message) {
-        int badgeLevel = getBadgeLevel(badge) + 1;
-        badges.put(badge, badgeLevel);
-
-        if (badgeLevel == 1) {
-            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " + "the " + badge.getName()
-                    + " badge of honor: " + message);
-        } else {
-            sendMessage(ChatColor.GOLD + "Congratulations! You've been awarded " + "the level " + ChatColor.GREEN
-                    + badgeLevel + " " + ChatColor.GOLD + badge.getName() + "badge of honor: " + message);
-        }
     }
 
     @Override
@@ -291,25 +276,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public void setAttachment(PermissionAttachment ment) {
         this.attachment = ment;
-    }
-
-    @Override
-    public int getBadgeLevel(Badge badge) {
-        if (!hasBadge(badge)) {
-            return 0;
-        } else {
-            return badges.get(badge);
-        }
-    }
-
-    @Override
-    public Map<Badge, Integer> getBadges() {
-        return badges;
-    }
-
-    @Override
-    public void setBadges(Map<Badge, Integer> v) {
-        this.badges = v;
     }
 
     @Override
@@ -539,12 +505,12 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
-    public int getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(int v) {
+    public void setId(String v) {
         this.id = v;
     }
 
@@ -879,11 +845,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         }
     }
 
-    @Override
-    public boolean hasBadge(Badge badge) {
-        return badges.containsKey(badge);
-    }
-
     /**
      * Returns true or false if the player has permission for that block
      *
@@ -1000,11 +961,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public boolean hasFlag(Flags flag) {
         return flags.contains(flag);
-    }
-
-    @Override
-    public int hashCode() {
-        return getId();
     }
 
     @Override
@@ -1167,6 +1123,8 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         } catch (DAOException e) {
             plugin.getLogger().info("INVENTORY ERROR: Trying to load " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1250,6 +1208,8 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         } catch (DAOException e) {
             plugin.getLogger().info("INVENTORY ERROR: Trying to save " + this.getName() + " inventory named: " + name);
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -60,7 +60,7 @@ public class Tregmine extends JavaPlugin {
     private Server server;
     private WebServer webServer;
     private Map<UUID, GenericPlayer> players;
-    private Map<Integer, GenericPlayer> playersById;
+    private Map<String, GenericPlayer> playersById;
     private Map<Location, Integer> blessedBlocks;
     private Map<Location, FishyBlock> fishyBlocks;
     private Map<Material, Integer> minedBlockPrices;
@@ -314,7 +314,7 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public GenericPlayer getPlayerOffline(int id) {
+    public GenericPlayer getPlayerOffline(String id) {
         GenericPlayer plr = playersById.get(id);
         if (plr != null) {
             return plr;
@@ -342,7 +342,8 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
-    public GenericPlayer getPlayerOffline(String username) {
+    @Deprecated
+    public GenericPlayer getPlayerOfflineByName(String username) {
         GenericPlayer plr = players.get(username);
         if (plr != null) {
             return plr;
@@ -818,7 +819,6 @@ public class Tregmine extends JavaPlugin {
         getCommand("alert").setExecutor(new AlertCommand(this));
         getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("back").setExecutor(new BackCommand(this));
-        getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
         getCommand("bless").setExecutor(new BlessCommand(this));
         getCommand("blockhere").setExecutor(new BlockHereCommand(this));
@@ -1022,7 +1022,6 @@ public class Tregmine extends JavaPlugin {
 
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             playerDAO.updatePlayTime(player);
-            playerDAO.updateBadges(player);
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
