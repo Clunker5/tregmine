@@ -879,11 +879,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public void awardBadgeLevel(Badge badge, String message) {
-
-    }
-
-    @Override
     public BooleanStringReturn canBeHere(Location loc) {
         return null;
     }
@@ -934,21 +929,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void setAttachment(PermissionAttachment ment) {
-
-    }
-
-    @Override
-    public int getBadgeLevel(Badge badge) {
-        return 0;
-    }
-
-    @Override
-    public Map<Badge, Integer> getBadges() {
-        return null;
-    }
-
-    @Override
-    public void setBadges(Map<Badge, Integer> v) {
 
     }
 
@@ -1143,12 +1123,12 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public int getId() {
-        return 0;
+    public String getId() {
+        return null;
     }
 
     @Override
-    public void setId(int v) {
+    public void setId(String v) {
 
     }
 
@@ -1440,11 +1420,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
     @Override
     public void gotoWorld(Player player, Location loc, String success, String failure) {
 
-    }
-
-    @Override
-    public boolean hasBadge(Badge badge) {
-        return false;
     }
 
     @Override
