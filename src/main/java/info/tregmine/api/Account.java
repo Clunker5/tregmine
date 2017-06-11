@@ -1,5 +1,10 @@
 package info.tregmine.api;
 
+import info.tregmine.database.db.pojo.BankAccountPOJO;
+import info.tregmine.database.db.pojo.BankTransactionPOJO;
+import org.bson.types.ObjectId;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -9,15 +14,11 @@ import java.util.Random;
  * @author Robert Catron
  * @since 12/7/2013
  */
-public class Account {
+public class Account extends BankAccountPOJO {
 
     private Bank bank;
-    private int id;
-    private int playerId;
-    private long balance;
-    private String pin;
 
-    private int account_number;
+    private long account_number;
 
     private boolean verified;
 
@@ -34,20 +35,20 @@ public class Account {
         }
     }
 
-    public int getAccountNumber() {
+    public long getAccountNumber() {
         return account_number;
     }
 
-    public void setAccountNumber(int v) {
+    public void setAccountNumber(long v) {
         this.account_number = v;
     }
 
     public long getBalance() {
-        return balance;
+        return this.accountBalance;
     }
 
     public void setBalance(long v) {
-        this.balance = v;
+        this.accountBalance = v;
     }
 
     public Bank getBank() {
@@ -58,27 +59,27 @@ public class Account {
         this.bank = bank;
     }
 
-    public int getId() {
-        return id;
+    public ObjectId getId() {
+        return this.id;
     }
 
-    public void setId(int v) {
+    public void setId(ObjectId v) {
         this.id = v;
     }
 
     public String getPin() {
-        return pin;
+        return this.accountPin;
     }
 
     public void setPin(String pin) {
-        this.pin = pin;
+        this.accountPin = pin;
     }
 
-    public int getPlayerId() {
-        return playerId;
+    public ObjectId getPlayerId() {
+        return this.playerId;
     }
 
-    public void setPlayerId(int v) {
+    public void setPlayerId(ObjectId v) {
         this.playerId = v;
     }
 
@@ -89,4 +90,5 @@ public class Account {
     public void setVerified(boolean v) {
         this.verified = v;
     }
+
 }
