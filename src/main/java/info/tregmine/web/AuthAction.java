@@ -22,6 +22,7 @@ public class AuthAction implements WebHandler.Action {
     private int playerId;
     private boolean found = false;
     private String token = null;
+
     public AuthAction(int playerId) {
         this.playerId = playerId;
     }

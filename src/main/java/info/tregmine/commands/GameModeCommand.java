@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 
@@ -36,7 +37,7 @@ public class GameModeCommand extends AbstractCommand {
             //Generic Mode!
             if (args.length != 1) {
                 String modes = "";
-                for(GameMode m : GameMode.values()){
+                for (GameMode m : GameMode.values()) {
                     ChatColor color =
                             player.getRank().getPermittedGamemodes().contains(m) ? ChatColor.GREEN : ChatColor.RED;
                     modes += m.name().toLowerCase() + " ";
@@ -46,8 +47,8 @@ public class GameModeCommand extends AbstractCommand {
             }
             GameMode switchTo;
             try {
-               switchTo = GameMode.valueOf(args[0].toUpperCase());
-            }catch(IllegalArgumentException e){
+                switchTo = GameMode.valueOf(args[0].toUpperCase());
+            } catch (IllegalArgumentException e) {
                 player.sendMessage(ChatColor.RED + "The specified gamemode does not exist!");
                 return true;
             }

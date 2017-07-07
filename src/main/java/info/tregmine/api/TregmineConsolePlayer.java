@@ -31,7 +31,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
@@ -40,11 +39,10 @@ import java.util.*;
  */
 public class TregmineConsolePlayer implements GenericPlayer {
 
+    private final UUID uuid = UUID.randomUUID();
     private Tregmine tregmine;
 
-    private final UUID uuid = UUID.randomUUID();
-
-    public TregmineConsolePlayer(Tregmine plugin){
+    public TregmineConsolePlayer(Tregmine plugin) {
         this.tregmine = plugin;
     }
 
@@ -215,7 +213,7 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public String getDisplayName() {
-        return ChatColor.RED  +"Console";
+        return ChatColor.RED + "Console";
     }
 
     @Override
@@ -440,12 +438,12 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public Location getLocation() {
-        return new Location(this.tregmine.getServer().getWorld("world"), 0, 0,0);
+        return new Location(this.tregmine.getServer().getWorld("world"), 0, 0, 0);
     }
 
     @Override
     public Location getLocation(Location p0) {
-        return new Location(this.tregmine.getServer().getWorld("world"), 0, 0,0);
+        return new Location(this.tregmine.getServer().getWorld("world"), 0, 0, 0);
     }
 
     @Override
@@ -1528,6 +1526,11 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
+    public void setValid(boolean v) {
+
+    }
+
+    @Override
     public boolean isWhitelisted() {
         return false;
     }
@@ -1664,7 +1667,7 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void sendMessage(BaseComponent... a) {
-        for(BaseComponent component : a){
+        for (BaseComponent component : a) {
             Tregmine.LOGGER.info(ChatColor.stripColor(component.toPlainText()));
         }
     }
@@ -1750,11 +1753,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public void setValid(boolean v) {
-
-    }
-
-    @Override
     public void loadInventory(String name, boolean save) {
 
     }
@@ -1796,7 +1794,7 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void sendNotification(Notification notif, BaseComponent... message) {
-        for(BaseComponent c : message){
+        for (BaseComponent c : message) {
             Tregmine.LOGGER.info(ChatColor.stripColor(c.toPlainText()));
         }
     }

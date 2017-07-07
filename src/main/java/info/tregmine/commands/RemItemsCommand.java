@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.math.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

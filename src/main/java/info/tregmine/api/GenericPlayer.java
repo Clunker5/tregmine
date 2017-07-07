@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by ericrabil on 3/29/17.
  */
-public interface GenericPlayer extends GenericDelegate{
+public interface GenericPlayer extends GenericDelegate {
     void addReport(String[] report);
 
     boolean alertedAfk();

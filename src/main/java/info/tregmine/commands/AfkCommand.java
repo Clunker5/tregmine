@@ -1,6 +1,6 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
 
 public class AfkCommand extends AbstractCommand {

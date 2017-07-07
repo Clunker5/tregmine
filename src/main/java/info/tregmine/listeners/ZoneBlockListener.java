@@ -63,7 +63,7 @@ public class ZoneBlockListener implements Listener {
             return;
 
 		/*
-		 * if (!player.getRank().canBuild() && player.getMentor() != null) {
+         * if (!player.getRank().canBuild() && player.getMentor() != null) {
 		 * 
 		 * TregminePlayer mentor = player.getMentor(); Location a =
 		 * player.getLocation(); Location b = mentor.getLocation();

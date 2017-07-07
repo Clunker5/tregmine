@@ -25,6 +25,7 @@ public class ChatHandler extends WebSocketHandler implements WebSocketCreator, L
     private PluginManager pluginMgr;
     private Set<ChatSocket> sockets;
     private Map<Integer, Date> kickedPlayers;
+
     public ChatHandler(Tregmine tregmine, PluginManager pluginMgr) {
         this.tregmine = tregmine;
         this.pluginMgr = pluginMgr;

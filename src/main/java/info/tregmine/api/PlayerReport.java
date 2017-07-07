@@ -10,6 +10,7 @@ public class PlayerReport {
     private String message = "";
     private Date timestamp = new Date();
     private Date validUntil = null;
+
     public PlayerReport() {
     }
 

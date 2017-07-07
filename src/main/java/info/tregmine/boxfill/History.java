@@ -1,7 +1,6 @@
 package info.tregmine.boxfill;
 
 import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.TregminePlayer;
 
 import java.util.HashMap;
 import java.util.Map;

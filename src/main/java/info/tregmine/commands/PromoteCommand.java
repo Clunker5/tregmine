@@ -1,15 +1,15 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.Rank;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.Flags;
+import info.tregmine.api.Rank;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class PromoteCommand extends AbstractCommand {
         Rank rank;
         try {
             rank = Rank.valueOf(args[1].toUpperCase());
-        }catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             player.sendMessage(RED + "That rank does not exist. Available ranks: ");
             player.sendMessage(RED + StringUtils.join(Rank.values(), " "));
             return true;
@@ -50,7 +50,7 @@ public class PromoteCommand extends AbstractCommand {
             return true;
         }
         GenericPlayer user = candidate.get(0);
-        if(rank == user.getRank()){
+        if (rank == user.getRank()) {
             player.sendMessage(RED + "The player already has the desired rank.");
         }
         if (user.hasFlag(Flags.HARDWARNED)) {

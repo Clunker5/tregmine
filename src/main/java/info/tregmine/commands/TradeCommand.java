@@ -1,8 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
-import info.tregmine.api.TregminePlayer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.ChatState;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.database.*;

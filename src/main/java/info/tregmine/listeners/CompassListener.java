@@ -20,6 +20,7 @@ import java.util.Set;
 public class CompassListener implements Listener {
     private Tregmine plugin;
     private CompassMode mode = CompassMode.Precision;
+
     public CompassListener(Tregmine instance) {
         this.plugin = instance;
     }

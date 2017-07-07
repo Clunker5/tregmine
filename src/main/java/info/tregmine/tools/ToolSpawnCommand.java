@@ -2,7 +2,6 @@ package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.commands.AbstractCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;

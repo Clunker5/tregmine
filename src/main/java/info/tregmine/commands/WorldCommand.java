@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 

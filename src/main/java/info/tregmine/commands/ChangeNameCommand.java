@@ -1,8 +1,9 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.Nickname;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.Property;
+import info.tregmine.api.Nickname;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;

@@ -37,6 +37,7 @@ import java.util.*;
 public class TregminePlayerListener implements Listener {
     private Tregmine plugin;
     private Map<Item, GenericPlayer> droppedItems;
+
     public TregminePlayerListener(Tregmine instance) {
         this.plugin = instance;
 

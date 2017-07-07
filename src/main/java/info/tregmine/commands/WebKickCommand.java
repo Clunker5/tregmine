@@ -1,7 +1,8 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
 import info.tregmine.WebServer;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;

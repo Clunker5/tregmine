@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.TregmineConsolePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -26,7 +27,8 @@ public abstract class AbstractCommand implements CommandExecutor {
         return command;
     }
 
-    /**This is the default console-method, which uses a slimmed-down TregminePlayer to function.
+    /**
+     * This is the default console-method, which uses a slimmed-down TregminePlayer to function.
      * It is not recommended to leave this as the default, mostly due to the fact that many things
      * do not work with this compatibility layer due to the fact that this is not a real player.
      */

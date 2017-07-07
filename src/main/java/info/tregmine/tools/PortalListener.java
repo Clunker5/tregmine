@@ -2,7 +2,6 @@ package info.tregmine.tools;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.TregminePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,6 +27,7 @@ public class PortalListener implements Listener {
             Material.MOB_SPAWNER, Material.DROPPER, Material.DISPENSER, Material.FURNACE, Material.BREWING_STAND);
     private Tregmine plugin;
     private Map<GenericPlayer, GravityTask> gravityTasks = null;
+
     public PortalListener(Tregmine instance) {
         this.plugin = instance;
         this.gravityTasks = new HashMap<>();

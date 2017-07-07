@@ -23,6 +23,7 @@ public class PlayerKickAction implements WebHandler.Action {
     private String message;
     private boolean status;
     private String error;
+
     public PlayerKickAction(int subjectId, int issuerId, String message) {
         this.subjectId = subjectId;
         this.issuerId = issuerId;

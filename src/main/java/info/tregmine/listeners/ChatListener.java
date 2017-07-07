@@ -8,8 +8,6 @@ import info.tregmine.database.*;
 import info.tregmine.events.TregmineChatEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player.Spigot;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,8 +28,8 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
-        if(!event.getMessage().equalsIgnoreCase("/version")){
+    public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
+        if (!event.getMessage().equalsIgnoreCase("/version")) {
             return;
         }
         event.setCancelled(true);
@@ -186,7 +184,7 @@ public class ChatListener implements Listener {
                             sender.getChatName());
                 }
                 /*
-				 * if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
+                 * if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
 				 * text = text.replaceAll("@" + keyword.toLowerCase(),
 				 * ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + ChatColor.GOLD
 				 * + ChatColor.ITALIC + keyword.toLowerCase()); }

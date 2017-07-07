@@ -2,9 +2,9 @@ package info.tregmine.listeners;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.api.PlayerReport.Action;
-import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.ILogDAO;

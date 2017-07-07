@@ -15,6 +15,7 @@ public class Lot {
     private Rectangle rect;
     private Set<Integer> owners;
     private Set<Flags> flags;
+
     public Lot() {
         this.owners = new HashSet<Integer>();
 

@@ -17,7 +17,7 @@ public class VersionCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean handlePlayer(GenericPlayer player, String[] args){
+    public boolean handlePlayer(GenericPlayer player, String[] args) {
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Tregmine " + this.plugin.getDescription().getVersion().replace("Beta", ChatColor.RED + "Beta"));
         return true;
     }

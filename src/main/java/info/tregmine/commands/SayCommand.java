@@ -1,9 +1,9 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.discord.DiscordDelegate;
 import info.tregmine.discord.entities.EmbedType;
-import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;

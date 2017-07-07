@@ -1307,7 +1307,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public void setCurrentTexture(String url) {
         /*
-		 * if (url == null) { this.texture =
+         * if (url == null) { this.texture =
 		 * "https://dl.dropbox.com/u/5405236/mc/df.zip"; }
 		 *
 		 * if (!url.equals(this.texture)) { this.texture = url;

@@ -15,7 +15,7 @@ public class ToolCraftRegistry {
      */
     public static void RegisterRecipes(Server server) {
         /*
-		 * Lumberaxes: Axe's Veinminer: Pickaxe's Area of Effect: Shovel's and
+         * Lumberaxes: Axe's Veinminer: Pickaxe's Area of Effect: Shovel's and
 		 * Pickaxe's Gravity : Diamond hoe
 		 */
         List<Material> items = new ArrayList<Material>();

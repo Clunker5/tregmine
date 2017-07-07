@@ -16,6 +16,7 @@ public class PushNotificationAction implements WebHandler.Action {
     private String type;
     private boolean status;
     private String error;
+
     public PushNotificationAction(int sendTo, int sentFrom, String type) {
         this.sendTo = sendTo;
         this.sentFrom = sentFrom;

@@ -21,7 +21,7 @@ public class DBHandbookDAO implements IHandbookDAO {
     public List<String[]> getHandbook() throws DAOException {
         String sql = "SELECT * FROM staff_handbook";
         /*
-		 * Table Name: staff_handbook rulenum VARCHAR 4 NOT NULL NO AI rule
+         * Table Name: staff_handbook rulenum VARCHAR 4 NOT NULL NO AI rule
 		 * VARCHAR 128 NOT NULL NO AI
 		 */
         try (PreparedStatement stmt = c.prepareStatement(sql)) {

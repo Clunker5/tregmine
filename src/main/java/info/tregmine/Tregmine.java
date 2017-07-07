@@ -49,10 +49,8 @@ public class Tregmine extends JavaPlugin {
     public final static int AMOUNT = 0;
 
     public final static Logger LOGGER = Logger.getLogger("Minecraft");
-
-    public final TregmineConsolePlayer consolePlayer = new TregmineConsolePlayer(this);
-
     private static Boolean coreProtectEnabled = null;
+    public final TregmineConsolePlayer consolePlayer = new TregmineConsolePlayer(this);
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
@@ -533,7 +531,7 @@ public class Tregmine extends JavaPlugin {
     }
 
     public List<GenericPlayer> matchPlayer(String pattern) {
-        if(pattern.toLowerCase() == "console") {
+        if (pattern.toLowerCase() == "console") {
             List<GenericPlayer> list = new ArrayList<>();
             list.add(this.consolePlayer);
             return list;
@@ -765,7 +763,6 @@ public class Tregmine extends JavaPlugin {
         // Declaration of all commands
 
         getCommand("admins").setExecutor(new NotifyCommand(this, "admins", Rank.JUNIOR_ADMIN, Rank.SENIOR_ADMIN) {
-
 
 
             @Override

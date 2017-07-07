@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.entities.impl.GameImpl;
 import net.dv8tion.jda.core.exceptions.GuildUnavailableException;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.requests.RestAction;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;

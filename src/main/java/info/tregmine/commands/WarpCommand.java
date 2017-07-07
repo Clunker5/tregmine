@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Warp;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
@@ -67,10 +68,9 @@ public class WarpCommand extends AbstractCommand {
 
         if (world.isChunkLoaded(chunk)) {
             long delay = player.getRank().getTeleportTimeout();
-            if(delay != 0)
+            if (delay != 0)
                 player.sendMessage(AQUA + "You must now stand still and wait " + (delay / 20)
                         + " seconds for the stars to align, " + "allowing you to warp");
-
 
 
             BukkitScheduler scheduler = server.getScheduler();

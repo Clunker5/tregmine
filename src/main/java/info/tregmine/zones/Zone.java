@@ -24,6 +24,7 @@ public class Zone {
     private String textExit;
     private String mainOwner;
     private Map<Integer, Permission> users;
+
     public Zone() {
         rects = new ArrayList<Rectangle>();
         users = new HashMap<Integer, Permission>();

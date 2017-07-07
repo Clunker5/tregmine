@@ -14,11 +14,11 @@ public enum Rank {
 
     private String discordEquivalent = null;
 
-    private Rank(String discord){
+    private Rank(String discord) {
         this.discordEquivalent = discord;
     }
 
-    private Rank(){
+    private Rank() {
 
     }
 
@@ -32,7 +32,7 @@ public enum Rank {
         return null;
     }
 
-    public String getDiscordEquivalent(){
+    public String getDiscordEquivalent() {
         return this.discordEquivalent;
     }
 
@@ -122,7 +122,7 @@ public enum Rank {
 
     public boolean canEditBanks() {
         return (this == JUNIOR_ADMIN || this == SENIOR_ADMIN
-		/* || this == CODER */); // Possibly? :P
+        /* || this == CODER */); // Possibly? :P
 
     }
 

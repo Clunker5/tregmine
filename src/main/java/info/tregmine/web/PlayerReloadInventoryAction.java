@@ -17,6 +17,7 @@ public class PlayerReloadInventoryAction implements WebHandler.Action {
     private int issuerId;
     private boolean status;
     private String error;
+
     public PlayerReloadInventoryAction(int subjectId, int issuerId) {
         this.subjectId = subjectId;
         this.issuerId = issuerId;

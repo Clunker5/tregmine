@@ -1,13 +1,13 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.discord.DiscordDelegate;
-import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.md_5.bungee.api.ChatColor;
 

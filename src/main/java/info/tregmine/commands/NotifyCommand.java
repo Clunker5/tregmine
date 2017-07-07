@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
-import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
+import info.tregmine.Tregmine;
+import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
 import info.tregmine.discord.DiscordDelegate;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -18,12 +19,12 @@ import java.util.List;
 import static org.bukkit.ChatColor.WHITE;
 
 public abstract class NotifyCommand extends AbstractCommand {
+    protected Rank[] targets;
+
     public NotifyCommand(Tregmine tregmine, String command, Rank... targets) {
         super(tregmine, command);
         this.targets = targets;
     }
-
-    protected Rank[] targets;
 
     private String argsToMessage(String[] args) {
         StringBuffer buf = new StringBuffer();
@@ -67,13 +68,13 @@ public abstract class NotifyCommand extends AbstractCommand {
             DiscordDelegate delegate = this.tregmine.getDiscordDelegate();
             Guild guild = delegate.getChatChannel().getGuild();
             List<String> notified = new ArrayList<>();
-            for(Rank r : this.targets) {
+            for (Rank r : this.targets) {
                 List<Role> roles = guild.getRolesByName(r.getDiscordEquivalent(), true);
-                for(Role role : roles) {
-                    for(Member member : guild.getMembersWithRoles(role)){
+                for (Role role : roles) {
+                    for (Member member : guild.getMembersWithRoles(role)) {
                         if (notified.contains(member.getUser().getId())) continue;
                         else notified.add(member.getUser().getId());
-                        if(!member.getUser().hasPrivateChannel())
+                        if (!member.getUser().hasPrivateChannel())
                             member.getUser().openPrivateChannel().complete();
                         MessageEmbed embed = delegate.getEmbedBuilder().genericEmbed("From " + player.getName(), msg, Color.ORANGE);
                         embed = new EmbedBuilder(embed).setAuthor(r.getDiscordEquivalent() + " Alert", null, null).build();

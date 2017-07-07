@@ -46,10 +46,10 @@ public class RareDropListener implements Listener {
             EntityType.SPIDER, EntityType.ENDERMAN, EntityType.WITHER, EntityType.WITCH, EntityType.BAT,
             EntityType.GHAST, EntityType.MAGMA_CUBE, EntityType.PIG_ZOMBIE, EntityType.SLIME);
 
-	/*
+    /*
      * private Set<Material> swords = EnumSet.of(WOOD_SWORD, STONE_SWORD,
-	 * IRON_SWORD, GOLD_SWORD, DIAMOND_SWORD);
-	 */
+     * IRON_SWORD, GOLD_SWORD, DIAMOND_SWORD);
+     */
     private Material[] leather_armor = {LEATHER_HELMET, LEATHER_CHESTPLATE, LEATHER_LEGGINGS, LEATHER_BOOTS};
     private Material[] iron_armor = {IRON_HELMET, IRON_CHESTPLATE, IRON_LEGGINGS, IRON_BOOTS};
     private Material[] gold_armor = {GOLD_HELMET, GOLD_CHESTPLATE, GOLD_LEGGINGS, GOLD_BOOTS};
