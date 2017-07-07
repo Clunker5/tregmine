@@ -12,7 +12,7 @@ import java.util.List;
 public enum Rank {
     UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR("Donator"), GUARDIAN("Guardian"), CODER("Coder"), BUILDER("Builder"), JUNIOR_ADMIN("Junior Admin"), SENIOR_ADMIN("Senior Admin");
 
-    private String discordEquivalent = "UNSETDONTUSEMEPLEASE";
+    private String discordEquivalent = null;
 
     private Rank(String discord){
         this.discordEquivalent = discord;

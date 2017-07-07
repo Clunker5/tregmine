@@ -7,8 +7,7 @@ import info.tregmine.api.util.TregmineFileUtil;
 import info.tregmine.commands.*;
 import info.tregmine.database.*;
 import info.tregmine.database.db.DBContextFactory;
-import info.tregmine.discord.Discord;
-import info.tregmine.discord.exception.JDAFailedException;
+import info.tregmine.discord.DiscordDelegate;
 import info.tregmine.events.CallEventListener;
 import info.tregmine.events.TregmineChatEvent;
 import info.tregmine.listeners.*;
@@ -17,6 +16,7 @@ import info.tregmine.tools.*;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -29,6 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class Tregmine extends JavaPlugin {
     private int onlineJuniors = 0;
     private int onlineSeniors = 0;
     private int onlineTeachers = 0;
-    private Discord dsv;
+    private DiscordDelegate discord;
     private Lag lag = new Lag();
 
     public static boolean coreProtectEnabled() {
@@ -202,8 +203,8 @@ public class Tregmine extends JavaPlugin {
         return contextFactory.createContext();
     }
 
-    public boolean dsvEnabled() {
-        return this.dsv != null;
+    public boolean discordEnabled() {
+        return this.discord != null;
     }
 
     public List<String> getBannedWords() {
@@ -222,8 +223,8 @@ public class Tregmine extends JavaPlugin {
         return contextFactory;
     }
 
-    public Discord getDiscordSRV() {
-        return this.dsv;
+    public DiscordDelegate getDiscordDelegate() {
+        return this.discord;
     }
 
     public Map<Location, FishyBlock> getFishyBlocks() {
@@ -558,8 +559,8 @@ public class Tregmine extends JavaPlugin {
     @Override
     public void onDisable() {
         server.getScheduler().cancelTasks(this);
-        if (this.dsv != null) {
-            this.dsv.onDisable();
+        if (this.discord != null) {
+            this.discord.getClient().shutdown(false);
         }
         // Add a record of logout to db for all players
 
@@ -711,10 +712,10 @@ public class Tregmine extends JavaPlugin {
             this.quitMessages = miscDAO.loadQuitMessages();
             this.bannedWords = miscDAO.loadBannedWords();
             if (insults.size() == 0) {
-                insults.add(0, "This is a generic death message, hardcoded into the plugin as a safeguard.");
+                insults.add(0, "");
             }
             if (quitMessages.size() == 0) {
-                quitMessages.add(0, "This is a generic quit message, hardcoded into the plugin as a safeguard.");
+                quitMessages.add(0, "");
             }
             LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
         } catch (DAOException e) {
@@ -937,11 +938,12 @@ public class Tregmine extends JavaPlugin {
                 }
             }
         }, 20L, 20L);
-        if (this.getConfig().getBoolean("discord.enabled")) {
+        if (this.getConfig().getBoolean("discord-bot.enabled")) {
             try {
-                this.dsv = new Discord(this);
-            } catch (JDAFailedException e) {
+                this.discord = new DiscordDelegate(this);
+            } catch (InterruptedException | RateLimitedException | LoginException e) {
                 e.printStackTrace();
+                this.discord = null;
             }
         }
 

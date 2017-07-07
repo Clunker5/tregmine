@@ -1,8 +1,8 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 1.0 RC 1
+version: 1.1
 website: https://www.tregmine.com
-author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
+author: Ein Andersson, Emil Hernvall, Eric Rabil, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro
 description: Tregmine Plugin
 loadbefore: [BlockLog,GameMagic]
 
@@ -40,12 +40,6 @@ commands:
   database:
     description: Miscellanious database tools (console only)
     usage: /database <repopulate>
-  discord:
-    description: Interact with discord.
-    usage: /discord [link|verify|unlink] [discordID|confcode]
-  discordsrv:
-    description: Interact with discord internals.
-    usage: /discordsrv [setpicture|reload|debug]
   survival:
     description: Switch to survival mode (admins and builders only)
     usage: /survival

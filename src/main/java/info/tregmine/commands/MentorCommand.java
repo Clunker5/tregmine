@@ -6,7 +6,7 @@ import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.database.IPlayerDAO;
-import info.tregmine.discord.Discord;
+import info.tregmine.discord.DiscordDelegate;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.md_5.bungee.api.ChatColor;
@@ -52,13 +52,16 @@ public class MentorCommand extends AbstractCommand {
                 p.sendMessage(
                         student.getName() + YELLOW + " needs a mentor! Type /mentor to " + "offer your services!");
             }
-            Discord discord = plugin.getDiscordSRV();
-            discord.getChatChannel().sendMessage(new EmbedBuilder(null)
-            .setTitle(student.getName() + " needs a mentor!", null)
-            .setDescription("Join Tregmine and offer your services!")
-            .setColor(Color.GREEN)
-            .setFooter(TregmineEmbedBuilder.TREGMINE_FOOTER, TregmineEmbedBuilder.TREGMINE_FOOTER_ICON)
-            .build()).complete();
+            if (plugin.discordEnabled()) {
+                DiscordDelegate delegate = plugin.getDiscordDelegate();
+                delegate.getChatChannel().sendMessage(new EmbedBuilder(null)
+                        .setTitle(student.getName() + " needs a mentor!", null)
+                        .setDescription("Join Tregmine and offer your services!")
+                        .setColor(Color.GREEN)
+                        .setFooter(delegate.getEmbedBuilder().getFooter(), delegate.getClient().getSelfUser().getAvatarUrl())
+                        .build()).complete();
+            }
+
         }
     }
 

@@ -1,6 +1,6 @@
 package info.tregmine.discord.entities;
 
-import info.tregmine.discord.Discord;
+import info.tregmine.discord.DiscordDelegate;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -11,31 +11,43 @@ import java.awt.*;
 
 public class TregmineEmbedBuilder {
 
-    public static final String TREGMINE_FOOTER = "Made by TregBot with lots of love";
-    public static final String TREGMINE_FOOTER_ICON = Discord.selfUser.getAvatarUrl();
+    private DiscordDelegate delegate;
 
-    public static Message errorEmbedForUser(String title, String description, User forUser) {
+    private String footer;
+    private String footerIcon;
+
+    public TregmineEmbedBuilder(DiscordDelegate delegate, String footer) {
+        this.delegate = delegate;
+        this.footer = footer;
+        this.footerIcon = this.delegate.getClient().getSelfUser().getAvatarUrl();
+    }
+
+    public Message errorEmbedForUser(String title, String description, User forUser) {
         return new MessageBuilder().append("(" + forUser.getAsMention() + ")").setEmbed(new
                 EmbedBuilder(null)
                 .setColor(Color.RED)
                 .setTitle(title, null)
                 .setDescription(description)
-                .setFooter(TREGMINE_FOOTER, TREGMINE_FOOTER_ICON)
+                .setFooter(this.footer, this.footerIcon)
                 .build())
                 .build();
     }
 
-    public static MessageEmbed errorEmbed(String title, String description) {
+    public String getFooter() {
+        return this.footer;
+    }
+
+    public MessageEmbed errorEmbed(String title, String description) {
         return new
                 EmbedBuilder(null)
                 .setColor(Color.RED)
                 .setTitle(title, null)
                 .setDescription(description)
-                .setFooter(TREGMINE_FOOTER, TREGMINE_FOOTER_ICON)
+                .setFooter(this.footer, this.footerIcon)
                 .build();
     }
 
-    public static Message genericOperationEmbedForUser(String title, String description, User forUser) {
+    public Message genericOperationEmbedForUser(String title, String description, User forUser) {
         return
                 new MessageBuilder().append(generateMention(forUser)).setEmbed(
                         new EmbedBuilder(null)
@@ -47,47 +59,47 @@ public class TregmineEmbedBuilder {
                         .build();
     }
 
-    public static MessageEmbed genericOperationEmbed(String title, String description) {
+    public MessageEmbed genericOperationEmbed(String title, String description) {
         return new EmbedBuilder(null)
                 .setColor(Color.CYAN)
                 .setTitle(title, null)
                 .setDescription(description)
-                .setFooter(TREGMINE_FOOTER, TREGMINE_FOOTER_ICON)
+                .setFooter(this.footer, this.footerIcon)
 
                 .build();
     }
 
-    public static Message genericEmbedForUser(String title, String description, Color color, User forUser) {
+    public Message genericEmbedForUser(String title, String description, Color color, User forUser) {
         return
                 new MessageBuilder().append(generateMention(forUser)).setEmbed(
                         new EmbedBuilder(null)
                                 .setColor(color)
                                 .setTitle(title, null)
                                 .setDescription(description)
-                                .setFooter(TREGMINE_FOOTER, TREGMINE_FOOTER_ICON)
+                                .setFooter(this.footer, this.footerIcon)
                                 .build())
                         .build();
     }
 
-    public static Message wrapEmbed(MessageEmbed embed) {
+    public Message wrapEmbed(MessageEmbed embed) {
         return new MessageBuilder().setEmbed(embed).build();
     }
 
-    public static Message wrapEmbed(MessageEmbed embed, User forUser) {
+    public Message wrapEmbed(MessageEmbed embed, User forUser) {
         return new MessageBuilder().append(generateMention(forUser)).setEmbed(embed).build();
     }
 
-    public static MessageEmbed genericEmbed(String title, String description, Color color) {
+    public MessageEmbed genericEmbed(String title, String description, Color color) {
         return new EmbedBuilder(null)
                 .setColor(color)
                 .setTitle(title, null)
                 .setDescription(description)
-                .setFooter(TREGMINE_FOOTER, TREGMINE_FOOTER_ICON)
+                .setFooter(this.footer, this.footerIcon)
                 .build();
     }
 
 
-    private static String generateMention(User user) {
+    private String generateMention(User user) {
         return "(" + user.getAsMention() + ")";
     }
 

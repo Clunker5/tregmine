@@ -1,7 +1,8 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine; import info.tregmine.api.GenericPlayer;
-import info.tregmine.discord.entities.EmbedAlertType;
+import info.tregmine.discord.DiscordDelegate;
+import info.tregmine.discord.entities.EmbedType;
 import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -35,9 +36,10 @@ public class SayCommand extends AbstractCommand {
 
         server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
         LOGGER.info("CONSOLE: <GOD> " + msg);
-        if (this.tregmine.dsvEnabled()) {
-            this.tregmine.getDiscordSRV().getChatChannel().sendMessage(
-                    TregmineEmbedBuilder.genericEmbed(EmbedAlertType.SAY.getDisplayName(), msg, Color.YELLOW)).complete();
+        if (this.tregmine.discordEnabled()) {
+            DiscordDelegate delegate = this.tregmine.getDiscordDelegate();
+            delegate.getChatChannel().sendMessage(
+                    delegate.getEmbedBuilder().genericEmbed(EmbedType.SAY.getTitle(), msg, Color.YELLOW)).complete();
         }
         return true;
     }
@@ -58,9 +60,10 @@ public class SayCommand extends AbstractCommand {
 
         LOGGER.info(player.getName() + ": <GOD> " + msg);
 
-        if (this.tregmine.dsvEnabled()) {
-            this.tregmine.getDiscordSRV().getChatChannel().sendMessage(
-                    TregmineEmbedBuilder.genericEmbed(EmbedAlertType.SAY.getDisplayName(), msg, Color.YELLOW)).complete();
+        if (this.tregmine.discordEnabled()) {
+            DiscordDelegate delegate = this.tregmine.getDiscordDelegate();
+            delegate.getChatChannel().sendMessage(
+                    delegate.getEmbedBuilder().genericEmbed(EmbedType.SAY.getTitle(), msg, Color.YELLOW)).complete();
         }
 
         Collection<? extends Player> players = server.getOnlinePlayers();

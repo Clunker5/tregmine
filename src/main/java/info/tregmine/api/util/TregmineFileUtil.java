@@ -1,6 +1,5 @@
 package info.tregmine.api.util;
 
-import info.tregmine.discord.RandomString;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;

@@ -1035,7 +1035,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
             if (!this.isHidden()) {
                 this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
                         new TextComponent(RESET + "" + BLUE + " is now afk."));
-                this.plugin.getDiscordSRV().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is now afk.").complete();
+                this.plugin.getDiscordDelegate().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is now afk.").complete();
             }
             String oldname = getChatNameNoHover();
             this.namePreAfkAppendage = oldname;
@@ -1048,7 +1048,9 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
             if (!this.isHidden()) {
                 this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
                         new TextComponent(RESET + "" + GREEN + " is no longer afk."));
-                this.plugin.getDiscordSRV().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is no longer afk.").complete();
+                if (this.plugin.discordEnabled()) {
+                    this.plugin.getDiscordDelegate().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is no longer afk.").complete();
+                }
             }
         }
     }
