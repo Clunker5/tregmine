@@ -282,9 +282,6 @@ commands:
   update:
     description: See what was last updated!
     usage: /update [version number]
-  undercoverboss:
-    description: Go undercover!
-    usage: /undercoverboss <guardian, donator, resident>
   vanish:
     description: Become invisible (admin only)
     usage: /vanish <on|off>
