@@ -158,6 +158,9 @@ public class ActionCommand extends AbstractCommand {
             to.sendMessage(begin, middle, end);
         }
         Tregmine.LOGGER.info("* " + player.getName() + " " + msg);
+        if (player.getRank() != Rank.SENIOR_ADMIN && player.getRank() != Rank.JUNIOR_ADMIN) {
+            msg = msg.replaceAll("@everyone", "").replaceAll("@here", "");
+        }
         this.tregmine.getDiscordDelegate().getChatChannel().sendMessage("**" + player.getName() + "** " + msg).complete();
         return true;
     }
