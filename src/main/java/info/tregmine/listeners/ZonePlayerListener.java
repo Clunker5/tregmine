@@ -583,12 +583,6 @@ public class ZonePlayerListener implements Listener {
             }
         }
 
-        if ("world_the_end".equals(dstWorld.getName()) && !player.isOp()) {
-            player.sendMessage(ChatColor.RED + "You can't teleport to someone in The End");
-            event.setCancelled(true);
-            return;
-        }
-
         if (srcWorld.getName().equals(dstWorld.getName())) {
             ZoneWorld world = plugin.getWorld(player.getWorld());
 
