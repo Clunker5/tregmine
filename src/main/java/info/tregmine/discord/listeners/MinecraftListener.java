@@ -1,8 +1,10 @@
 package info.tregmine.discord.listeners;
 
 import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
 import info.tregmine.discord.DiscordDelegate;
 import info.tregmine.events.TregmineChatEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -24,7 +26,11 @@ public class MinecraftListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        this.delegate.sendChat("**" + sender.getName() + "**: " + event.getMessage().replaceAll("#[0-9a-fA-Fk-oK-O]", ""));
+        String message = event.getMessage().replaceAll("#[0-9a-fA-Fk-oK-O]", "");
+        if (sender.getRank() != Rank.JUNIOR_ADMIN && sender.getRank() != Rank.SENIOR_ADMIN) {
+            message = message.replaceAll("@everyone", "").replaceAll("@here", "");
+        }
+        this.delegate.sendChat("**" + sender.getName() + "**: " + message);
     }
 
     @EventHandler
@@ -51,7 +57,6 @@ public class MinecraftListener implements Listener {
         GenericPlayer player = this.delegate.getPlugin().getPlayer(event.getEntity());
         if (player.isHidden())
             return;
-        this.delegate.sendChat(event.getDeathMessage());
+        this.delegate.sendChat(ChatColor.stripColor(event.getDeathMessage()));
     }
-
 }
