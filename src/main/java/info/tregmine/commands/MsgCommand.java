@@ -1,6 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
+import info.tregmine.api.DiscordCommandSender;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Notification;
 import info.tregmine.database.DAOException;
@@ -34,6 +35,8 @@ public class MsgCommand extends AbstractCommand {
         if (args.length < 2) {
             return false;
         }
+
+        if (player instanceof DiscordCommandSender) return false;
 
         String message = ChatColor.translateAlternateColorCodes('#', argsToMessage(args));
 

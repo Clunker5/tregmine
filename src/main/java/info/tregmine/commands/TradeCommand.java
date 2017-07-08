@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.Badge;
+import info.tregmine.api.DiscordCommandSender;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.ChatState;
 import info.tregmine.api.math.MathUtil;
@@ -49,6 +50,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
         if (args.length != 1) {
             return false;
         }
+        if (player instanceof DiscordCommandSender) return false;
         if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
             player.sendMessage(RED + "A trade is already in progress!");
             return true;
