@@ -8,6 +8,7 @@ import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.database.IPlayerDAO;
 import info.tregmine.discord.DiscordDelegate;
+import info.tregmine.discord.entities.TregmineEmbedBuilder;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.md_5.bungee.api.ChatColor;
 
@@ -176,13 +177,7 @@ public class MentorCommand extends AbstractCommand {
                 player.sendMessage(RED + "You do not have permission to mentor.");
                 return true;
             }
-            GenericPlayer student = player.getStudent();
-            if (student == null && (player.getRank() == Rank.TOURIST || tregmine.getOnlineTeachers() <= 3)) {
-                player.sendMessage(RED + "You are not mentoring anyone right now.");
-                return true;
-            }
-
-            if (tregmine.getOnlineTeachers() < 3 && student == null) {
+            if (tregmine.getOnlineTeachers() < 3 && player.getMentor() == null && player.getRank() == Rank.TOURIST) {
                 try (IContext ctx = tregmine.createContext()) {
                     player.setRank(Rank.SETTLER);
 
@@ -199,7 +194,13 @@ public class MentorCommand extends AbstractCommand {
                     throw new RuntimeException(e);
                 }
                 return true;
-            } else if (student != null) {
+            }
+            GenericPlayer student = player.getStudent();
+            if (student == null) {
+                player.sendMessage(RED + "You are not mentoring anyone right now.");
+                return true;
+            }
+            if (student != null) {
                 try (IContext ctx = tregmine.createContext()) {
                     student.setRank(Rank.SETTLER);
 
