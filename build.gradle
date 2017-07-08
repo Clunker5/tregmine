@@ -34,7 +34,7 @@ jar {
   def appendage = System.getenv("BUILD_NUMBER") ? "-" + System.getenv("BUILD_NUMBER") : ""
 	baseName = "tregmine" + appendage + "-NODEPS-SNAPSHOT"
 	from('src/main/java') {
-   	include 'plugin.yml'
+   		include 'plugin.yml'
 		include 'config.yml'
 		include 'GeoIPCity.dat'
 		include 'tregmine.sql'

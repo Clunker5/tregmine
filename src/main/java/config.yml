@@ -59,4 +59,7 @@ discord-bot:
     startup:
       enabled: true
       message: "Tregmine is online!"
+    shutdown:
+      enabled: true
+      message: "The server has shut down."
     embed-footer: "Made by TregBot XOXO"
