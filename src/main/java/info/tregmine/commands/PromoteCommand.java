@@ -32,7 +32,6 @@ public class PromoteCommand extends AbstractCommand {
         }
         // This player is a senior admin and is allowed to promote. Continue.
         if (args.length != 2) {
-            // Player didn't enter two arguments, terminate.
             return false;
         }
         // The checks have finished, perform the command
@@ -73,6 +72,7 @@ public class PromoteCommand extends AbstractCommand {
         } catch (DAOException e) {
             throw new RuntimeException(e);
         }
+        player.sendMessage(user.getChatNameNoColor() + " has been promoted to " + rank);
         this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(
                 RESET + "" + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + rank.getDiscordEquivalent() + "!"));
         return true;
