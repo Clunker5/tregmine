@@ -53,7 +53,8 @@ public class TeleportCommand extends AbstractCommand {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
-        if (target.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
+        if (target.hasFlag(GenericPlayer.Flags.INVISIBLE) && !player.getRank().canVanish()) {
+            player.sendMessage(RED + "Can't find user.");
             return true;
         }
 
