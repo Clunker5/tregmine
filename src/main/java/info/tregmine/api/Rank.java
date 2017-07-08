@@ -32,6 +32,15 @@ public enum Rank {
         return null;
     }
 
+    public static Rank fromDiscordString(String value) {
+        for (Rank rank : Rank.values()) {
+            if (value.equalsIgnoreCase(rank.getDiscordEquivalent())) {
+                return rank;
+            }
+        }
+        return null;
+    }
+
     public String getDiscordEquivalent() {
         return this.discordEquivalent;
     }
@@ -400,7 +409,7 @@ public enum Rank {
     public boolean canViewHelp() {
         return this != UNVERIFIED;
     }
-	/*
+    /*
 	 * End CoreProtect Permissions
 	 */
 
