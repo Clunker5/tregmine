@@ -592,7 +592,7 @@ public class TregminePlayerListener implements Listener {
         }
 
         if (player.getRank() == Rank.GUARDIAN) {
-            player.setGuardianState(GenericPlayer.GuardianState.QUEUED);
+            player.setGuardianState(GenericPlayer.GuardianState.ACTIVE);
         }
     }
 
