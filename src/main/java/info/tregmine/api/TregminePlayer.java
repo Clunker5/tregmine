@@ -53,7 +53,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     // One-time state
     private String chatChannel = "GLOBAL";
     private Zone currentZone = null;
-    private GuardianState guardianState = GuardianState.QUEUED;
+    private GuardianState guardianState = GuardianState.ACTIVE;
     private int blessTarget = 0;
     private ChatState chatState = ChatState.CHAT;
     private Date loginTime = null;
