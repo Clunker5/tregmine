@@ -83,12 +83,6 @@ public abstract class PlayerDelegate implements GenericDelegate {
     }
 
     @Override
-    public void awardAchievement(org.bukkit.Achievement p0) {
-        checkState();
-        delegate.awardAchievement(p0);
-    }
-
-    @Override
     public boolean beginConversation(org.bukkit.conversations.Conversation p0) {
         checkState();
         return delegate.beginConversation(p0);

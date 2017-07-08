@@ -95,12 +95,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
     public boolean addPotionEffects(Collection<PotionEffect> p0) {
         return false;
     }
-
-    @Override
-    public void awardAchievement(Achievement p0) {
-
-    }
-
     @Override
     public boolean beginConversation(Conversation p0) {
         return false;

@@ -33,8 +33,6 @@ public interface GenericDelegate {
 
     boolean addPotionEffects(java.util.Collection<org.bukkit.potion.PotionEffect> p0);
 
-    void awardAchievement(org.bukkit.Achievement p0);
-
     boolean beginConversation(org.bukkit.conversations.Conversation p0);
 
     boolean canSee(org.bukkit.entity.Player p0);
