@@ -460,7 +460,6 @@ public class ZonePlayerListener implements Listener {
         if (currentZone == null || !currentZone.contains(currentPos)) {
 
             if (currentZone != null && currentZone.contains(oldPos)) {
-                player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
                 player.sendMessage(
                         ChatColor.RED + "[" + currentZone.getName() + "] " + currentZone.getTextExit());
             }
@@ -569,20 +568,6 @@ public class ZonePlayerListener implements Listener {
         Location dst = event.getTo();
         World dstWorld = dst.getWorld();
 
-        if (event.getCause().equals(TeleportCause.END_PORTAL)) {
-            Tregmine.LOGGER.info("Portal by: " + player.getName());
-
-            int nrEnt = event.getTo().getWorld().getLivingEntities().size();
-            int max = 1000;
-            int newEnt = max - nrEnt;
-
-            if (nrEnt <= max) {
-                for (int i = 0; i < newEnt; i++) {
-                    dstWorld.spawnEntity(dst, EntityType.GHAST);
-                }
-            }
-        }
-
         if (srcWorld.getName().equals(dstWorld.getName())) {
             ZoneWorld world = plugin.getWorld(player.getWorld());
 
@@ -594,7 +579,6 @@ public class ZonePlayerListener implements Listener {
             if (currentZone == null || !currentZone.contains(currentPos)) {
 
                 if (currentZone != null && currentZone.contains(oldPos)) {
-                    player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
                     player.sendMessage(currentZone.getTextExit());
                 }
 
@@ -641,14 +625,7 @@ public class ZonePlayerListener implements Listener {
             return;
         }
 
-        if (currentZone.getTexture() == "") {
-            if (currentZone.isPvp()) {
-                player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/pvp.zip");
-            } else {
-                player.setCurrentTexture("https://dl.dropbox.com/u/5405236/mc/df.zip");
-            }
-
-        } else {
+        if (currentZone.getTexture() != "") {
             player.setCurrentTexture(currentZone.getTexture());
         }
 
