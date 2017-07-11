@@ -69,7 +69,7 @@ public class DiscordListener extends ListenerAdapter {
                 stripColors = false;
         }
         if (stripColors)
-            message = message.replaceAll("&([0-9a-qs-z])", "");
+            message = message.replaceAll("#([0-9a-qs-z])", "");
         return message;
     }
 
@@ -82,12 +82,10 @@ public class DiscordListener extends ListenerAdapter {
                 stripColors = false;
         }
         if (stripColors)
-            message = message.replaceAll("&([0-9a-qs-z])", "");
-        String authorAttr =
-                (event.getMember().getRoles().isEmpty()
-                        ? ""
-                        : ChatColor.translateAlternateColorCodes('&', this.delegate.convertRoleToMinecraftColor(this.delegate.getTopRole(event.getMember().getRoles()))))
-                        + event.getMember().getNickname();
+            message = message.replaceAll("#([0-9a-qs-z])", "");
+        String authorAttr = event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName();
+        System.out.println(authorAttr);
+        String color = ChatColor.translateAlternateColorCodes('#', this.delegate.convertRoleToMinecraftColor(this.delegate.getTopRole(event.getMember().getRoles())));
         message = "(" + authorAttr + ChatColor.RESET + ") " + message;
         Tregmine.LOGGER.info("DISCORD " + ChatColor.stripColor(message));
         this.delegate.getPlugin().broadcast(new TextComponent(message));
@@ -103,6 +101,9 @@ public class DiscordListener extends ListenerAdapter {
             return;
 
         if (!event.getGuild().getId().equalsIgnoreCase(this.delegate.getChatChannel().getGuild().getId()))
+            return;
+
+        if (event.getAuthor().isBot())
             return;
 
         String message = event.getMessage().getContent();
