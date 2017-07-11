@@ -376,7 +376,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         }
         if (this.hasFlag(Flags.CHILD)) {
             returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD" + addon)
+                    new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "Child" + addon)
                             .create()));
         } else {
             returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
