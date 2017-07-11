@@ -1029,25 +1029,14 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
-    public void setAfk(boolean value) {
-        if (value == true) {
-            this.afk = true;
-            if (!this.isHidden()) {
-                this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
-                        new TextComponent(RESET + "" + BLUE + " is now afk."));
+    public void setAfk(boolean isAFK) {
+        this.setSilentAfk(isAFK);
+        if (!this.isHidden()) {
+            if (isAFK) {
+                this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + BLUE + " is now afk."));
                 this.plugin.getDiscordDelegate().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is now afk.").complete();
-            }
-            String oldname = getChatNameNoHover();
-            this.namePreAfkAppendage = oldname;
-            setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
-        } else if (value == false) {
-            final long currentTime = System.currentTimeMillis();
-            this.setLastOnlineActivity(currentTime);
-            this.afk = false;
-            setTemporaryChatName(this.namePreAfkAppendage);
-            if (!this.isHidden()) {
-                this.plugin.broadcast(new TextComponent(ITALIC + ""), getChatName(),
-                        new TextComponent(RESET + "" + GREEN + " is no longer afk."));
+            } else {
+                this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + GREEN + " is no longer afk."));
                 if (this.plugin.discordEnabled()) {
                     this.plugin.getDiscordDelegate().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is no longer afk.").complete();
                 }
@@ -1343,21 +1332,18 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
-    public void setSilentAfk(boolean value) {
-        if (this.isHidden()) {
-            return;
-        }
-        if (value == true) {
-            this.afk = true;
-            String oldname = getChatNameNoHover();
-            setTemporaryChatName(GRAY + "[AFK] " + RESET + oldname);
-        } else if (value == false) {
+    public void setSilentAfk(boolean isAFK) {
+        this.afk = isAFK;
+        if (isAFK) {
+            String namePreAFK = getChatNameNoHover();
+            if (!namePreAFK.contains("[AFK]")) {
+                this.namePreAfkAppendage = namePreAFK;
+                setTemporaryChatName(GRAY + "[AFK] " + RESET + namePreAFK);
+            }
+        } else {
             final long currentTime = System.currentTimeMillis();
             this.setLastOnlineActivity(currentTime);
-            this.afk = false;
-            setTemporaryChatName(getNameColor() + getRealName());
-        } else {
-            return;
+            setTemporaryChatName(this.namePreAfkAppendage);
         }
     }
 
