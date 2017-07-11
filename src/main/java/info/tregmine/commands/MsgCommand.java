@@ -17,7 +17,12 @@ import static org.bukkit.ChatColor.GREEN;
 public class MsgCommand extends AbstractCommand {
     public MsgCommand(Tregmine tregmine) {
         super(tregmine, "msg");
+        this.toFlag.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+        this.fromFlag.setColor(net.md_5.bungee.api.ChatColor.GREEN);
     }
+
+    private final TextComponent toFlag = new TextComponent("(to) ");
+    private final TextComponent fromFlag = new TextComponent("(from) ");
 
     private String argsToMessage(String[] args) {
         StringBuffer buf = new StringBuffer();
@@ -39,7 +44,8 @@ public class MsgCommand extends AbstractCommand {
         if (player instanceof DiscordCommandSender) return false;
 
         String message = ChatColor.translateAlternateColorCodes('#', argsToMessage(args));
-
+        TextComponent messageTC = new TextComponent(": " + message);
+        messageTC.setColor(net.md_5.bungee.api.ChatColor.GREEN);
         String[] receivingPlayers = args[0].split(",");
         try (IContext ctx = tregmine.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
@@ -63,21 +69,23 @@ public class MsgCommand extends AbstractCommand {
                 if (ignored)
                     continue;
 
+
+
                 // Show message in senders terminal, as long as the recipient
                 // isn't
                 // invisible, to prevent /msg from giving away hidden players
                 // presence
+
                 if (!receivingPlayer.hasFlag(GenericPlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
-                    player.sendMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.decideVS(player),
-                            new TextComponent(GREEN + ": " + message));
+                    player.sendMessage(this.toFlag, receivingPlayer.decideVS(player), messageTC);
                 } else {
                     player.sendNotification(Notification.COMMAND_FAIL,
                             new TextComponent(ChatColor.RED + "No player found by the name of " + possiblePlayer));
                 }
                 receivingPlayer.setLastMessenger(player.getName());
                 // Send message to recipient
-                receivingPlayer.sendNotification(Notification.MESSAGE, new TextComponent(GREEN + "(msg) "),
-                        player.decideVS(receivingPlayer), new TextComponent(GREEN + ": " + message));
+                receivingPlayer.sendNotification(Notification.MESSAGE, this.fromFlag,
+                        player.decideVS(receivingPlayer), messageTC);
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
