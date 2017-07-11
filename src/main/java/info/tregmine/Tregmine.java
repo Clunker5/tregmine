@@ -692,34 +692,10 @@ public class Tregmine extends JavaPlugin {
             }
         }
 
-        try (IContext ctx = contextFactory.createContext()) {
-            IBlessedBlockDAO blessedBlockDAO = ctx.getBlessedBlockDAO();
-            this.blessedBlocks = blessedBlockDAO.load(getServer());
+        DatabaseToolCommand dbTool = new DatabaseToolCommand(this);
 
-            LOGGER.info("Loaded " + blessedBlocks.size() + " blessed blocks");
-
-            IFishyBlockDAO fishyBlockDAO = ctx.getFishyBlockDAO();
-            this.fishyBlocks = fishyBlockDAO.loadFishyBlocks(getServer());
-
-            LOGGER.info("Loaded " + fishyBlocks.size() + " fishy blocks");
-
-            IBlockDAO blockDAO = ctx.getBlockDAO();
-            this.minedBlockPrices = blockDAO.loadBlockMinePrices();
-
-            IMiscDAO miscDAO = ctx.getMiscDAO();
-            this.insults = miscDAO.loadInsults();
-            this.quitMessages = miscDAO.loadQuitMessages();
-            this.bannedWords = miscDAO.loadBannedWords();
-            if (insults.size() == 0) {
-                insults.add(0, "");
-            }
-            if (quitMessages.size() == 0) {
-                quitMessages.add(0, "");
-            }
-            LOGGER.info("Loaded " + insults.size() + " insults and " + quitMessages.size() + " quit messages");
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
+        // Loads blessed blocks, fishy blocks, insults, quit messages, banned words
+        dbTool.loadBFS();
 
         // Set up web server
         webServer = new WebServer(this);
@@ -831,7 +807,7 @@ public class Tregmine extends JavaPlugin {
         getCommand("createwarp").setExecutor(new CreateWarpCommand(this));
         getCommand("gamemode").setExecutor(new GameModeCommand(this, "gamemode", null));
         getCommand("fill").setExecutor(new FillCommand(this, "fill"));
-        getCommand("database").setExecutor(new DatabaseToolCommand(this));
+        getCommand("database").setExecutor(dbTool);
         getCommand("suicide").setExecutor(new SuicideCommand(this));
         getCommand("fly").setExecutor(new FlyCommand(this));
         getCommand("force").setExecutor(new ForceCommand(this));
@@ -1037,6 +1013,30 @@ public class Tregmine extends JavaPlugin {
 
     public String serverName() {
         return this.serverName;
+    }
+
+    public void setBlessedBlocks(Map<Location, Integer> blocks) {
+        this.blessedBlocks = blocks;
+    }
+
+    public void setFishyBlocks(Map<Location, FishyBlock> blocks) {
+        this.fishyBlocks = blocks;
+    }
+
+    public void setMinedBlockPrices(Map<Material, Integer> blocks) {
+        this.minedBlockPrices = blocks;
+    }
+
+    public void setInsults(List<String> insults) {
+        this.insults = insults;
+    }
+
+    public void setQuitMessages(List<String> quitMessages) {
+        this.quitMessages = quitMessages;
+    }
+
+    public void setBannedWords(List<String> bannedWords) {
+        this.bannedWords = bannedWords;
     }
 
     public void setReconnecting(boolean v) {
