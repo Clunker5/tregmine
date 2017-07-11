@@ -43,12 +43,8 @@ public class ForceCommand extends AbstractCommand {
         GenericPlayer toPlayer = matches.get(0);
 
         if (toPlayer.hasFlag(GenericPlayer.Flags.FORCESHIELD) && !player.getRank().canOverrideForceShield()) {
-            toPlayer.sendMessage(new TextComponent((toPlayer.canVS())
-                    ? ChatColor.AQUA + "" + player.getChatNameStaff() + " tried to force you into a channel!"
-                    : ChatColor.AQUA + "" + player.getChatName() + " tried to force you into a channel!"));
-            player.sendMessage(new TextComponent((toPlayer.canVS())
-                    ? ChatColor.AQUA + "Can not force " + toPlayer.getChatNameStaff() + " into a channel!"
-                    : ChatColor.AQUA + "Can not force " + toPlayer.getChatName() + " into a channel!"));
+            toPlayer.sendMessage(new TextComponent(ChatColor.AQUA.toString()), player.decideVS(toPlayer), new TextComponent(" tried to force you into a channel!"));
+            player.sendMessage(new TextComponent(ChatColor.AQUA + "Can not force "), player.decideVS(player), new TextComponent(" into a channel!"));
             return true;
         }
         String oldChannel = player.getChatChannel();
@@ -57,15 +53,14 @@ public class ForceCommand extends AbstractCommand {
         toPlayer.sendMessage(new TextComponent(YELLOW + ""), player.decideVS(player),
                 new TextComponent(" forced you into channel " + channel.toUpperCase()));
         toPlayer.sendMessage(YELLOW + "Write /channel global to switch back to " + "the global chat.");
-        player.sendMessage(YELLOW + "You are now in a forced chat " + channel.toUpperCase() + " with "
-                + toPlayer.decideVS(player) + ".");
+        player.sendMessage(new TextComponent(YELLOW + "You are now in a forced chat " + channel.toUpperCase() + " with"), toPlayer.decideVS(player),  new TextComponent("."));
         LOGGER.info(player.getName() + " FORCED CHAT WITH " + toPlayer.getDisplayName() + " IN CHANNEL "
                 + channel.toUpperCase());
 
         for (GenericPlayer players : tregmine.getOnlinePlayers()) {
             if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
                 players.sendMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and "
-                        + toPlayer.getChatName() + ChatColor.YELLOW + " have left channel " + oldChannel));
+                ), toPlayer.getChatName(), new TextComponent(ChatColor.YELLOW + " have left channel " + oldChannel));
                 players.sendMessage(player.decideVS(players), new TextComponent(YELLOW + " and "),
                         toPlayer.decideVS(players), new TextComponent(YELLOW + " have left channel " + oldChannel));
             } else if (channel.equalsIgnoreCase(players.getChatChannel())) {
