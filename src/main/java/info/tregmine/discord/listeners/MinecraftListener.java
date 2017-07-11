@@ -22,8 +22,7 @@ public class MinecraftListener implements Listener {
     @EventHandler
     public void onTregmineChat(TregmineChatEvent event) {
         GenericPlayer sender = event.getPlayer();
-        if (sender.isMuted() || sender.isHidden() || event.getMessage().contains("%cancel%")) {
-            event.setCancelled(true);
+        if (sender.isMuted() || sender.isHidden() || event.getMessage().contains("%cancel%") || !sender.getChatChannel().equalsIgnoreCase("GLOBAL")) {
             return;
         }
         String message = event.getMessage().replaceAll("#[0-9a-fA-Fk-oK-O]", "");
