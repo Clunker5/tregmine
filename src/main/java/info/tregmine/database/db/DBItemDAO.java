@@ -59,13 +59,11 @@ public class DBItemDAO implements IItemDAO {
         } catch (SQLException e) {
             throw new DAOException("TRUNCATE item", e);
         }
-        String sql = "INSERT INTO item (item_id, item_data, item_name, enchantable) VALUES " +
-                "(?, ?, ?, ?)";
+        String sql = "INSERT INTO item (item_id, item_data, item_name, enchantable, sellable) VALUES " +
+                "(?, ?, ?, ?, yes)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             for (Material material : Material.values()) {
-                if (this.excludeGenerics.contains(material))
-                    continue;
                 ItemStack stack = new ItemStack(material);
                 String enchantable = "no";
                 for (Enchantment enchant : Enchantment.values()) {
@@ -84,12 +82,6 @@ public class DBItemDAO implements IItemDAO {
                 stmt.setString(4, enchantable);
                 stmt.execute();
                 Tregmine.LOGGER.info("[DATABASE] Added " + material.name() + " to item table.");
-            }
-            for (DyeColor color : DyeColor.values()) {
-                Material material = Material.WOOL;
-                ItemStack wool = new ItemStack(material);
-                wool.setData(new Dye(color));
-
             }
             Tregmine.LOGGER.info("[DATABASE] Database repopulated.");
         } catch (SQLException e) {
