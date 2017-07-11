@@ -35,7 +35,9 @@ public class CraftListener implements Listener {
         ItemStack[] stack = event.getInventory().getMatrix();
 
         for (ItemStack onestack : stack) {
-            if (onestack.getType() != Material.AIR && onestack.hasItemMeta()) {
+            if (onestack == null)
+                continue;
+            if (onestack.hasItemMeta()) {
                 ItemMeta meta = onestack.getItemMeta();
                 List<String> lore = meta.getLore();
                 if (lore.contains(Created.CREATIVE.toColorString()) || lore.get(0).contains("CREATIVE")) {
@@ -51,7 +53,6 @@ public class CraftListener implements Listener {
                         resultmeta.setLore(resultlore);
                         result.setItemMeta(resultmeta);
                         event.getInventory().setResult(result);
-                        // Â
                     }
                 }
                 if (lore.contains(Created.SPAWNED.toColorString()) || lore.get(0).contains("SPAWNED")) {
