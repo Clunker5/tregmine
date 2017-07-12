@@ -67,14 +67,15 @@ public class ReplyCommand extends AbstractCommand {
                 // isn't
                 // invisible, to prevent /msg from giving away hidden players
                 // presence
+                TextComponent messageTC = new TextComponent(GREEN + ": " + message);
+                messageTC.setColor(net.md_5.bungee.api.ChatColor.GREEN);
                 if (!receivingPlayer.hasFlag(GenericPlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
                     player.sendMessage(new TextComponent(GREEN + "(to) "), receivingPlayer.getChatName(),
-                            new TextComponent(GREEN + ": " + message));
+                            messageTC);
                 }
-
                 // Send message to recipient
                 receivingPlayer.sendNotification(Notification.MESSAGE, new TextComponent(GREEN + "(msg) "),
-                        player.getChatName(), new TextComponent(GREEN + ": " + message));
+                        player.getChatName(), messageTC);
                 receivingPlayer.setLastMessenger(player.getName());
             } catch (DAOException e) {
                 throw new RuntimeException(e);
