@@ -99,8 +99,8 @@ public class DiscordDelegate {
         return newMessage;
     }
 
-    public Message sendChat(String message) {
-        return this.chatChannel.sendMessage(this.convertMentionsFromNames(message)).complete();
+    public void sendChat(String message) {
+        this.chatChannel.sendMessage(this.convertMentionsFromNames(message)).queue();
     }
 
     public TextChannel getChatChannel() {
