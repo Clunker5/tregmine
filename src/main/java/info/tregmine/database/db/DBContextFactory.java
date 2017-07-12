@@ -54,6 +54,11 @@ public class DBContextFactory implements IContextFactory {
         ds.setMaxActive(5);
         ds.setMaxIdle(5);
         ds.setDefaultAutoCommit(true);
+        try {
+            ds.getConnection().prepareStatement("SET NAMES latin1").execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         this.driver = driver;
         this.url = url;
@@ -69,9 +74,6 @@ public class DBContextFactory implements IContextFactory {
             // It's the responsibility of the context to make sure that the
             // connection is correctly closed
             Connection conn = ds.getConnection();
-            try (Statement stmt = conn.createStatement()) {
-                stmt.execute("SET NAMES latin1");
-            }
 
             return new DBContext(new LoggingConnection(conn, queryLog), plugin);
         } catch (SQLException e) {
@@ -84,10 +86,6 @@ public class DBContextFactory implements IContextFactory {
                 Connection conn;
                 try {
                     conn = ds.getConnection();
-
-                    try (Statement stmt = conn.createStatement()) {
-                        stmt.execute("SET NAMES latin1");
-                    }
                     this.plugin.setReconnecting(false);
                     return new DBContext(new LoggingConnection(conn, queryLog), plugin);
                 } catch (SQLException e1) {
