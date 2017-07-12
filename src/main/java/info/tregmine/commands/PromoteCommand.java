@@ -74,7 +74,7 @@ public class PromoteCommand extends AbstractCommand {
         }
         player.sendMessage(user.getChatNameNoColor() + " has been promoted to " + rank);
         this.tregmine.broadcast(new TextComponent("" + BLUE + ITALIC), user.getChatName(), new TextComponent(
-                RESET + "" + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + rank.getDiscordEquivalent() + "!"));
+                RESET + "" + GREEN + " has been promoted to " + RESET + BLUE + ITALIC + rank.getNiceName() + "!"));
         return true;
     }
 

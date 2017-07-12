@@ -69,7 +69,7 @@ public abstract class NotifyCommand extends AbstractCommand {
             Guild guild = delegate.getChatChannel().getGuild();
             List<String> notified = new ArrayList<>();
             for (Rank r : this.targets) {
-                List<Role> roles = guild.getRolesByName(r.getDiscordEquivalent(), true);
+                List<Role> roles = guild.getRolesByName(r.getNiceName(), true);
                 for (Role role : roles) {
                     for (Member member : guild.getMembersWithRoles(role)) {
                         if (notified.contains(member.getUser().getId())) continue;
@@ -77,7 +77,7 @@ public abstract class NotifyCommand extends AbstractCommand {
                         if (!member.getUser().hasPrivateChannel())
                             member.getUser().openPrivateChannel().complete();
                         MessageEmbed embed = delegate.getEmbedBuilder().genericEmbed("From " + player.getName(), msg, Color.ORANGE);
-                        embed = new EmbedBuilder(embed).setAuthor(r.getDiscordEquivalent() + " Alert", null, null).build();
+                        embed = new EmbedBuilder(embed).setAuthor(r.getNiceName() + " Alert", null, null).build();
                         member.getUser().openPrivateChannel().complete().sendMessage(embed).complete();
                     }
                 }

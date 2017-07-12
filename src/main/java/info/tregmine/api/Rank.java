@@ -1,6 +1,7 @@
 package info.tregmine.api;
 
 import info.tregmine.Tregmine;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
@@ -10,17 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Rank {
-    UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR("Donator"), GUARDIAN("Guardian"), CODER("Coder"), BUILDER("Builder"), JUNIOR_ADMIN("Junior Admin"), SENIOR_ADMIN("Senior Admin");
-
-    private String discordEquivalent = null;
-
-    private Rank(String discord) {
-        this.discordEquivalent = discord;
-    }
-
-    private Rank() {
-
-    }
+    UNVERIFIED, TOURIST, SETTLER, RESIDENT, DONATOR, GUARDIAN, CODER, BUILDER, JUNIOR_ADMIN, SENIOR_ADMIN;
 
     public static Rank fromString(String value) {
         for (Rank rank : Rank.values()) {
@@ -34,15 +25,15 @@ public enum Rank {
 
     public static Rank fromDiscordString(String value) {
         for (Rank rank : Rank.values()) {
-            if (value.equalsIgnoreCase(rank.getDiscordEquivalent())) {
+            if (value.equalsIgnoreCase(rank.getNiceName())) {
                 return rank;
             }
         }
         return null;
     }
 
-    public String getDiscordEquivalent() {
-        return this.discordEquivalent;
+    public String getNiceName() {
+        return WordUtils.capitalize(this.toString().toLowerCase().replace('_', ' '));
     }
 
     public boolean arePickupsLogged() {

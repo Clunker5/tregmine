@@ -29,9 +29,9 @@ public class DiscordListener extends ListenerAdapter {
     public DiscordListener(DiscordDelegate delegate) {
         this.delegate = delegate;
         for (Rank r : Rank.values()) {
-            if (r.getDiscordEquivalent() == null)
+            if (r.getNiceName() == null)
                 return;
-            colorPermitted.add(r.getDiscordEquivalent());
+            colorPermitted.add(r.getNiceName());
         }
     }
 
