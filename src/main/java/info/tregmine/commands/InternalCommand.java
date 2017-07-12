@@ -38,7 +38,6 @@ public class InternalCommand extends AbstractCommand {
                 player.sendMessage(new TextComponent("Flags for "), target.getChatName());
                 player.sendMessage(ChatColor.AQUA + target.getFlags().toString());
             }
-            System.out.println(args.length);
             if (args.length >= 4) {
                 if (args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove")) {
                     GenericPlayer.Flags flag = null;
