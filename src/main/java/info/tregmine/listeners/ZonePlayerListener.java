@@ -204,6 +204,8 @@ public class ZonePlayerListener implements Listener {
                 }
                 type = "zone";
             }
+            if (player.getZoneBlock1().getLocation().distance(block.getLocation()) == 0)
+                return;
             player.setZoneBlock1(block);
             event.getPlayer().sendMessage("First block set of new " + type + ".");
             if (zone != null) {
@@ -371,7 +373,7 @@ public class ZonePlayerListener implements Listener {
             return;
         }
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !player.getRank().canModifyZones()) {
             return;
         }
 
@@ -403,6 +405,8 @@ public class ZonePlayerListener implements Listener {
 
         // Handle stick, for zone and lot creation
         if (item.getType() == Material.STICK) {
+            if (player.getZoneBlock2() != null && player.getZoneBlock2().getLocation().distance(block.getLocation()) == 0)
+                return;
             // within a zone, lots can be created by zone owners or people with
             // the zones permission.
             String type = null;
@@ -417,9 +421,7 @@ public class ZonePlayerListener implements Listener {
                     return;
                 }
                 type = "lot";
-            }
-            // outside of a zone
-            else {
+            } else {
                 // outside of any existing zone, this can only be used by people
                 // with zones permission.
                 if (!player.getRank().canModifyZones()) {
@@ -435,7 +437,6 @@ public class ZonePlayerListener implements Listener {
 
             player.setZoneBlock2(block);
             player.sendMessage("Second block set of new " + type + ".");
-
         }
     }
 
