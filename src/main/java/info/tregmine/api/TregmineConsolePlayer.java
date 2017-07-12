@@ -925,6 +925,11 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
+    public Set<Flags> getFlags() {
+        return new HashSet<>();
+    }
+
+    @Override
     public void setAttachment(PermissionAttachment ment) {
 
     }

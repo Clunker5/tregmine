@@ -356,6 +356,11 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
+    public Set<Flags> getFlags() {
+        return this.flags;
+    }
+
+    @Override
     public TextComponent getChatNameStaff() {
         TextComponent returns = new TextComponent(this.name);
         String addon = "";

@@ -785,6 +785,8 @@ public class Tregmine extends JavaPlugin {
             getCommand(gm.name().toLowerCase()).setExecutor(new GameModeCommand(this, gm.name().toLowerCase(), gm));
         }
 
+
+        getCommand("internal").setExecutor(new InternalCommand(this));
         getCommand("taxi").setExecutor(new OWCommand(this));
         getCommand("property").setExecutor(new PropertyCommand(this));
         getCommand("staffbook").setExecutor(new StaffHandbookCommand(this));

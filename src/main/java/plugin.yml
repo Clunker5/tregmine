@@ -110,6 +110,9 @@ commands:
   ignore:
     description: Ignore a player (not staff)
     usage: /ignore <add/remove> <player_name> or /ignore <list>
+  internal:
+    description: Update internal properties of a user
+    usage: /internal <flags>
   inv:
     description: Look in a players inventory (admin only)
     usage: /inv <player>

@@ -63,6 +63,11 @@ public class DiscordCommandSender implements GenericPlayer {
     }
 
     @Override
+    public Set<Flags> getFlags() {
+        return new HashSet<>();
+    }
+
+    @Override
     public void abandonConversation(Conversation p0) {
 
     }

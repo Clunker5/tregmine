@@ -13,6 +13,7 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -46,6 +47,8 @@ public interface GenericPlayer extends GenericDelegate {
     void setAfkKick(boolean a);
 
     PermissionAttachment getAttachment();
+
+    Set<Flags> getFlags();
 
     void setAttachment(PermissionAttachment ment);
 
