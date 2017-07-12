@@ -211,7 +211,7 @@ public class DBInventoryDAO implements IInventoryDAO {
             stmt.setInt(2, player.getId());
             stmt.setInt(3, slot);
             stmt.setString(4, slotContent.getType().name());
-            stmt.setString(5, slotContent.getData().getItemType().name());
+            stmt.setInt(5, slotContent.getData().getData());
             if (slotContent.hasItemMeta()) {
                 YamlConfiguration config = new YamlConfiguration();
                 config.set("meta", slotContent.getItemMeta());
