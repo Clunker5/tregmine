@@ -71,7 +71,7 @@ public class BanCommand extends AbstractCommand {
             throw new RuntimeException(e);
         }
         player.getSpigot();
-        plugin.broadcast(new TextComponent(victim.getChatName() + "" + RED + " was banned by "), player.getChatName(),
+        plugin.broadcast(victim.getChatName(), new TextComponent("" + RED + " was banned by "), player.getChatName(),
                 new TextComponent("."));
 
         LOGGER.info(victim.getName() + " Banned by " + player.getName());

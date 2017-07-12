@@ -33,7 +33,7 @@ public class WarpCommand extends AbstractCommand {
         String name = args[0];
         if (name.equalsIgnoreCase("irl")) {
             player.kickPlayer(plugin, "Welcome to IRL.");
-            plugin.broadcast(new TextComponent(ChatColor.GOLD + "" + player.getChatName() + " found the IRL warp!"));
+            plugin.broadcast(new TextComponent(ChatColor.GOLD.toString()), player.getChatName(), new TextComponent(" found the IRL warp!"));
             return true;
         }
 
