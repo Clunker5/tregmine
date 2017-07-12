@@ -58,44 +58,6 @@ public class ChatListener implements Listener {
         try (IContext ctx = plugin.createContext()) {
             IPlayerDAO playerDAO = ctx.getPlayerDAO();
             String text = event.getMessage();
-            boolean curse = false;
-            boolean avoided = false;
-            int cursetotal = 0;
-            for (String word : plugin.getBannedWords()) {
-                if (text.toLowerCase().contains(word.toLowerCase())) {
-                    curse = true;
-                    cursetotal += 1;
-                    String replacement = "";
-                    for (int count = 1; count <= word.length(); count++) {
-                        replacement += "*";
-                    }
-                    text = text.replaceAll(word, replacement);
-                    if (text.toLowerCase().contains(word.toLowerCase())) {
-                        avoided = true;
-                    }
-                }
-            }
-            if (curse == true) {
-                IPlayerDAO playerdao = ctx.getPlayerDAO();
-                if (sender.isCurseWarned()) {
-                    sender.sendMessage(new TextComponent(ChatColor.RED + "Hey! You shouldn't be cursing! "
-                            + cursetotal * 50 + " Tregs have been removed from your account."));
-                    IWalletDAO wallet = ctx.getWalletDAO();
-                    wallet.take(sender, cursetotal * 50);
-                } else {
-                    playerdao.updateProperty(sender, "cursewarned", "true");
-                    sender.sendMessage(new TextComponent(ChatColor.RED
-                            + "Hey! You shouldn't be cursing! This is your only warning. After this, 50 Tregs per curse will be removed from your account."));
-                    sender.setCurseWarned(true);
-                }
-                if (avoided) {
-                    sender.sendMessage(new TextComponent(
-                            ChatColor.RED + "You thought you were slick... Your chat has been cancelled."));
-                    event.setCancelled(true);
-                    plugin.addBlockedChat(event);
-                    return;
-                }
-            }
             for (GenericPlayer to : plugin.getOnlinePlayers()) {
                 if (to.getChatState() == GenericPlayer.ChatState.SETUP) {
                     continue;
@@ -183,12 +145,6 @@ public class ChatListener implements Listener {
                                     ChatColor.BLUE + "You were mentioned in GLOBAL by " + sender.getNameColor()),
                             sender.getChatName());
                 }
-                /*
-                 * if(text.toLowerCase().contains("@" + keyword.toLowerCase())){
-				 * text = text.replaceAll("@" + keyword.toLowerCase(),
-				 * ChatColor.GOLD + "" + ChatColor.ITALIC + "@" + ChatColor.GOLD
-				 * + ChatColor.ITALIC + keyword.toLowerCase()); }
-				 */
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
