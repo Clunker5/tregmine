@@ -47,40 +47,27 @@ public class InventoryListener implements Listener {
         }
 
         GenericPlayer player = plugin.getPlayer((Player) event.getPlayer());
-
         Inventory inv = event.getInventory();
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null) {
-                ItemMeta meta = item.getItemMeta();
-                if (meta.hasLore()) {
-                    List<String> lore = meta.getLore();
-                    List<String> newlore = new ArrayList<String>();
-                    for (String a : lore) {
-                        newlore.add(a.replace("�", ""));
-                    }
-                    meta.setLore(newlore);
-                    item.setItemMeta(meta);
-                }
-            }
-        }
+
         if (player.getGameMode() == GameMode.CREATIVE) {
             for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null) {
-                    ItemMeta meta = item.getItemMeta();
-                    List<String> lore = new ArrayList<String>();
-                    lore.add(Created.CREATIVE.toColorString());
-                    lore.add(ChatColor.WHITE + "by: " + player.getName());
-                    lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE
-                            + " Treg");
-                    meta.setLore(lore);
-                    item.setItemMeta(meta);
-                }
+                if (item == null)
+                    continue;
+                ItemMeta meta = item.getItemMeta();
+                List<String> lore = new ArrayList<>();
+                lore.add(Created.CREATIVE.toColorString());
+                lore.add(ChatColor.WHITE + "by: " + player.getName());
+                lore.add(ChatColor.WHITE + "Value: " + ChatColor.MAGIC + "0000" + ChatColor.RESET + ChatColor.WHITE
+                        + " Treg");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
             }
         }
+
         InventoryHolder holder = inv.getHolder();
         Location loc = null;
-        if (holder instanceof BlockState) {
 
+        if (holder instanceof BlockState) {
             BlockState block = (BlockState) holder;
             loc = block.getLocation();
         } else if (holder instanceof DoubleChest) {
@@ -116,7 +103,6 @@ public class InventoryListener implements Listener {
                 if (a == null && b == null) {
                     continue;
                 }
-
                 if (a == null || b == null || !a.equals(b)) {
                     // Removed
                     if (a != null) {
