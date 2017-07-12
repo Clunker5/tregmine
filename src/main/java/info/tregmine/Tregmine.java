@@ -703,7 +703,7 @@ public class Tregmine extends JavaPlugin {
 
         // Register all listeners
         PluginManager pluginMgm = server.getPluginManager();
-        pluginMgm.registerEvents(new CraftListener(this), this);
+        pluginMgm.registerEvents(new CraftListener(), this);
         pluginMgm.registerEvents(new AfkListener(this), this);
         pluginMgm.registerEvents(new BlockStats(this), this);
         pluginMgm.registerEvents(new BlessedBlockListener(this), this);
