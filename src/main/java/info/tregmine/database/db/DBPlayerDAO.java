@@ -22,6 +22,8 @@ public class DBPlayerDAO implements IPlayerDAO {
     private Map<Integer, List<String>> keywordCache = new HashMap<>();
     private Map<Integer, List<String>> ignoreCache = new HashMap<>();
 
+    public static final String PLAYER_SEARCH_STRING = "SELECT player_uuid, player_name, player_id, player_uuid, player_password, player_rank, player_inventory, player_flags FROM player WHERE %s = ? LIMIT 1";
+
     public DBPlayerDAO(Connection conn) {
         this.conn = conn;
     }
@@ -116,7 +118,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     @Override
     public List<String> getIgnored(GenericPlayer player) throws DAOException {
         if (this.ignoreCache.containsKey(player.getId())) return this.ignoreCache.get(player.getId());
-        String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
+        String sql = "SELECT player_ignore FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
@@ -139,7 +141,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     public List<String> getKeywords(GenericPlayer to) throws DAOException {
         if (this.keywordCache.containsKey(to.getId())) return this.keywordCache.get(to.getId());
 
-        String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
+        String sql = "SELECT player_keywords FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, to.getId());
@@ -168,228 +170,77 @@ public class DBPlayerDAO implements IPlayerDAO {
 
     @Override
     public GenericPlayer getPlayer(int id) throws DAOException {
-        String sql = "SELECT * FROM player WHERE player_id = ?";
-
-        GenericPlayer player = null;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.execute();
-
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    return null;
-                }
-
-                player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin,
-                        rs.getString("player_name"));
-                player.setId(rs.getInt("player_id"));
-
-                String uniqueIdStr = rs.getString("player_uuid");
-                if (uniqueIdStr != null) {
-                    player.setStoredUuid(UUID.fromString(uniqueIdStr));
-                }
-                player.setPasswordHash(rs.getString("player_password"));
-                player.setRank(Rank.fromString(rs.getString("player_rank")));
-                // if(rs.getString("player_referralcode") == null){
-                // player.setReferralCode(generateReferralCode(player));
-                // }else{
-                // player.setReferralCode(rs.getString("player_referralcode"));
-                // }
-
-                if (rs.getString("player_inventory") == null) {
-                    player.setCurrentInventory("survival");
-                } else {
-                    player.setCurrentInventory(rs.getString("player_inventory"));
-                }
-
-                int flags = rs.getInt("player_flags");
-                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
-                    if ((flags & (1 << flag.ordinal())) != 0) {
-                        player.setFlag(flag);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
-
-        loadSettings(player);
-
-        return player;
+        return this.loadPlayer("player_id", id);
     }
 
     @Override
     public GenericPlayer getPlayer(Player wrap) throws DAOException {
-        String sql = "SELECT * FROM player WHERE player_uuid = ?";
-        String sql1 = "UPDATE `player` SET player_name = ? WHERE player_uuid = ?";
-        try (PreparedStatement stmt1 = conn.prepareStatement(sql1)) {
-            stmt1.setString(1, wrap.getName());
-            stmt1.setString(2, wrap.getUniqueId().toString());
-            stmt1.execute();
-        } catch (SQLException e1) {
-            e1.printStackTrace();
-        }
-        GenericPlayer player;
-        if (wrap != null) {
-            player = new TregminePlayer(wrap, plugin);
-        } else {
-            return null;
-        }
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, wrap.getUniqueId().toString());
-            stmt.execute();
-
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    return null;
-                }
-                if (rs.getString("player_name") != wrap.getName()) {
-                    // Name change! Call 911!
-
-                }
-
-                UUID uniqueId = wrap.getUniqueId();
-
-                player.setId(rs.getInt("player_id"));
-                player.setStoredUuid(uniqueId);
-                player.setPasswordHash(rs.getString("player_password"));
-                player.setRank(Rank.fromString(rs.getString("player_rank")));
-                // if(rs.getString("player_referralcode") == null){
-                // player.setReferralCode(generateReferralCode(player));
-                // }else{
-                // player.setReferralCode(rs.getString("player_referralcode"));
-                // }
-                if (rs.getString("player_inventory") == null) {
-                    player.setCurrentInventory("survival");
-                } else {
-                    player.setCurrentInventory(rs.getString("player_inventory"));
-                }
-
-                int flags = rs.getInt("player_flags");
-                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
-                    if ((flags & (1 << flag.ordinal())) != 0) {
-                        player.setFlag(flag);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
-
-        loadSettings(player);
-        loadReports(player);
-        return player;
+        return this.loadPlayer(wrap);
     }
 
     @Override
     public GenericPlayer getPlayer(String username) throws DAOException {
-        String sql = "SELECT * FROM player WHERE player_name = ?";
+        return this.loadPlayer("player_name", username);
+    }
 
-        GenericPlayer player = null;
-
+    private GenericPlayer loadPlayer(String key, Object value) throws DAOException {
+        String sql = String.format(PLAYER_SEARCH_STRING, key);
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            stmt.execute();
-
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    return null;
-                }
-
-                player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin,
-                        rs.getString("player_name"));
-                player.setId(rs.getInt("player_id"));
-
-                String uniqueIdStr = rs.getString("player_uuid");
-                if (uniqueIdStr != null) {
-                    player.setStoredUuid(UUID.fromString(uniqueIdStr));
-                }
-                player.setPasswordHash(rs.getString("player_password"));
-                player.setRank(Rank.fromString(rs.getString("player_rank")));
-                // if(rs.getString("player_referralcode") == null){
-                // player.setReferralCode(generateReferralCode(player));
-                // }else{
-                // player.setReferralCode(rs.getString("player_referralcode"));
-                // }
-
-                if (rs.getString("player_inventory") == null) {
-                    player.setCurrentInventory("survival");
-                } else {
-                    player.setCurrentInventory(rs.getString("player_inventory"));
-                }
-
-                int flags = rs.getInt("player_flags");
-                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
-                    if ((flags & (1 << flag.ordinal())) != 0) {
-                        player.setFlag(flag);
-                    }
-                }
-            }
+            stmt.setObject(1, value);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next())
+                return null;
+            return this.injectData(rs, new TregminePlayer(UUID.fromString("player_uuid"), plugin, rs.getString("player_name")));
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
+    }
 
-        loadSettings(player);
+    private GenericPlayer loadPlayer(Player wrap) throws DAOException {
+        String sql = String.format(PLAYER_SEARCH_STRING, "player_uuid");
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, wrap.getUniqueId().toString());
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.next())
+                return null;
+            return this.injectData(rs, new TregminePlayer(wrap, plugin));
+        } catch (SQLException e) {
+            throw new DAOException(sql, e);
+        }
+    }
 
+    private GenericPlayer injectData(ResultSet rs, GenericPlayer player) throws DAOException, SQLException {
+        player.setId(rs.getInt("player_id"));
+        String uniqueIdStr = rs.getString("player_uuid");
+        if (uniqueIdStr != null) {
+            player.setStoredUuid(UUID.fromString(uniqueIdStr));
+        }
+        player.setPasswordHash(rs.getString("player_password"));
+        player.setRank(Rank.fromString(rs.getString("player_rank")));
+        if (rs.getString("player_inventory") == null) {
+            player.setCurrentInventory("survival");
+        } else {
+            player.setCurrentInventory(rs.getString("player_inventory"));
+        }
+
+        int flags = rs.getInt("player_flags");
+        for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
+            if ((flags & (1 << flag.ordinal())) != 0) {
+                player.setFlag(flag);
+            }
+        }
+        this.loadSettings(player);
+        this.loadReports(player);
         return player;
     }
 
     @Override
     public GenericPlayer getPlayer(UUID id) throws DAOException {
-        String sql = "SELECT * FROM player WHERE player_uuid = ?";
-
-        GenericPlayer player = null;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, id.toString());
-            stmt.execute();
-
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    return null;
-                }
-
-                player = new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin,
-                        rs.getString("player_name"));
-                player.setId(rs.getInt("player_id"));
-
-                String uniqueIdStr = rs.getString("player_uuid");
-                if (uniqueIdStr != null) {
-                    player.setStoredUuid(UUID.fromString(uniqueIdStr));
-                }
-                player.setPasswordHash(rs.getString("player_password"));
-                player.setRank(Rank.fromString(rs.getString("player_rank")));
-                // if(rs.getString("player_referralcode") == null){
-                // player.setReferralCode(generateReferralCode(player));
-                // }else{
-                // player.setReferralCode(rs.getString("player_referralcode"));
-                // }
-                if (rs.getString("player_inventory") == null) {
-                    player.setCurrentInventory("survival");
-                } else {
-                    player.setCurrentInventory(rs.getString("player_inventory"));
-                }
-
-                int flags = rs.getInt("player_flags");
-                for (GenericPlayer.Flags flag : GenericPlayer.Flags.values()) {
-                    if ((flags & (1 << flag.ordinal())) != 0) {
-                        player.setFlag(flag);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(sql, e);
-        }
-
-        loadSettings(player);
-
-        return player;
+        return this.loadPlayer("player_uuid", id.toString());
     }
 
     private void loadReports(GenericPlayer player) throws DAOException {
-        String sql = "SELECT * FROM player_report WHERE subject_id = ?";
+        String sql = "SELECT report_action FROM player_report WHERE subject_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
             stmt.execute();
