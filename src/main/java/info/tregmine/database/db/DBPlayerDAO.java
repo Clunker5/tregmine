@@ -19,6 +19,8 @@ import java.util.*;
 public class DBPlayerDAO implements IPlayerDAO {
     private Connection conn;
     private Tregmine plugin;
+    private Map<Integer, List<String>> keywordCache = new HashMap<>();
+    private Map<Integer, List<String>> ignoreCache = new HashMap<>();
 
     public DBPlayerDAO(Connection conn) {
         this.conn = conn;
@@ -61,7 +63,9 @@ public class DBPlayerDAO implements IPlayerDAO {
 
     @Override
     public boolean doesIgnore(GenericPlayer player, GenericPlayer victim) throws DAOException {
-        String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
+        if (this.ignoreCache.containsKey(player.getId())) return this.ignoreCache.get(player.getId()).contains(victim.getRealName());
+
+        String sql = "SELECT player_ignore FROM player WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
@@ -75,16 +79,11 @@ public class DBPlayerDAO implements IPlayerDAO {
                 if (stringofignored == null || stringofignored.length() == 0) {
                     return false;
                 }
-                String[] strings = stringofignored.split(",");
 
-                List<String> playerignore = new ArrayList<String>();
-                for (String i : strings) {
-                    if ("".equalsIgnoreCase(i))
-                        continue;
-                    playerignore.add(i);
-                }
+                List<String> strings = Arrays.asList(stringofignored.split(","));
+                this.ignoreCache.put(player.getId(), strings);
 
-                return playerignore.contains(victim.getRealName());
+                return strings.contains(victim.getRealName());
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -115,31 +114,21 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     @Override
-    public List<String> getIgnored(GenericPlayer to) throws DAOException {
+    public List<String> getIgnored(GenericPlayer player) throws DAOException {
+        if (this.ignoreCache.containsKey(player.getId())) return this.ignoreCache.get(player.getId());
         String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, to.getId());
+            stmt.setInt(1, player.getId());
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next())
                     return null;
-                String[] strings;
                 String stringofignored = rs.getString("player_ignore");
-                if (stringofignored == null) {
-                    strings = new String[0];
-                } else {
-                    strings = stringofignored.split(",");
-                }
-                List<String> playerignore = new ArrayList<String>();
-                for (String i : strings) {
-                    if ("".equalsIgnoreCase(i))
-                        continue;
-                    playerignore.add(i);
-                }
-
-                return playerignore;
+                List<String> strings = stringofignored == null ? new ArrayList<>() : Arrays.asList(stringofignored.split(","));
+                this.ignoreCache.put(player.getId(), strings);
+                return strings;
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -148,6 +137,8 @@ public class DBPlayerDAO implements IPlayerDAO {
 
     @Override
     public List<String> getKeywords(GenericPlayer to) throws DAOException {
+        if (this.keywordCache.containsKey(to.getId())) return this.keywordCache.get(to.getId());
+
         String sql = "SELECT * FROM player " + "WHERE player_id = ? ";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -537,6 +528,12 @@ public class DBPlayerDAO implements IPlayerDAO {
 
     @Override
     public void updateIgnore(GenericPlayer player, List<String> update) throws DAOException {
+        if (this.ignoreCache.containsKey(player.getId())) {
+            if (this.ignoreCache.get(player.getId()).equals(update))
+                return;
+            this.ignoreCache.put(player.getId(), update);
+        }
+
         String sql = "UPDATE player SET player_ignore = ? " + "WHERE player_id = ?";
 
         StringBuilder buffer = new StringBuilder();
@@ -560,6 +557,12 @@ public class DBPlayerDAO implements IPlayerDAO {
     @Override
     public void updateKeywords(GenericPlayer player, List<String> update) throws DAOException {
         String sql = "UPDATE player SET player_keywords = ? " + "WHERE player_id = ?";
+
+        if (this.keywordCache.containsKey(player.getId())) {
+            if (this.keywordCache.get(player.getId()).equals(update))
+                return;
+            this.keywordCache.put(player.getId(), update);
+        }
 
         StringBuilder buffer = new StringBuilder();
         String delim = "";
