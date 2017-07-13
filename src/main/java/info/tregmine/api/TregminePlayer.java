@@ -1039,12 +1039,11 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         if (!this.isHidden()) {
             if (isAFK) {
                 this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + BLUE + " is now afk."));
-                this.plugin.getDiscordDelegate().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is now afk.").complete();
+                if (this.plugin.discordEnabled()) this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is now afk.");
+
             } else {
                 this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + GREEN + " is no longer afk."));
-                if (this.plugin.discordEnabled()) {
-                    this.plugin.getDiscordDelegate().getChatChannel().sendMessage("**" + getChatNameNoColor() + "** is no longer afk.").complete();
-                }
+                if (this.plugin.discordEnabled()) this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is no longer afk.");
             }
         }
     }
