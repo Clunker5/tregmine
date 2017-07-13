@@ -1178,7 +1178,7 @@ public class DiscordCommandSender implements GenericPlayer {
 
     @Override
     public boolean getIsStaff() {
-        return this.rank.canUseStaffNews();
+        return this.rank.isStaff();
     }
 
     @Override

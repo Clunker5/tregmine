@@ -247,10 +247,6 @@ public enum Rank {
         return this == SENIOR_ADMIN;
     }
 
-    public boolean canReadStaffNews() {
-        return this == GUARDIAN || this == CODER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
-    }
-
     public boolean canReload() {
         return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
     }
@@ -384,8 +380,8 @@ public enum Rank {
         return this == GUARDIAN || this == CODER || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
     }
 
-    public boolean canUseStaffNews() {
-        return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    public boolean isStaff() {
+        return this == GUARDIAN || this == CODER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
     }
 
     public boolean canUseTools() {
