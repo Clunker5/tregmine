@@ -21,7 +21,7 @@ public class DBBlockDAO implements IBlockDAO {
 
     @Override
     public int blockValue(Block a) throws DAOException {
-        String sql = "SELECT * FROM item WHERE item_id = ?";
+        String sql = "SELECT mine_value FROM item WHERE item_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, a.getType().name());
             stmt.execute();

@@ -10,8 +10,10 @@ import info.tregmine.events.PlayerMoveBlockEvent;
 import info.tregmine.quadtree.Point;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.ZoneWorld;
+import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -343,44 +345,10 @@ public class TregminePlayerListener implements Listener {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-        Rank rank = player.getRank();
-        if (player.getIsStaff()) {
-            List<StaffNews> news = null;
-            try (IContext ctx = this.plugin.createContext()) {
-                IStaffNewsDAO newsDAO = ctx.getNewsByUploader();
-                news = newsDAO.getStaffNews();
 
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-            if (news == null) {
-            } else {
-                // There's messages :)
-                for (StaffNews singleNews : news) {
-                    String username = singleNews.getUsername();
-                    String text = singleNews.getText();
-                    player.sendMessage(
-                            ChatColor.GREEN + "There is a message from " + ChatColor.RESET + ChatColor.BLUE + username);
-                    player.sendMessage(ChatColor.GOLD + text);
-                }
-            }
-        }
-        try (IContext ctx = this.plugin.createContext()) {
-            IMailDAO maildao = ctx.getMailDAO();
-            int total = maildao.getMailTotal(player.getName());
-            if (total != 0) {
-                String suffix = "";
-                if (total == 1) {
-                    suffix = "message";
-                } else {
-                    suffix = "messages";
-                }
-                player.sendMessage(
-                        ChatColor.AQUA + "You have " + total + " " + suffix + " -- Type /mail read to view them.");
-            }
-        } catch (DAOException e) {
-            throw new RuntimeException(e);
-        }
+        player.sendMessage(new TextComponent(net.md_5.bungee.api.ChatColor.AQUA + "This server is running "), this.plugin.version);
+
+        Rank rank = player.getRank();
 
         // Handle invisibility, if set
         List<GenericPlayer> players = plugin.getOnlinePlayers();

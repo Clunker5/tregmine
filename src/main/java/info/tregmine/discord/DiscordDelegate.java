@@ -79,8 +79,8 @@ public class DiscordDelegate {
         return this.plugin.getConfig().getString("discord-bot." + nodes);
     }
 
-    public Message sendChat(MessageEmbed embed) {
-        return this.chatChannel.sendMessage(embed).complete();
+    public void sendChat(MessageEmbed embed) {
+        this.chatChannel.sendMessage(embed).queue();
     }
 
     public String convertMentionsFromNames(String message) {
@@ -115,10 +115,9 @@ public class DiscordDelegate {
         return this.client;
     }
 
-    public Message sendShutdownSignal() {
+    public void sendShutdownSignal() {
         if (this.getBoolean("behavior.shutdown.enabled"))
-            return this.sendChat(this.embedBuilder.errorEmbed("Server Offline", this.getString("behavior.shutdown.message")));
-        else return null;
+            this.sendChat(this.embedBuilder.errorEmbed("Server Offline", this.getString("behavior.shutdown.message")));
     }
 
     public TregmineEmbedBuilder getEmbedBuilder() {

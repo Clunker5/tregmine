@@ -28,15 +28,11 @@ public interface IContext extends AutoCloseable {
 
     ILogDAO getLogDAO();
 
-    IMailDAO getMailDAO();
-
     IMentorLogDAO getMentorLogDAO();
 
     IMiscDAO getMiscDAO();
 
     IMotdDAO getMotdDAO();
-
-    IStaffNewsDAO getNewsByUploader();
 
     IPlayerDAO getPlayerDAO();
 

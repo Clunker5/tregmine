@@ -70,7 +70,7 @@ public class DBBlessedBlockDAO implements IBlessedBlockDAO {
 
     @Override
     public Map<Location, Integer> load(Server server) throws DAOException {
-        String sql = "SELECT * FROM blessedblock";
+        String sql = "SELECT blessedblock_world, blessedblock_x, blessedblock_y, blessedblock_z, player_id FROM blessedblock";
 
         Map<Location, Integer> chests = new HashMap<Location, Integer>();
 
@@ -101,7 +101,7 @@ public class DBBlessedBlockDAO implements IBlessedBlockDAO {
     @Override
     public int owner(Location loc) throws DAOException {
         int id = -1;
-        String sql = "SELECT * FROM blessedblock WHERE blessedblock_x = ? AND blessedblock_y = ? AND blessedblock_z = ?";
+        String sql = "SELECT player_id FROM blessedblock WHERE blessedblock_x = ? AND blessedblock_y = ? AND blessedblock_z = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, loc.getBlockX());
             stmt.setInt(2, loc.getBlockY());

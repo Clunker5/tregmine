@@ -84,9 +84,8 @@ public class DiscordListener extends ListenerAdapter {
         if (stripColors)
             message = message.replaceAll("#([0-9a-qs-z])", "");
         String authorAttr = event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName();
-        System.out.println(authorAttr);
-        String color = ChatColor.translateAlternateColorCodes('#', this.delegate.convertRoleToMinecraftColor(this.delegate.getTopRole(event.getMember().getRoles())));
-        message = "(" + authorAttr + ChatColor.RESET + ") " + message;
+        String color = ChatColor.translateAlternateColorCodes('&', this.delegate.convertRoleToMinecraftColor(this.delegate.getTopRole(event.getMember().getRoles())));
+        message = "(" + color + authorAttr + ChatColor.RESET + ") " + message;
         Tregmine.LOGGER.info("DISCORD " + ChatColor.stripColor(message));
         this.delegate.getPlugin().broadcast(new TextComponent(message));
     }

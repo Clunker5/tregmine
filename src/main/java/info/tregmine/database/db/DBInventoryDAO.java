@@ -50,7 +50,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
     @Override
     public int fetchInventory(GenericPlayer player, String inventoryName, String type) throws DAOException {
-        String sql = "SELECT * FROM playerinventory " + "WHERE playerinventory_name = ? "
+        String sql = "SELECT playerinventory_id FROM playerinventory " + "WHERE playerinventory_name = ? "
                 + "AND playerinventory_type = ? " + "AND player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -73,7 +73,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
     @Override
     public List<InventoryAccess> getAccessLog(int inventoryId, int count) throws DAOException {
-        String sql = "SELECT * FROM inventory_accesslog " + "WHERE inventory_id = ? "
+        String sql = "SELECT player_id, accesslog_timestamp FROM inventory_accesslog " + "WHERE inventory_id = ? "
                 + "ORDER BY accesslog_timestamp DESC LIMIT " + count;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -100,7 +100,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
     @Override
     public int getInventoryId(int playerId, InventoryType type) throws DAOException {
-        String sql = "SELECT * FROM inventory " + "WHERE inventory_type = ? AND player_id = ?";
+        String sql = "SELECT inventory_id FROM inventory " + "WHERE inventory_type = ? AND player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, type.name());
@@ -121,7 +121,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
     @Override
     public int getInventoryId(Location loc) throws DAOException {
-        String sql = "SELECT * FROM inventory " + "WHERE inventory_x = ? " + "AND inventory_y = ? "
+        String sql = "SELECT inventory_id FROM inventory " + "WHERE inventory_x = ? " + "AND inventory_y = ? "
                 + "AND inventory_z = ? " + "AND inventory_world = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -145,7 +145,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
     @Override
     public ItemStack[] getStacks(int inventoryId, int size) throws DAOException {
-        String sql = "SELECT * FROM inventory_item " + "WHERE inventory_id = ?";
+        String sql = "SELECT item_slot, item_material, item_data, item_count, item_meta FROM inventory_item " + "WHERE inventory_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, inventoryId);
@@ -313,7 +313,7 @@ public class DBInventoryDAO implements IInventoryDAO {
 
     @Override
     public void loadInventory(GenericPlayer player, int inventoryID, String type) throws DAOException {
-        String sql = "SELECT * FROM playerinventory_item " + "WHERE playerinventory_id = ?";
+        String sql = "SELECT item_slot, item_material, item_data, item_count, item_meta, item_durability FROM playerinventory_item " + "WHERE playerinventory_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, inventoryID);
@@ -326,7 +326,6 @@ public class DBInventoryDAO implements IInventoryDAO {
                     int data = rs.getInt("item_data");
                     int count = rs.getInt("item_count");
                     String meta = rs.getString("item_meta");
-                    meta = meta.replace("�", "");
                     short durability = rs.getShort("item_durability");
 
                     ItemMeta metaObj = null;

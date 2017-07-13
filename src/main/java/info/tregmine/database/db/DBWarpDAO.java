@@ -21,7 +21,7 @@ public class DBWarpDAO implements IWarpDAO {
 
     @Override
     public Warp getWarp(String name, Server server) throws DAOException {
-        String sql = "SELECT * FROM warp WHERE warp_name = ?";
+        String sql = "SELECT warp_id, warp_name, warp_x, warp_y, warp_z, warp_pitch, warp_yaw FROM warp WHERE warp_name = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name);

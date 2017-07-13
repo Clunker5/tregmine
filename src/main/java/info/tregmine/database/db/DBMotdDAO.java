@@ -17,7 +17,7 @@ public class DBMotdDAO implements IMotdDAO {
 
     @Override
     public String getMotd() throws DAOException {
-        String sql = "SELECT * FROM motd ";
+        String sql = "SELECT motd_message FROM motd ";
         sql += "ORDER BY motd_timestamp DESC LIMIT 1";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -37,7 +37,7 @@ public class DBMotdDAO implements IMotdDAO {
 
     @Override
     public String getUpdates(String version) throws DAOException {
-        String sql = "SELECT * FROM version " + "WHERE version_number = ?";
+        String sql = "SELECT version_string FROM version " + "WHERE version_number = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, version);

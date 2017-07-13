@@ -37,7 +37,7 @@ public class DBHomeDAO implements IHomeDAO {
 
     @Override
     public Location getHome(int playerId, String name, Server server) throws DAOException {
-        String sql = "SELECT * FROM player_home " + "WHERE player_id = ? AND home_name = ? ORDER BY home_time DESC";
+        String sql = "SELECT home_x, home_y, home_z, home_pitch, home_yaw, home_world FROM player_home " + "WHERE player_id = ? AND home_name = ? ORDER BY home_time DESC";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, playerId);
@@ -75,7 +75,7 @@ public class DBHomeDAO implements IHomeDAO {
 
     @Override
     public List<String> getHomeNames(int playerId) throws DAOException {
-        String sql = "SELECT * FROM player_home " + "WHERE player_id = ? AND NOT home_name IS NULL "
+        String sql = "SELECT home_name FROM player_home WHERE player_id = ? AND NOT home_name IS NULL "
                 + "GROUP BY home_name ORDER BY max(home_time) DESC LIMIT 20";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -83,7 +83,7 @@ public class DBHomeDAO implements IHomeDAO {
             stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
-                List<String> names = new ArrayList<String>();
+                List<String> names = new ArrayList<>();
                 while (rs.next()) {
                     String name = rs.getString("home_name");
                     names.add(name);

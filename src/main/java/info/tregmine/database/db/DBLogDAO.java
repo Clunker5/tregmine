@@ -48,7 +48,7 @@ public class DBLogDAO implements ILogDAO {
 
     @Override
     public Date getLastSeen(GenericPlayer player) throws DAOException {
-        String sql = "SELECT * FROM player_login WHERE player_id= ? ";
+        String sql = "SELECT login_timestamp FROM player_login WHERE player_id= ? ";
         sql += "ORDER BY login_timestamp DESC LIMIT 1";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

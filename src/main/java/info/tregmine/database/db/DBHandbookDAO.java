@@ -19,14 +19,14 @@ public class DBHandbookDAO implements IHandbookDAO {
 
     @Override
     public List<String[]> getHandbook() throws DAOException {
-        String sql = "SELECT * FROM staff_handbook";
+        String sql = "SELECT rulenum, rule FROM staff_handbook";
         /*
          * Table Name: staff_handbook rulenum VARCHAR 4 NOT NULL NO AI rule
 		 * VARCHAR 128 NOT NULL NO AI
 		 */
         try (PreparedStatement stmt = c.prepareStatement(sql)) {
             stmt.execute();
-            List<String[]> handbook = new ArrayList<String[]>();
+            List<String[]> handbook = new ArrayList<>();
             try (ResultSet rs = stmt.getResultSet()) {
                 while (rs.next()) {
                     String[] rule = new String[2];

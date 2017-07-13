@@ -213,7 +213,7 @@ public class DBZonesDAO implements IZonesDAO {
 
     @Override
     public List<Integer> getLotOwners(int lotId) throws DAOException {
-        String sql = "SELECT * FROM zone_lotuser " + "WHERE lot_id = ?";
+        String sql = "SELECT user_id FROM zone_lotuser " + "WHERE lot_id = ?";
 
         List<Integer> owners = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -279,7 +279,7 @@ public class DBZonesDAO implements IZonesDAO {
     }
 
     private Map<Integer, Zone.Permission> getZonePermissions(int zoneId) throws DAOException {
-        String sql = "SELECT * FROM zone_user " + "WHERE zone_id = ?";
+        String sql = "SELECT user_id, user_perm FROM zone_user " + "WHERE zone_id = ?";
 
         Map<Integer, Zone.Permission> permissions = new HashMap<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -302,7 +302,7 @@ public class DBZonesDAO implements IZonesDAO {
     }
 
     private List<Rectangle> getZoneRectangles(int zoneId) throws DAOException {
-        String sql = "SELECT * FROM zone_rect WHERE zone_id = ?";
+        String sql = "SELECT rect_x1, rect_y1, rect_x2, rect_y2 FROM zone_rect WHERE zone_id = ?";
 
         List<Rectangle> rects = new ArrayList<Rectangle>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

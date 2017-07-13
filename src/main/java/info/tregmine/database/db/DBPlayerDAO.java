@@ -94,7 +94,7 @@ public class DBPlayerDAO implements IPlayerDAO {
 
     @Override
     public Map<Badge, Integer> getBadges(GenericPlayer player) throws DAOException {
-        String sql = "SELECT * FROM player_badge " + "WHERE player_id = ?";
+        String sql = "SELECT badge_name, badge_level FROM player_badge " + "WHERE player_id = ?";
 
         Map<Badge, Integer> badges = new EnumMap<Badge, Integer>(Badge.class);
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -266,7 +266,7 @@ public class DBPlayerDAO implements IPlayerDAO {
     }
 
     private void loadSettings(GenericPlayer player) throws DAOException {
-        String sql = "SELECT * FROM player_property WHERE player_id = ?";
+        String sql = "SELECT property_key, property_value FROM player_property WHERE player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());

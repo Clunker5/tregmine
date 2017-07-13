@@ -90,11 +90,6 @@ public class DBContext implements IContext {
     }
 
     @Override
-    public IMailDAO getMailDAO() {
-        return new DBMailDAO(conn, this.plugin);
-    }
-
-    @Override
     public IMentorLogDAO getMentorLogDAO() {
         return new DBMentorLogDAO(conn);
     }
@@ -107,11 +102,6 @@ public class DBContext implements IContext {
     @Override
     public IMotdDAO getMotdDAO() {
         return new DBMotdDAO(conn);
-    }
-
-    @Override
-    public IStaffNewsDAO getNewsByUploader() {
-        return new DBNewsDAO(conn);
     }
 
     @Override

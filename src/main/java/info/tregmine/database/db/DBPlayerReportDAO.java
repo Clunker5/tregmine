@@ -22,7 +22,7 @@ public class DBPlayerReportDAO implements IPlayerReportDAO {
 
     @Override
     public List<PlayerReport> getReportsBySubject(GenericPlayer player) throws DAOException {
-        String sql = "SELECT * FROM player_report ";
+        String sql = "SELECT report_id, subject_id, issuer_id, report_action, report_message, report_timestamp, report_validuntil FROM player_report ";
         sql += "WHERE subject_id = ? ";
         sql += "ORDER BY report_timestamp DESC";
 

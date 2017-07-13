@@ -818,7 +818,6 @@ public class Tregmine extends JavaPlugin {
         getCommand("give").setExecutor(new GiveCommand(this));
         getCommand("head").setExecutor(new HeadCommand(this));
         getCommand("hide").setExecutor(new HideCommand(this));
-        getCommand("mail").setExecutor(new MailCommand(this));
         getCommand("home").setExecutor(new HomeCommand(this));
         getCommand("ignore").setExecutor(new IgnoreCommand(this));
         getCommand("inv").setExecutor(new InventoryCommand(this));
@@ -856,7 +855,6 @@ public class Tregmine extends JavaPlugin {
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));
         getCommand("support").setExecutor(new SupportCommand(this));
-        getCommand("staffnews").setExecutor(new StaffNewsCommand(this));
         getCommand("testfill").setExecutor(new FillCommand(this, "testfill"));
         getCommand("time").setExecutor(new TimeCommand(this));
         getCommand("tool").setExecutor(new ToolSpawnCommand(this));

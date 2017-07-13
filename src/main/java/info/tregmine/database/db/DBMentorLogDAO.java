@@ -19,7 +19,7 @@ public class DBMentorLogDAO implements IMentorLogDAO {
 
     @Override
     public int getMentorLogId(GenericPlayer student, GenericPlayer mentor) throws DAOException {
-        String sql = "SELECT * FROM mentorlog ";
+        String sql = "SELECT mentorlog_id FROM mentorlog ";
         sql += "WHERE student_id = ? AND mentor_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -31,7 +31,6 @@ public class DBMentorLogDAO implements IMentorLogDAO {
                 if (!rs.next()) {
                     return 0;
                 }
-
                 return rs.getInt("mentorlog_id");
             }
         } catch (SQLException e) {

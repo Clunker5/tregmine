@@ -118,7 +118,7 @@ public class DBBankDAO implements IBankDAO {
 
     @Override
     public Account getAccount(Bank bank, int accNumber) throws DAOException {
-        String sql = "SELECT * FROM bank_account " + "WHERE bank_id = ? AND account_number = ?";
+        String sql = "SELECT account_id, account_balance, player_id, account_pin FROM bank_account " + "WHERE bank_id = ? AND account_number = ?";
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, bank.getId());
             stm.setInt(2, accNumber);
@@ -146,7 +146,7 @@ public class DBBankDAO implements IBankDAO {
 
     @Override
     public Account getAccountByPlayer(Bank bank, int player) throws DAOException {
-        String sql = "SELECT * FROM bank_account " + "WHERE bank_id = ? AND player_id = ?";
+        String sql = "SELECT account_id, player_id, account_balance, account_number, account_pin FROM bank_account " + "WHERE bank_id = ? AND player_id = ?";
         Account acct = null;
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, bank.getId());
@@ -173,7 +173,7 @@ public class DBBankDAO implements IBankDAO {
 
     @Override
     public List<Account> getAccounts(Bank bank) throws DAOException {
-        String sql = "SELECT * FROM bank_account WHERE bank_id = ?";
+        String sql = "SELECT account_id, player_id, account_balance, account_number, account_pin FROM bank_account WHERE bank_id = ?";
         List<Account> accounts = Lists.newArrayList();
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, bank.getId());
@@ -202,7 +202,7 @@ public class DBBankDAO implements IBankDAO {
 
     @Override
     public Bank getBank(int lotId) throws DAOException {
-        String sql = "SELECT * FROM bank WHERE lot_id = ? LIMIT 1";
+        String sql = "SELECT bank_id FROM bank WHERE lot_id = ? LIMIT 1";
         Bank bank = null;
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, lotId);
@@ -211,7 +211,7 @@ public class DBBankDAO implements IBankDAO {
             ResultSet rs = stm.getResultSet();
 
             if (rs.next()) {
-                bank = new Bank(rs.getInt("lot_id"));
+                bank = new Bank(lotId);
                 bank.setId(rs.getInt("bank_id"));
                 bank.setAccounts(this.getAccounts(bank));
 
