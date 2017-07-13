@@ -137,9 +137,6 @@ commands:
   lot:
     description: Manage your lot
     usage: /lot
-  mail:
-    description: Send mail to players, offline or online
-    usage: /mail read|send|delete|total|tbt
   mentor:
     description: Make yourself available for mentoring (residents and above)
     usage: /mentor queue|complete|cancel
@@ -241,9 +238,6 @@ commands:
   staffbook:
     description: Gives the guidelines for staff to follow
     usage: /staffbook
-  staffnews:
-    description: Add a message to the staff message board
-    usage: /staffnews <message>
   testfill:
     description: Like fill, but with fake blocks (admins and builders only)
     usage: /testfill

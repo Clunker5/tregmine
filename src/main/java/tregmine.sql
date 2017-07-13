@@ -601,19 +601,6 @@ CREATE TABLE `shorturl` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `staffnews`
---
-
-CREATE TABLE `staffnews` (
-  `id` int(10) NOT NULL,
-  `username` varchar(64) NOT NULL,
-  `text` text NOT NULL,
-  `timestamp` int(16) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `staff_handbook`
 --
 
@@ -1049,12 +1036,6 @@ ALTER TABLE `shorturl`
   ADD UNIQUE KEY `urlID` (`urlID`);
 
 --
--- Indexes for table `staffnews`
---
-ALTER TABLE `staffnews`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `stats_blocks`
 --
 ALTER TABLE `stats_blocks`
@@ -1287,11 +1268,6 @@ ALTER TABLE `player_webcookie`
 --
 ALTER TABLE `shorturl`
   MODIFY `urlID` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `staffnews`
---
-ALTER TABLE `staffnews`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `trade`
 --
