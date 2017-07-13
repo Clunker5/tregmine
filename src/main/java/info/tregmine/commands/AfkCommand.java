@@ -11,11 +11,7 @@ public class AfkCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.isAfk()) {
-            player.setAfk(false);
-        } else {
-            player.setAfk(true);
-        }
+        player.setAfk(!player.isAfk());
         return true;
     }
 
