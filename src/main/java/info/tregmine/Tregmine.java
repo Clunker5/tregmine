@@ -17,12 +17,14 @@ import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.*;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -92,6 +94,8 @@ public class Tregmine extends JavaPlugin {
     private int onlineTeachers = 0;
     private DiscordDelegate discord;
     private Lag lag = new Lag();
+
+    public TextComponent version;
 
     public static boolean coreProtectEnabled() {
         if (coreProtectEnabled == null) {
@@ -592,6 +596,8 @@ public class Tregmine extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.version = new TextComponent("Tregmine " + this.getDescription().getVersion());
+        this.version.setColor(net.md_5.bungee.api.ChatColor.GREEN);
 
         this.server = getServer();
         plugin = this;
@@ -793,7 +799,6 @@ public class Tregmine extends JavaPlugin {
         getCommand("action").setExecutor(new ActionCommand(this));
         getCommand("afk").setExecutor(new AfkCommand(this));
         getCommand("alert").setExecutor(new AlertCommand(this));
-        getCommand("allclear").setExecutor(new CheckBlocksCommand(this));
         getCommand("back").setExecutor(new BackCommand(this));
         getCommand("badge").setExecutor(new BadgeCommand(this));
         getCommand("ban").setExecutor(new BanCommand(this));
