@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.dv8tion:JDA:3.1.1_220"
+    compile "net.dv8tion:JDA:3.1.1_222"
     compile "net.md-5:bungeecord-api:1.11-SNAPSHOT"
     compile "commons-dbcp:commons-dbcp:1.4"
 	compile "org.apache.commons:commons-lang3:3.5"
