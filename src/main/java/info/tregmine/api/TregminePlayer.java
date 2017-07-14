@@ -1349,13 +1349,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public void setSilentAfk(boolean isAFK) {
         this.afk = isAFK;
-        if (isAFK) {
-            String namePreAFK = getChatNameNoHover();
-            if (!namePreAFK.contains("[AFK]")) {
-                this.namePreAfkAppendage = namePreAFK;
-                setTemporaryChatName(GRAY + "[AFK] " + RESET + namePreAFK);
-            }
-        } else {
+        if (!isAFK) {
             final long currentTime = System.currentTimeMillis();
             this.setLastOnlineActivity(currentTime);
         }
