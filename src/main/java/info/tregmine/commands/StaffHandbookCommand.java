@@ -19,10 +19,6 @@ public class StaffHandbookCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer a, String[] b) {
-        if (!a.getIsStaff()) {
-            a.sendMessage(ChatColor.RED + "You don't need to read this, books are boring!");
-            return true;
-        }
         try (IContext ctx = tregmine.createContext()) {
             IHandbookDAO c = ctx.getHandbookDAO();
             List<String[]> handbook = c.getHandbook();

@@ -14,7 +14,7 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class GiveCommand extends AbstractCommand {
     public GiveCommand(Tregmine tregmine) {
-        super(tregmine, "give");
+        super(tregmine, "give", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
@@ -26,9 +26,6 @@ public class GiveCommand extends AbstractCommand {
         }
         if (args.length == 0) {
             return false;
-        }
-        if (!player.getRank().canSpawnItems()) {
-            return true;
         }
 
         String pattern = args[0];

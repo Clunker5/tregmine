@@ -42,6 +42,7 @@ public class SummonCommand extends AbstractCommand {
         // Mentors can summon their students, but nobody else. In those cases,
         // you need the canSummon-permission.
         if (victim != player.getStudent() && !player.getRank().canSummon()) {
+            player.sendMessage(PERMISSION_DENIED);
             return true;
         }
 

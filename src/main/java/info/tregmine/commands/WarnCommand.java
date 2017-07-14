@@ -16,7 +16,7 @@ import static org.bukkit.ChatColor.GREEN;
 
 public class WarnCommand extends AbstractCommand {
     public WarnCommand(Tregmine tregmine) {
-        super(tregmine, "warn");
+        super(tregmine, "warn", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
     }
 
     private String argsToMessage(String[] args) {
@@ -31,10 +31,6 @@ public class WarnCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canWarn()) {
-            return true;
-        }
-
         if (args.length < 3) {
             player.sendMessage(DARK_AQUA + "/warn <hard|soft> <player> <message>");
             return true;

@@ -35,7 +35,7 @@ public class FillCommand extends AbstractCommand {
     }
 
     public FillCommand(Tregmine tregmine, String command) {
-        super(tregmine, command);
+        super(tregmine, command, Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
 
         undoHistory = new History();
         copyHistory = new History();
@@ -49,10 +49,6 @@ public class FillCommand extends AbstractCommand {
         }
         if (args.length == 0) {
             player.sendMessage(RED + "Please specify the material");
-            return true;
-        }
-        if (!player.getRank().canFill()) {
-            player.sendMessage(ChatColor.RED + "You don't have the permissions to fill.");
             return true;
         }
 

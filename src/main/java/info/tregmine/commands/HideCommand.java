@@ -11,14 +11,11 @@ import static org.bukkit.ChatColor.RED;
 
 public class HideCommand extends AbstractCommand {
     public HideCommand(Tregmine tregmine) {
-        super(tregmine, "hide");
+        super(tregmine, "hide", Tregmine.PermissionDefinitions.CODER_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canSeeHiddenInfo())
-            return true;
-
         if (args.length < 1) {
             player.sendMessage("Your Announcement prevention is set to "
                     + (player.hasFlag(GenericPlayer.Flags.HIDDEN_ANNOUNCEMENT) ? "on" : "off") + ".");

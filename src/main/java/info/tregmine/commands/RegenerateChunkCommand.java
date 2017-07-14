@@ -10,14 +10,11 @@ import org.bukkit.block.Block;
 
 public class RegenerateChunkCommand extends AbstractCommand {
     public RegenerateChunkCommand(Tregmine tregmine) {
-        super(tregmine, "regeneratechunk");
+        super(tregmine, "regeneratechunk", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getRank() != Rank.SENIOR_ADMIN) {
-            return false;
-        }
         if (player.getFillBlock1() == null) {
             player.sendMessage(ChatColor.RED + "You haven't made a selection! [Wand is the wooden shovel]");
             return true;

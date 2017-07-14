@@ -18,7 +18,7 @@ public class KickCommand extends AbstractCommand {
     private Tregmine plugin;
 
     public KickCommand(Tregmine tregmine) {
-        super(tregmine, "kick");
+        super(tregmine, "kick", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
         plugin = tregmine;
     }
 
@@ -58,10 +58,6 @@ public class KickCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canKick()) {
-            return false;
-        }
-
         if (args.length < 2) {
             player.sendMessage(DARK_AQUA + "/kick <player> <message>");
             return true;

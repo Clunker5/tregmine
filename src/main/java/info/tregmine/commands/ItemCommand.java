@@ -16,7 +16,7 @@ import static org.bukkit.ChatColor.*;
 
 public class ItemCommand extends AbstractCommand {
     public ItemCommand(Tregmine tregmine) {
-        super(tregmine, "item");
+        super(tregmine, "item", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
@@ -26,9 +26,6 @@ public class ItemCommand extends AbstractCommand {
             return true;
         }
         if (args.length == 0) {
-            return false;
-        }
-        if (!player.getRank().canSpawnItems()) {
             return false;
         }
 

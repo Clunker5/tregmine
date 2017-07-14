@@ -16,7 +16,7 @@ import static org.bukkit.ChatColor.*;
 
 public class SayCommand extends AbstractCommand {
     public SayCommand(Tregmine tregmine) {
-        super(tregmine, "say");
+        super(tregmine, "say", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     private String argsToMessage(String[] args) {
@@ -46,9 +46,6 @@ public class SayCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canBeGod()) {
-            return true;
-        }
         if (args.length == 0) {
             player.sendMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
             return true;

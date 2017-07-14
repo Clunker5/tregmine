@@ -8,7 +8,7 @@ public class BackCommand extends AbstractCommand {
     Tregmine plugin;
 
     public BackCommand(Tregmine tregmine) {
-        super(tregmine, "back");
+        super(tregmine, "back", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
         plugin = tregmine;
     }
 
@@ -16,11 +16,6 @@ public class BackCommand extends AbstractCommand {
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (!player.getIsStaff()) {
-            player.sendMessage(ChatColor.RED + "You don't have the permissions to do that command.");
-            player.sendMessage(ChatColor.RED + "There's no going back!");
             return true;
         }
         if (player.getLastPos() == null) {

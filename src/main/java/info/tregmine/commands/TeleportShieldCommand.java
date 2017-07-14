@@ -11,15 +11,11 @@ import static org.bukkit.ChatColor.RED;
 
 public class TeleportShieldCommand extends AbstractCommand {
     public TeleportShieldCommand(Tregmine tregmine) {
-        super(tregmine, "tpshield");
+        super(tregmine, "tpshield", Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canShieldTeleports()) {
-            return true;
-        }
-
         if (args.length < 1) {
             player.sendMessage(
                     "Your tpblock is set to " + (player.hasFlag(GenericPlayer.Flags.TPSHIELD) ? "on" : "off") + ".");

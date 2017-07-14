@@ -20,7 +20,7 @@ public class TeleportCommand extends AbstractCommand {
     private Tregmine tregmine;
 
     public TeleportCommand(Tregmine tregmine) {
-        super(tregmine, "tp");
+        super(tregmine, "tp", Tregmine.PermissionDefinitions.SETTLER_REQUIRED);
         this.tregmine = tregmine;
     }
 
@@ -33,9 +33,6 @@ public class TeleportCommand extends AbstractCommand {
         Rank rank = player.getRank();
         if (args.length != 1) {
             return false;
-        }
-        if (!rank.canTeleport()) {
-            return true;
         }
 
         Server server = tregmine.getServer();

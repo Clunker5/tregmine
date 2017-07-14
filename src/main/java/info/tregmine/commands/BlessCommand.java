@@ -12,16 +12,13 @@ import static org.bukkit.ChatColor.AQUA;
 
 public class BlessCommand extends AbstractCommand {
     public BlessCommand(Tregmine tregmine) {
-        super(tregmine, "bless");
+        super(tregmine, "bless", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
             return false;
-        }
-        if (!player.getRank().canBless()) {
-            return true;
         }
 
         List<GenericPlayer> candidates = tregmine.matchPlayer(args[0]);

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InventoryCommand extends AbstractCommand {
     public InventoryCommand(Tregmine tregmine) {
-        super(tregmine, "inv");
+        super(tregmine, "inv", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
@@ -24,9 +24,6 @@ public class InventoryCommand extends AbstractCommand {
             player.sendMessage(
                     ChatColor.AQUA + "/inv reload <name> <true/false> - Reload inventory, optional save");
             player.sendMessage(ChatColor.AQUA + "/inv save - Save your current inventory to database");
-            return true;
-        }
-        if (!player.getRank().canInspectInventories()) {
             return true;
         }
         if ("save".equalsIgnoreCase(args[0]) && args.length == 1) {

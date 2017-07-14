@@ -14,17 +14,13 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class ForceCommand extends AbstractCommand {
     public ForceCommand(Tregmine tregmine) {
-        super(tregmine, "force");
+        super(tregmine, "force", Tregmine.PermissionDefinitions.RESIDENT_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 2) {
             return false;
-        }
-        if (!player.getRank().canForceChannel()) {
-            player.sendMessage(ChatColor.RED + "You cannot force players into channels.");
-            return true;
         }
         String playerPattern = args[0];
         String channel = args[1];

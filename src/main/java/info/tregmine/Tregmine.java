@@ -23,6 +23,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -94,6 +95,34 @@ public class Tregmine extends JavaPlugin {
     private int onlineTeachers = 0;
     private DiscordDelegate discord;
     private Lag lag = new Lag();
+
+    public enum PermissionDefinitions {
+        SENIOR_REQUIRED(new Rank[] {Rank.SENIOR_ADMIN}, "You must be a senior admin to perform this command."),
+        ADMIN_REQUIRED(ArrayUtils.add(SENIOR_REQUIRED.getPermissions(), Rank.JUNIOR_ADMIN), "You must be an admin to perform this command."),
+        CODER_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[] {Rank.CODER}),  "You must be a coder to perform this command."),
+        STAFF_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[] {Rank.GUARDIAN}), "You must be a staff member to perform this command."),
+        BUILDER_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[] {Rank.BUILDER}), "You must be a builder to perform this command."),
+        DONATOR_REQUIRED(ArrayUtils.addAll(STAFF_REQUIRED.getPermissions(), new Rank[] {Rank.BUILDER, Rank.CODER, Rank.DONATOR}), "You must be a donator to perform this command."),
+        RESIDENT_REQUIRED(ArrayUtils.addAll(DONATOR_REQUIRED.getPermissions(), new Rank[] {Rank.RESIDENT}), "You must be a resident to perform this command."),
+        SETTLER_REQUIRED(ArrayUtils.addAll(RESIDENT_REQUIRED.getPermissions(), new Rank[] {Rank.SETTLER}), "You must be a settler to perform this command."),
+        TOURIST_REQUIRED(ArrayUtils.addAll(SETTLER_REQUIRED.getPermissions(), new Rank[] {Rank.TOURIST}), "You must be a tourist to perform this command.");
+
+        public Rank[] getPermissions() {
+            return permissions;
+        }
+
+        public String getDeniedMessage() {
+            return deniedMessage;
+        }
+
+        private Rank[] permissions;
+        private String deniedMessage;
+
+        PermissionDefinitions(Rank[] permissions, String deniedMessage) {
+            this.permissions = permissions;
+            this.deniedMessage = deniedMessage;
+        }
+    }
 
     public TextComponent version;
 

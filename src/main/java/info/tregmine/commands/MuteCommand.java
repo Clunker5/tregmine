@@ -10,15 +10,11 @@ public class MuteCommand extends AbstractCommand {
     private Tregmine tregmine;
 
     public MuteCommand(Tregmine p0) {
-        super(p0, "mute");
+        super(p0, "mute", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canMute()) {
-            player.sendMessage(ChatColor.RED + "You aren't allowed to mute players.");
-            return true;
-        }
         if (args.length != 2) {
             player.sendMessage(ChatColor.RED + "Invalid Arguments; /mute <player> <duration:-1 for indefinite>");
             return true;

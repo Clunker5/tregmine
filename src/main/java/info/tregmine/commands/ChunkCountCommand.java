@@ -7,7 +7,7 @@ import org.bukkit.World;
 
 public class ChunkCountCommand extends AbstractCommand {
     public ChunkCountCommand(Tregmine tregmine) {
-        super(tregmine, "chunkcount");
+        super(tregmine, "chunkcount", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
@@ -22,10 +22,6 @@ public class ChunkCountCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canGetChunkInfo()) {
-            return true;
-        }
-
         Server server = player.getServer();
         for (World world : server.getWorlds()) {
             int chunks = world.getLoadedChunks().length;

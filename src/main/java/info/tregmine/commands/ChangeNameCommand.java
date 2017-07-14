@@ -11,17 +11,13 @@ import java.util.List;
 
 public class ChangeNameCommand extends AbstractCommand {
     public ChangeNameCommand(Tregmine tregmine) {
-        super(tregmine, "cname");
+        super(tregmine, "cname", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 2) {
             return false;
-        }
-        if (!player.getRank().canChangeName()) {
-            player.sendMessage(ChatColor.RED + "You can't change your name!");
-            return true;
         }
         // String colorstring = args[0];
         String use[] = args[0].split(":");

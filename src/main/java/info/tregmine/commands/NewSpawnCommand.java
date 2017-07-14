@@ -7,15 +7,11 @@ import org.bukkit.World;
 
 public class NewSpawnCommand extends AbstractCommand {
     public NewSpawnCommand(Tregmine tregmine) {
-        super(tregmine, "newspawn");
+        super(tregmine, "newspawn", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.isOp()) {
-            return false;
-        }
-
         World world = player.getWorld();
         if (world == null) {
             // TODO: error message

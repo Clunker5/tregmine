@@ -20,16 +20,12 @@ public class PromoteCommand extends AbstractCommand {
     private Tregmine tregmine;
 
     public PromoteCommand(Tregmine tregmine) {
-        super(tregmine, "promote");
+        super(tregmine, "promote", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
         this.tregmine = tregmine;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getRank() != Rank.SENIOR_ADMIN && !player.isOp()) {
-            player.sendMessage(ChatColor.RED + "You certainly don't have permission to promote players!");
-            return true;
-        }
         // This player is a senior admin and is allowed to promote. Continue.
         if (args.length != 2) {
             return false;

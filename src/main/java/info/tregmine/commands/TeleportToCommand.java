@@ -9,7 +9,7 @@ import org.bukkit.World;
 
 public class TeleportToCommand extends AbstractCommand {
     public TeleportToCommand(Tregmine tregmine) {
-        super(tregmine, "tpto");
+        super(tregmine, "tpto", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
@@ -20,9 +20,6 @@ public class TeleportToCommand extends AbstractCommand {
         }
         if (args.length != 3) {
             player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
-            return true;
-        }
-        if (!player.getRank().canTeleportToPlayers()) {
             return true;
         }
         if (player.getIsStaff()) {

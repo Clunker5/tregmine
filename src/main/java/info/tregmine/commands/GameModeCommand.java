@@ -11,7 +11,7 @@ public class GameModeCommand extends AbstractCommand {
     private GameMode mode;
 
     public GameModeCommand(Tregmine tregmine, String name, GameMode mode) {
-        super(tregmine, name);
+        super(tregmine, name, Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
         this.mode = mode;
     }
 

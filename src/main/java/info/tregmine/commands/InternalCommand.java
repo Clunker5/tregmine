@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class InternalCommand extends AbstractCommand {
     public InternalCommand(Tregmine plugin) {
-        super (plugin, "internal");
+        super (plugin, "internal", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override

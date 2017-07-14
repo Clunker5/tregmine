@@ -9,16 +9,13 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class WeatherCommand extends AbstractCommand {
     public WeatherCommand(Tregmine tregmine) {
-        super(tregmine, "weather");
+        super(tregmine, "weather", Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName() == "vanilla") {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (!player.getRank().canSetWeather()) {
             return true;
         }
         if (args.length != 1) {

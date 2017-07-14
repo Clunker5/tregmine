@@ -11,7 +11,7 @@ public class FlyCommand extends AbstractCommand {
     private Tregmine tregmine;
 
     public FlyCommand(Tregmine tregmine) {
-        super(tregmine, "fly");
+        super(tregmine, "fly", Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
         this.tregmine = tregmine;
     }
 
@@ -25,8 +25,6 @@ public class FlyCommand extends AbstractCommand {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
             return true;
         }
-        if (!player.getRank().canFly())
-            return false;
 
         if (player.hasFlag(GenericPlayer.Flags.FLY_ENABLED)) {
             player.sendMessage(ChatColor.YELLOW + "Flying Disabled!");

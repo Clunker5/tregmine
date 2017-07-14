@@ -12,7 +12,7 @@ public class SendBackCommand extends AbstractCommand {
     Tregmine plugin;
 
     public SendBackCommand(Tregmine tregmine) {
-        super(tregmine, "sendback");
+        super(tregmine, "sendback", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
         plugin = tregmine;
     }
 
@@ -20,10 +20,6 @@ public class SendBackCommand extends AbstractCommand {
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (player.getRank() != Rank.SENIOR_ADMIN) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to send a player back!");
             return true;
         }
         if (args.length != 1) {

@@ -18,7 +18,7 @@ public class BanCommand extends AbstractCommand {
     private Tregmine plugin;
 
     public BanCommand(Tregmine tregmine) {
-        super(tregmine, "ban");
+        super(tregmine, "ban", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
         plugin = tregmine;
     }
 
@@ -34,10 +34,6 @@ public class BanCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canBan()) {
-            player.sendMessage(DARK_AQUA + "You don't have permission to do that command.");
-            return true;
-        }
         if (args.length < 2) {
             player.sendMessage(DARK_AQUA + "/ban <player> <message>");
             return true;

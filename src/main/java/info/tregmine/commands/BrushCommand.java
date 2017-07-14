@@ -25,7 +25,7 @@ import static org.bukkit.ChatColor.RED;
 public class BrushCommand extends AbstractCommand implements Listener {
 
     public BrushCommand(Tregmine tregmine) {
-        super(tregmine, "brush");
+        super(tregmine, "brush", Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
 
         PluginManager pm = tregmine.getServer().getPluginManager();
         pm.registerEvents(this, tregmine);
@@ -35,9 +35,6 @@ public class BrushCommand extends AbstractCommand implements Listener {
     public boolean handlePlayer(GenericPlayer p, String[] args) {
         if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
             p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (!p.getRank().canBrush()) {
             return true;
         }
 

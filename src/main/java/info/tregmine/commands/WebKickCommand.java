@@ -14,7 +14,7 @@ import static org.bukkit.ChatColor.*;
 
 public class WebKickCommand extends AbstractCommand {
     public WebKickCommand(Tregmine tregmine) {
-        super(tregmine, "webkick");
+        super(tregmine, "webkick", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
     }
 
     private String argsToMessage(String[] args) {
@@ -29,10 +29,6 @@ public class WebKickCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canKick()) {
-            return false;
-        }
-
         if (args.length < 2) {
             player.sendMessage(DARK_AQUA + "/webkick <player> <message>");
             return true;

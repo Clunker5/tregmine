@@ -15,16 +15,12 @@ public class PropertyCommand extends AbstractCommand {
     private Tregmine plugin;
 
     public PropertyCommand(Tregmine plugin) {
-        super(plugin, "property");
+        super(plugin, "property", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
         this.plugin = plugin;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String args[]) {
-        if (player.getRank() != Rank.SENIOR_ADMIN) {
-            player.sendMessage(ChatColor.RED + "You're not allowed to change player properties!");
-            return true;
-        }
         if (args.length <= 2) {
             player.sendMessage(ChatColor.RED + "/property <target player> <key> <value>");
             return true;

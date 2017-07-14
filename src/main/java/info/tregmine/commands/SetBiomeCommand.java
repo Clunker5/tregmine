@@ -18,16 +18,13 @@ public class SetBiomeCommand extends AbstractCommand {
     protected int z, minZ, maxZ;
 
     public SetBiomeCommand(Tregmine tregmine) {
-        super(tregmine, "setbiome");
+        super(tregmine, "setbiome", Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (!player.getRank().canSetBiome()) {
             return true;
         }
 

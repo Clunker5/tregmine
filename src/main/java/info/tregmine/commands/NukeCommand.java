@@ -11,16 +11,13 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class NukeCommand extends AbstractCommand {
     public NukeCommand(Tregmine tregmine) {
-        super(tregmine, "nuke");
+        super(tregmine, "nuke", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (!player.getRank().canNuke()) {
             return true;
         }
 

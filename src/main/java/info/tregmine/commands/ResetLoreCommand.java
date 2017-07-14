@@ -16,7 +16,7 @@ public class ResetLoreCommand extends AbstractCommand {
     GenericPlayer player;
 
     public ResetLoreCommand(Tregmine instance) {
-        super(instance, "resetlore");
+        super(instance, "resetlore", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
         plugin = instance;
     }
 
@@ -24,10 +24,6 @@ public class ResetLoreCommand extends AbstractCommand {
     public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (sender.getWorld().getName().equalsIgnoreCase("vanilla") || sender.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (sender.getRank() != Rank.SENIOR_ADMIN) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to reset lores.");
             return true;
         }
         player = sender;

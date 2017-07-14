@@ -9,16 +9,12 @@ public class LockdownCommand extends AbstractCommand {
     Tregmine plugin;
 
     public LockdownCommand(Tregmine tregmine) {
-        super(tregmine, "lockdown");
+        super(tregmine, "lockdown", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
         plugin = tregmine;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getRank() != Rank.SENIOR_ADMIN) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to call a lockdown!");
-            return true;
-        }
         if (args.length == 0) {
             player.sendMessage(ChatColor.RED + "You must specify <on|off>");
             return true;

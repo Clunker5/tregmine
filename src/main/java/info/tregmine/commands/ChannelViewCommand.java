@@ -11,15 +11,11 @@ import static org.bukkit.ChatColor.RED;
 
 public class ChannelViewCommand extends AbstractCommand {
     public ChannelViewCommand(Tregmine tregmine) {
-        super(tregmine, "invlog");
+        super(tregmine, "invlog", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canChannelView()) {
-            return true;
-        }
-
         if (args.length < 1) {
             player.sendMessage("Your ChannelView is set to "
                     + (player.hasFlag(GenericPlayer.Flags.CHANNEL_VIEW) ? "on" : "off") + ".");

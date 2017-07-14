@@ -11,16 +11,13 @@ import java.util.List;
 
 public class SendToCommand extends AbstractCommand {
     public SendToCommand(Tregmine tregmine) {
-        super(tregmine, "sendto");
+        super(tregmine, "sendto", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 2) {
             return false;
-        }
-        if (!player.getRank().canSendPeopleToOtherWorlds()) {
-            return true;
         }
 
         List<GenericPlayer> candidates = tregmine.matchPlayer(args[0]);

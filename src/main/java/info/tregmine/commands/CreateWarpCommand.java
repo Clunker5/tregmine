@@ -11,16 +11,13 @@ import org.bukkit.Location;
 
 public class CreateWarpCommand extends AbstractCommand {
     public CreateWarpCommand(Tregmine tregmine) {
-        super(tregmine, "createwarp");
+        super(tregmine, "createwarp", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 1) {
             return false;
-        }
-        if (!player.getRank().canCreateWarps()) {
-            return true;
         }
 
         String name = args[0];

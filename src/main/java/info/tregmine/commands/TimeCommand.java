@@ -7,15 +7,11 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class TimeCommand extends AbstractCommand {
     public TimeCommand(Tregmine tregmine) {
-        super(tregmine, "time");
+        super(tregmine, "time", Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canSetTime()) {
-            return true;
-        }
-
         if (args.length != 1) {
             player.sendMessage(YELLOW + "Say /time day|night|normal");
             return false;

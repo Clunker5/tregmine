@@ -8,7 +8,7 @@ public class VanillaCommand extends AbstractCommand {
     Tregmine plugin;
 
     public VanillaCommand(Tregmine t) {
-        super(t, "vanilla");
+        super(t, "vanilla", Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
         plugin = t;
     }
 
@@ -16,10 +16,6 @@ public class VanillaCommand extends AbstractCommand {
     public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (plugin.getVanillaWorld() == null) {
             sender.sendMessage(ChatColor.RED + "The server does not have the vanilla world enabled.");
-            return true;
-        }
-        if (!sender.getRank().canGoToVanilla()) {
-            sender.sendMessage(ChatColor.RED + "You have to be a donator to go to the vanilla world!");
             return true;
         }
         if (sender.getWorld() == plugin.getServer().getWorld("world")) {

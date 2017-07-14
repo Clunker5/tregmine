@@ -3,9 +3,11 @@ package info.tregmine.commands;
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.PlayerReport;
+import info.tregmine.api.Rank;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerReportDAO;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class ReportCommand extends AbstractCommand {
     public ReportCommand(Tregmine tregmine) {
-        super(tregmine, "report");
+        super(tregmine, "report", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
     }
 
     private String argsToMessage(String[] args) {
@@ -29,10 +31,6 @@ public class ReportCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (!player.getRank().canReport()) {
-            return true;
-        }
-
         if (args.length < 2) {
             player.sendMessage(DARK_AQUA + "/report <player> <message>");
             return true;

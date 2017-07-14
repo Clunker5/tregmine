@@ -13,16 +13,13 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class CreateMobCommand extends AbstractCommand {
     public CreateMobCommand(Tregmine tregmine) {
-        super(tregmine, "createmob");
+        super(tregmine, "createmob", Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
             player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-        if (!player.getRank().canSpawnMobs()) {
             return true;
         }
 
