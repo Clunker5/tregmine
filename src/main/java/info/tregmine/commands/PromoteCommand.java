@@ -9,7 +9,6 @@ import info.tregmine.database.IContext;
 import info.tregmine.database.IPlayerDAO;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 

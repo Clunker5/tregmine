@@ -2,7 +2,6 @@ package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
-import org.bukkit.ChatColor;
 
 /**
  * Created by ericrabil on 4/2/17.

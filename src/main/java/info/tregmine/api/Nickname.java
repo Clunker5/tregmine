@@ -3,7 +3,8 @@ package info.tregmine.api;
 import org.bukkit.ChatColor;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Nickname {
 
@@ -28,6 +29,20 @@ public class Nickname {
         this.formatting = formatting;
     }
 
+    public static Nickname fromSQL(String json) {
+        return fromSQL(new JSONObject(json));
+    }
+
+    public static Nickname fromSQL(JSONObject json) {
+        List<ChatColor> formatting = new ArrayList<>();
+        for (String format : json.getString("formatting").split(" ")) {
+            if (format.isEmpty())
+                continue;
+            formatting.add(ChatColor.valueOf(format));
+        }
+        return new Nickname(json.getString("nickname"), ChatColor.valueOf(json.getString("color")), formatting);
+    }
+
     public void addFormatting(ChatColor format) {
         if (this.formatting.contains(format)) {
             return;
@@ -37,6 +52,10 @@ public class Nickname {
 
     public ChatColor getColor() {
         return this.color;
+    }
+
+    public void setColor(ChatColor setcolor) {
+        this.color = setcolor;
     }
 
     public List<ChatColor> getFormatting() {
@@ -64,10 +83,6 @@ public class Nickname {
         return this.nickname;
     }
 
-    public void setColor(ChatColor setcolor) {
-        this.color = setcolor;
-    }
-
     private String formattingToJSON() {
         StringBuilder builder = new StringBuilder();
         boolean first = true;
@@ -84,20 +99,6 @@ public class Nickname {
                 .put("formatting", formattingToJSON())
                 .put("nickname", this.nickname)
                 .toString();
-    }
-
-    public static Nickname fromSQL(String json) {
-        return fromSQL(new JSONObject(json));
-    }
-
-    public static Nickname fromSQL(JSONObject json) {
-        List<ChatColor> formatting = new ArrayList<>();
-        for (String format : json.getString("formatting").split(" ")) {
-            if (format.isEmpty())
-                continue;
-            formatting.add(ChatColor.valueOf(format));
-        }
-        return new Nickname(json.getString("nickname"), ChatColor.valueOf(json.getString("color")), formatting);
     }
 
 }

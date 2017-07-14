@@ -48,9 +48,9 @@ public interface GenericPlayer extends GenericDelegate {
 
     PermissionAttachment getAttachment();
 
-    Set<Flags> getFlags();
-
     void setAttachment(PermissionAttachment ment);
+
+    Set<Flags> getFlags();
 
     int getBadgeLevel(Badge badge);
 
@@ -177,12 +177,14 @@ public interface GenericPlayer extends GenericDelegate {
 
     FishyBlock getNewFishyBlock();
 
-    void refreshPlayerList();
-
     // Fishy block state
     void setNewFishyBlock(FishyBlock v);
 
+    void refreshPlayerList();
+
     Nickname getNickname();
+
+    void setNickname(Nickname n);
 
     String getPasswordHash();
 
@@ -342,8 +344,6 @@ public interface GenericPlayer extends GenericDelegate {
     void setDeathCause(String a);
 
     void setFlag(Flags flag);
-
-    void setNickname(Nickname n);
 
     void setPassword(String newPassword);
 

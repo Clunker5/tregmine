@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class InternalCommand extends AbstractCommand {
     public InternalCommand(Tregmine plugin) {
-        super (plugin, "internal", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(plugin, "internal", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class InternalCommand extends AbstractCommand {
             if (args.length >= 4) {
                 if (args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove")) {
                     GenericPlayer.Flags flag = null;
-                    try{
+                    try {
                         flag = GenericPlayer.Flags.valueOf(args[3].toUpperCase());
                     } catch (Exception e) {
                         player.sendMessage(ChatColor.RED + e.getMessage());

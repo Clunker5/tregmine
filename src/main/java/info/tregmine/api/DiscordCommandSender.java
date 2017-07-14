@@ -1263,18 +1263,23 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
     }
 
     @Override
-    public void refreshPlayerList() {
+    public void setNewFishyBlock(FishyBlock v) {
 
     }
 
     @Override
-    public void setNewFishyBlock(FishyBlock v) {
+    public void refreshPlayerList() {
 
     }
 
     @Override
     public Nickname getNickname() {
         return new Nickname(this.getCustomName());
+    }
+
+    @Override
+    public void setNickname(Nickname n) {
+        this.setCustomName(n.getNicknamePlaintext());
     }
 
     @Override
@@ -1870,11 +1875,6 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
     @Override
     public void setFlag(Flags flag) {
 
-    }
-
-    @Override
-    public void setNickname(Nickname n) {
-        this.setCustomName(n.getNicknamePlaintext());
     }
 
     @Override

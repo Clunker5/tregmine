@@ -1,7 +1,10 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.*;
+import info.tregmine.api.DiscordCommandSender;
+import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.TextComponentBuilder;
+import info.tregmine.api.TregmineConsolePlayer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -11,18 +14,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public abstract class AbstractCommand implements CommandExecutor {
+    public static final TextComponent PERMISSION_DENIED = new TextComponentBuilder("You do not have access to that command.").setColor(net.md_5.bungee.api.ChatColor.DARK_RED).setBold(true).build();
     protected final Logger LOGGER = Logger.getLogger("Minecraft");
-
-    protected Tregmine tregmine;
-    protected String command;
     protected final Tregmine.PermissionDefinitions permissionDefinitions;
     private final TregmineConsolePlayer consolePlayer;
-
-    public static final TextComponent PERMISSION_DENIED = new TextComponentBuilder("You do not have access to that command.").setColor(net.md_5.bungee.api.ChatColor.DARK_RED).setBold(true).build();
+    protected Tregmine tregmine;
+    protected String command;
 
     protected AbstractCommand(Tregmine tregmine, String command) {
         this(tregmine, command, null);

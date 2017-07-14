@@ -95,6 +95,7 @@ public class TregmineConsolePlayer implements GenericPlayer {
     public boolean addPotionEffects(Collection<PotionEffect> p0) {
         return false;
     }
+
     @Override
     public boolean beginConversation(Conversation p0) {
         return false;
@@ -925,13 +926,13 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public Set<Flags> getFlags() {
-        return new HashSet<>();
+    public void setAttachment(PermissionAttachment ment) {
+
     }
 
     @Override
-    public void setAttachment(PermissionAttachment ment) {
-
+    public Set<Flags> getFlags() {
+        return new HashSet<>();
     }
 
     @Override
@@ -1245,18 +1246,23 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public void refreshPlayerList() {
+    public void setNewFishyBlock(FishyBlock v) {
 
     }
 
     @Override
-    public void setNewFishyBlock(FishyBlock v) {
+    public void refreshPlayerList() {
 
     }
 
     @Override
     public Nickname getNickname() {
         return null;
+    }
+
+    @Override
+    public void setNickname(Nickname n) {
+
     }
 
     @Override
@@ -1835,11 +1841,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void setFlag(Flags flag) {
-
-    }
-
-    @Override
-    public void setNickname(Nickname n) {
 
     }
 

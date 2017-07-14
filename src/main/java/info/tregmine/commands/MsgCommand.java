@@ -12,17 +12,14 @@ import org.bukkit.ChatColor;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.GREEN;
-
 public class MsgCommand extends AbstractCommand {
+    private final TextComponent toFlag = new TextComponent("(to) ");
+    private final TextComponent fromFlag = new TextComponent("(from) ");
     public MsgCommand(Tregmine tregmine) {
         super(tregmine, "msg");
         this.toFlag.setColor(net.md_5.bungee.api.ChatColor.GREEN);
         this.fromFlag.setColor(net.md_5.bungee.api.ChatColor.GREEN);
     }
-
-    private final TextComponent toFlag = new TextComponent("(to) ");
-    private final TextComponent fromFlag = new TextComponent("(from) ");
 
     private String argsToMessage(String[] args) {
         StringBuffer buf = new StringBuffer();
@@ -68,7 +65,6 @@ public class MsgCommand extends AbstractCommand {
                     ignored = false;
                 if (ignored)
                     continue;
-
 
 
                 // Show message in senders terminal, as long as the recipient

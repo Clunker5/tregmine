@@ -5,11 +5,9 @@ import info.tregmine.api.TregmineArrayList;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IItemDAO;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Dye;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -397,7 +397,7 @@ public enum Rank {
         return this != UNVERIFIED;
     }
     /*
-	 * End CoreProtect Permissions
+     * End CoreProtect Permissions
 	 */
 
     public boolean canViewIgnored() {

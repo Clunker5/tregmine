@@ -49,7 +49,7 @@ public class ForceCommand extends AbstractCommand {
         toPlayer.sendMessage(new TextComponent(YELLOW + ""), player.decideVS(player),
                 new TextComponent(" forced you into channel " + channel.toUpperCase()));
         toPlayer.sendMessage(YELLOW + "Write /channel global to switch back to " + "the global chat.");
-        player.sendMessage(new TextComponent(YELLOW + "You are now in a forced chat " + channel.toUpperCase() + " with"), toPlayer.decideVS(player),  new TextComponent("."));
+        player.sendMessage(new TextComponent(YELLOW + "You are now in a forced chat " + channel.toUpperCase() + " with"), toPlayer.decideVS(player), new TextComponent("."));
         LOGGER.info(player.getName() + " FORCED CHAT WITH " + toPlayer.getDisplayName() + " IN CHANNEL "
                 + channel.toUpperCase());
 

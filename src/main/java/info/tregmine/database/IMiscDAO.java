@@ -1,7 +1,5 @@
 package info.tregmine.database;
 
-import org.bukkit.Location;
-
 import java.util.List;
 
 public interface IMiscDAO {

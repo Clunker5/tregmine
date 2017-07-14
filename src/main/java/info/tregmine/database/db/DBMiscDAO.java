@@ -3,7 +3,6 @@ package info.tregmine.database.db;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IMiscDAO;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

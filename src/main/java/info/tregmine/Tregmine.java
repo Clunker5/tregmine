@@ -17,7 +17,6 @@ import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -25,7 +24,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -57,6 +55,7 @@ public class Tregmine extends JavaPlugin {
     public Tregmine plugin;
     public String releaseType = "re";
     public String serverName;
+    public TextComponent version;
     FileConfiguration config;
     private IContextFactory contextFactory;
     private Server server;
@@ -95,36 +94,6 @@ public class Tregmine extends JavaPlugin {
     private int onlineTeachers = 0;
     private DiscordDelegate discord;
     private Lag lag = new Lag();
-
-    public enum PermissionDefinitions {
-        SENIOR_REQUIRED(new Rank[] {Rank.SENIOR_ADMIN}, "You must be a senior admin to perform this command."),
-        ADMIN_REQUIRED(ArrayUtils.add(SENIOR_REQUIRED.getPermissions(), Rank.JUNIOR_ADMIN), "You must be an admin to perform this command."),
-        CODER_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[] {Rank.CODER}),  "You must be a coder to perform this command."),
-        STAFF_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[] {Rank.GUARDIAN}), "You must be a staff member to perform this command."),
-        BUILDER_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[] {Rank.BUILDER}), "You must be a builder to perform this command."),
-        DONATOR_REQUIRED(ArrayUtils.addAll(STAFF_REQUIRED.getPermissions(), new Rank[] {Rank.BUILDER, Rank.CODER, Rank.DONATOR}), "You must be a donator to perform this command."),
-        RESIDENT_REQUIRED(ArrayUtils.addAll(DONATOR_REQUIRED.getPermissions(), new Rank[] {Rank.RESIDENT}), "You must be a resident to perform this command."),
-        SETTLER_REQUIRED(ArrayUtils.addAll(RESIDENT_REQUIRED.getPermissions(), new Rank[] {Rank.SETTLER}), "You must be a settler to perform this command."),
-        TOURIST_REQUIRED(ArrayUtils.addAll(SETTLER_REQUIRED.getPermissions(), new Rank[] {Rank.TOURIST}), "You must be a tourist to perform this command.");
-
-        public Rank[] getPermissions() {
-            return permissions;
-        }
-
-        public String getDeniedMessage() {
-            return deniedMessage;
-        }
-
-        private Rank[] permissions;
-        private String deniedMessage;
-
-        PermissionDefinitions(Rank[] permissions, String deniedMessage) {
-            this.permissions = permissions;
-            this.deniedMessage = deniedMessage;
-        }
-    }
-
-    public TextComponent version;
 
     public static boolean coreProtectEnabled() {
         if (coreProtectEnabled == null) {
@@ -240,8 +209,16 @@ public class Tregmine extends JavaPlugin {
         return bannedWords;
     }
 
+    public void setBannedWords(List<String> bannedWords) {
+        this.bannedWords = bannedWords;
+    }
+
     public Map<Location, Integer> getBlessedBlocks() {
         return blessedBlocks;
+    }
+
+    public void setBlessedBlocks(Map<Location, Integer> blocks) {
+        this.blessedBlocks = blocks;
     }
 
     public List<TregmineChatEvent> getBlockedChats() {
@@ -260,8 +237,16 @@ public class Tregmine extends JavaPlugin {
         return fishyBlocks;
     }
 
+    public void setFishyBlocks(Map<Location, FishyBlock> blocks) {
+        this.fishyBlocks = blocks;
+    }
+
     public List<String> getInsults() {
         return insults;
+    }
+
+    public void setInsults(List<String> insults) {
+        this.insults = insults;
     }
 
     public Lag getLag() {
@@ -294,6 +279,10 @@ public class Tregmine extends JavaPlugin {
         return this.onlineGuards;
     }
 
+    // ============================================================================
+    // Data structure accessors
+    // ============================================================================
+
     public int getOnlineJuniors() {
         return this.onlineJuniors;
     }
@@ -310,10 +299,6 @@ public class Tregmine extends JavaPlugin {
     public int getOnlineSeniors() {
         return this.onlineSeniors;
     }
-
-    // ============================================================================
-    // Data structure accessors
-    // ============================================================================
 
     public int getOnlineTeachers() {
         return this.onlineTeachers;
@@ -407,8 +392,16 @@ public class Tregmine extends JavaPlugin {
         return this.getDataFolder().getAbsolutePath();
     }
 
+    // ============================================================================
+    // Player methods
+    // ============================================================================
+
     public List<String> getQuitMessages() {
         return quitMessages;
+    }
+
+    public void setQuitMessages(List<String> quitMessages) {
+        this.quitMessages = quitMessages;
     }
 
     public ChatColor getRankColor(Rank rank) {
@@ -447,13 +440,11 @@ public class Tregmine extends JavaPlugin {
         }
     }
 
+    // Interjection point for other stuff
+
     public SecureRandom getSecureRandom() {
         return this.random;
     }
-
-    // ============================================================================
-    // Player methods
-    // ============================================================================
 
     public Queue<GenericPlayer> getStudentQueue() {
         return students;
@@ -466,8 +457,6 @@ public class Tregmine extends JavaPlugin {
     public World getSWorldEnd() {
         return this.world2end;
     }
-
-    // Interjection point for other stuff
 
     public World getSWorldNether() {
         return this.world2nether;
@@ -613,6 +602,10 @@ public class Tregmine extends JavaPlugin {
             LOGGER.log(Level.WARNING, "Failed to stop web server!", e);
         }
     }
+
+    // ============================================================================
+    // Zone methods
+    // ============================================================================
 
     private void setupInstructions() {
         LOGGER.info("[tregmine] It appears you have not set up the tregmine plugin!");
@@ -1005,10 +998,6 @@ public class Tregmine extends JavaPlugin {
         return this.config;
     }
 
-    // ============================================================================
-    // Zone methods
-    // ============================================================================
-
     public void reloadPlayer(GenericPlayer player) {
         try {
             addPlayer(player.getDelegate(), player.getAddress().getAddress());
@@ -1047,28 +1036,8 @@ public class Tregmine extends JavaPlugin {
         return this.serverName;
     }
 
-    public void setBlessedBlocks(Map<Location, Integer> blocks) {
-        this.blessedBlocks = blocks;
-    }
-
-    public void setFishyBlocks(Map<Location, FishyBlock> blocks) {
-        this.fishyBlocks = blocks;
-    }
-
     public void setMinedBlockPrices(Map<Material, Integer> blocks) {
         this.minedBlockPrices = blocks;
-    }
-
-    public void setInsults(List<String> insults) {
-        this.insults = insults;
-    }
-
-    public void setQuitMessages(List<String> quitMessages) {
-        this.quitMessages = quitMessages;
-    }
-
-    public void setBannedWords(List<String> bannedWords) {
-        this.bannedWords = bannedWords;
     }
 
     public void setReconnecting(boolean v) {
@@ -1101,5 +1070,33 @@ public class Tregmine extends JavaPlugin {
         this.onlineJuniors = j;
         this.onlineSeniors = s;
         this.onlineTeachers = t;
+    }
+
+    public enum PermissionDefinitions {
+        SENIOR_REQUIRED(new Rank[]{Rank.SENIOR_ADMIN}, "You must be a senior admin to perform this command."),
+        ADMIN_REQUIRED(ArrayUtils.add(SENIOR_REQUIRED.getPermissions(), Rank.JUNIOR_ADMIN), "You must be an admin to perform this command."),
+        CODER_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[]{Rank.CODER}), "You must be a coder to perform this command."),
+        STAFF_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[]{Rank.GUARDIAN}), "You must be a staff member to perform this command."),
+        BUILDER_REQUIRED(ArrayUtils.addAll(ADMIN_REQUIRED.getPermissions(), new Rank[]{Rank.BUILDER}), "You must be a builder to perform this command."),
+        DONATOR_REQUIRED(ArrayUtils.addAll(STAFF_REQUIRED.getPermissions(), new Rank[]{Rank.BUILDER, Rank.CODER, Rank.DONATOR}), "You must be a donator to perform this command."),
+        RESIDENT_REQUIRED(ArrayUtils.addAll(DONATOR_REQUIRED.getPermissions(), new Rank[]{Rank.RESIDENT}), "You must be a resident to perform this command."),
+        SETTLER_REQUIRED(ArrayUtils.addAll(RESIDENT_REQUIRED.getPermissions(), new Rank[]{Rank.SETTLER}), "You must be a settler to perform this command."),
+        TOURIST_REQUIRED(ArrayUtils.addAll(SETTLER_REQUIRED.getPermissions(), new Rank[]{Rank.TOURIST}), "You must be a tourist to perform this command.");
+
+        private Rank[] permissions;
+        private String deniedMessage;
+
+        PermissionDefinitions(Rank[] permissions, String deniedMessage) {
+            this.permissions = permissions;
+            this.deniedMessage = deniedMessage;
+        }
+
+        public Rank[] getPermissions() {
+            return permissions;
+        }
+
+        public String getDeniedMessage() {
+            return deniedMessage;
+        }
     }
 }

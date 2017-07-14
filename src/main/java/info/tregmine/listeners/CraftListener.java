@@ -1,15 +1,12 @@
 package info.tregmine.listeners;
 
-import info.tregmine.Tregmine;
 import info.tregmine.api.lore.Created;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CraftListener implements Listener {

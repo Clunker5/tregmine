@@ -675,6 +675,20 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
+    public void setNickname(Nickname n) {
+        try (IContext ctx = this.plugin.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            if (n != null) {
+                playerDAO.updateProperty(this, "nickname", n.toSQL());
+            } else playerDAO.deleteProperty(this, "nickname");
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+        this.nickname = n;
+        this.refreshPlayerList();
+    }
+
+    @Override
     public String getPasswordHash() {
         return password;
     }
@@ -684,12 +698,12 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         password = v;
     }
 
+    // non-persistent state methods
+
     @Override
     public void removeNickname() {
         this.nickname = null;
     }
-
-    // non-persistent state methods
 
     @Override
     public int getPlayTime() {
@@ -1038,11 +1052,13 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         if (!this.isHidden()) {
             if (isAFK) {
                 this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + BLUE + " is now afk."));
-                if (this.plugin.discordEnabled()) this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is now afk.");
+                if (this.plugin.discordEnabled())
+                    this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is now afk.");
 
             } else {
                 this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + GREEN + " is no longer afk."));
-                if (this.plugin.discordEnabled()) this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is no longer afk.");
+                if (this.plugin.discordEnabled())
+                    this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is no longer afk.");
             }
         }
     }
@@ -1315,20 +1331,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public void setFlag(Flags flag) {
         flags.add(flag);
-    }
-
-    @Override
-    public void setNickname(Nickname n) {
-        try (IContext ctx = this.plugin.createContext()) {
-            IPlayerDAO playerDAO = ctx.getPlayerDAO();
-            if (n != null) {
-                playerDAO.updateProperty(this, "nickname", n.toSQL());
-            } else playerDAO.deleteProperty(this, "nickname");
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-        this.nickname = n;
-        this.refreshPlayerList();
     }
 
     @Override

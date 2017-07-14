@@ -2,7 +2,6 @@ package info.tregmine.database.db;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.*;
-import info.tregmine.api.GenericPlayer.Property;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IPlayerDAO;
 import org.bukkit.entity.Player;
@@ -14,12 +13,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class DBPlayerDAO implements IPlayerDAO {
+    public static final String PLAYER_SEARCH_STRING = "SELECT player_uuid, player_name, player_id, player_uuid, player_password, player_rank, player_inventory, player_flags FROM player WHERE %s = ? LIMIT 1";
     private Connection conn;
     private Tregmine plugin;
     private Map<Integer, List<String>> keywordCache = new HashMap<>();
     private Map<Integer, List<String>> ignoreCache = new HashMap<>();
-
-    public static final String PLAYER_SEARCH_STRING = "SELECT player_uuid, player_name, player_id, player_uuid, player_password, player_rank, player_inventory, player_flags FROM player WHERE %s = ? LIMIT 1";
 
     public DBPlayerDAO(Connection conn) {
         this.conn = conn;
@@ -62,7 +60,8 @@ public class DBPlayerDAO implements IPlayerDAO {
 
     @Override
     public boolean doesIgnore(GenericPlayer player, GenericPlayer victim) throws DAOException {
-        if (this.ignoreCache.containsKey(player.getId())) return this.ignoreCache.get(player.getId()).contains(victim.getRealName());
+        if (this.ignoreCache.containsKey(player.getId()))
+            return this.ignoreCache.get(player.getId()).contains(victim.getRealName());
 
         String sql = "SELECT player_ignore FROM player WHERE player_id = ? ";
 

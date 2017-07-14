@@ -1,7 +1,6 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.CommandStatus;
 import info.tregmine.api.GenericPlayer;
 import org.bukkit.ChatColor;
 
