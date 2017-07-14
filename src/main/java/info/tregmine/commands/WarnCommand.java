@@ -66,7 +66,6 @@ public class WarnCommand extends AbstractCommand {
             LOGGER.info(victim.getName() + " warned by " + player.getName());
         }
 
-        victim.setTemporaryChatName(victim.getNameColor() + victim.getName());
         if (hard) {
             victim.setFlag(GenericPlayer.Flags.HARDWARNED);
         } else {

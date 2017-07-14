@@ -12,6 +12,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -39,7 +40,7 @@ import java.util.*;
 /**
  * Created by eric on 7/7/17.
  */
-public class DiscordCommandSender implements GenericPlayer {
+public class DiscordCommandSender implements GenericPlayer, CommandSender {
 
     private DiscordDelegate discord;
 
@@ -1262,13 +1263,18 @@ public class DiscordCommandSender implements GenericPlayer {
     }
 
     @Override
+    public void refreshPlayerList() {
+
+    }
+
+    @Override
     public void setNewFishyBlock(FishyBlock v) {
 
     }
 
     @Override
     public Nickname getNickname() {
-        return new Nickname(this, this.getCustomName());
+        return new Nickname(this.getCustomName());
     }
 
     @Override
@@ -1278,6 +1284,11 @@ public class DiscordCommandSender implements GenericPlayer {
 
     @Override
     public void setPasswordHash(String v) {
+
+    }
+
+    @Override
+    public void removeNickname() {
 
     }
 
@@ -1703,6 +1714,15 @@ public class DiscordCommandSender implements GenericPlayer {
     }
 
     @Override
+    public void sendMessage(String[] strArr) {
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < strArr.length; i++) {
+            strBuilder.append(strArr[i] + " ");
+        }
+        this.sendMessage(strBuilder.toString());
+    }
+
+    @Override
     public Map<String, Object> serialize() {
         return null;
     }
@@ -1853,7 +1873,7 @@ public class DiscordCommandSender implements GenericPlayer {
     }
 
     @Override
-    public void setNick(Nickname n) {
+    public void setNickname(Nickname n) {
         this.setCustomName(n.getNicknamePlaintext());
     }
 
@@ -1880,11 +1900,6 @@ public class DiscordCommandSender implements GenericPlayer {
     @Override
     public void setTemporaryChatName(String name) {
         this.setCustomName(name);
-    }
-
-    @Override
-    public void setTemporaryRank(Rank v) {
-
     }
 
     @Override

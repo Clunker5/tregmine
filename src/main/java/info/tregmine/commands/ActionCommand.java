@@ -161,7 +161,7 @@ public class ActionCommand extends AbstractCommand {
         if (player.getRank() != Rank.SENIOR_ADMIN && player.getRank() != Rank.JUNIOR_ADMIN) {
             msg = msg.replaceAll("@everyone", "").replaceAll("@here", "");
         }
-        this.tregmine.getDiscordDelegate().getChatChannel().sendMessage("**" + player.getName() + "** " + msg).complete();
+        this.tregmine.getDiscordDelegate().getChatChannel().sendMessage("**" + player.getChatNameNoColor() + "** " + ChatColor.stripColor(msg)).complete();
         return true;
     }
 }

@@ -1,11 +1,8 @@
 package info.tregmine.database.db;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.Badge;
-import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.*;
 import info.tregmine.api.GenericPlayer.Property;
-import info.tregmine.api.Rank;
-import info.tregmine.api.TregminePlayer;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IPlayerDAO;
 import org.bukkit.entity.Player;
@@ -288,9 +285,8 @@ public class DBPlayerDAO implements IPlayerDAO {
                         player.setAfkKick(Boolean.valueOf(value));
                     } else if ("cursewarned".equals(key)) {
                         player.setCurseWarned(Boolean.valueOf(value));
-                    } else if ("nick".equals(key)) {
-                        player.setProperty(Property.NICKNAME);
-                        player.setTemporaryChatName(player.getRank().getName(plugin) + value);
+                    } else if ("nickname".equals(key)) {
+                        player.setNickname(Nickname.fromSQL(value));
                     }
                 }
             }
@@ -489,6 +485,19 @@ public class DBPlayerDAO implements IPlayerDAO {
             stmt.execute();
         } catch (SQLException e) {
             throw new DAOException(sqlInsert, e);
+        }
+    }
+
+    @Override
+    public void deleteProperty(GenericPlayer player, String key) throws DAOException {
+        String sqlDelete = "DELETE FROM player_property WHERE player_id = ? AND property_key = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {
+            stmt.setInt(1, player.getId());
+            stmt.setString(2, key);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DAOException(sqlDelete, e);
         }
     }
 }

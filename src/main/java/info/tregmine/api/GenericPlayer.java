@@ -177,6 +177,8 @@ public interface GenericPlayer extends GenericDelegate {
 
     FishyBlock getNewFishyBlock();
 
+    void refreshPlayerList();
+
     // Fishy block state
     void setNewFishyBlock(FishyBlock v);
 
@@ -185,6 +187,8 @@ public interface GenericPlayer extends GenericDelegate {
     String getPasswordHash();
 
     void setPasswordHash(String v);
+
+    void removeNickname();
 
     int getPlayTime();
 
@@ -339,7 +343,7 @@ public interface GenericPlayer extends GenericDelegate {
 
     void setFlag(Flags flag);
 
-    void setNick(Nickname n);
+    void setNickname(Nickname n);
 
     void setPassword(String newPassword);
 
@@ -350,8 +354,6 @@ public interface GenericPlayer extends GenericDelegate {
     void setStaff(boolean v);
 
     void setTemporaryChatName(String name);
-
-    void setTemporaryRank(Rank v);
 
     void showPlayer(GenericPlayer player);
 

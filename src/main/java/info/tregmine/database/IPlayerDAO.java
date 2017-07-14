@@ -43,6 +43,8 @@ public interface IPlayerDAO {
 
     void updateProperty(GenericPlayer player, String key, String value) throws DAOException;
 
+    void deleteProperty(GenericPlayer player, String key) throws DAOException;
+
     // public String generateReferralCode(TregminePlayer source) throws
     // DAOException;
 }

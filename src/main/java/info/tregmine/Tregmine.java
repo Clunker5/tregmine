@@ -204,8 +204,6 @@ public class Tregmine extends JavaPlugin {
             ILogDAO logDAO = ctx.getLogDAO();
             logDAO.insertLogin(player, false, onlinePlayerCount);
 
-            player.setTemporaryChatName(player.getNameColor() + player.getName());
-
             players.put(player.getUniqueId(), player);
             playersById.put(player.getId(), player);
             return player;

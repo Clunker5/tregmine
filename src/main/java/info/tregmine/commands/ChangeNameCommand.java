@@ -52,14 +52,7 @@ public class ChangeNameCommand extends AbstractCommand {
                 break;
             }
         }
-        Nickname nname = new Nickname(player, args[1]);
-        if (usecolor != null) {
-            nname.setColor(usecolor);
-        }
-        if (!format.isEmpty()) {
-            nname.setFormatting(format);
-        }
-        player.setTemporaryChatName(nname.getNickname());
+        player.setNickname(new Nickname(args[1], usecolor, format));
 
         player.setProperty(Property.NICKNAME);
         player.sendMessage("You are now: " + player.getChatNameNoHover());

@@ -34,7 +34,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     private int id = 0;
     private UUID storedUuid = null;
     private String name = null;
-    private String realName = null;
     private String password = null;
     private String keyword = null;
     private Rank rank = Rank.UNVERIFIED;
@@ -106,7 +105,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     // Death states
     private String deathcause = "";
     // Nickname stats
-    private boolean hasNick = false;
     private Nickname nickname;
     private Tregmine plugin;
 
@@ -114,7 +112,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         super(player);
 
         this.name = player.getName();
-        this.realName = player.getName();
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
@@ -127,7 +124,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     public TregminePlayer(UUID uuid, Tregmine instance, String uname) {
         super(null);
         this.name = uname;
-        this.realName = uname;
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
@@ -334,7 +330,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public TextComponent getChatName() {
-        TextComponent returns = new TextComponent(this.name);
+        TextComponent returns = new TextComponent(this.getChatNameNoHover());
         if (this.hasFlag(Flags.CHILD)) {
             returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                     new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD").create()));
@@ -352,7 +348,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public String getChatNameNoHover() {
-        return name;
+        return this.nickname != null ? this.nickname.getNickname() : this.name;
     }
 
     @Override
@@ -362,9 +358,9 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public TextComponent getChatNameStaff() {
-        TextComponent returns = new TextComponent(this.name);
+        TextComponent returns = new TextComponent(this.getChatNameNoHover());
         String addon = "";
-        if (this.hasNick) {
+        if (this.nickname != null) {
             addon += "\n" + ChatColor.AQUA + "Real name: " + this.name;
         }
         if (this.getTotalBans() != 0) {
@@ -529,8 +525,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public void setGuardianState(GuardianState v) {
         this.guardianState = v;
-
-        setTemporaryChatName(getNameColor() + getRealName());
     }
 
     @Override
@@ -690,6 +684,11 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         password = v;
     }
 
+    @Override
+    public void removeNickname() {
+        this.nickname = null;
+    }
+
     // non-persistent state methods
 
     @Override
@@ -747,7 +746,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public String getRealName() {
-        return realName;
+        return name;
     }
 
     @Override
@@ -1014,7 +1013,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public boolean hasNick() {
-        return this.hasNick;
+        return this.nickname != null;
     }
 
     @Override
@@ -1319,10 +1318,22 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     }
 
     @Override
-    public void setNick(Nickname n) {
+    public void setNickname(Nickname n) {
+        try (IContext ctx = this.plugin.createContext()) {
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            if (n != null) {
+                playerDAO.updateProperty(this, "nickname", n.toSQL());
+            } else playerDAO.deleteProperty(this, "nickname");
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
         this.nickname = n;
-        this.hasNick = true;
-        this.name = n.getNickname();
+        this.refreshPlayerList();
+    }
+
+    @Override
+    public void refreshPlayerList() {
+        this.getDelegate().setPlayerListName(this.getChatNameNoHover().length() > 16 ? this.getChatNameNoHover().substring(0, 15) : this.getChatNameNoHover());
     }
 
     @Override
@@ -1347,7 +1358,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         } else {
             final long currentTime = System.currentTimeMillis();
             this.setLastOnlineActivity(currentTime);
-            setTemporaryChatName(this.namePreAfkAppendage);
         }
     }
 
@@ -1363,24 +1373,9 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public void setTemporaryChatName(String name) {
         this.name = name;
-
         if (getDelegate() != null) {
-            if (getChatNameNoHover().length() > 16) {
-                setPlayerListName(name.substring(0, 15));
-            } else {
-                setPlayerListName(name);
-            }
+            this.refreshPlayerList();
         }
-    }
-
-    @Override
-    public void setTemporaryRank(Rank v) {
-        this.temporaryRank = v;
-        this.isTemporaryRank = true;
-        if (v == Rank.GUARDIAN || v == Rank.JUNIOR_ADMIN || v == Rank.SENIOR_ADMIN || v == Rank.CODER) {
-            this.Staff = true;
-        }
-        setTemporaryChatName(getNameColor() + getRealName());
     }
 
     @Override

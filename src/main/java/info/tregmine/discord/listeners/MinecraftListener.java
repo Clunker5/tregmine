@@ -29,7 +29,7 @@ public class MinecraftListener implements Listener {
         if (sender.getRank() != Rank.JUNIOR_ADMIN && sender.getRank() != Rank.SENIOR_ADMIN) {
             message = message.replaceAll("@everyone", "").replaceAll("@here", "");
         }
-        this.delegate.sendChat("**" + sender.getName() + "**: " + message);
+        this.delegate.sendChat("**" + sender.getChatNameNoColor() + "**: " + message);
     }
 
     @EventHandler

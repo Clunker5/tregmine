@@ -12,7 +12,7 @@ public class ResetNameCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        player.setTemporaryChatName(player.getNameColor() + player.getName());
+        player.setNickname(null);
         player.sendMessage(ChatColor.GREEN + "Your name has been reset.");
         player.removeProperty(Property.NICKNAME);
         return true;

@@ -1,182 +1,103 @@
 package info.tregmine.api;
 
 import org.bukkit.ChatColor;
+import org.json.JSONObject;
 
 import java.util.*;
 
 public class Nickname {
 
-    // Base values
-    private GenericPlayer owner;
-
     // Nickname
     private String nickname;
-    private String colorString;
     private ChatColor color = ChatColor.WHITE;
-    private boolean hasColor = false;
 
     // Special nickname characteristics
-    private List<ChatColor> formatting = new ArrayList<ChatColor>();
-    private boolean hasFormatting;
-    private boolean showNickFlag;
+    private List<ChatColor> formatting = new ArrayList<>();
 
-    // Internal
-    private String spacer = "$";
-    private String breakcolor = ";;";
+    public Nickname(String nickname) {
+        this.nickname = nickname;
+    }
 
-    public Nickname(GenericPlayer player, String setnickname) {
-        this.owner = player;
-        this.showNickFlag = !this.owner.getRank().canHaveHiddenNickname();
-        this.nickname = setnickname;
+    public Nickname(String nickname, ChatColor color) {
+        this(nickname);
+        this.color = color;
+    }
+
+    public Nickname(String nickname, ChatColor color, List<ChatColor> formatting) {
+        this(nickname, color);
+        this.formatting = formatting;
     }
 
     public void addFormatting(ChatColor format) {
-        if (this.hasFormatting == false) {
-            this.hasFormatting = true;
-        }
         if (this.formatting.contains(format)) {
             return;
         }
         this.formatting.add(format);
     }
 
-    public ChatColor getChatColor() {
-        if (hasColor)
-            return this.color;
-        else
-            return ChatColor.WHITE;
-    }
-
-    public List<ChatColor> getChatFormatting() {
-        if (hasFormatting)
-            return this.formatting;
-        else
-            return null;
-    }
-
-    public String getColorName() {
-        if (this.hasColor) {
-            return this.colorString;
-        } else {
-            return "%";
-        }
+    public ChatColor getColor() {
+        return this.color;
     }
 
     public List<ChatColor> getFormatting() {
-        if (this.hasFormatting) {
-            return this.formatting;
-        } else {
-            return new ArrayList<ChatColor>();
-        }
+        return this.formatting;
     }
 
-    public void setFormatting(List<ChatColor> fmt) {
-        if (!this.hasFormatting)
-            this.hasFormatting = true;
-        this.formatting = fmt;
+    public void setFormatting(List<ChatColor> format) {
+        this.formatting = format;
     }
 
     public String getFormattingCF() {
-        String returns = "";
+        StringBuilder returns = new StringBuilder();
         for (Object color : this.formatting.toArray()) {
             ChatColor clr = (ChatColor) color;
-            returns += clr;
+            returns.append(clr);
         }
-        return returns;
+        return returns.toString();
     }
 
     public String getNickname() {
-        if (this.showNickFlag) {
-            if (hasColor && hasFormatting)
-                return "!" + this.color + "" + this.getFormattingCF() + this.nickname;
-            else if (hasColor && !hasFormatting)
-                return "!" + this.color + "" + this.nickname;
-            else
-                return "!" + this.nickname;
-        } else {
-            if (hasColor && hasFormatting)
-                return this.color + "" + this.getFormattingCF() + this.nickname;
-            else if (hasColor && !hasFormatting)
-                return this.color + "" + this.nickname;
-            else
-                return this.nickname;
-        }
-    }
-
-    public void setNickname(String nick) {
-        this.nickname = nick;
+        return (this.color != null ? this.color : "") + this.getFormattingCF() + this.nickname;
     }
 
     public String getNicknamePlaintext() {
         return this.nickname;
     }
 
-    public GenericPlayer getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(GenericPlayer newowner) {
-        this.owner = newowner;
-    }
-
-    public boolean hasChatColor() {
-        return this.hasColor;
-    }
-
-    public void removeColor() {
-        this.hasColor = false;
-        this.color = ChatColor.WHITE;
-    }
-
-    public void removeFormatting() {
-        this.hasFormatting = false;
-        this.formatting.clear();
-    }
-
     public void setColor(ChatColor setcolor) {
-        this.hasColor = true;
-        this.color = setcolor;
-        this.colorString = setcolor.name();
-    }
-
-    public void setNickname(String nick, ChatColor setcolor) {
-        this.hasColor = true;
-        this.nickname = nick;
         this.color = setcolor;
     }
 
-    public String sqlColors(ChatColor color, ChatColor formatting) {
-        String colorname = color.getChar() + "";
-        String formatname = formatting.name();
-        return colorname + this.spacer + formatname + this.spacer + this.breakcolor;
-    }
-
-    public Map<ColorType, ChatColor> translateSql(String sql) {
-        Map<ColorType, ChatColor> map = new HashMap<>();
-        List<String> returnme = Arrays.asList(sql.split(spacer));
-        ChatColor returnc;
-        ChatColor returnf;
-        for (String str : returnme) {
-            if (str.contains(this.breakcolor)) {
-                returnme.remove(str);
-            }
-            if (str.contains(this.spacer)) {
-                returnme.remove(str);
-                returnme.add(str.replace(this.spacer, ""));
-            }
+    private String formattingToJSON() {
+        StringBuilder builder = new StringBuilder();
+        boolean first = true;
+        for (ChatColor color : formatting) {
+            builder.append((first ? "" : " ") + color.name());
+            first = false;
         }
-        for (String str : returnme) {
-            if (ChatColor.getByChar(str).isColor()) {
-                returnc = ChatColor.getByChar(str);
-                map.put(ColorType.COLOR, returnc);
-            } else if (ChatColor.getByChar(str).isFormat()) {
-                returnf = ChatColor.getByChar(str);
-                map.put(ColorType.FORMAT, returnf);
-            } else {
+        return builder.toString();
+    }
+
+    public String toSQL() {
+        return new JSONObject()
+                .put("color", this.color.name())
+                .put("formatting", formattingToJSON())
+                .put("nickname", this.nickname)
+                .toString();
+    }
+
+    public static Nickname fromSQL(String json) {
+        return fromSQL(new JSONObject(json));
+    }
+
+    public static Nickname fromSQL(JSONObject json) {
+        List<ChatColor> formatting = new ArrayList<>();
+        for (String format : json.getString("formatting").split(" ")) {
+            if (format.isEmpty())
                 continue;
-            }
+            formatting.add(ChatColor.valueOf(format));
         }
-        return map;
+        return new Nickname(json.getString("nickname"), ChatColor.valueOf(json.getString("color")), formatting);
     }
 
 }

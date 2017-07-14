@@ -1245,6 +1245,11 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
+    public void refreshPlayerList() {
+
+    }
+
+    @Override
     public void setNewFishyBlock(FishyBlock v) {
 
     }
@@ -1261,6 +1266,11 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void setPasswordHash(String v) {
+
+    }
+
+    @Override
+    public void removeNickname() {
 
     }
 
@@ -1829,7 +1839,7 @@ public class TregmineConsolePlayer implements GenericPlayer {
     }
 
     @Override
-    public void setNick(Nickname n) {
+    public void setNickname(Nickname n) {
 
     }
 
@@ -1855,11 +1865,6 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void setTemporaryChatName(String name) {
-
-    }
-
-    @Override
-    public void setTemporaryRank(Rank v) {
 
     }
 
