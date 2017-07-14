@@ -2,72 +2,57 @@ package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.GenericPlayer.ChatState;
-import info.tregmine.api.GenericPlayer.Flags;
 import info.tregmine.api.Rank;
+import info.tregmine.api.TextComponentBuilder;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
+import info.tregmine.database.IMentorLogDAO;
 import info.tregmine.database.IPlayerDAO;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.GREEN;
 
 public class SkipMentorCommand extends AbstractCommand {
 
     public SkipMentorCommand(Tregmine tregmine) {
-        super(tregmine, "skipmentor");
+        super(tregmine, "skipmentor", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getRank() != Rank.SENIOR_ADMIN && player.getRank() != Rank.JUNIOR_ADMIN
-                && player.getRank() != Rank.GUARDIAN) {
-            player.sendMessage(RED
-                    + "You are not authorized to perform that command. All online administrators have been notified.");
+        if (args.length < 1) return this.invalidArguments(player, "/skipmentor <player>");
+        List<GenericPlayer> matches = this.tregmine.matchPlayer(args[0]);
+        if (matches.size() != 1) {
+            player.sendMessage(new TextComponentBuilder("Could not find a player by the name of '" + args[0] + "'").setColor(ChatColor.DARK_RED).setBold(true).build());
             return true;
         }
-        if (args.length != 1) {
-            // Player didn't enter two arguments, terminate.
-            player.sendMessage(ChatColor.RED + "Invalid arguments! Use /skipmentor <player>");
+        GenericPlayer student = matches.get(0);
+        if (student.getRank() != Rank.TOURIST && student.getRank() != Rank.UNVERIFIED) {
+            player.sendMessage(student.getChatName(), new TextComponentBuilder(" is already past the mentoring process.").setColor(ChatColor.RED).setBold(true).build());
             return true;
         }
-        // The checks have finished, perform the command
-        String possibleuser = args[0];
-        List<GenericPlayer> candidate = tregmine.matchPlayer(possibleuser);
-        if (candidate.size() != 1) {
-            player.sendMessage(RED + "The player specified was not found. Please try again.");
-            return true;
-        }
-        GenericPlayer user = candidate.get(0);
-        if (user.hasFlag(Flags.HARDWARNED)) {
-            // Players with a hardwarn cannot be promoted using this command.
-            // They must be promoted manually.
-            player.sendMessage(
-                    RED + "The player specified has been hardwarned and is not eligible for promotion.");
-            return true;
-        }
-        if (user.getRank() == Rank.UNVERIFIED || user.getRank() == Rank.TOURIST) {
-            // Any other errors have now been checked and dealt with. Promote
-            // the user.
-            try (IContext ctx = tregmine.createContext()) {
-                user.setRank(Rank.SETTLER);
-                user.setMentor(null);
-                user.setChatState(ChatState.CHAT);
-                IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                playerDAO.updatePlayer(user);
-                playerDAO.updatePlayerInfo(user);
-            } catch (DAOException e) {
-                throw new RuntimeException(e);
-            }
-            return true;
-        } else {
-            player.sendMessage(
-                    RED + "This player cannot skip mentoring because their rank does not qualify them.");
-            return true;
-        }
+        try (IContext ctx = tregmine.createContext()) {
+            student.setRank(Rank.SETTLER);
 
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            playerDAO.updatePlayer(student);
+            playerDAO.updatePlayerInfo(student);
+
+            IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+            int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+
+            mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.COMPLETED);
+            player.sendMessage(GREEN + "Mentoring of " + student.getName() + GREEN + " has now finished!");
+            player.giveExp(100);
+
+            student.sendMessage(GREEN + "Congratulations! You have now achieved "
+                    + "settler status. We hope you'll enjoy your stay on Tregmine!");
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 
 }

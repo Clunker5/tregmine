@@ -29,7 +29,8 @@ public class DBMentorLogDAO implements IMentorLogDAO {
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next()) {
-                    return 0;
+                    this.insertMentorLog(student, mentor);
+                    return this.getMentorLogId(student, mentor);
                 }
                 return rs.getInt("mentorlog_id");
             }
