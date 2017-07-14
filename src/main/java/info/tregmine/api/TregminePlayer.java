@@ -73,8 +73,6 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     private PlayerMute mute = null;
     private boolean muted = false;
 
-    private String namePreAfkAppendage;
-
     // Reports
     private List<String[]> reports = new ArrayList<String[]>();
     private int kicks = 0;
@@ -331,13 +329,8 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     @Override
     public TextComponent getChatName() {
         TextComponent returns = new TextComponent(this.getChatNameNoHover());
-        if (this.hasFlag(Flags.CHILD)) {
-            returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "CHILD").create()));
-        } else {
-            returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new ComponentBuilder(this.getRank().getName(plugin)).create()));
-        }
+        returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+            new ComponentBuilder(this.getRank().getName(plugin) + (hasFlag(Flags.CHILD) ? "\n" + ChatColor.AQUA + "CHILD" : "")).create()));
         return returns;
     }
 
@@ -348,7 +341,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public String getChatNameNoHover() {
-        return this.nickname != null ? this.nickname.getNickname() : this.name;
+        return this.nickname != null ? this.nickname.getNickname() : this.getNameColor() + this.name;
     }
 
     @Override
@@ -377,11 +370,11 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         }
         if (this.hasFlag(Flags.CHILD)) {
             returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new ComponentBuilder(this.getRank().getName(plugin) + "\n" + ChatColor.AQUA + "Child" + addon)
+                    new ComponentBuilder(returns.getText() + "\n" + ChatColor.AQUA + "Child" + addon)
                             .create()));
         } else {
             returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new ComponentBuilder(this.getRank().getName(plugin) + addon).create()));
+                    new ComponentBuilder(returns.getText() + addon).create()));
         }
         return returns;
     }
@@ -755,7 +748,7 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
         if (v == Rank.GUARDIAN || v == Rank.JUNIOR_ADMIN || v == Rank.SENIOR_ADMIN || v == Rank.CODER) {
             this.Staff = true;
         }
-        setTemporaryChatName(getNameColor() + getRealName());
+        this.refreshPlayerList();
     }
 
     @Override
@@ -1050,16 +1043,10 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
     public void setAfk(boolean isAFK) {
         this.setSilentAfk(isAFK);
         if (!this.isHidden()) {
-            if (isAFK) {
-                this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + BLUE + " is now afk."));
+            String status = isAFK ? "now" : "no longer";
+            this.plugin.broadcast(new TextComponentBuilder(this.getChatName()).setItalic(true).build(), new TextComponent(RESET + "" + BLUE + " is " + status + " afk."));
                 if (this.plugin.discordEnabled())
-                    this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is now afk.");
-
-            } else {
-                this.plugin.broadcast(new TextComponent(ITALIC + namePreAfkAppendage + RESET + GREEN + " is no longer afk."));
-                if (this.plugin.discordEnabled())
-                    this.plugin.getDiscordDelegate().sendChat("**" + ChatColor.stripColor(namePreAfkAppendage) + "** is no longer afk.");
-            }
+                    this.plugin.getDiscordDelegate().sendChat("**" + getChatNameNoColor() + "** is " + status + " afk.");
         }
     }
 
