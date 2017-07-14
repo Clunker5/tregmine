@@ -5,9 +5,7 @@ import info.tregmine.api.DiscordCommandSender;
 import info.tregmine.api.Rank;
 import info.tregmine.commands.AbstractCommand;
 import info.tregmine.discord.DiscordDelegate;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -37,13 +35,8 @@ public class DiscordListener extends ListenerAdapter {
 
     public void onCommandChannelReceived(MessageReceivedEvent event) {
         String message = this.filterMessage(event.getMessage());
-        if (!this.commandSenderMap.containsKey(event.getAuthor().getId())) {
-            Rank rank = Rank.fromDiscordString(this.delegate.getTopRole(event.getMember().getRoles()).getName());
-            if (rank == null) rank = Rank.RESIDENT;
-            this.commandSenderMap.put(event.getAuthor().getId(), new DiscordCommandSender(this.delegate, rank, event.getMember(), event.getChannel()));
-        }
         List<String> query = new ArrayList(Arrays.asList(message.substring(1).split(" ")));
-        DiscordCommandSender sender = this.commandSenderMap.get(event.getAuthor().getId());
+        DiscordCommandSender sender = getSender(event.getMember(), event.getTextChannel());
         sender.setResponseChannel(event.getChannel());
         if (this.delegate.getPlugin().getCommand(query.get(0)) == null) {
             sender.sendMessage("The command provided does not exist.");
@@ -58,6 +51,15 @@ public class DiscordListener extends ListenerAdapter {
             }
         }
         return;
+    }
+
+    private DiscordCommandSender getSender(Member member, TextChannel channel) {
+        if (!this.commandSenderMap.containsKey(member.getUser().getId())) {
+            Rank rank = Rank.fromDiscordString(this.delegate.getTopRole(member.getRoles()).getName());
+            if (rank == null) rank = Rank.RESIDENT;
+            this.commandSenderMap.put(member.getUser().getId(), new DiscordCommandSender(this.delegate, rank, member, channel));
+        }
+        return this.commandSenderMap.get(member.getUser().getId()).setResponseChannel(channel);
     }
 
     private String filterMessage(Message messageData) {
@@ -81,13 +83,13 @@ public class DiscordListener extends ListenerAdapter {
             if (this.colorPermitted.contains(role.getName()))
                 stripColors = false;
         }
+        DiscordCommandSender sender = this.getSender(event.getMember(), event.getTextChannel());
         if (stripColors)
             message = message.replaceAll("#([0-9a-qs-z])", "");
         String authorAttr = event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getAuthor().getName();
         String color = ChatColor.translateAlternateColorCodes('&', this.delegate.convertRoleToMinecraftColor(this.delegate.getTopRole(event.getMember().getRoles())));
-        message = "(" + color + authorAttr + ChatColor.RESET + ") " + message;
-        Tregmine.LOGGER.info("DISCORD " + ChatColor.stripColor(message));
-        this.delegate.getPlugin().broadcast(new TextComponent(message));
+        Tregmine.LOGGER.info("DISCORD " + '(' + authorAttr + ") " + ChatColor.stripColor(message));
+        this.delegate.getPlugin().broadcast(new TextComponent("<"), sender.getChatName(), new TextComponent("> " + message));
     }
 
     @Override

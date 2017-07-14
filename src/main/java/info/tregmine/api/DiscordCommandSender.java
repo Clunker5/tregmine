@@ -8,6 +8,8 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_12_R1.EntityPlayer;
 import org.bukkit.*;
@@ -989,7 +991,14 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
 
     @Override
     public TextComponent getChatName() {
-        return new TextComponent(this.getCustomName());
+        TextComponent returns = new TextComponent(this.getChatNameNoHover());
+        StringBuilder addon = new StringBuilder();
+        addon.append("\n" + ChatColor.AQUA + ChatColor.ITALIC + "Discord" + ChatColor.RESET);
+        addon.append("\n" + ChatColor.GRAY + "Name: " + this.member.getUser().getName() + '#' + this.member.getUser().getDiscriminator());
+        addon.append("\n" + ChatColor.GRAY + "ID: " + this.member.getUser().getId());
+        returns.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(this.getRank().getName(this.discord.getPlugin()) + addon).create()));
+        return returns;
     }
 
     @Override
@@ -999,7 +1008,7 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
 
     @Override
     public String getChatNameNoHover() {
-        return this.getCustomName();
+        return this.discord.getPlugin().getRankColor(this.rank) + this.getCustomName();
     }
 
     @Override
@@ -1274,7 +1283,7 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
 
     @Override
     public Nickname getNickname() {
-        return new Nickname(this.getCustomName());
+        return null;
     }
 
     @Override
@@ -1922,7 +1931,8 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
         return false;
     }
 
-    public void setResponseChannel(MessageChannel channel) {
+    public DiscordCommandSender setResponseChannel(MessageChannel channel) {
         this.responseChannel = channel;
+        return this;
     }
 }
