@@ -590,7 +590,7 @@ public class Tregmine extends JavaPlugin {
         server.getScheduler().cancelTasks(this);
         if (this.discord != null) {
             this.discord.sendShutdownSignal();
-            this.discord.getClient().shutdown(false);
+            this.discord.getClient().shutdown();
         }
         // Add a record of logout to db for all players
 
