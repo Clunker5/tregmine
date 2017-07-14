@@ -52,9 +52,9 @@ public abstract class AbstractCommand implements CommandExecutor {
         return false;
     }
 
-    public void invalidArguments(GenericPlayer player, String arguments) {
-        player.sendMessage(ChatColor.RED + "Invalid arguments passed for /" + this.command + ".");
-        player.sendMessage(ChatColor.RED + "The proper syntax is: " + ChatColor.GOLD + arguments);
+    public boolean invalidArguments(GenericPlayer player, String arguments) {
+        player.sendMessage(new TextComponentBuilder("Usage: " + arguments).setColor(net.md_5.bungee.api.ChatColor.DARK_RED).setBold(true).build());
+        return true;
     }
 
     @Override
