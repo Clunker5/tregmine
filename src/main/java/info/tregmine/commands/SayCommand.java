@@ -32,6 +32,7 @@ public class SayCommand extends AbstractCommand {
 
     @Override
     public boolean handleOther(Server server, String[] args) {
+        if (args.length == 0) return false;
         String msg = argsToMessage(args);
 
         server.broadcastMessage("<" + BLUE + "GOD" + WHITE + "> " + LIGHT_PURPLE + msg);
@@ -47,8 +48,7 @@ public class SayCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage(RED + "WHERE ARE YOUR ARGUMENTS????!!!!");
-            return true;
+            return false;
         }
         Server server = player.getServer();
         String msg = ChatColor.translateAlternateColorCodes('#', argsToMessage(args));

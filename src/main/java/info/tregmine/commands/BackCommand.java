@@ -8,16 +8,12 @@ public class BackCommand extends AbstractCommand {
     Tregmine plugin;
 
     public BackCommand(Tregmine tregmine) {
-        super(tregmine, "back", Tregmine.PermissionDefinitions.STAFF_REQUIRED);
+        super(tregmine, "back", Tregmine.PermissionDefinitions.STAFF_REQUIRED, true);
         plugin = tregmine;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (player.getLastPos() == null) {
             return error(player,  "You don't have a last location!");
         }

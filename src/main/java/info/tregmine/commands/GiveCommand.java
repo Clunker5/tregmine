@@ -14,16 +14,11 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class GiveCommand extends AbstractCommand {
     public GiveCommand(Tregmine tregmine) {
-        super(tregmine, "give", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(tregmine, "give", Tregmine.PermissionDefinitions.ADMIN_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.isInVanillaWorld()) {
-            player.setFireTicks(30);
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length == 0) {
             return false;
         }

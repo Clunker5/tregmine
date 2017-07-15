@@ -10,15 +10,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class HeadCommand extends AbstractCommand {
     public HeadCommand(Tregmine tregmine) {
-        super(tregmine, "head", Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
+        super(tregmine, "head", Tregmine.PermissionDefinitions.BUILDER_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String args[]) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length == 1) {
             ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
             SkullMeta itemMeta = (SkullMeta) item.getItemMeta();

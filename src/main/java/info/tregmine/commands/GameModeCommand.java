@@ -11,17 +11,12 @@ public class GameModeCommand extends AbstractCommand {
     private GameMode mode;
 
     public GameModeCommand(Tregmine tregmine, String name, GameMode mode) {
-        super(tregmine, name, Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
+        super(tregmine, name, Tregmine.PermissionDefinitions.DONATOR_REQUIRED, true);
         this.mode = mode;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.setFireTicks(30);
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (this.mode != null) {
             if (!player.getRank().getPermittedGamemodes().contains(this.mode)) {
                 error(player, "You don't have the permissions to switch to " + this.mode.name().toLowerCase() + "!");

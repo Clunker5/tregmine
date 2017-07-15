@@ -9,15 +9,11 @@ import org.bukkit.World;
 
 public class TeleportToCommand extends AbstractCommand {
     public TeleportToCommand(Tregmine tregmine) {
-        super(tregmine, "tpto", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(tregmine, "tpto", Tregmine.PermissionDefinitions.ADMIN_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length != 3) {
             error(player, "Incorrect parameters passed!");
             return true;

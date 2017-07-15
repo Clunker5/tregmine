@@ -20,16 +20,12 @@ public class TeleportCommand extends AbstractCommand {
     private Tregmine tregmine;
 
     public TeleportCommand(Tregmine tregmine) {
-        super(tregmine, "tp", Tregmine.PermissionDefinitions.SETTLER_REQUIRED);
+        super(tregmine, "tp", Tregmine.PermissionDefinitions.SETTLER_REQUIRED, true);
         this.tregmine = tregmine;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         Rank rank = player.getRank();
         if (args.length != 1) {
             return false;

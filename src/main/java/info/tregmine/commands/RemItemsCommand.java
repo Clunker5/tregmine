@@ -19,16 +19,11 @@ public class RemItemsCommand extends AbstractCommand {
     int taskID;
 
     public RemItemsCommand(Tregmine tregmine) {
-        super(tregmine, "remitems", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(tregmine, "remitems", Tregmine.PermissionDefinitions.ADMIN_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(final GenericPlayer p, String[] args) {
-        if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
-            p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-
         if (args.length != 1) {
             p.sendMessage(ChatColor.GRAY + "Please type /remitems help");
             return true;

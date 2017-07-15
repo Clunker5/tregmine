@@ -9,15 +9,11 @@ import java.util.List;
 
 public class InventoryCommand extends AbstractCommand {
     public InventoryCommand(Tregmine tregmine) {
-        super(tregmine, "inv", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(tregmine, "inv", Tregmine.PermissionDefinitions.ADMIN_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length == 0) {
             error(player, "Incorrect usage:");
             player.sendMessage(ChatColor.AQUA + "/inv inspect <name> - Inspect someones inventory");

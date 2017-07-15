@@ -13,16 +13,12 @@ public class KillCommand extends AbstractCommand {
     Tregmine t;
 
     public KillCommand(Tregmine instance) {
-        super(instance, "kill", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
+        super(instance, "kill", Tregmine.PermissionDefinitions.SENIOR_REQUIRED, true);
         t = instance;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length != 1) {
             error(player, "Invalid arguments - Use /kill player");
             return true;

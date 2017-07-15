@@ -35,7 +35,7 @@ public class FillCommand extends AbstractCommand {
     }
 
     public FillCommand(Tregmine tregmine, String command) {
-        super(tregmine, command, Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
+        super(tregmine, command, Tregmine.PermissionDefinitions.BUILDER_REQUIRED, true);
 
         undoHistory = new History();
         copyHistory = new History();
@@ -43,10 +43,6 @@ public class FillCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length == 0) {
             error(player, "Please specify the material");
             return true;

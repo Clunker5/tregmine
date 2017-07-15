@@ -33,10 +33,7 @@ public class BrushCommand extends AbstractCommand implements Listener {
 
     @Override
     public boolean handlePlayer(GenericPlayer p, String[] args) {
-        if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
-            p.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
+
 
         // Check how many arguments on the command
         if (args.length != 2) {

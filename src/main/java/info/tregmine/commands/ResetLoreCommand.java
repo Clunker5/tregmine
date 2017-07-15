@@ -15,16 +15,12 @@ public class ResetLoreCommand extends AbstractCommand {
     GenericPlayer player;
 
     public ResetLoreCommand(Tregmine instance) {
-        super(instance, "resetlore", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
+        super(instance, "resetlore", Tregmine.PermissionDefinitions.SENIOR_REQUIRED, true);
         plugin = instance;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer sender, String[] args) {
-        if (sender.getWorld().getName().equalsIgnoreCase("vanilla") || sender.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         player = sender;
         Inventory inv = player.getInventory();
         ItemStack[] contents = inv.getContents();

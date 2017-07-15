@@ -11,7 +11,7 @@ public class FlyCommand extends AbstractCommand {
     private Tregmine tregmine;
 
     public FlyCommand(Tregmine tregmine) {
-        super(tregmine, "fly", Tregmine.PermissionDefinitions.DONATOR_REQUIRED);
+        super(tregmine, "fly", Tregmine.PermissionDefinitions.DONATOR_REQUIRED, true);
         this.tregmine = tregmine;
     }
 
@@ -20,10 +20,6 @@ public class FlyCommand extends AbstractCommand {
         if (player.hasFlag(GenericPlayer.Flags.HARDWARNED) || player.hasFlag(GenericPlayer.Flags.SOFTWARNED)) {
             player.sendMessage("You are warned and are not allowed to fly.");
             player.setAllowFlight(false);
-        }
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
         }
 
         if (player.hasFlag(GenericPlayer.Flags.FLY_ENABLED)) {

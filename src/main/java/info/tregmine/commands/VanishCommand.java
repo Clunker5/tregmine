@@ -14,16 +14,11 @@ import static org.bukkit.ChatColor.YELLOW;
 
 public class VanishCommand extends AbstractCommand {
     public VanishCommand(Tregmine tregmine) {
-        super(tregmine, "vanish", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(tregmine, "vanish", Tregmine.PermissionDefinitions.ADMIN_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-
         if (args.length == 0) {
             if (player.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
                 player.sendMessage(DARK_AQUA + "You are currently invisible.");

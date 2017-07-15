@@ -14,16 +14,11 @@ import static org.bukkit.ChatColor.RED;
 
 public class SetSpawnerCommand extends AbstractCommand {
     public SetSpawnerCommand(Tregmine tregmine) {
-        super(tregmine, "setspawner", Tregmine.PermissionDefinitions.BUILDER_REQUIRED);
+        super(tregmine, "setspawner", Tregmine.PermissionDefinitions.BUILDER_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
-
         if (args.length != 1) {
             error(player, "Type /spawner <mobname> whilst pointing " + "at a spawner");
             return false;

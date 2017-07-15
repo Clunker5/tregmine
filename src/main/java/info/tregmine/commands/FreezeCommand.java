@@ -10,16 +10,12 @@ public class FreezeCommand extends AbstractCommand {
     private Tregmine plugin;
 
     public FreezeCommand(Tregmine tregmine) {
-        super(tregmine, "freeze", Tregmine.PermissionDefinitions.SENIOR_REQUIRED);
+        super(tregmine, "freeze", Tregmine.PermissionDefinitions.SENIOR_REQUIRED, true);
         plugin = tregmine;
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length != 1) {
             error(player, "Invalid arguments! Use /freeze <player>");
             return true;

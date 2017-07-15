@@ -16,15 +16,11 @@ import static org.bukkit.ChatColor.*;
 
 public class ItemCommand extends AbstractCommand {
     public ItemCommand(Tregmine tregmine) {
-        super(tregmine, "item", Tregmine.PermissionDefinitions.ADMIN_REQUIRED);
+        super(tregmine, "item", Tregmine.PermissionDefinitions.ADMIN_REQUIRED, true);
     }
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        if (player.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
-        }
         if (args.length == 0) {
             return false;
         }
