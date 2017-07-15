@@ -1322,7 +1322,9 @@ public class TregminePlayer extends PlayerDelegate implements GenericPlayer {
 
     @Override
     public void refreshPlayerList() {
-        this.getDelegate().setPlayerListName(this.getChatNameNoHover().length() > 16 ? this.getChatNameNoHover().substring(0, 15) : this.getChatNameNoHover());
+        if (this.getDelegate() != null) {
+            this.getDelegate().setPlayerListName(this.getChatNameNoHover().length() > 16 ? this.getChatNameNoHover().substring(0, 15) : this.getChatNameNoHover());
+        }
     }
 
     @Override
