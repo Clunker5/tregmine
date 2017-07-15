@@ -16,6 +16,7 @@ import info.tregmine.tools.*;
 import info.tregmine.zones.Lot;
 import info.tregmine.zones.Zone;
 import info.tregmine.zones.ZoneWorld;
+import net.coreprotect.worldedit.WorldEdit;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -87,6 +89,7 @@ public class Tregmine extends JavaPlugin {
     private World world2nether;
     private World world2end;
     private boolean secondaryworld;
+
     // Statistics
     private int onlineGuards = 0;
     private int onlineJuniors = 0;
@@ -1070,6 +1073,10 @@ public class Tregmine extends JavaPlugin {
         this.onlineJuniors = j;
         this.onlineSeniors = s;
         this.onlineTeachers = t;
+    }
+
+    public void addPermissions(PermissionAttachment attachment, List<String> permissions) {
+        permissions.forEach(permission -> attachment.setPermission(permission, true));
     }
 
     public enum PermissionDefinitions {

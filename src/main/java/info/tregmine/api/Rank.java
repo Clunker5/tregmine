@@ -561,4 +561,12 @@ public enum Rank {
         return this != BUILDER && this != JUNIOR_ADMIN && this != SENIOR_ADMIN;
     }
 
+    public boolean WEGeneral() {
+        return this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+
+    public boolean WENavigation() {
+        return this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+
 }

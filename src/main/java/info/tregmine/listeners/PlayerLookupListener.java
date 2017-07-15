@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -120,6 +121,46 @@ public class PlayerLookupListener implements Listener {
             attachment.setPermission("coreprotect.reload", true);
         }
         attachment.setPermission("coreprotect.help", true);
+
+        if (player.getRank().WEGeneral()) {
+            this.plugin.addPermissions(attachment, Arrays.asList(new String[] {
+                "worldedit.chunkinfo",
+                "worldedit.listchunks",
+                "worldedit.clipboard.*",
+                "worldedit.schematic.*",
+                "worldedit.generation.*",
+                "worldedit.history.*",
+                "worldedit.region.*",
+                "worldedit.selection.*",
+                "worldedit.wand",
+                "worldedit.analysis.*",
+                "worldedit.snapshots.*",
+                "worldedit.tool.*",
+                "worldedit.brush.*",
+                "worldedit.fill.*",
+                "worldedit.fixlava",
+                "worldedit.fixwater",
+                "worldedit.removeabove",
+                "worldedit.removebelow",
+                "worldedit.removenear",
+                "worldedit.replacenear",
+                "worldedit.snow",
+                "worldedit.thaw",
+                "worldedit.green",
+                "worldedit.extinguish",
+                "worldedit.calc",
+                "worldedit.fill",
+                "worldedit.biome.*"
+            }));
+        }
+
+        if (player.getRank().WENavigation()) {
+            this.plugin.addPermissions(attachment, Arrays.asList(new String[] {
+                "worldedit.regen",
+                "worldedit.navigation.*"
+            }));
+        }
+        attachment.setPermission("worldedit.help", true);
 
         String aliasList = null;
         try (IContext ctx = plugin.createContext()) {
