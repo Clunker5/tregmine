@@ -54,12 +54,12 @@ public class DiscordListener extends ListenerAdapter {
     }
 
     private DiscordCommandSender getSender(Member member, TextChannel channel) {
+        Rank rank = Rank.fromDiscordString(this.delegate.getTopRole(member.getRoles()).getName());
+        if (rank == null) rank = Rank.RESIDENT;
         if (!this.commandSenderMap.containsKey(member.getUser().getId())) {
-            Rank rank = Rank.fromDiscordString(this.delegate.getTopRole(member.getRoles()).getName());
-            if (rank == null) rank = Rank.RESIDENT;
             this.commandSenderMap.put(member.getUser().getId(), new DiscordCommandSender(this.delegate, rank, member, channel));
         }
-        return this.commandSenderMap.get(member.getUser().getId()).setResponseChannel(channel);
+        return this.commandSenderMap.get(member.getUser().getId()).setResponseChannel(channel).refreshRank(rank);
     }
 
     private String filterMessage(Message messageData) {
