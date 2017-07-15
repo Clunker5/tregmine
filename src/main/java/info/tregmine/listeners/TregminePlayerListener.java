@@ -343,9 +343,7 @@ public class TregminePlayerListener implements Listener {
             event.getPlayer().kickPlayer("error loading profile!");
             return;
         }
-
-        player.sendMessage(new TextComponent(net.md_5.bungee.api.ChatColor.AQUA + "This server is running "), this.plugin.version);
-
+        
         Rank rank = player.getRank();
 
         // Handle invisibility, if set
