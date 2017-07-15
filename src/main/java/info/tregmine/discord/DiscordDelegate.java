@@ -125,7 +125,7 @@ public class DiscordDelegate {
     }
 
     public String convertRoleToMinecraftColor(Role role) {
-        if (role == null) {
+        if (role == null || role.getColor() == null) {
             return "";
         }
         String before = String.format("%06x", role.getColor().getRGB() & 0x00FFFFFF).toUpperCase();
@@ -183,6 +183,6 @@ public class DiscordDelegate {
             else if (highestRole.getPosition() < role.getPosition())
                 highestRole = role;
         }
-        return highestRole;
+        return highestRole == null ? this.chatChannel.getGuild().getRolesByName("@everyone", true).get(0) : highestRole;
     }
 }
