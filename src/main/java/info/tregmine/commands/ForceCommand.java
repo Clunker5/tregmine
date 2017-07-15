@@ -55,7 +55,7 @@ public class ForceCommand extends AbstractCommand {
 
         for (GenericPlayer players : tregmine.getOnlinePlayers()) {
             if (oldChannel.equalsIgnoreCase(players.getChatChannel())) {
-                players.sendMessage(new TextComponent(player.decideVS(players) + "" + ChatColor.YELLOW + " and "
+                players.sendMessage(player.decideVS(players), new TextComponent(ChatColor.YELLOW + " and "
                 ), toPlayer.getChatName(), new TextComponent(ChatColor.YELLOW + " have left channel " + oldChannel));
                 players.sendMessage(player.decideVS(players), new TextComponent(YELLOW + " and "),
                         toPlayer.decideVS(players), new TextComponent(YELLOW + " have left channel " + oldChannel));
