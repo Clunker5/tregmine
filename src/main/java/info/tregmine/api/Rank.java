@@ -557,4 +557,8 @@ public enum Rank {
         return this == GUARDIAN || this == CODER || this == BUILDER || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
     }
 
+    public boolean canParticipateInEconomy() {
+        return this != BUILDER && this != JUNIOR_ADMIN && this != SENIOR_ADMIN;
+    }
+
 }

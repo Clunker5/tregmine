@@ -26,8 +26,8 @@ public class TregmineBlockListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-
         GenericPlayer player = plugin.getPlayer(event.getPlayer());
+        if (!player.getRank().canParticipateInEconomy()) return;
         Block block = event.getBlock();
         Material material = block.getType();
 
