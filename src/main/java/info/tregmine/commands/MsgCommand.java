@@ -51,8 +51,7 @@ public class MsgCommand extends AbstractCommand {
                 List<GenericPlayer> candidates = tregmine.matchPlayer(possiblePlayer);
 
                 if (candidates.size() != 1) {
-                    player.sendNotification(Notification.COMMAND_FAIL,
-                            new TextComponent(ChatColor.RED + "No player found by the name of " + possiblePlayer));
+                    error(player, "No player found by the name of " + possiblePlayer);
                     return true;
                 }
 
@@ -75,8 +74,7 @@ public class MsgCommand extends AbstractCommand {
                 if (!receivingPlayer.hasFlag(GenericPlayer.Flags.INVISIBLE) || player.getRank().canSeeHiddenInfo()) {
                     player.sendMessage(this.toFlag, receivingPlayer.decideVS(player), messageTC);
                 } else {
-                    player.sendNotification(Notification.COMMAND_FAIL,
-                            new TextComponent(ChatColor.RED + "No player found by the name of " + possiblePlayer));
+                    error(player, "No player found by the name of " + possiblePlayer);
                 }
                 receivingPlayer.setLastMessenger(player.getName());
                 // Send message to recipient

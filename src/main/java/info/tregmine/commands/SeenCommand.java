@@ -55,7 +55,7 @@ public class SeenCommand extends AbstractCommand {
             return true;
         }
         if (target == null) {
-            player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+            error(player, "Could not find player: " + ChatColor.YELLOW + args[0]);
             return true;
         }
 

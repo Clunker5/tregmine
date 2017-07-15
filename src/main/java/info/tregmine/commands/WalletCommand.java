@@ -2,10 +2,13 @@ package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
+import info.tregmine.api.Rank;
+import info.tregmine.api.TextComponentBuilder;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IWalletDAO;
+import net.md_5.bungee.api.ChatColor;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -27,7 +30,7 @@ public class WalletCommand extends AbstractCommand {
             if (balance >= 0) {
                 player.sendMessage("You have " + GOLD + FORMAT.format(balance) + WHITE + " Tregs.");
             } else {
-                player.sendMessage(RED + "An error occured.");
+                error(player, "An error occured.");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -59,7 +62,7 @@ public class WalletCommand extends AbstractCommand {
                 LOGGER.info(amount + ":TREG_DONATED " + player.getName() + "(" + walletDAO.balance(player) + ")"
                         + " => " + target.getName() + "(" + walletDAO.balance(target) + ")");
             } else {
-                player.sendMessage(RED + "You cant give more then you have!");
+                error(player, "You cant give more then you have!");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -91,7 +94,7 @@ public class WalletCommand extends AbstractCommand {
                 LOGGER.info(amount + ":TREG " + player.getName() + "(" + walletDAO.balance(player) + ")" + " => "
                         + target.getName() + "(" + walletDAO.balance(target) + ")");
             } else {
-                player.sendMessage(RED + "You cant give more then you have!");
+                error(player, "You cant give more then you have!");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);
@@ -103,7 +106,7 @@ public class WalletCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage(RED + "Incorrect usage! Try:");
+            error(player, "Incorrect usage! Try:");
             player.sendMessage(AQUA + "/wallet tell <player>");
             player.sendMessage(AQUA + "/wallet balance");
             player.sendMessage(AQUA + "/wallet donate <player> <amount>");
@@ -115,7 +118,7 @@ public class WalletCommand extends AbstractCommand {
 
         // inform people that syntax has changed
         if ("tell".equalsIgnoreCase(cmd) && args.length == 1) {
-            player.sendMessage(RED + "Usage: /wallet tell <player>");
+            error(player, "Usage: /wallet tell <player>");
             return true;
         }
         // new version with player parameter
@@ -133,7 +136,7 @@ public class WalletCommand extends AbstractCommand {
 
             List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
-                player.sendMessage(RED + "Unknown Player: " + args[1]);
+                error(player, "Unknown Player: " + args[1]);
                 return true;
             }
 
@@ -141,7 +144,11 @@ public class WalletCommand extends AbstractCommand {
 
             // Sneaky ;)
             if (target.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
-                player.sendMessage(RED + "Unknown Player: " + args[1]);
+                error(player, "Unknown Player: " + args[1]);
+                return true;
+            }
+            if (player.getRank() == Rank.BUILDER || target.getRank() == Rank.BUILDER) {
+                player.sendMessage(new TextComponentBuilder("Builders cannot participate in the economy").setColor(ChatColor.DARK_RED).setBold(true).build());
                 return true;
             }
             return donate(player, target, amount);
@@ -155,14 +162,18 @@ public class WalletCommand extends AbstractCommand {
 
             List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
-                player.sendMessage(RED + "Unknown Player: " + args[1]);
+                error(player, "Unknown Player: " + args[1]);
                 return true;
             }
 
             GenericPlayer target = candidates.get(0);
 
             if (target.hasFlag(GenericPlayer.Flags.INVISIBLE)) {
-                player.sendMessage(RED + "Unknown Player: " + args[1]);
+                error(player, "Unknown Player: " + args[1]);
+                return true;
+            }
+            if (player.getRank() == Rank.BUILDER || target.getRank() == Rank.BUILDER) {
+                player.sendMessage(new TextComponentBuilder("Builders cannot participate in the economy").setColor(ChatColor.DARK_RED).setBold(true).build());
                 return true;
             }
 
@@ -178,11 +189,12 @@ public class WalletCommand extends AbstractCommand {
     }
 
     private boolean tell(GenericPlayer player, String name) {
-        GenericPlayer target = tregmine.getPlayer(name);
-        if (target == null) {
-            player.sendMessage(RED + "Usage: /wallet tell <player>");
+        List<GenericPlayer> targets = tregmine.matchPlayer(name);
+        if (targets.size() != 1) {
+            error(player, "Usage: /wallet tell <player>");
             return true;
         }
+        GenericPlayer target = targets.get(0);
 
         try (IContext ctx = tregmine.createContext()) {
             IWalletDAO walletDAO = ctx.getWalletDAO();
@@ -191,9 +203,9 @@ public class WalletCommand extends AbstractCommand {
             if (balance >= 0) {
                 target.sendMessage(
                         player.getName() + AQUA + " has " + GOLD + FORMAT.format(balance) + AQUA + " Tregs.");
-                player.sendMessage(" You have " + GOLD + FORMAT.format(balance) + AQUA + " Tregs.");
+                player.sendMessage("You have " + GOLD + FORMAT.format(balance) + AQUA + " Tregs.");
             } else {
-                player.sendMessage(RED + "An error occured.");
+                error(player, "An error occured.");
             }
         } catch (DAOException e) {
             throw new RuntimeException(e);

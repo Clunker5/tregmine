@@ -90,11 +90,11 @@ public class WhoCommand extends AbstractCommand {
         GenericPlayer whoPlayer = candidates.get(0);
 
         if (whoPlayer == null) {
-            player.sendMessage(RED + "That player is not online right now.");
+            error(player, "That player is not online right now.");
             return true;
         }
         if (whoPlayer.isOnline() != true) {
-            player.sendMessage(RED + "That player is not online right now.");
+            error(player, "That player is not online right now.");
             return true;
         }
 

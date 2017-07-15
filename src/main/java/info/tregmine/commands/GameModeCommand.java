@@ -24,7 +24,7 @@ public class GameModeCommand extends AbstractCommand {
         }
         if (this.mode != null) {
             if (!player.getRank().getPermittedGamemodes().contains(this.mode)) {
-                player.sendMessage(ChatColor.RED + "You don't have the permissions to switch to " + this.mode.name().toLowerCase() + "!");
+                error(player, "You don't have the permissions to switch to " + this.mode.name().toLowerCase() + "!");
                 return true;
             }
             player.setGameMode(mode);
@@ -49,11 +49,11 @@ public class GameModeCommand extends AbstractCommand {
             try {
                 switchTo = GameMode.valueOf(args[0].toUpperCase());
             } catch (IllegalArgumentException e) {
-                player.sendMessage(ChatColor.RED + "The specified gamemode does not exist!");
+                error(player, "The specified gamemode does not exist!");
                 return true;
             }
             if (!player.getRank().getPermittedGamemodes().contains(switchTo)) {
-                player.sendMessage(ChatColor.RED + "You don't have the permissions to switch to " + switchTo.name().toLowerCase() + "!");
+                error(player, "You don't have the permissions to switch to " + switchTo.name().toLowerCase() + "!");
                 return true;
             }
             player.setGameMode(switchTo);

@@ -45,7 +45,7 @@ public class LotCommand extends AbstractCommand {
         String name = args[1] + "." + tzone.getName();
 
         if (world.lotExists(name)) {
-            player.sendMessage(RED + "A lot named " + name + " does already exist.");
+            error(player, "A lot named " + name + " does already exist.");
             return;
         }
 
@@ -53,7 +53,7 @@ public class LotCommand extends AbstractCommand {
 
         GenericPlayer victim = tregmine.getPlayerOffline(playerName);
         if (victim == null) {
-            player.sendMessage(RED + "Player " + playerName + " was not found.");
+            error(player, "Player " + playerName + " was not found.");
             return;
         }
 
@@ -96,7 +96,7 @@ public class LotCommand extends AbstractCommand {
             try {
                 world.addLot(lot);
             } catch (IntersectionException e) {
-                player.sendMessage(RED + "The specified rectangle intersects an existing lot.");
+                error(player, "The specified rectangle intersects an existing lot.");
                 return;
             }
 
@@ -125,7 +125,7 @@ public class LotCommand extends AbstractCommand {
 
         Lot lot = world.getLot(name);
         if (lot == null) {
-            player.sendMessage(RED + "No lot named " + name + " found.");
+            error(player, "No lot named " + name + " found.");
             return;
         }
 
@@ -138,7 +138,7 @@ public class LotCommand extends AbstractCommand {
         } else if (player.getRank().canModifyZones()) {
             // Admins etc.
         } else {
-            player.sendMessage(RED + "You are not an owner of lot " + lot.getName() + ".");
+            error(player, "You are not an owner of lot " + lot.getName() + ".");
             return;
         }
 
@@ -171,12 +171,12 @@ public class LotCommand extends AbstractCommand {
 
         Lot lot = world.getLot(name);
         if (lot == null) {
-            player.sendMessage(RED + "No lot named " + name + " found.");
+            error(player, "No lot named " + name + " found.");
             return;
         }
 
         if (!lot.isOwner(player)) {
-            player.sendMessage(RED + "Must be a lot owner!");
+            error(player, "Must be a lot owner!");
             return;
         }
 
@@ -189,7 +189,7 @@ public class LotCommand extends AbstractCommand {
         }
 
         if (flag == null) {
-            player.sendMessage(RED + "Flag not found! Try the following:");
+            error(player, "Flag not found! Try the following:");
 
             for (Lot.Flags i : Lot.Flags.values()) {
                 player.sendMessage(AQUA + i.name());
@@ -199,7 +199,7 @@ public class LotCommand extends AbstractCommand {
 
         if (flag == Lot.Flags.PVP && (player.getRank() != Rank.JUNIOR_ADMIN && player.getRank() != Rank.SENIOR_ADMIN)) {
 
-            player.sendMessage(RED + "This is an admin only flag, Please contact an admin!");
+            error(player, "This is an admin only flag, Please contact an admin!");
             return;
         }
 
@@ -217,7 +217,7 @@ public class LotCommand extends AbstractCommand {
                     player.sendMessage(GREEN + "Removed flag: " + flag.name());
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "Please see an admin to make a bank");
+                error(player, "Please see an admin to make a bank");
             }
         } else {
             if (value) {
@@ -251,7 +251,7 @@ public class LotCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "Incorrect usage! Try:");
+            error(player, "Incorrect usage! Try:");
             player.sendMessage(ChatColor.AQUA + "/lot create <lot name> <player>");
             player.sendMessage(ChatColor.AQUA + "/lot addowner <lot name> <player>");
             player.sendMessage(ChatColor.AQUA + "/lot delowner <lot name> <owner>");
@@ -295,7 +295,7 @@ public class LotCommand extends AbstractCommand {
 
         Lot lot = world.getLot(name);
         if (lot == null) {
-            player.sendMessage(RED + "No lot named " + name + " found.");
+            error(player, "No lot named " + name + " found.");
             return;
         }
 
@@ -308,7 +308,7 @@ public class LotCommand extends AbstractCommand {
         } else if (player.getRank().canModifyZones()) {
             // Admins etc.
         } else {
-            player.sendMessage(RED + "You are not an owner of lot " + lot.getName() + ".");
+            error(player, "You are not an owner of lot " + lot.getName() + ".");
             return;
         }
 
@@ -320,7 +320,7 @@ public class LotCommand extends AbstractCommand {
             candidate = tregmine.getPlayerOffline(args[2]);
             if (candidate == null) {
                 // give up
-                player.sendMessage(RED + "Player " + args[2] + " was not found.");
+                error(player, "Player " + args[2] + " was not found.");
                 return;
             }
         } else {

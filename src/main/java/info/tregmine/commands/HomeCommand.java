@@ -30,7 +30,7 @@ public class HomeCommand extends AbstractCommand {
         Location playerLoc = player.getLocation();
         World playerWorld = playerLoc.getWorld();
         if ("world_the_end".equalsIgnoreCase(playerWorld.getName())) {
-            player.sendMessage(RED + "You can't set your home in The End");
+            error(player, "You can't set your home in The End");
             return true;
         }
 
@@ -60,7 +60,7 @@ public class HomeCommand extends AbstractCommand {
             return deleteHome(player, args[1]);
         } else if ("go".equalsIgnoreCase(args[0])) {
             if (args.length < 2) {
-                player.sendMessage(RED + "Usage: /home go <name>.");
+                error(player, "Usage: /home go <name>.");
                 return true;
             }
 
@@ -77,17 +77,17 @@ public class HomeCommand extends AbstractCommand {
             } else if (args.length == 2) {
                 return teleportTo(player, args[1], "default");
             } else if (args.length < 2) {
-                player.sendMessage(RED + "Usage: /home to <player> <name>");
+                error(player, "Usage: /home to <player> <name>");
                 return true;
             }
         } else {
-            player.sendMessage(RED + "Incorrect Usage:");
-            player.sendMessage(RED + "/home go <home name> - To go to a home");
-            player.sendMessage(RED + "/home save <home name> - To save a home");
-            player.sendMessage(RED + "/home delete <home name> - To delete a home");
-            player.sendMessage(RED + "/home list - To list your homes");
+            error(player, "Incorrect Usage:");
+            error(player, "/home go <home name> - To go to a home");
+            error(player, "/home save <home name> - To save a home");
+            error(player, "/home delete <home name> - To delete a home");
+            error(player, "/home list - To list your homes");
             if (player.getRank().canVisitHomes()) {
-                player.sendMessage(RED + "/home to <player> <name>");
+                error(player, "/home to <player> <name>");
             }
         }
 
@@ -103,7 +103,7 @@ public class HomeCommand extends AbstractCommand {
 
             target = tregmine.getPlayerOffline(playerName);
             if (target == null) {
-                player.sendMessage(RED + playerName + " was not found in database.");
+                error(player, playerName + " was not found in database.");
                 return true;
             }
         }
@@ -142,7 +142,7 @@ public class HomeCommand extends AbstractCommand {
         Location playerLoc = player.getLocation();
         World playerWorld = playerLoc.getWorld();
         if ("world_the_end".equalsIgnoreCase(playerWorld.getName())) {
-            player.sendMessage(RED + "You can't set your home in The End");
+            error(player, "You can't set your home in The End");
             return true;
         }
 
@@ -151,7 +151,7 @@ public class HomeCommand extends AbstractCommand {
             List<String> homes = homeDAO.getHomeNames(player.getId());
             int limit = player.getRank().getHomeLimit();
             if (homes.size() > limit) {
-                player.sendMessage(RED + "You can't have more than " + limit + " homes.");
+                error(player, "You can't have more than " + limit + " homes.");
                 return true;
             }
 
@@ -175,7 +175,7 @@ public class HomeCommand extends AbstractCommand {
         }
 
         if (loc == null) {
-            player.sendMessage(RED + "You don't have a home set. Set one with " + ChatColor.AQUA + "/home save");
+            error(player, "You don't have a home set. Set one with " + ChatColor.AQUA + "/home save");
             return true;
         }
 
@@ -185,7 +185,7 @@ public class HomeCommand extends AbstractCommand {
 
         if (world.isChunkLoaded(chunk)) {
             if (!world.getName().equalsIgnoreCase(player.getWorld().getName())) {
-                player.sendMessage(RED + "You can't use a home thats in another world!");
+                error(player, "You can't use a home thats in another world!");
                 return true;
             }
 
@@ -193,7 +193,7 @@ public class HomeCommand extends AbstractCommand {
 
             player.sendMessage(AQUA + "Hoci poci, little gnome. Magic worked, " + "you're in your home!");
         } else {
-            player.sendMessage(RED + "Loading your home chunk failed, try /home again.");
+            error(player, "Loading your home chunk failed, try /home again.");
         }
 
         return true;
@@ -201,12 +201,12 @@ public class HomeCommand extends AbstractCommand {
 
     private boolean teleportTo(GenericPlayer player, String playerName, String name) {
         if (!player.getRank().canVisitHomes()) {
-            player.sendMessage(RED + "You can't teleport to other player's homes");
+            error(player, "You can't teleport to other player's homes");
         }
 
         GenericPlayer target = tregmine.getPlayerOffline(playerName);
         if (target == null) {
-            player.sendMessage(RED + playerName + " was not found in database.");
+            error(player, playerName + " was not found in database.");
             return true;
         }
 
@@ -219,7 +219,7 @@ public class HomeCommand extends AbstractCommand {
         }
 
         if (loc == null) {
-            player.sendMessage(RED + "Telogric lift malfunctioned. Teleportation failed.");
+            error(player, "Telogric lift malfunctioned. Teleportation failed.");
             return true;
         }
 
@@ -233,7 +233,7 @@ public class HomeCommand extends AbstractCommand {
             player.sendMessage(AQUA + "Like a drunken gnome, you fly across the world to " + playerName
                     + "'s home. Try not to hit any birds.");
         } else {
-            player.sendMessage(RED + "Loading of home chunk failed, try /home again");
+            error(player, "Loading of home chunk failed, try /home again");
         }
 
         return true;

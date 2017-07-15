@@ -15,7 +15,7 @@ public class WeatherCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName() == "vanilla") {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+            error(player, "You cannot use that command in this world!");
             return true;
         }
         if (args.length != 1) {

@@ -41,12 +41,11 @@ public class SellCommand extends AbstractCommand implements Listener {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (this.tregmine.getConfig().getBoolean("general.economy.minefortregs")) {
-            player.sendMessage(
-                    ChatColor.RED + "The server has decided to use the mining system to obtain tregs.");
+            error(player, "The server has decided to use the mining system to obtain tregs.");
             return true;
         }
         if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
-            player.sendMessage(RED + "A trade is already in progress!");
+            error(player, "A trade is already in progress!");
             return true;
         }
 
@@ -94,7 +93,7 @@ public class SellCommand extends AbstractCommand implements Listener {
                     ItemMeta meta = stack.getItemMeta();
                     List<String> lore = meta.getLore();
                     if (lore.get(0).contains("CREATIVE") || lore.get(0).contains("SURVIVAL")) {
-                        player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD
+                        error(player, "" + ChatColor.BOLD
                                 + "You CANNOT sell illegal items. The value for the " + material.toString()
                                 + " has been set to 0.");
                         amount = 0;
@@ -197,7 +196,7 @@ public class SellCommand extends AbstractCommand implements Listener {
 
         player.setChatState(GenericPlayer.ChatState.CHAT);
         inventories.remove(player);
-        player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
+        error(player, "You just lost your /sell inventory! Now that was silly...");
     }
 
     @EventHandler
@@ -208,6 +207,6 @@ public class SellCommand extends AbstractCommand implements Listener {
 
         player.setChatState(GenericPlayer.ChatState.CHAT);
         inventories.remove(player);
-        player.sendMessage(ChatColor.RED + "You just lost your /sell inventory! Now that was silly...");
+        error(player, "You just lost your /sell inventory! Now that was silly...");
     }
 }

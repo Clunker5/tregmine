@@ -17,7 +17,7 @@ public class SupportCommand extends AbstractCommand {
         super(tregmine, "support");
     }
 
-    public void email(String text, GenericPlayer p) {
+    public void email(String text, GenericPlayer player) {
         final String username = tregmine.getConfig().getString("support.user");
         final String password = tregmine.getConfig().getString("support.password");
         final List<?> to = tregmine.getConfig().getList("support.to");
@@ -44,13 +44,13 @@ public class SupportCommand extends AbstractCommand {
             }
             Message message = new MimeMessage(session);
             message.setRecipients(javax.mail.Message.RecipientType.TO, addressTo);
-            message.setSubject("[Help Request] from " + p.getName());
+            message.setSubject("[Help Request] from " + player.getName());
             message.setText(
-                    "Help request from: " + p.getName() + " at " + time + "\n" + "\n" + "Message: " + text + "\n");
+                    "Help request from: " + player.getName() + " at " + time + "\n" + "\n" + "Message: " + text + "\n");
             Transport.send(message);
-            p.sendMessage(ChatColor.GREEN + "Help request sent, we will get back to you ASAP :)");
+            player.sendMessage(ChatColor.GREEN + "Help request sent, we will get back to you ASAP :)");
         } catch (MessagingException e) {
-            p.sendMessage(ChatColor.RED + "Error sending message, please try again.");
+            error(player, "Error sending message, please try again.");
             throw new RuntimeException(e);
         }
     }

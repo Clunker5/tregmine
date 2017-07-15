@@ -38,7 +38,7 @@ public class ReplyCommand extends AbstractCommand {
             String lastMessenger = player.getLastMessenger();
 
             if (lastMessenger == null || lastMessenger.equalsIgnoreCase("")) {
-                player.sendMessage(ChatColor.RED + "No one has messaged you");
+                error(player, "No one has messaged you");
                 return true;
             }
 
@@ -48,9 +48,7 @@ public class ReplyCommand extends AbstractCommand {
                 List<GenericPlayer> candidates = tregmine.matchPlayer(lastMessenger);
 
                 if (candidates.size() != 1) {
-                    player.sendNotification(Notification.COMMAND_FAIL,
-                            new TextComponent(ChatColor.RED + "No player found by the name of " + lastMessenger));
-                    return true;
+                    return error(player, "No player found by the name of " + lastMessenger);
                 }
 
                 GenericPlayer receivingPlayer = candidates.get(0);
@@ -82,7 +80,7 @@ public class ReplyCommand extends AbstractCommand {
             }
 
         } else {
-            player.sendMessage(ChatColor.RED + "You need to type a message!");
+            error(player, "You need to type a message!");
         }
         return true;
     }

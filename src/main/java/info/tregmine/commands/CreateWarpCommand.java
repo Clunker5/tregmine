@@ -22,7 +22,7 @@ public class CreateWarpCommand extends AbstractCommand {
 
         String name = args[0];
         if (name.equalsIgnoreCase("irl")) {
-            player.sendMessage(ChatColor.RED + "Warp already exists!");
+            error(player, "Warp already exists!");
             return true;
         }
         try (IContext ctx = tregmine.createContext()) {
@@ -30,7 +30,7 @@ public class CreateWarpCommand extends AbstractCommand {
 
             Warp foundWarp = warpDAO.getWarp(args[0], tregmine.getServer());
             if (foundWarp != null) {
-                player.sendMessage(ChatColor.RED + "Warp already exists!");
+                error(player, "Warp already exists!");
                 return true;
             }
 

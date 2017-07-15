@@ -28,7 +28,7 @@ public class CreateMobCommand extends AbstractCommand {
             String mobName = args[0];
             mobType = EntityType.valueOf(mobName.toUpperCase());
         } catch (Exception e) {
-            player.sendMessage(RED + "Sorry, that mob doesn't exist.");
+            error(player, "Sorry, that mob doesn't exist.");
         }
 
         if (mobType == null) {

@@ -42,7 +42,7 @@ public class DatabaseToolCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        player.sendMessage(ChatColor.RED + "Please use this command from the console.");
+        error(player, "Please use this command from the console.");
         return true;
     }
 

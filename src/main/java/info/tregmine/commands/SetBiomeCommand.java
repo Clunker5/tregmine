@@ -32,7 +32,7 @@ public class SetBiomeCommand extends AbstractCommand {
         Block b2 = player.getFillBlock2();
 
         if (b1 == null || b2 == null) {
-            player.sendMessage(RED + "You must select 2 corners!");
+            error(player, "You must select 2 corners!");
             return true;
         }
 
@@ -47,8 +47,8 @@ public class SetBiomeCommand extends AbstractCommand {
         z = minZ;
 
         if (args.length != 1) {
-            player.sendMessage(RED + "Correct usage: /setbiome <biome>");
-            player.sendMessage(RED + "For a list of availiable biomes type /setbiome help");
+            error(player, "Correct usage: /setbiome <biome>");
+            error(player, "For a list of availiable biomes type /setbiome help");
             return true;
         }
 
@@ -67,8 +67,8 @@ public class SetBiomeCommand extends AbstractCommand {
                 }
                 player.sendMessage(GREEN + "Biome successfully changed to " + args[0].toLowerCase() + "!");
             } catch (Exception error) {
-                player.sendMessage(RED + "An error has occured, Please type " + GRAY + "/setbiome help");
-                player.sendMessage(RED + "for a list of valid biomes.");
+                error(player, "An error has occured, Please type " + GRAY + "/setbiome help");
+                error(player, "for a list of valid biomes.");
 
             }
         }

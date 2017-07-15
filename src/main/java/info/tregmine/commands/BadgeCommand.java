@@ -46,7 +46,7 @@ public class BadgeCommand extends AbstractCommand {
             }
 
             if (target == null) {
-                player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+                error(player, "Could not find player: " + ChatColor.YELLOW + args[0]);
                 return true;
             }
             Map<Badge, Integer> badges = target.getBadges();
@@ -69,7 +69,7 @@ public class BadgeCommand extends AbstractCommand {
             try {
                 target = tregmine.getPlayerOffline(args[1]);
             } catch (Exception e) {
-                player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[0]);
+                error(player, "Could not find player: " + ChatColor.YELLOW + args[0]);
                 return true;
             }
 

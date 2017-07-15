@@ -23,7 +23,7 @@ public class PasswordCommand extends AbstractCommand {
         String password = args[0];
 
         if (password.length() < 1) {
-            player.sendMessage(RED + "Your password must be at least " + "6 characters long.");
+            error(player, "Your password must be at least " + "6 characters long.");
             return true;
         }
 

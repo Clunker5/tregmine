@@ -23,8 +23,7 @@ public class BlessCommand extends AbstractCommand {
 
         List<GenericPlayer> candidates = tregmine.matchPlayer(args[0]);
         if (candidates.size() != 1) {
-            player.sendNotification(Notification.COMMAND_FAIL, new TextComponent(ChatColor.RED + "No player found"));
-            return false;
+            return error(player, "No player found");
         }
 
         GenericPlayer candidate = candidates.get(0);

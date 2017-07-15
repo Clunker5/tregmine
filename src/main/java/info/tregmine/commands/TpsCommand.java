@@ -18,7 +18,7 @@ public class TpsCommand extends AbstractCommand {
             player.sendMessage(ChatColor.GREEN + "Server TPS: " + tps);
         }
         if (!isTpsGood(tps)) {
-            player.sendMessage(ChatColor.RED + "Server TPS: " + tps);
+            error(player, "Server TPS: " + tps);
         }
         player.sendMessage(ChatColor.BLUE + "Lag Percentage: " + lagPercentage);
         return true;

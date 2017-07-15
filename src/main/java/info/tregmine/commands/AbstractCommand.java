@@ -1,10 +1,7 @@
 package info.tregmine.commands;
 
 import info.tregmine.Tregmine;
-import info.tregmine.api.DiscordCommandSender;
-import info.tregmine.api.GenericPlayer;
-import info.tregmine.api.TextComponentBuilder;
-import info.tregmine.api.TregmineConsolePlayer;
+import info.tregmine.api.*;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -23,19 +20,25 @@ public abstract class AbstractCommand implements CommandExecutor {
     private final TregmineConsolePlayer consolePlayer;
     protected Tregmine tregmine;
     protected String command;
+    private final boolean vanillaBanned;
 
     protected AbstractCommand(Tregmine tregmine, String command) {
         this(tregmine, command, null);
     }
 
     protected AbstractCommand(Tregmine tregmine, String command, Tregmine.PermissionDefinitions permissionDefinitions) {
+        this(tregmine, command, permissionDefinitions, false);
+    }
+
+    protected AbstractCommand(Tregmine tregmine, String command, Tregmine.PermissionDefinitions permissionDefinitions, boolean vanillaBanned) {
         this.tregmine = tregmine;
         this.command = command;
         this.permissionDefinitions = permissionDefinitions;
         this.consolePlayer = new TregmineConsolePlayer(this.tregmine);
+        this.vanillaBanned = vanillaBanned;
     }
 
-    public String getName() {
+        public String getName() {
         return command;
     }
 
@@ -53,30 +56,41 @@ public abstract class AbstractCommand implements CommandExecutor {
     }
 
     public boolean invalidArguments(GenericPlayer player, String arguments) {
-        player.sendMessage(new TextComponentBuilder("Usage: " + arguments).setColor(net.md_5.bungee.api.ChatColor.DARK_RED).setBold(true).build());
+        return error(player, "Usage: " + arguments);
+    }
+
+    protected static boolean error(GenericPlayer player, String message) {
+        return error(player, new TextComponent(message));
+    }
+
+    protected static boolean error(GenericPlayer player, TextComponent... messages) {
+        player.sendNotification(Notification.COMMAND_FAIL, new TextComponentBuilder(new TextComponent(messages)).setColor(net.md_5.bungee.api.ChatColor.DARK_AQUA).setBold(true).build());
         return true;
+    }
+    protected boolean usage(GenericPlayer player, Command command) {
+        return error(player, "Usage: " + this.tregmine.getCommand(this.command).getUsage());
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        GenericPlayer player = sender instanceof Player ? tregmine.getPlayer((Player) sender) : sender instanceof DiscordCommandSender ? (DiscordCommandSender) sender : this.consolePlayer;
+        if (!(sender instanceof Player) && !(sender instanceof DiscordCommandSender)) {
+            if (!this.handleOther(sender.getServer(), args)) return usage(player, command);
+            return true;
+        }
+        if (this.vanillaBanned && player.isInVanillaWorld()) {
+            return error(player, "You cannot use that command in this world!");
+        }
         if (this.permissionDefinitions != null) {
-            GenericPlayer player = sender instanceof Player ? tregmine.getPlayer((Player) sender) : sender instanceof DiscordCommandSender ? (DiscordCommandSender) sender : this.consolePlayer;
-            if (!Arrays.asList(this.permissionDefinitions.getPermissions()).contains(player.getRank())) {
-                player.sendMessage(new TextComponentBuilder(permissionDefinitions.getDeniedMessage()).setColor(net.md_5.bungee.api.ChatColor.DARK_RED).setBold(true).build());
-                return true;
+            if (!Arrays.asList(this.permissionDefinitions.getPermissions()).contains(player.getRank()) && !player.isOp()) {
+                return error(player, permissionDefinitions.getDeniedMessage());
             }
         }
-        if (sender instanceof Player) {
-            GenericPlayer player = tregmine.getPlayer((Player) sender);
-            if (!player.getRank().canUseCommands()) {
-                player.sendMessage(ChatColor.RED + "Please complete setup before " + "continuing.");
-                return true;
-            }
-
-            return handlePlayer(player, args);
+        if (!player.getRank().canUseCommands()) {
+                return error(player, "Please complete setup before " + "continuing.");
         }
-
-        return handleOther(sender.getServer(), args);
+        if (!handlePlayer(player, args)) return usage(player, command);
+        return true;
     }
 
 }

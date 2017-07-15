@@ -48,7 +48,7 @@ public class FillCommand extends AbstractCommand {
             return true;
         }
         if (args.length == 0) {
-            player.sendMessage(RED + "Please specify the material");
+            error(player, "Please specify the material");
             return true;
         }
 
@@ -119,7 +119,7 @@ public class FillCommand extends AbstractCommand {
             if (mat != null && toMat == null) {
 
                 if (!player.isOp() && !mat.toItemStack().getType().isBlock()) {
-                    player.sendMessage(RED + "Disabled!");
+                    error(player, "Disabled!");
                     return true;
                 }
 
@@ -143,7 +143,7 @@ public class FillCommand extends AbstractCommand {
             if (mat != null && toMat != null) {
 
                 if (!player.isOp() && !mat.toItemStack().getType().isBlock()) {
-                    player.sendMessage(RED + "Disabled!");
+                    error(player, "Disabled!");
                     return true;
 
                 }
@@ -168,7 +168,7 @@ public class FillCommand extends AbstractCommand {
         }
 
         if (filler == null) {
-            player.sendMessage(RED + "Invalid command!");
+            error(player, "Invalid command!");
             return false;
         }
 

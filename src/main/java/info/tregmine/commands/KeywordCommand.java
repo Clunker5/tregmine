@@ -23,7 +23,7 @@ public class KeywordCommand extends AbstractCommand {
         String keyword = args[0];
 
         if (keyword.length() < 1) {
-            player.sendMessage(RED + "Your keyword must be at least " + "1 characters long.");
+            error(player, "Your keyword must be at least " + "1 characters long.");
             return true;
         }
 

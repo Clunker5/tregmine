@@ -41,22 +41,22 @@ public class TeleportCommand extends AbstractCommand {
 
         List<GenericPlayer> candidates = tregmine.matchPlayer(name);
         if (candidates.size() != 1) {
-            player.sendMessage(RED + "Can't find user.");
+            error(player, "Can't find user.");
             return true;
         }
 
         GenericPlayer target = candidates.get(0);
-        if (target.getWorld().getName().equalsIgnoreCase("vanilla") || target.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+        if (target.isInVanillaWorld()) {
+            error(player, "You cannot use that command in this world!");
             return true;
         }
         if (target.hasFlag(GenericPlayer.Flags.INVISIBLE) && !player.getRank().canVanish()) {
-            player.sendMessage(RED + "Can't find user.");
+            error(player, "Can't find user.");
             return true;
         }
 
         if (target.hasFlag(GenericPlayer.Flags.TPSHIELD) && !player.getRank().canOverrideTeleportShield()) {
-            player.sendMessage(RED + target.getName() + AQUA + "'s teloptical deflector absorbed all motion. "
+            error(player, target.getName() + AQUA + "'s teloptical deflector absorbed all motion. "
                     + "Teleportation failed.");
             target.sendMessage(
                     player.getName() + AQUA + "'s teleportation spell " + "cannot bypass your sophisticated defenses.");
@@ -68,7 +68,7 @@ public class TeleportCommand extends AbstractCommand {
         String targetWorldName = targetWorld.getName();
         String sourceWorldName = sourceWorld.getName();
         if (!sourceWorldName.equalsIgnoreCase(targetWorldName) && !rank.canTeleportBetweenWorlds()) {
-            player.sendMessage(RED + "The user is in another world called " + BLUE + targetWorld.getName() + ".");
+            error(player, "The user is in another world called " + BLUE + targetWorld.getName() + ".");
             return true;
         }
 

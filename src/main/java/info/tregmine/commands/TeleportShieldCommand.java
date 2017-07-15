@@ -34,7 +34,7 @@ public class TeleportShieldCommand extends AbstractCommand {
             player.sendMessage(
                     "Your tpblock is set to " + (player.hasFlag(GenericPlayer.Flags.TPSHIELD) ? "on" : "off") + ".");
         } else {
-            player.sendMessage(RED + "The commands are /tpblock on, /tpblock off and /tpblock status.");
+            error(player, "The commands are /tpblock on, /tpblock off and /tpblock status.");
         }
 
         try (IContext ctx = tregmine.createContext()) {

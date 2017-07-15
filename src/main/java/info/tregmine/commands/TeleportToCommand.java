@@ -19,7 +19,7 @@ public class TeleportToCommand extends AbstractCommand {
             return true;
         }
         if (args.length != 3) {
-            player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
+            error(player, "Incorrect parameters passed!");
             return true;
         }
         if (player.getIsStaff()) {
@@ -47,7 +47,7 @@ public class TeleportToCommand extends AbstractCommand {
             }
 
             if (x == 0 || y == 0 || z == 0) {
-                player.sendMessage(ChatColor.RED + "Incorrect parameters passed!");
+                error(player, "Incorrect parameters passed!");
                 return true;
             }
         }

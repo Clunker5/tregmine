@@ -29,7 +29,7 @@ public class QuitMessageCommand extends AbstractCommand {
 
     private boolean getElseMsg(GenericPlayer player, String[] args) {
         if (args.length > 3) {
-            player.sendMessage(RED + "Correct Usage: /quitmessage player get <player>");
+            error(player, "Correct Usage: /quitmessage player get <player>");
             return true;
         }
 
@@ -96,8 +96,8 @@ public class QuitMessageCommand extends AbstractCommand {
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         } else {
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
-            player.sendMessage(RED + "Sorry, Quit Messages are only for players who");
-            player.sendMessage(RED + "donate to keep the server running.");
+            error(player, "Sorry, Quit Messages are only for players who");
+            error(player, "donate to keep the server running.");
             player.sendMessage(DARK_GRAY + "-----------------------------------------");
         }
         return true;
@@ -109,7 +109,7 @@ public class QuitMessageCommand extends AbstractCommand {
         }
 
         if (args.length == 3) {
-            player.sendMessage(RED + "Correct Usage: /quitmessage player set <player> <message>");
+            error(player, "Correct Usage: /quitmessage player set <player> <message>");
             return true;
         }
 
@@ -127,7 +127,7 @@ public class QuitMessageCommand extends AbstractCommand {
         }
 
         if (victim.isOp()) {
-            player.sendMessage(RED + "Thou shall not mess with the Gods!");
+            error(player, "Thou shall not mess with the Gods!");
 
             World world = player.getWorld();
             org.bukkit.Location location = player.getLocation();

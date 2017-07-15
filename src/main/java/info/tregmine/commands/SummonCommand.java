@@ -18,7 +18,7 @@ public class SummonCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getWorld().getName() == "vanilla") {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
+            error(player, "You cannot use that command in this world!");
             return true;
         }
         if (args.length == 0) {
@@ -29,12 +29,12 @@ public class SummonCommand extends AbstractCommand {
 
         List<GenericPlayer> candidates = tregmine.matchPlayer(pattern);
         if (candidates.size() != 1) {
-            player.sendMessage(RED + "Can't find user.");
+            error(player, "Can't find user.");
         }
 
         GenericPlayer victim = candidates.get(0);
         if (victim.getWorld().getName() == "vanilla") {
-            player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+            error(player, "That player is in the vanilla world!");
             return true;
         }
         victim.setLastPos(victim.getLocation());

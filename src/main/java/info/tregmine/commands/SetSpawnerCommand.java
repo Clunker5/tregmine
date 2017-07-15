@@ -25,13 +25,13 @@ public class SetSpawnerCommand extends AbstractCommand {
         }
 
         if (args.length != 1) {
-            player.sendMessage(RED + "Type /spawner <mobname> whilst pointing " + "at a spawner");
+            error(player, "Type /spawner <mobname> whilst pointing " + "at a spawner");
             return false;
         }
 
         Block target = player.getDelegate().getTargetBlock((Set<Material>) null, 15);
         if (!target.getType().equals(Material.MOB_SPAWNER)) {
-            player.sendMessage(RED + "Please point at a spawner.");
+            error(player, "Please point at a spawner.");
             return false;
         }
 
@@ -39,7 +39,7 @@ public class SetSpawnerCommand extends AbstractCommand {
         try {
             spawner.setSpawnedType(EntityType.valueOf(args[0].toUpperCase()));
         } catch (Exception error) {
-            player.sendMessage(RED + "An error occured. Did you specify a valid " + "mob type?");
+            error(player, "An error occured. Did you specify a valid " + "mob type?");
         }
 
         return true;

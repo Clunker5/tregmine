@@ -43,14 +43,10 @@ public class ChangeNameCommand extends AbstractCommand {
             }
         }
         ChatColor usecolor = null;
-        for (ChatColor color : ChatColor.values()) {
-            if (!color.isColor()) {
-                continue;
-            }
-            if (colorstring.toLowerCase().equals(color.name().toLowerCase())) {
-                usecolor = color;
-                break;
-            }
+        try {
+            usecolor = ChatColor.valueOf(colorstring.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return error(player, "The color provided does not exist.");
         }
         player.setNickname(new Nickname(args[1], usecolor, format));
 

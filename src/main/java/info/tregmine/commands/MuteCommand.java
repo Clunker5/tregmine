@@ -16,7 +16,7 @@ public class MuteCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length != 2) {
-            player.sendMessage(ChatColor.RED + "Invalid Arguments; /mute <player> <duration:-1 for indefinite>");
+            error(player, "Invalid Arguments; /mute <player> <duration:-1 for indefinite>");
             return true;
         }
         if (tregmine.getPlayer(args[0]) == null) {
@@ -25,8 +25,8 @@ public class MuteCommand extends AbstractCommand {
         }
         GenericPlayer mutee = tregmine.getPlayer(args[0]);
         if (!mutee.getRank().canBeMuted()) {
-            player.sendMessage(new TextComponent(ChatColor.RED + "You cannot mute "), mutee.decideVS(player),
-                    new TextComponent(ChatColor.RED + " because their rank bypasses muting."));
+            error(player, new TextComponent("You cannot mute "), mutee.decideVS(player),
+                    new TextComponent(" because their rank bypasses muting."));
             return true;
         }
         int duration;

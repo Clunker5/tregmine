@@ -120,12 +120,12 @@ public class MentorCommand extends AbstractCommand {
 
         if ("queue".equalsIgnoreCase(action)) {
             if (!player.canMentor()) {
-                player.sendMessage(RED + "You have not been granted mentoring abilities.");
+                error(player, "You have not been granted mentoring abilities.");
                 return true;
             }
 
             if (player.getStudent() != null) {
-                player.sendMessage(RED + "You can only mentor one " + "student at any given time.");
+                error(player, "You can only mentor one " + "student at any given time.");
                 return true;
             }
 
@@ -163,7 +163,7 @@ public class MentorCommand extends AbstractCommand {
             } else {
                 Queue<GenericPlayer> mentors = tregmine.getMentorQueue();
                 if (!mentors.contains(player)) {
-                    player.sendMessage(RED + "You are not part of the mentor queue. "
+                    error(player, "You are not part of the mentor queue. "
                             + "If you have already been assigned a student, you cannot " + "abort the mentoring.");
                     return true;
                 }
@@ -173,7 +173,7 @@ public class MentorCommand extends AbstractCommand {
             }
         } else if ("complete".equalsIgnoreCase(action)) {
             if (!player.getRank().canMentor() && tregmine.getOnlineTeachers() >= 3) {
-                player.sendMessage(RED + "You do not have permission to mentor.");
+                error(player, "You do not have permission to mentor.");
                 return true;
             }
             if (tregmine.getOnlineTeachers() < 3 && player.getMentor() == null && player.getRank() == Rank.TOURIST) {
@@ -196,7 +196,7 @@ public class MentorCommand extends AbstractCommand {
             }
             GenericPlayer student = player.getStudent();
             if (student == null) {
-                player.sendMessage(RED + "You are not mentoring anyone right now.");
+                error(player, "You are not mentoring anyone right now.");
                 return true;
             }
             if (student != null) {

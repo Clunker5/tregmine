@@ -15,7 +15,7 @@ public class RegenerateChunkCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (player.getFillBlock1() == null) {
-            player.sendMessage(ChatColor.RED + "You haven't made a selection! [Wand is the wooden shovel]");
+            error(player, "You haven't made a selection! [Wand is the wooden shovel]");
             return true;
         }
 

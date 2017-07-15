@@ -35,8 +35,7 @@ public class BanCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(DARK_AQUA + "/ban <player> <message>");
-            return true;
+            return false;
         }
 
         String pattern = args[0];

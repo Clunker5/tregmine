@@ -34,18 +34,18 @@ public class PromoteCommand extends AbstractCommand {
         try {
             rank = Rank.valueOf(args[1].toUpperCase());
         } catch (IllegalArgumentException e) {
-            player.sendMessage(RED + "That rank does not exist. Available ranks: ");
-            player.sendMessage(RED + StringUtils.join(Rank.values(), " "));
+            error(player, "That rank does not exist. Available ranks: ");
+            error(player, StringUtils.join(Rank.values(), " "));
             return true;
         }
         List<GenericPlayer> candidate = tregmine.matchPlayer(args[0]);
         if (candidate.size() != 1) {
-            player.sendMessage(RED + "The player specified was not found. Please try again.");
+            error(player, "The player specified was not found. Please try again.");
             return true;
         }
         GenericPlayer user = candidate.get(0);
         if (rank == user.getRank()) {
-            player.sendMessage(RED + "The player already has the desired rank.");
+            error(player, "The player already has the desired rank.");
         }
         if (user.hasFlag(Flags.HARDWARNED)) {
             player.sendMessage(

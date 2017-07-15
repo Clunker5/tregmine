@@ -16,8 +16,7 @@ public class BlockHereCommand extends AbstractCommand {
         if (player.getWorld() == player.getPlugin().getVanillaWorld()
                 || player.getWorld() == player.getPlugin().getVanillaNether()
                 || player.getWorld() == player.getPlugin().getVanillaEnd()) {
-            player.sendMessage(ChatColor.RED + "You cannot use that command in this world!");
-            return true;
+            return error(player, "You cannot use that command in this world!");
         }
 
         Block block = player.getWorld().getBlockAt(player.getLocation());

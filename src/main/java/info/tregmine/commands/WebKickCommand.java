@@ -45,7 +45,7 @@ public class WebKickCommand extends AbstractCommand {
 
         WebServer webServer = tregmine.getWebServer();
         if (!webServer.isPlayerOnWeb(victim)) {
-            player.sendMessage(RED + "Player is not on web chat.");
+            error(player, "Player is not on web chat.");
             return true;
         }
 

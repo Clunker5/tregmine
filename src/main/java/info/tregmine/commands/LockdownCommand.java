@@ -15,7 +15,7 @@ public class LockdownCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "You must specify <on|off>");
+            error(player, "You must specify <on|off>");
             return true;
         }
         System.out.println(args[0]);
@@ -25,7 +25,7 @@ public class LockdownCommand extends AbstractCommand {
         } else if (args[0].equalsIgnoreCase("off")) {
             state = false;
         } else {
-            player.sendMessage(ChatColor.RED + "You must specify <on|off>");
+            error(player, "You must specify <on|off>");
             return true;
         }
         plugin.setLockdown(state);

@@ -34,7 +34,7 @@ public class HideCommand extends AbstractCommand {
             player.sendMessage("Your Announcement prevention display is set to "
                     + (player.hasFlag(GenericPlayer.Flags.HIDDEN_ANNOUNCEMENT) ? "on" : "off") + ".");
         } else {
-            player.sendMessage(RED + "The commands are /hide on, /hide off and /hide status.");
+            error(player, "The commands are /hide on, /hide off and /hide status.");
         }
 
         try (IContext ctx = tregmine.createContext()) {

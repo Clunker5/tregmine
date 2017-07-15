@@ -44,7 +44,7 @@ public class ActionCommand extends AbstractCommand {
                 && player.getRank() != Rank.UNVERIFIED) {
             msg = ChatColor.translateAlternateColorCodes('#', msg);
         } else {
-            player.sendMessage(ChatColor.RED + "You are not allowed to use chat colors!");
+            error(player, "You are not allowed to use chat colors!");
         }
 
         Collection<? extends Player> players = server.getOnlinePlayers();

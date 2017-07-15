@@ -21,19 +21,18 @@ public class FreezeCommand extends AbstractCommand {
             return true;
         }
         if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "Invalid arguments! Use /freeze <player>");
+            error(player, "Invalid arguments! Use /freeze <player>");
             return true;
         }
         String raw = args[0];
         List<GenericPlayer> victims = plugin.matchPlayer(raw);
         if (victims.size() != 1) {
-            player.sendMessage(ChatColor.RED + "That player is not online!");
+            error(player, "That player is not online!");
             return true;
         }
         GenericPlayer victim = victims.get(0);
         if (player.isInVanillaWorld()) {
-            player.sendMessage(
-                    ChatColor.RED + "You cannot freeze that player because they are in the vanilla world!");
+            error(player, "You cannot freeze that player because they are in the vanilla world!");
             return true;
         }
         boolean newValue = !victim.getFrozen();

@@ -19,15 +19,13 @@ public class BackCommand extends AbstractCommand {
             return true;
         }
         if (player.getLastPos() == null) {
-            player.sendMessage(ChatColor.RED + "You don't have a last location!");
-            return true;
+            return error(player,  "You don't have a last location!");
         }
         boolean success = player.teleport(player.getLastPos());
         if (!success) {
-            player.sendMessage(ChatColor.RED + "Failed to teleport back. Sorry!");
+            error(player,  "Failed to teleport back. Sorry!");
             if (!player.getLastPos().toString().isEmpty()) {
-                player.sendMessage(
-                        ChatColor.RED + "But... I can give you your coordinates. X" + player.getLastPos().getBlockX()
+                error(player, "But... I can give you your coordinates. X" + player.getLastPos().getBlockX()
                                 + " Y" + player.getLastPos().getBlockY() + " Z" + player.getLastPos().getBlockZ());
             }
         }

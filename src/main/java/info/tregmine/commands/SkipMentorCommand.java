@@ -30,8 +30,7 @@ public class SkipMentorCommand extends AbstractCommand {
         }
         GenericPlayer student = matches.get(0);
         if (student.getRank() != Rank.TOURIST && student.getRank() != Rank.UNVERIFIED) {
-            player.sendMessage(student.getChatName(), new TextComponentBuilder(" is already past the mentoring process.").setColor(ChatColor.RED).setBold(true).build());
-            return true;
+            return error(player, student.getChatName(), new TextComponentBuilder(" is already past the mentoring process.").build());
         }
         try (IContext ctx = tregmine.createContext()) {
             student.setRank(Rank.SETTLER);

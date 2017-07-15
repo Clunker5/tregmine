@@ -77,7 +77,7 @@ public class WarpCommand extends AbstractCommand {
             scheduler.scheduleSyncDelayedTask(tregmine, new WarpTask(player, warpPoint), delay);
 
         } else {
-            player.sendMessage(RED + "Chunk failed to load. Please try to warp again");
+            error(player, "Chunk failed to load. Please try to warp again");
         }
 
         return true;
@@ -110,7 +110,7 @@ public class WarpCommand extends AbstractCommand {
                 PotionEffect ef = new PotionEffect(PotionEffectType.BLINDNESS, 60, 100);
                 player.addPotionEffect(ef);
             } else {
-                player.sendMessage(RED + "You can't teleport between worlds.");
+                error(player, "You can't teleport between worlds.");
             }
         }
     }

@@ -21,12 +21,12 @@ public class PropertyCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String args[]) {
         if (args.length <= 2) {
-            player.sendMessage(ChatColor.RED + "/property <target player> <key> <value>");
+            error(player, "/property <target player> <key> <value>");
             return true;
         }
         List<GenericPlayer> matches = this.plugin.matchPlayer(args[0]);
         if (matches.size() != 1) {
-            player.sendMessage(ChatColor.RED + "The target player specified does not exist");
+            error(player, "The target player specified does not exist");
             return true;
         }
         GenericPlayer target = matches.get(0);
@@ -47,7 +47,7 @@ public class PropertyCommand extends AbstractCommand {
                     + ChatColor.GOLD + updatedValue + ChatColor.GREEN + " for " + ChatColor.GOLD + player.getName()));
         } catch (DAOException g) {
             g.printStackTrace();
-            player.sendMessage(ChatColor.RED + "Something went wrong!");
+            error(player, "Something went wrong!");
             return true;
         }
 

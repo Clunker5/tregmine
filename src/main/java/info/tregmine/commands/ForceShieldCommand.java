@@ -34,7 +34,7 @@ public class ForceShieldCommand extends AbstractCommand {
             player.sendMessage("Your forceblock is set to "
                     + (player.hasFlag(GenericPlayer.Flags.FORCESHIELD) ? "on" : "off") + ".");
         } else {
-            player.sendMessage(RED + "The commands are /forceblock on, /forceblock off and /forceblock status.");
+            error(player, "The commands are /forceblock on, /forceblock off and /forceblock status.");
         }
 
         try (IContext ctx = tregmine.createContext()) {

@@ -34,7 +34,7 @@ public class InventoryLogCommand extends AbstractCommand {
             player.sendMessage("Your Inventory Log display is set to "
                     + (player.hasFlag(GenericPlayer.Flags.CHEST_LOG) ? "on" : "off") + ".");
         } else {
-            player.sendMessage(RED + "The commands are /invlog on, /invlog off and /invlog status.");
+            error(player, "The commands are /invlog on, /invlog off and /invlog status.");
         }
 
         try (IContext ctx = tregmine.createContext()) {

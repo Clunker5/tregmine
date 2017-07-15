@@ -50,7 +50,7 @@ public class IgnoreCommand extends AbstractCommand {
             GenericPlayer target = tregmine.getPlayerOffline(args[1]);
 
             if (target == null) {
-                player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[1]);
+                error(player, "Could not find player: " + ChatColor.YELLOW + args[1]);
                 return true;
             }
 
@@ -75,12 +75,12 @@ public class IgnoreCommand extends AbstractCommand {
             GenericPlayer target = tregmine.getPlayerOffline(args[1]);
 
             if (target == null) {
-                player.sendMessage(ChatColor.RED + "Could not find player: " + ChatColor.YELLOW + args[1]);
+                error(player, "Could not find player: " + ChatColor.YELLOW + args[1]);
                 return true;
             }
 
             if (target.getRank().canNotBeIgnored() || target.getId() == player.getId()) {
-                player.sendMessage(ChatColor.RED + "Can not ignore this player!");
+                error(player, "Can not ignore this player!");
                 return true;
             }
             if (target.getDelegate() == null) {

@@ -19,7 +19,7 @@ public class InventoryCommand extends AbstractCommand {
             return true;
         }
         if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "Incorrect usage:");
+            error(player, "Incorrect usage:");
             player.sendMessage(ChatColor.AQUA + "/inv inspect <name> - Inspect someones inventory");
             player.sendMessage(
                     ChatColor.AQUA + "/inv reload <name> <true/false> - Reload inventory, optional save");
@@ -33,7 +33,7 @@ public class InventoryCommand extends AbstractCommand {
         if ("reload".equalsIgnoreCase(args[0]) && args.length == 3) {
             List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
-                player.sendMessage(ChatColor.RED + "Player: " + args[1] + " not found!");
+                error(player, "Player: " + args[1] + " not found!");
                 return true;
             }
             GenericPlayer candidate = candidates.get(0);
@@ -52,7 +52,7 @@ public class InventoryCommand extends AbstractCommand {
         if ("inspect".equalsIgnoreCase(args[0]) && args.length == 2) {
             List<GenericPlayer> candidates = tregmine.matchPlayer(args[1]);
             if (candidates.size() != 1) {
-                player.sendMessage(ChatColor.RED + "Player: " + args[1] + " not found!");
+                error(player, "Player: " + args[1] + " not found!");
                 return true;
             }
             GenericPlayer candidate = candidates.get(0);
@@ -62,7 +62,7 @@ public class InventoryCommand extends AbstractCommand {
             return true;
         }
 
-        player.sendMessage(ChatColor.RED + "Incorrect usage:");
+        error(player, "Incorrect usage:");
         player.sendMessage(ChatColor.AQUA + "/inv inspect <name> - Inspect someones inventory");
         player.sendMessage(ChatColor.AQUA + "/inv reload <name> <true/false> - Reload inventory, optional save");
         player.sendMessage(ChatColor.AQUA + "/inv save - Save your current inventory to database");

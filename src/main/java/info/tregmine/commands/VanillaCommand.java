@@ -15,7 +15,7 @@ public class VanillaCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer sender, String[] args) {
         if (plugin.getVanillaWorld() == null) {
-            sender.sendMessage(ChatColor.RED + "The server does not have the vanilla world enabled.");
+            error(sender, "The server does not have the vanilla world enabled.");
             return true;
         }
         if (sender.getWorld() == plugin.getServer().getWorld("world")) {
@@ -27,8 +27,7 @@ public class VanillaCommand extends AbstractCommand {
                     ChatColor.YELLOW + "Thanks for riding the Starlight Express!",
                     ChatColor.RED + "The Starlight Express is having some issues, try again later.");
         } else {
-            sender.sendMessage(
-                    ChatColor.RED + "You cannot switch between worlds if you are not in WORLD or VANILLA");
+            error(sender, "You cannot switch between worlds if you are not in WORLD or VANILLA");
         }
         return true;
     }

@@ -16,12 +16,12 @@ public class OWCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
         if (!tregmine.hasSecondaryWorld()) {
-            player.sendMessage(ChatColor.RED + "There's no old world on this server!");
+            error(player, "There's no old world on this server!");
             return true;
         }
         if (tregmine.getConfig().getBoolean("worlds.special.restrictnewworldtostaff")) {
             if (!player.getRank().canGoToNewWorld()) {
-                player.sendMessage(ChatColor.RED + "The new world isn't ready yet!");
+                error(player, "The new world isn't ready yet!");
                 return true;
             }
         }
@@ -34,8 +34,7 @@ public class OWCommand extends AbstractCommand {
                     ChatColor.YELLOW + "[TAXI-R-US] Welcome to the new world!", ChatColor.YELLOW
                             + "[TAXI-R-US] Something bad happened; Try again or contact an admin for assistance.");
         } else {
-            player.sendMessage(
-                    ChatColor.RED + "You must be in the overworld of either the old world or the main world");
+            error(player, "You must be in the overworld of either the old world or the main world");
         }
         return true;
     }

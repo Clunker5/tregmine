@@ -5,6 +5,7 @@ import info.tregmine.api.Badge;
 import info.tregmine.api.DiscordCommandSender;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.GenericPlayer.ChatState;
+import info.tregmine.api.TextComponentBuilder;
 import info.tregmine.api.math.MathUtil;
 import info.tregmine.database.*;
 import info.tregmine.events.TregminePortalEvent;
@@ -52,7 +53,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
         }
         if (player instanceof DiscordCommandSender) return false;
         if (player.getChatState() != GenericPlayer.ChatState.CHAT) {
-            player.sendMessage(RED + "A trade is already in progress!");
+            error(player, "A trade is already in progress!");
             return true;
         }
 
@@ -67,19 +68,23 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
         GenericPlayer target = candidates.get(0);
         if (target.getChatState() != GenericPlayer.ChatState.CHAT) {
-            player.sendMessage(RED + target.getName() + "is in a trade!");
+            error(player, target.getName() + "is in a trade!");
+            return true;
+        }
+        if (!player.getRank().canParticipateInEconomy() || !target.getRank().canParticipateInEconomy()) {
+            player.sendMessage(new TextComponentBuilder("Builders cannot participate in the economy.").setColor(net.md_5.bungee.api.ChatColor.DARK_RED).setBold(true).build());
             return true;
         }
 
         if (target.getId() == player.getId()) {
-            player.sendMessage(RED + "You cannot trade with yourself!");
+            error(player, "You cannot trade with yourself!");
             return true;
         }
 
         double distance = MathUtil.calcDistance2d(player.getLocation(), target.getLocation());
 
         if (!target.hasFlag(GenericPlayer.Flags.INVISIBLE) && (distance > player.getRank().getTradeDistance(player))) {
-            player.sendMessage(RED + "You can only trade with people less than "
+            error(player, "You can only trade with people less than "
                     + player.getRank().getTradeDistance(player) + " blocks away.");
             return true;
         }
@@ -125,8 +130,8 @@ public class TradeCommand extends AbstractCommand implements Listener {
         }
 
         if (ctx.inventory.getContents().length == 0) {
-            ctx.firstPlayer.sendMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
-            ctx.secondPlayer.sendMessage(ChatColor.RED + "Trade was cancelled by " + player.getName());
+            error(ctx.firstPlayer, "Trade was cancelled by " + player.getName());
+            error(ctx.secondPlayer, "Trade was cancelled by " + player.getName());
             ctx.firstPlayer.setChatState(ChatState.CHAT);
             ctx.secondPlayer.setChatState(ChatState.CHAT);
             activeTrades.remove(ctx.firstPlayer);
@@ -250,11 +255,11 @@ public class TradeCommand extends AbstractCommand implements Listener {
             second.sendMessage(YELLOW + "[Trade] Trade ended.");
         } else if ("bid".equalsIgnoreCase(args[0]) && args.length == 2) {
             if (second != player) {
-                player.sendMessage(RED + "[Trade] You can't make a bid!");
+                error(player, "[Trade] You can't make a bid!");
                 return;
             }
             if (ctx.state != TradeState.BID) {
-                player.sendMessage(RED + "[Trade] You can't make a bid right now.");
+                error(player, "[Trade] You can't make a bid right now.");
                 return;
             }
 
@@ -262,11 +267,11 @@ public class TradeCommand extends AbstractCommand implements Listener {
             try {
                 amount = Integer.parseInt(args[1]);
                 if (amount < 0) {
-                    player.sendMessage(RED + "[Trade] You have to bid an integer " + "number of tregs.");
+                    error(player, "[Trade] You have to bid an integer " + "number of tregs.");
                     return;
                 }
             } catch (NumberFormatException e) {
-                player.sendMessage(RED + "[Trade] You have to bid an integer " + "number of tregs.");
+                error(player, "[Trade] You have to bid an integer " + "number of tregs.");
                 return;
             }
 
@@ -275,7 +280,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
 
                 long balance = walletDAO.balance(second);
                 if (amount > balance) {
-                    player.sendMessage(RED + "[Trade] You only have " + balance + " tregs!");
+                    error(player, "[Trade] You only have " + balance + " tregs!");
                     return;
                 }
             } catch (DAOException e) {
@@ -291,7 +296,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
             ctx.state = TradeState.CONSIDER_BID;
         } else if ("change".equalsIgnoreCase(args[0]) && args.length == 1) {
             if (first != player) {
-                player.sendMessage(RED + "[Trade] You can't change the offer!");
+                error(player, "[Trade] You can't change the offer!");
                 return;
             }
 
@@ -299,7 +304,7 @@ public class TradeCommand extends AbstractCommand implements Listener {
             ctx.state = TradeState.ITEM_SELECT;
         } else if ("accept".equals(args[0]) && args.length == 1) {
             if (first != player) {
-                player.sendMessage(RED + "[Trade] You can't accept an offer!");
+                error(player, "[Trade] You can't accept an offer!");
                 return;
             }
 

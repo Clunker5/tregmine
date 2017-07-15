@@ -15,7 +15,7 @@ import org.bukkit.Sound;
 public enum Notification {
     NONE(null), // Place holder for just a message
     BLESS(Sound.BLOCK_CHEST_CLOSE), // to keep it related to chests ect..
-    COMMAND_FAIL(Sound.BLOCK_LEVER_CLICK), MESSAGE(Sound.ENTITY_PLAYER_LEVELUP), RANK_UP(
+    COMMAND_FAIL(Sound.UI_TOAST_IN), MESSAGE(Sound.ENTITY_PLAYER_LEVELUP), RANK_UP(
             Sound.BLOCK_PISTON_CONTRACT), RARE_DROP(Sound.ENTITY_ITEM_PICKUP), SUMMON(Sound.BLOCK_PORTAL_TRAVEL), WARP(
             Sound.ENTITY_ENDERMEN_TELEPORT), MAIL(Sound.BLOCK_NOTE_PLING), UNBLESS(Sound.BLOCK_CHEST_OPEN);
 

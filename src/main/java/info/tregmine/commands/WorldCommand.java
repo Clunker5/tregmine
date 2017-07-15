@@ -20,8 +20,7 @@ public class WorldCommand extends AbstractCommand {
         if (allowedWorlds.contains(args[0].toLowerCase())) {
 
         } else {
-            player.sendMessage(
-                    new TextComponent(ChatColor.RED + "You cannot go to that world with the autoswitcher."));
+            error(player, "You cannot go to that world with the autoswitcher.");
         }
         return true;
     }

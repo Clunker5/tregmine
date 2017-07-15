@@ -20,12 +20,12 @@ public class InternalCommand extends AbstractCommand {
     @Override
     public boolean handlePlayer(GenericPlayer player, String args[]) {
         if (args.length == 0) {
-            player.sendMessage(ChatColor.RED + "/" + this.command + " <flags>");
+            error(player, "/" + this.command + " <flags>");
             return true;
         }
         if (args[0].equalsIgnoreCase("flags")) {
             if (args.length == 1) {
-                player.sendMessage(ChatColor.RED + "/" + this.command + " <flags> <username>");
+                error(player, "/" + this.command + " <flags> <username>");
                 return true;
             }
             List<GenericPlayer> targets = this.tregmine.matchPlayer(args[1]);
@@ -44,19 +44,19 @@ public class InternalCommand extends AbstractCommand {
                     try {
                         flag = GenericPlayer.Flags.valueOf(args[3].toUpperCase());
                     } catch (Exception e) {
-                        player.sendMessage(ChatColor.RED + e.getMessage());
+                        error(player, e.getMessage());
                         return true;
                     }
                     if (args[2].equalsIgnoreCase("add")) {
                         if (target.hasFlag(flag)) {
-                            player.sendMessage(ChatColor.RED + "Player already has " + flag);
+                            error(player, "Player already has " + flag);
                             return true;
                         }
                         target.setFlag(flag);
                         player.sendMessage(ChatColor.GREEN + "Gave player " + flag + " flag.");
                     } else {
                         if (!target.hasFlag(flag)) {
-                            player.sendMessage(ChatColor.RED + "Player does not have " + flag);
+                            error(player, "Player does not have " + flag);
                             return true;
                         }
                         target.removeFlag(flag);

@@ -38,8 +38,8 @@ public class GiveCommand extends AbstractCommand {
         }
 
         GenericPlayer target = candidates.get(0);
-        if (target.getWorld().getName().equalsIgnoreCase("vanilla") || player.isInVanillaWorld()) {
-            player.sendMessage(ChatColor.RED + "That player is in the vanilla world!");
+        if (player.isInVanillaWorld()) {
+            error(player, "That player is in the vanilla world!");
             return true;
         }
         Material material;
