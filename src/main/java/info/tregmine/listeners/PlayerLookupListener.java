@@ -53,9 +53,9 @@ public class PlayerLookupListener implements Listener {
                     continue;
                 }
 
-                SimpleDateFormat dfm = new SimpleDateFormat("dd/MM/yy hh:mm:ss a");
+                SimpleDateFormat dfm = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a");
                 player.sendMessage(ChatColor.RED + "[" + i.getAction() + "]" + i.getMessage() + " - Valid until: "
-                        + dfm.format(i.getTimestamp()));
+                        + dfm.format(i.getValidUntil()));
                 break;
             }
         } catch (DAOException e) {
