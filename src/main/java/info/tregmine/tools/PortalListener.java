@@ -82,7 +82,7 @@ public class PortalListener implements Listener {
         }
 
         GenericPlayer p = plugin.getPlayer(event.getPlayer());
-        if (p.getWorld().getName().equalsIgnoreCase("vanilla") || p.isInVanillaWorld()) {
+        if (p.isInVanillaWorld()) {
             return;
         }
         if (!p.getRank().canUseTools())
