@@ -1347,8 +1347,13 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
     }
 
     @Override
-    public void setRank(Rank v) {
+    public void setRank(Rank rank) {
+        this.rank = rank;
+    }
 
+    public DiscordCommandSender refreshRank(Rank rank) {
+        this.rank = rank;
+        return this;
     }
 
     @Override
