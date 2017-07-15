@@ -1677,13 +1677,13 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void sendRawMessage(String p0) {
-        Tregmine.LOGGER.info(ChatColor.stripColor(p0));
+        sendMessage(p0);
     }
 
     @Override
     public void sendMessage(BaseComponent... a) {
         for (BaseComponent component : a) {
-            Tregmine.LOGGER.info(ChatColor.stripColor(component.toPlainText()));
+            sendMessage(component.toPlainText());
         }
     }
 
@@ -1809,14 +1809,12 @@ public class TregmineConsolePlayer implements GenericPlayer {
 
     @Override
     public void sendNotification(Notification notif, BaseComponent... message) {
-        for (BaseComponent c : message) {
-            Tregmine.LOGGER.info(ChatColor.stripColor(c.toPlainText()));
-        }
+        sendMessage(message);
     }
 
     @Override
     public void sendNotification(Notification notif, BaseComponent message) {
-        Tregmine.LOGGER.info(ChatColor.stripColor(message.toPlainText()));
+        sendMessage(message);
     }
 
     @Override

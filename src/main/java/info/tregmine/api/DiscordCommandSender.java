@@ -1853,12 +1853,12 @@ public class DiscordCommandSender implements GenericPlayer, CommandSender {
 
     @Override
     public void sendNotification(Notification notif, BaseComponent... message) {
-
+        this.sendMessage(message);
     }
 
     @Override
     public void sendNotification(Notification notif, BaseComponent message) {
-
+        this.sendMessage(message);
     }
 
     @Override
