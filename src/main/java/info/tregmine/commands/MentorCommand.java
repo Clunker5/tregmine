@@ -3,6 +3,7 @@ package info.tregmine.commands;
 import info.tregmine.Tregmine;
 import info.tregmine.api.GenericPlayer;
 import info.tregmine.api.Rank;
+import info.tregmine.api.TextComponentBuilder;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IContext;
 import info.tregmine.database.IMentorLogDAO;
@@ -10,6 +11,7 @@ import info.tregmine.database.IPlayerDAO;
 import info.tregmine.discord.DiscordDelegate;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.awt.*;
 import java.util.Queue;
@@ -34,9 +36,12 @@ public class MentorCommand extends AbstractCommand {
         if (mentor != null) {
             startMentoring(plugin, student, mentor);
         } else {
-            if (onlineTeachers < 3) {
-                student.sendMessage(RED
-                        + "As there are less than three teachers online, you can do /mentor complete to skip the mentoring process automatically. Alternatively, you can wait for a mentor to be assigned to you.");
+            if (onlineTeachers == 0) {
+                student.sendMessage(
+                        new TextComponentBuilder(new TextComponent("Because there is nobody online to mentor you, you can do " + ChatColor.LIGHT_PURPLE + "/mentor complete" + ChatColor.RESET + ChatColor.YELLOW + " to skip the mentoring process automatically. Alternatively, you can wait for a mentor to be assigned to you."))
+                            .setColor(ChatColor.YELLOW)
+                            .setItalic(true)
+                            .build());
             } else {
                 student.sendMessage(YELLOW + "You will now be assigned "
                         + "a mentor to show you around, as soon as one becomes available.");
@@ -172,11 +177,11 @@ public class MentorCommand extends AbstractCommand {
                 player.sendMessage(GREEN + "You are no longer part of the mentor queue.");
             }
         } else if ("complete".equalsIgnoreCase(action)) {
-            if (!player.getRank().canMentor() && tregmine.getOnlineTeachers() >= 3) {
-                error(player, "You do not have permission to mentor.");
+            if (!player.getRank().canMentor() && tregmine.getOnlineTeachers() >= 1) {
+                error(player, "There are mentors available, you cannot skip mentoring.");
                 return true;
             }
-            if (tregmine.getOnlineTeachers() < 3 && player.getMentor() == null && player.getRank() == Rank.TOURIST) {
+            if (tregmine.getOnlineTeachers() == 0 && player.getMentor() == null && player.getRank() == Rank.TOURIST) {
                 try (IContext ctx = tregmine.createContext()) {
                     player.setRank(Rank.SETTLER);
 
@@ -206,6 +211,9 @@ public class MentorCommand extends AbstractCommand {
                     IPlayerDAO playerDAO = ctx.getPlayerDAO();
                     playerDAO.updatePlayer(student);
                     playerDAO.updatePlayerInfo(student);
+
+                    player.setStudent(null);
+                    student.setMentor(null);
 
                     IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
                     int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
