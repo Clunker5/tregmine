@@ -165,52 +165,51 @@ public class ZonePlayerListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getPlayer().getItemOnCursor().getType() == Material.STICK) return;
         GenericPlayer player = plugin.getPlayer(event.getPlayer());
         if (player == null) {
             return;
         }
         ItemStack item = player.getItemInHand();
-        if (item.getType() == Material.STICK) {
-            event.setCancelled(true);
+        event.setCancelled(true);
 
-            Block block = event.getBlock();
-            Point currentPos = new Point(block.getX(), block.getZ());
-            ZoneWorld world = plugin.getWorld(block.getWorld());
-            Zone zone = world.findZone(currentPos);
-            Lot lot = world.findLot(currentPos);
-            // within a zone, lots can be created by zone owners or people with
-            // the zones permission.
-            String type = null;
-            if (zone != null) {
-                Zone.Permission perm = zone.getUser(player);
-                if (perm != Zone.Permission.Owner && !player.getRank().canModifyZones()) {
+        Block block = event.getBlock();
+        Point currentPos = new Point(block.getX(), block.getZ());
+        ZoneWorld world = plugin.getWorld(block.getWorld());
+        Zone zone = world.findZone(currentPos);
+        Lot lot = world.findLot(currentPos);
+        // within a zone, lots can be created by zone owners or people with
+        // the zones permission.
+        String type = null;
+        if (zone != null) {
+            Zone.Permission perm = zone.getUser(player);
+            if (perm != Zone.Permission.Owner && !player.getRank().canModifyZones()) {
 
-                    return;
-                }
-                if (lot != null) {
-                    player.sendMessage("This lot is called " + lot.getName() + ".");
-                    return;
-                }
-                type = "lot";
-            }
-            // outside of a zone
-            else {
-                // outside of any existing zone, this can only be used by people
-                // with zones permission.
-                if (!player.getRank().canModifyZones()) {
-                    return;
-                }
-                type = "zone";
-            }
-            if (player.getZoneBlock1().getLocation().distance(block.getLocation()) == 0)
                 return;
-            player.setZoneBlock1(block);
-            event.getPlayer().sendMessage("First block set of new " + type + ".");
-            if (zone != null) {
-                player.setTargetZoneId(zone.getId());
-            } else {
-                player.setTargetZoneId(0);
             }
+            if (lot != null) {
+                player.sendMessage("This lot is called " + lot.getName() + ".");
+                return;
+            }
+            type = "lot";
+        }
+        // outside of a zone
+        else {
+            // outside of any existing zone, this can only be used by people
+            // with zones permission.
+            if (!player.getRank().canModifyZones()) {
+                return;
+            }
+            type = "zone";
+        }
+        if (player.getZoneBlock1() != null && player.getZoneBlock1().getLocation().distance(block.getLocation()) == 0)
+            return;
+        player.setZoneBlock1(block);
+        event.getPlayer().sendMessage("First block set of new " + type + ".");
+        if (zone != null) {
+            player.setTargetZoneId(zone.getId());
+        } else {
+            player.setTargetZoneId(0);
         }
     }
 
