@@ -22,8 +22,12 @@ public class MentorCommand extends AbstractCommand {
 
     private static int onlineTeachers = 0;
 
+
+    private Queue<GenericPlayer> mentors;
+
     public MentorCommand(Tregmine tregmine) {
         super(tregmine, "mentor");
+        mentors = tregmine.getMentorQueue();
         onlineTeachers = tregmine.getOnlineTeachers();
     }
 
@@ -118,121 +122,108 @@ public class MentorCommand extends AbstractCommand {
 
     @Override
     public boolean handlePlayer(GenericPlayer player, String[] args) {
-        String action = "queue";
-        if (args.length > 0) {
-            action = args[0];
-        }
+        String action = args.length > 0 ? args[0] : "queue";
 
-        if ("queue".equalsIgnoreCase(action)) {
-            if (!player.canMentor()) {
-                error(player, "You have not been granted mentoring abilities.");
-                return true;
-            }
-
-            if (player.getStudent() != null) {
-                error(player, "You can only mentor one " + "student at any given time.");
-                return true;
-            }
-
-            Queue<GenericPlayer> students = tregmine.getStudentQueue();
-            if (students.size() > 0) {
-                GenericPlayer student = students.poll();
-                startMentoring(tregmine, student, player);
-                return true;
-            }
-
-            Queue<GenericPlayer> mentors = tregmine.getMentorQueue();
-            mentors.offer(player);
-
-            player.sendMessage(GREEN + "You are now part of the mentor queue. " + "You are number "
-                    + mentors.size() + ". Type /mentor cancel " + "to opt out.");
-        } else if ("cancel".equalsIgnoreCase(action)) {
-            if (player.getRank() == Rank.TOURIST) {
-                GenericPlayer mentor = player.getMentor();
-
-                try (IContext ctx = tregmine.createContext()) {
-                    IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
-                    int mentorLogId = mentorLogDAO.getMentorLogId(player, mentor);
-                    mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.CANCELLED);
-                } catch (DAOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                player.setMentor(null);
-                mentor.setStudent(null);
-
-                mentor.sendMessage(player.getName() + "" + RED + " cancelled " + "mentoring with you.");
-                player.sendMessage(GREEN + "Mentoring cancelled. Attempting to " + "find you a new mentor.");
-
-                findMentor(tregmine, player);
-            } else {
-                Queue<GenericPlayer> mentors = tregmine.getMentorQueue();
-                if (!mentors.contains(player)) {
-                    error(player, "You are not part of the mentor queue. "
-                            + "If you have already been assigned a student, you cannot " + "abort the mentoring.");
+        switch (action) {
+            case "queue":
+                if (!player.canMentor()) {
+                    error(player, "You have not been granted mentoring abilities.");
                     return true;
                 }
-                mentors.remove(player);
 
-                player.sendMessage(GREEN + "You are no longer part of the mentor queue.");
-            }
-        } else if ("complete".equalsIgnoreCase(action)) {
-            if (!player.getRank().canMentor() && tregmine.getOnlineTeachers() >= 1) {
-                error(player, "There are mentors available, you cannot skip mentoring.");
-                return true;
-            }
-            if (tregmine.getOnlineTeachers() == 0 && player.getMentor() == null && player.getRank() == Rank.TOURIST) {
-                try (IContext ctx = tregmine.createContext()) {
-                    player.setRank(Rank.SETTLER);
-
-                    IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                    playerDAO.updatePlayer(player);
-                    playerDAO.updatePlayerInfo(player);
-
-                    IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
-                    int mentorLogId = mentorLogDAO.getMentorLogId(player, player);
-
-                    mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.SKIPPED);
-                    player.sendMessage(ChatColor.GREEN + "You have been elevated to settler status.");
-                } catch (DAOException e) {
-                    throw new RuntimeException(e);
+                if (player.getStudent() != null) {
+                    error(player, "You can only mentor one " + "student at any given time.");
+                    return true;
                 }
-                return true;
-            }
-            GenericPlayer student = player.getStudent();
-            if (student == null) {
-                error(player, "You are not mentoring anyone right now.");
-                return true;
-            }
-            if (student != null) {
-                try (IContext ctx = tregmine.createContext()) {
-                    student.setRank(Rank.SETTLER);
 
-                    IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                    playerDAO.updatePlayer(student);
-                    playerDAO.updatePlayerInfo(student);
-
-                    player.setStudent(null);
-                    student.setMentor(null);
-
-                    IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
-                    int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
-
-                    mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.COMPLETED);
-                    player.sendMessage(GREEN + "Mentoring of " + student.getName() + GREEN + " has now finished!");
-                    player.giveExp(100);
-
-                    student.sendMessage(GREEN + "Congratulations! You have now achieved "
-                            + "settler status. We hope you'll enjoy your stay on Tregmine!");
-                } catch (DAOException e) {
-                    throw new RuntimeException(e);
+                Queue<GenericPlayer> students = tregmine.getStudentQueue();
+                if (students.size() > 0) {
+                    GenericPlayer student = students.poll();
+                    startMentoring(tregmine, student, player);
+                    return true;
                 }
-                return true;
-            }
-        } else {
-            return false;
+                mentors.offer(player);
+
+                player.sendMessage(GREEN + "You are now part of the mentor queue. " + "You are number "
+                        + mentors.size() + ". Type /mentor cancel " + "to opt out.");
+                break;
+            case "cancel":
+                if (player.getRank() == Rank.TOURIST) {
+                    GenericPlayer mentor = player.getMentor();
+
+                    try (IContext ctx = tregmine.createContext()) {
+                        IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                        int mentorLogId = mentorLogDAO.getMentorLogId(player, mentor);
+                        mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.CANCELLED);
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    player.setMentor(null);
+                    mentor.setStudent(null);
+
+                    mentor.sendMessage(player.getName() + "" + RED + " cancelled " + "mentoring with you.");
+                    player.sendMessage(GREEN + "Mentoring cancelled. Attempting to " + "find you a new mentor.");
+
+                    findMentor(tregmine, player);
+                } else {
+                    Queue<GenericPlayer> mentors = tregmine.getMentorQueue();
+                    if (!mentors.contains(player)) return error(player, "You are not part of the mentor queue. "
+                                + "If you have already been assigned a student, you cannot " + "abort the mentoring.");
+                    mentors.remove(player);
+
+                    player.sendMessage(GREEN + "You are no longer part of the mentor queue.");
+                }
+            case "complete":
+                if (!player.getRank().canMentor() && tregmine.getOnlineTeachers() >= 1) return error(player, "There are mentors available, you cannot skip mentoring.");
+                if (tregmine.getOnlineTeachers() == 0 && player.getMentor() == null && player.getRank() == Rank.TOURIST) {
+                    try (IContext ctx = tregmine.createContext()) {
+                        player.setRank(Rank.SETTLER);
+
+                        IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                        playerDAO.updatePlayer(player);
+                        playerDAO.updatePlayerInfo(player);
+
+                        IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                        int mentorLogId = mentorLogDAO.getMentorLogId(player, player);
+
+                        mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.SKIPPED);
+                        player.sendMessage(ChatColor.GREEN + "You have been elevated to settler status.");
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return true;
+                }
+                GenericPlayer student = player.getStudent();
+                if (student == null) return error(player, "You are not mentoring anyone right now.");
+                if (student != null) {
+                    try (IContext ctx = tregmine.createContext()) {
+                        student.setRank(Rank.SETTLER);
+
+                        IPlayerDAO playerDAO = ctx.getPlayerDAO();
+                        playerDAO.updatePlayer(student);
+                        playerDAO.updatePlayerInfo(student);
+
+                        player.setStudent(null);
+                        student.setMentor(null);
+
+                        IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
+                        int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
+
+                        mentorLogDAO.updateMentorLogEvent(mentorLogId, IMentorLogDAO.MentoringEvent.COMPLETED);
+                        player.sendMessage(GREEN + "Mentoring of " + student.getName() + GREEN + " has now finished!");
+                        player.giveExp(100);
+
+                        student.sendMessage(GREEN + "Congratulations! You have now achieved "
+                                + "settler status. We hope you'll enjoy your stay on Tregmine!");
+                    } catch (DAOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return true;
+                }
+            default:
+                return false;
         }
-
         return true;
     }
 }
