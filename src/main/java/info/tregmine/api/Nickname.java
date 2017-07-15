@@ -21,7 +21,7 @@ public class Nickname {
 
     public Nickname(String nickname, ChatColor color) {
         this(nickname);
-        this.color = color;
+        this.color = color == null ? this.color : color;
     }
 
     public Nickname(String nickname, ChatColor color, List<ChatColor> formatting) {
@@ -55,7 +55,7 @@ public class Nickname {
     }
 
     public void setColor(ChatColor setcolor) {
-        this.color = setcolor;
+        this.color = setcolor == null ? this.color : setcolor;
     }
 
     public List<ChatColor> getFormatting() {
