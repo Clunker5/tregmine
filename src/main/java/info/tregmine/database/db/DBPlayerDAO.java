@@ -186,7 +186,7 @@ public class DBPlayerDAO implements IPlayerDAO {
             ResultSet rs = stmt.executeQuery();
             if (!rs.next())
                 return null;
-            return this.injectData(rs, new TregminePlayer(UUID.fromString("player_uuid"), plugin, rs.getString("player_name")));
+            return this.injectData(rs, new TregminePlayer(UUID.fromString(rs.getString("player_uuid")), plugin, rs.getString("player_name")));
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
