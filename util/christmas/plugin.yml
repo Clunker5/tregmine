@@ -1,0 +1,11 @@
+name: Christmas
+version: 1.0
+load: startup
+main: info.tregmine.christmas.ChristmasMain
+author: ice374
+description: A festive Christmas plugin!
+commands:
+  christmas:
+    description: Christmas command
+    aliases: xmas
+    usage: /<command> help
