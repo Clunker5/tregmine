@@ -145,6 +145,11 @@ public class ZonePlayerListener implements Listener
             }
 
             if (count == 0) {
+
+                if (player.getZoneBlock2() != null && player.getZoneBlock2().equals(block)) {
+                    return;
+                }
+
                 player.setZoneBlock1(block);
                 player.setZoneBlock2(null);
                 event.getPlayer().sendMessage(
@@ -156,8 +161,12 @@ public class ZonePlayerListener implements Listener
                 else {
                     player.setTargetZoneId(0);
                 }
-            }
-            else if (count == 1) {
+            } else if (count == 1) {
+
+                if (player.getZoneBlock1().equals(block)) {
+                    return;
+                }
+
                 int zf = player.getTargetZoneId();
                 if (zf != 0 && zf != zone.getId()) {
                     player.sendMessage("The full extent of the lot must be in the same zone.");
