@@ -77,7 +77,7 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
             "fishyblock_blockx, fishyblock_blocky, fishyblock_blockz, " +
             "fishyblock_signx, fishyblock_signy, fishyblock_signz, " +
             "fishyblock_storedenchants) ";
-        sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql += "VALUES (?, unix_timestamp(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING fishyblock_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, block.getPlayerId());
@@ -95,8 +95,6 @@ public class DBFishyBlockDAO implements IFishyBlockDAO
             stmt.setInt(13, block.getSignLocation().getBlockZ());
             stmt.setString(14, block.hasStoredEnchantments() ? "1" : "0");
             stmt.execute();
-
-            stmt.executeQuery("SELECT LAST_INSERT_ID()");
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next()) {

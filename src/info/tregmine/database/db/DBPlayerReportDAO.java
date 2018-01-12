@@ -68,7 +68,7 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
     {
         String sql = "INSERT INTO player_report (subject_id, issuer_id, " +
             "report_action, report_message, report_timestamp, report_validuntil) ";
-        sql += "VALUES (?, ?, ?, ?, ?, ?)";
+        sql += "VALUES (?, ?, ?, ?, ?, ?) RETURNING report_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -83,8 +83,6 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
             stmt.setLong(6, validUntil != null ? validUntil.getTime() / 1000l
                     : 0);
             stmt.execute();
-
-            stmt.executeQuery("SELECT LAST_INSERT_ID()");
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (rs.next()) {

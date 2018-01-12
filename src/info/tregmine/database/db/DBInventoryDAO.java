@@ -100,7 +100,7 @@ public class DBInventoryDAO implements IInventoryDAO
         String sql = "INSERT INTO inventory (player_id, inventory_checksum, " +
             "inventory_x, inventory_y, inventory_z, inventory_world, " +
             "inventory_type) ";
-        sql += "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        sql += "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING inventory_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, player.getId());
@@ -119,9 +119,8 @@ public class DBInventoryDAO implements IInventoryDAO
                 stmt.setString(6, loc.getWorld().getName());
             }
             stmt.setString(7, type.toString());
-            stmt.execute();
 
-            stmt.executeQuery("SELECT LAST_INSERT_ID()");
+            stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next()) {

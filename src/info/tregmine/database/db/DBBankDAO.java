@@ -54,12 +54,11 @@ public class DBBankDAO implements IBankDAO
     @Override
     public int createBank(Bank bank) throws DAOException
     {
-        String sql = "INSERT INTO bank (lot_id) VALUES (?)";
+        String sql = "INSERT INTO bank (lot_id) VALUES (?) RETURNING bank_id";
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, bank.getLotId());
             stm.execute();
 
-            stm.executeQuery("SELECT LAST_INSERT_ID()");
             try (ResultSet rs = stm.getResultSet()) {
                 if (!rs.next()) {
                     return 0;
@@ -208,7 +207,7 @@ public class DBBankDAO implements IBankDAO
         acct.setPin(s);
 
         String sql = "INSERT INTO bank_account (bank_id, player_id, " +
-            "account_balance, account_number, account_pin) VALUES (?,?,?,?, ?)";
+            "account_balance, account_number, account_pin) VALUES (?,?,?,?, ?) RETURNING account_id";
 
         try (PreparedStatement stm = conn.prepareStatement(sql)) {
             stm.setInt(1, acct.getBank().getId());
@@ -217,8 +216,6 @@ public class DBBankDAO implements IBankDAO
             stm.setInt(4, acct.getAccountNumber());
             stm.setString(5, acct.getPin());
             stm.execute();
-
-            stm.executeQuery("SELECT LAST_INSERT_ID()");
 
             try (ResultSet rs = stm.getResultSet()) {
                 if (!rs.next()) {

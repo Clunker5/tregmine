@@ -135,7 +135,7 @@ public class DBZonesDAO implements IZonesDAO
             "zone_enterdefault, zone_placedefault, zone_destroydefault, " +
             "zone_pvp, zone_hostiles, zone_communist, zone_publicprofile, " +
             "zone_entermessage, zone_exitmessage, zone_owner) ";
-        sql += "VALUES (?, ?,?,?,?,?,?,?,?,?,?,?)";
+        sql += "VALUES (?, ?,?,?,?,?,?,?,?,?,?,?) RETURNING zone_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, zone.getWorld());
@@ -150,9 +150,8 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setString(10, zone.getTextEnter());
             stmt.setString(11, zone.getTextExit());
             stmt.setString(12, zone.getMainOwner());
-            stmt.execute();
 
-            stmt.execute("SELECT LAST_INSERT_ID()");
+            stmt.execute();
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (!rs.next()) {
@@ -355,7 +354,7 @@ public class DBZonesDAO implements IZonesDAO
     public void addLot(Lot lot) throws DAOException
     {
         String sql = "INSERT INTO zone_lot (zone_id, lot_name, lot_x1, " +
-            "lot_y1, lot_x2, lot_y2) VALUES (?,?,?,?,?,?)";
+            "lot_y1, lot_x2, lot_y2) VALUES (?,?,?,?,?,?) RETURNING lot_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, lot.getZoneId());
@@ -368,8 +367,6 @@ public class DBZonesDAO implements IZonesDAO
             stmt.setInt(6, rect.getBottom());
 
             stmt.execute();
-
-            stmt.execute("SELECT LAST_INSERT_ID()");
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (rs.next()) {
