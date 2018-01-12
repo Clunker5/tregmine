@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -212,7 +214,7 @@ public class DBInventoryDAO implements IInventoryDAO
 
                 stmt.setInt(1, inventoryId);
                 stmt.setInt(2, counter);
-                stmt.setInt(3, stack.getTypeId());
+                stmt.setString(3, stack.getType().name());
                 stmt.setInt(4, stack.getData().getData());
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
@@ -247,7 +249,7 @@ public class DBInventoryDAO implements IInventoryDAO
                 while (rs.next()) {
 
                     int slot = rs.getInt("item_slot");
-                    int materialId = rs.getInt("item_material");
+                    String materialName = rs.getString("item_material");
                     int data = rs.getInt("item_data");
                     int count = rs.getInt("item_count");
                     String meta = rs.getString("item_meta");
@@ -259,7 +261,7 @@ public class DBInventoryDAO implements IInventoryDAO
                         metaObj = (ItemMeta) config.get("meta");
                     }
 
-                    stacks[slot] = new ItemStack(materialId, count, (short) data);
+                    stacks[slot] = new ItemStack(Material.valueOf(materialName.toUpperCase(Locale.ENGLISH)), count, (short) data);
                     if (metaObj != null) {
                         stacks[slot].setItemMeta(metaObj);
                     }
@@ -353,7 +355,7 @@ public class DBInventoryDAO implements IInventoryDAO
 
                 stmt.setInt(1, inventoryID);
                 stmt.setInt(2, counter);
-                stmt.setInt(3, stack.getTypeId());
+                stmt.setString(3, stack.getType().name());
                 stmt.setInt(4, stack.getData().getData());
                 if (stack.hasItemMeta()) {
                     YamlConfiguration config = new YamlConfiguration();
@@ -388,7 +390,7 @@ public class DBInventoryDAO implements IInventoryDAO
                try (ResultSet rs = stmt.getResultSet()) {
                    while (rs.next()) {
                        int slot = rs.getInt("item_slot");
-                       int materialId = rs.getInt("item_material");
+                       String materialName = rs.getString("item_material");
                        int data = rs.getInt("item_data");
                        int count = rs.getInt("item_count");
                        String meta = rs.getString("item_meta");
@@ -401,7 +403,7 @@ public class DBInventoryDAO implements IInventoryDAO
                            metaObj = (ItemMeta) config.get("meta");
                        }
 
-                       ItemStack item = new ItemStack(materialId, count, (short) data);
+                       ItemStack item = new ItemStack(Material.valueOf(materialName.toUpperCase(Locale.ENGLISH)), count, (short) data);
                        if ("main".equalsIgnoreCase(type)) {
                            player.getInventory().setItem(slot, item);
                            player.getInventory().getItem(slot).setDurability(durability);

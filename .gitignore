@@ -15,3 +15,4 @@ make.log
 /out
 lib/.DS_Store
 tregmine.jar
+.idea/workspace.xml

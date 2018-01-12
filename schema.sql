@@ -183,13 +183,12 @@ CREATE TABLE inventory_changelog (
 
 DROP TABLE IF EXISTS inventory_item;
 CREATE TABLE inventory_item (
-  item_id serial PRIMARY KEY NOT NULL,
-  inventory_id int DEFAULT NULL,
-  item_slot int DEFAULT NULL,
-  item_material int DEFAULT NULL,
-  item_data int DEFAULT NULL,
+  inventory_id int NOT NULL,
+  item_slot int NOT NULL,
+  item_material text DEFAULT 'AIR',
+  item_data int DEFAULT 0,
   item_meta text,
-  item_count int DEFAULT NULL
+  item_count int DEFAULT 0
 );
 
 --
@@ -287,7 +286,6 @@ CREATE TABLE playerinventory (
 DROP TABLE IF EXISTS playerinventory_item;
 
 CREATE TABLE playerinventory_item (
-  item_id int NOT NULL,
   playerinventory_id int DEFAULT NULL,
   item_slot int DEFAULT NULL,
   item_material varchar DEFAULT NULL,
@@ -511,7 +509,7 @@ DROP TABLE IF EXISTS trade_item;
 CREATE TABLE trade_item (
   item_id serial NOT NULL,
   trade_id int DEFAULT NULL,
-  item_material int DEFAULT NULL,
+  item_material text DEFAULT NULL,
   item_data int DEFAULT NULL,
   item_meta text,
   item_count int DEFAULT NULL,
