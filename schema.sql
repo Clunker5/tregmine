@@ -668,5 +668,50 @@ CREATE TABLE misc_message (
   message_value text NOT NULL
 );
 
+--
+-- Table structure for table bank
+--
+
+DROP TABLE IF EXISTS bank;
+
+CREATE TABLE bank (
+  bank_id serial PRIMARY KEY NOT NULL,
+  lot_id int DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table bank_account
+--
+
+DROP TABLE IF EXISTS bank_account;
+
+CREATE TABLE bank_account (
+  account_id serial PRIMARY KEY NOT NULL,
+  bank_id int DEFAULT NULL,
+  player_id int DEFAULT NULL,
+  account_balance int DEFAULT 0,
+  account_number int DEFAULT NULL,
+  account_pin varchar DEFAULT NULL
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table bank_transaction
+--
+
+DROP TABLE IF EXISTS bank_transaction;
+
+CREATE TABLE bank_transaction (
+  transaction_id serial PRIMARY KEY NOT NULL,
+  account_id int NOT NULL,
+  player_id int NOT NULL,
+  transaction_type varchar NOT NULL,
+  transaction_amount int NOT NULL,
+  transaction_timestamp int NOT NULL
+);
+
 
 -- Dump completed on 2013-12-10 22:18:14
