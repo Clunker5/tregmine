@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/bungee/BungeeChat/BungeeChat.iml" filepath="$PROJECT_DIR$/bungee/BungeeChat/BungeeChat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bungee/Hub Plugin/Hub Plugin.iml" filepath="$PROJECT_DIR$/bungee/Hub Plugin/Hub Plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bungee/Portal Plugin/Portal Plugin.iml" filepath="$PROJECT_DIR$/bungee/Portal Plugin/Portal Plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/blocklog/blocklog.iml" filepath="$PROJECT_DIR$/util/blocklog/blocklog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/christmas/christmas.iml" filepath="$PROJECT_DIR$/util/christmas/christmas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/delegate_gen/delegate_gen.iml" filepath="$PROJECT_DIR$/util/delegate_gen/delegate_gen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/eventdebug/eventdebug.iml" filepath="$PROJECT_DIR$/util/eventdebug/eventdebug.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/fix_broken/fix_broken.iml" filepath="$PROJECT_DIR$/util/fix_broken/fix_broken.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/gamemagic/gamemagic.iml" filepath="$PROJECT_DIR$/util/gamemagic/gamemagic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/mojang_nbt/mojang_nbt.iml" filepath="$PROJECT_DIR$/util/mojang_nbt/mojang_nbt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/spleef/spleef.iml" filepath="$PROJECT_DIR$/util/spleef/spleef.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tregmine.iml" filepath="$PROJECT_DIR$/tregmine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/world_importer/world_importer.iml" filepath="$PROJECT_DIR$/util/world_importer/world_importer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/zone_exporter/zone_exporter.iml" filepath="$PROJECT_DIR$/util/zone_exporter/zone_exporter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/zone_mapper/zone_mapper.iml" filepath="$PROJECT_DIR$/util/zone_mapper/zone_mapper.iml" />
+    </modules>
+  </component>
+</project>

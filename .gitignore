@@ -10,3 +10,8 @@ make.log
 .settings
 /misc
 /bin
+/server
+/bungee/**/*.java
+/out
+lib/.DS_Store
+tregmine.jar

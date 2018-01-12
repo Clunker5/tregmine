@@ -26,7 +26,7 @@ public class DBContextFactory implements IContextFactory
 
         String driver = config.getString("db.driver");
         if (driver == null) {
-            driver = "com.mysql.jdbc.Driver";
+            driver = "org.postgresql.Driver";
         }
 
         try {
@@ -68,9 +68,6 @@ public class DBContextFactory implements IContextFactory
             // It's the responsibility of the context to make sure that the
             // connection is correctly closed
             Connection conn = ds.getConnection();
-            try (Statement stmt = conn.createStatement()) {
-                stmt.execute("SET NAMES latin1");
-            }
 
             return new DBContext(new LoggingConnection(conn, queryLog), plugin);
         } catch (SQLException e) {

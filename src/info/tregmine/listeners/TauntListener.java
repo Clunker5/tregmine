@@ -37,10 +37,12 @@ public class TauntListener implements Listener
         Player player = (Player) event.getEntity();
         PlayerDeathEvent e = (PlayerDeathEvent) event;
 
-        Random rand = new Random();
-        int msgIndex = rand.nextInt(plugin.getInsults().size());
-        String death = ChatColor.DARK_GRAY + "DIED - " + player.getName() +
-                       " " + plugin.getInsults().get(msgIndex);
+        String death = ChatColor.DARK_GRAY + "DIED - " + player.getName();
+        if (plugin.getInsults().size() == 0) {
+            Random rand = new Random();
+            int msgIndex = rand.nextInt(plugin.getInsults().size());
+            death += " " + plugin.getInsults().get(msgIndex);
+        }
 
         EntityDamageEvent damage = player.getLastDamageCause();
         DamageCause cause = damage.getCause();

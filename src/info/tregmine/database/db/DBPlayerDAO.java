@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.EnumMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import info.tregmine.Tregmine;
@@ -33,9 +35,7 @@ public class DBPlayerDAO implements IPlayerDAO
     @Override
     public TregminePlayer getPlayer(int id) throws DAOException
     {
-        String sql = "SELECT * FROM player WHERE player_id = ?";
-
-        TregminePlayer player = null;
+        String sql = "SELECT player_name FROM player WHERE player_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -46,37 +46,13 @@ public class DBPlayerDAO implements IPlayerDAO
                     return null;
                 }
 
-                player = new TregminePlayer(rs.getString("player_name"), plugin);
-                player.setId(rs.getInt("player_id"));
-
-                String uniqueIdStr = rs.getString("player_uuid");
-                if (uniqueIdStr != null) {
-                    player.setStoredUuid(UUID.fromString(uniqueIdStr));
-                }
-                player.setPasswordHash(rs.getString("player_password"));
-                player.setRank(Rank.fromString(rs.getString("player_rank")));
-
-                if (rs.getString("player_inventory") == null) {
-                    player.setCurrentInventory("survival");
-                } else {
-                    player.setCurrentInventory(rs.getString("player_inventory"));
-                }
-
-                int flags = rs.getInt("player_flags");
-                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
-                    if ((flags & (1 << flag.ordinal())) != 0) {
-                        player.setFlag(flag);
-                    }
-                }
+                TregminePlayer player = new TregminePlayer(rs.getString("player_name"), plugin);
+                return this.parsePlayer(rs, player);
             }
         }
         catch (SQLException e) {
             throw new DAOException(sql, e);
         }
-
-        loadSettings(player);
-
-        return player;
     }
 
     @Override
@@ -95,6 +71,8 @@ public class DBPlayerDAO implements IPlayerDAO
     public TregminePlayer getPlayer(String name, Player wrap)
             throws DAOException
     {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+
         String sql = "SELECT * FROM player WHERE player_name = ?";
 
         TregminePlayer player;
@@ -113,41 +91,49 @@ public class DBPlayerDAO implements IPlayerDAO
                     return null;
                 }
 
-                UUID uniqueId = null;
-                if (wrap != null) {
-                    uniqueId = wrap.getUniqueId();
-                } else {
-                    String uniqueIdStr = rs.getString("player_uuid");
-                    if (uniqueIdStr != null) {
-                        player.setStoredUuid(UUID.fromString(uniqueIdStr));
-                    }
-                }
-
-                player.setId(rs.getInt("player_id"));
-                player.setStoredUuid(uniqueId);
-                player.setPasswordHash(rs.getString("player_password"));
-                player.setRank(Rank.fromString(rs.getString("player_rank")));
-
-                if (rs.getString("player_inventory") == null) {
-                    player.setCurrentInventory("survival");
-                } else {
-                    player.setCurrentInventory(rs.getString("player_inventory"));
-                }
-
-                int flags = rs.getInt("player_flags");
-                for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
-                    if ((flags & (1 << flag.ordinal())) != 0) {
-                        player.setFlag(flag);
-                    }
-                }
+                return this.parsePlayer(rs, player);
             }
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }
+    }
 
-        loadSettings(player);
+    private TregminePlayer parsePlayer(ResultSet rs, TregminePlayer player) throws DAOException {
+        try {
+            UUID uniqueId = null;
+            if (player.getDelegate() != null && player.getDelegate().getPlayer() != null) {
+                uniqueId = player.getDelegate().getUniqueId();
+            } else {
+                String uniqueIdStr = rs.getString("player_uuid");
+                if (uniqueIdStr != null) {
+                    player.setStoredUuid(UUID.fromString(uniqueIdStr));
+                }
+            }
 
-        return player;
+            player.setId(rs.getInt("player_id"));
+            player.setStoredUuid(uniqueId);
+            player.setPasswordHash(rs.getString("player_password"));
+            player.setRank(Rank.fromString(rs.getString("player_rank")));
+
+            if (rs.getString("player_inventory") == null) {
+                player.setCurrentInventory("survival");
+            } else {
+                player.setCurrentInventory(rs.getString("player_inventory"));
+            }
+
+            int flags = rs.getInt("player_flags");
+            for (TregminePlayer.Flags flag : TregminePlayer.Flags.values()) {
+                if ((flags & (1 << flag.ordinal())) != 0) {
+                    player.setFlag(flag);
+                }
+            }
+
+            loadSettings(player);
+
+            return player;
+        } catch (SQLException ex) {
+            throw new DAOException("", ex);
+        }
     }
 
     private void loadSettings(TregminePlayer player) throws DAOException
@@ -184,7 +170,7 @@ public class DBPlayerDAO implements IPlayerDAO
     @Override
     public TregminePlayer createPlayer(Player wrap) throws DAOException
     {
-        String sql = "INSERT INTO player (player_uuid, player_name, player_rank, player_keywords) VALUE (?, ?, ?, ?)";
+        String sql = "INSERT INTO player (player_uuid, player_name, player_rank, player_keywords) VALUES (?, ?, ?, ?) RETURNING player_id";
 
         TregminePlayer player = new TregminePlayer(wrap, plugin);
         player.setStoredUuid(player.getUniqueId());
@@ -194,17 +180,14 @@ public class DBPlayerDAO implements IPlayerDAO
             stmt.setString(2, player.getName());
             stmt.setString(3, player.getRank().toString());
             stmt.setString(4, player.getRealName());
-            stmt.execute();
 
-            stmt.executeQuery("SELECT LAST_INSERT_ID()");
+            ResultSet rs = stmt.executeQuery();
 
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    throw new DAOException("Failed to get player id", sql);
-                }
-
-                player.setId(rs.getInt(1));
+            if (!rs.next()) {
+                throw new DAOException("Failed to get player id", sql);
             }
+
+            player.setId(rs.getInt(1));
         }
         catch (SQLException e) {
             throw new DAOException(sql, e);
@@ -247,26 +230,39 @@ public class DBPlayerDAO implements IPlayerDAO
     private void updateProperty(TregminePlayer player, String key, String value)
             throws DAOException
     {
-        String sqlInsert = "REPLACE INTO player_property (player_id, " +
-                           "property_key, property_value) VALUE (?, ?, ?)";
+        String update = "UPDATE player_property SET property_value = ? WHERE property_key = ? AND player_id = ?";
+
+        String insert = "INSERT INTO player_property (player_id, property_key, property_value) VALUES (?, ?, ?)";
 
         if (value == null) {
             return;
         }
 
-        try (PreparedStatement stmt = conn.prepareStatement(sqlInsert)) {
-            stmt.setInt(1, player.getId());
+        try (PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setString(1, value);
             stmt.setString(2, key);
-            stmt.setString(3, value);
-            stmt.execute();
+            stmt.setInt(3, player.getId());
+            if (stmt.executeUpdate() == 0) {
+                try {
+                    PreparedStatement stmt2 = conn.prepareStatement(insert);
+                    stmt2.setInt(1, player.getId());
+                    stmt2.setString(2, key);
+                    stmt2.setString(3, value);
+                    stmt2.execute();
+                } catch (SQLException e) {
+                    throw new DAOException(insert, e);
+                }
+            }
         } catch (SQLException e) {
-            throw new DAOException(sqlInsert, e);
+            throw new DAOException(update, e);
         }
     }
 
     @Override
     public void updatePlayer(TregminePlayer player) throws DAOException
     {
+        // WITH upsert AS ($upsert RETURNING *) $insert WHERE NOT EXISTS (SELECT * FROM upsert);
+
         String sql = "UPDATE player SET player_uuid = ?, player_password = ?, " +
             "player_rank = ?, player_flags = ?, player_inventory = ? ";
         sql += "WHERE player_id = ?";
@@ -409,6 +405,11 @@ public class DBPlayerDAO implements IPlayerDAO
                 if(!rs.next()) return false;
 
                 String stringofignored = rs.getString("player_ignore");
+
+                if (stringofignored == null) {
+                    return false;
+                }
+
                 String[] strings = stringofignored.split(",");
 
                 List<String> playerignore = new ArrayList<String>();

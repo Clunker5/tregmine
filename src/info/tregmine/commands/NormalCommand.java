@@ -30,10 +30,8 @@ public class NormalCommand extends AbstractCommand
                     + "reconnect!");
         }
         else if (player.getRank() == Rank.GUARDIAN) {
-            Player[] players = tregmine.getServer().getOnlinePlayers();
             TregminePlayer maxRank = null;
-            for (Player srvPlayer : players) {
-                TregminePlayer guardian = tregmine.getPlayer(srvPlayer);
+            for (TregminePlayer guardian : tregmine.getOnlinePlayers()) {
                 if (guardian.getRank() != Rank.GUARDIAN) {
                     continue;
                 }

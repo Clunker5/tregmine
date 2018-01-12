@@ -2,8 +2,8 @@ package info.tregmine.christmas.populators;
 
 import java.util.Random;
 
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
-import net.minecraft.server.v1_7_R1.NBTTagList;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -13,7 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Witch;
@@ -4164,7 +4164,7 @@ public class ChristmasTreePopulator extends BlockPopulator {
 		Random random = new Random();
 		ItemStack dust = new ItemStack(Material.GLOWSTONE_DUST, 1);
 		ItemMeta meta = dust.getItemMeta();
-		meta.setDisplayName("§bChristmas Essence");
+		meta.setDisplayName("ï¿½bChristmas Essence");
 		dust.setItemMeta(meta);
 		
 		chest.getInventory().setItem(random.nextInt(27), dust);

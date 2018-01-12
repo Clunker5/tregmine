@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="TregBungeeChat-built">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bungee/BungeeChat/target/TregBungeeChat-built.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

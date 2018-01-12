@@ -90,8 +90,7 @@ public class Tregmine extends JavaPlugin
 
         zones = new HashMap<>();
 
-        Player[] players = getServer().getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : getServer().getOnlinePlayers()) {
             try {
                 TregminePlayer tp =
                     addPlayer(player, player.getAddress().getAddress());
@@ -504,9 +503,9 @@ public class Tregmine extends JavaPlugin
             }
 
             int onlinePlayerCount = 0;
-            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
-                onlinePlayerCount = onlinePlayers.length;
+                onlinePlayerCount = onlinePlayers.size();
             }
 
             ILogDAO logDAO = ctx.getLogDAO();
@@ -528,9 +527,9 @@ public class Tregmine extends JavaPlugin
     {
         try (IContext ctx = contextFactory.createContext()) {
             int onlinePlayerCount = 0;
-            Player[] onlinePlayers = getServer().getOnlinePlayers();
+            Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
             if (onlinePlayers != null) {
-                onlinePlayerCount = onlinePlayers.length;
+                onlinePlayerCount = onlinePlayers.size();
             }
 
             ILogDAO logDAO = ctx.getLogDAO();

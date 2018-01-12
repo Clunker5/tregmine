@@ -62,7 +62,8 @@
                            lib/commons-pool-1.5.6.jar
                            lib/TagAPI.jar
 						   lib/activation.jar 
-                	       lib/mail.jar" />
+                	       lib/mail.jar
+                           lib/postgresql-42.1.4.jar" />
             </manifest>
         </jar>
     </target>

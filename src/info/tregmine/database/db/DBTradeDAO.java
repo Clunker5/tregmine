@@ -27,7 +27,7 @@ public class DBTradeDAO implements ITradeDAO
     {
         String sql = "INSERT INTO trade (sender_id, recipient_id, " +
             "trade_timestamp, trade_amount) ";
-        sql += "VALUES (?, ?, unix_timestamp(), ?)";
+        sql += "VALUES (?, ?, unix_timestamp(), ?) RETURNING trade_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, srcId);
@@ -35,15 +35,13 @@ public class DBTradeDAO implements ITradeDAO
             stmt.setInt(3, amount);
             stmt.execute();
 
-            stmt.executeQuery("SELECT LAST_INSERT_ID()");
+            ResultSet rs = stmt.getResultSet();
 
-            try (ResultSet rs = stmt.getResultSet()) {
-                if (!rs.next()) {
-                    throw new DAOException("Failed to get insert_id!", sql);
-                }
-
-                return rs.getInt(1);
+            if (!rs.next()) {
+                throw new DAOException("Failed to get insert_id!", sql);
             }
+
+            return rs.getInt(1);
         } catch (SQLException e) {
             throw new DAOException(sql, e);
         }

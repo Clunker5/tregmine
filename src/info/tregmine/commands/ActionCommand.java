@@ -40,8 +40,7 @@ public class ActionCommand extends AbstractCommand
         String channel = player.getChatChannel();
         String msg = argsToMessage(args);
 
-        Player[] players = server.getOnlinePlayers();
-        for (Player tp : players) {
+        for (Player tp : server.getOnlinePlayers()) {
             TregminePlayer to = tregmine.getPlayer(tp);
             if (!channel.equals(to.getChatChannel())) {
                 continue;
