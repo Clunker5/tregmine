@@ -3,6 +3,8 @@ package info.tregmine.commands;
 import java.util.Queue;
 
 import static org.bukkit.ChatColor.*;
+
+import info.tregmine.api.util.DelayedTask;
 import org.bukkit.entity.Player;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -17,6 +19,9 @@ import info.tregmine.database.IMentorLogDAO;
 
 public class MentorCommand extends AbstractCommand
 {
+
+    private static final double MENTOR_TIMEOUT_MINUTES = 0.25;
+
     public MentorCommand(Tregmine tregmine)
     {
         super(tregmine, "mentor");
@@ -123,13 +128,9 @@ public class MentorCommand extends AbstractCommand
                                  ".");
 
             try (IContext ctx = tregmine.createContext()) {
-                student.setRank(Rank.SETTLER);
-                student.setMentor(null);
                 player.setStudent(null);
 
-                IPlayerDAO playerDAO = ctx.getPlayerDAO();
-                playerDAO.updatePlayer(student);
-                playerDAO.updatePlayerInfo(student);
+                this.promote(student);
 
                 IMentorLogDAO mentorLogDAO = ctx.getMentorLogDAO();
                 int mentorLogId = mentorLogDAO.getMentorLogId(student, player);
@@ -146,6 +147,41 @@ public class MentorCommand extends AbstractCommand
         return true;
     }
 
+    private static void promote(Tregmine tregmine, TregminePlayer student) {
+        try (IContext ctx = tregmine.createContext()) {
+            student.setRank(Rank.SETTLER);
+            student.setMentor(null);
+
+            if (student.getMentor() != null) {
+                student.getMentor().setStudent(null);
+            }
+
+            IPlayerDAO playerDAO = ctx.getPlayerDAO();
+            playerDAO.updatePlayer(student);
+            playerDAO.updatePlayerInfo(student);
+        } catch (DAOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void promote(TregminePlayer student) {
+        MentorCommand.promote(this.tregmine, student);
+    }
+
+    public static void skipMentor(Tregmine plugin, TregminePlayer student) {
+        Queue<TregminePlayer> students = plugin.getStudentQueue();
+
+        if (students.contains(student)) {
+            students.remove(student);
+            student.sendMessage(YELLOW + "Sorry about that! There's no mentors available to show you around." +
+                    " You are now a settler.");
+
+            Tregmine.LOGGER.info(student.getRealName() + " timed out for mentoring and has been promoted to settler.");
+
+            promote(plugin, student);
+        }
+    }
+
     public static void findMentor(Tregmine plugin, TregminePlayer student)
     {
         Queue<TregminePlayer> mentors = plugin.getMentorQueue();
@@ -159,6 +195,10 @@ public class MentorCommand extends AbstractCommand
             Queue<TregminePlayer> students = plugin.getStudentQueue();
             students.offer(student);
 
+            DelayedTask.setTimeout(() -> {
+                skipMentor(plugin, student);
+            }, MENTOR_TIMEOUT_MINUTES * 60 * 1000);
+
             for (TregminePlayer p : plugin.getOnlinePlayers()) {
                 if (!p.canMentor()) {
                     continue;
@@ -168,6 +208,7 @@ public class MentorCommand extends AbstractCommand
                     YELLOW + " needs a mentor! Type /mentor to " +
                     "offer your services!");
             }
+
         }
     }
 
