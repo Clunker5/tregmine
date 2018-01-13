@@ -3,6 +3,7 @@ package info.tregmine.listeners;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.event.*;
 
@@ -70,23 +71,25 @@ public class ChatListener implements Listener
                 if (senderChan.equalsIgnoreCase(toChan) ||
                     to.hasFlag(TregminePlayer.Flags.CHANNEL_VIEW)) {
 
+                    BaseComponent senderComponent = sender.getChatNameTextComponent(to.getRank().canViewStatistics());
+
                     if (event.isWebChat()) {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("(" + sender.getChatName()
-                                    + ChatColor.WHITE + ") " + txtColor + text);
+                            to.sendMessage("(", senderComponent
+                                    , ChatColor.WHITE + ") " + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + " (" + sender.getChatName()
-                                    + ChatColor.WHITE + ") " + txtColor + text);
+                            to.sendMessage(channel + " (", senderComponent
+                                    , ChatColor.WHITE + ") " + txtColor + text);
                         }
                     } else {
                         if ("GLOBAL".equalsIgnoreCase(senderChan)) {
-                            to.sendMessage("<" + sender.getChatName()
-                                    + ChatColor.WHITE + "> " + txtColor + text);
+                            to.sendMessage("<", senderComponent
+                                    , ChatColor.WHITE + "> " + txtColor + text);
                         }
                         else {
-                            to.sendMessage(channel + " <" + sender.getChatName()
-                                    + ChatColor.WHITE + "> " + txtColor + text);
+                            to.sendMessage(channel + " <", senderComponent
+                                    , ChatColor.WHITE + "> " + txtColor + text);
                         }
                     }
                 }

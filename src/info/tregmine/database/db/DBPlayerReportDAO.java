@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.stream.Collectors;
 
+import info.tregmine.Tregmine;
 import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.PlayerReport;
 import info.tregmine.database.IPlayerReportDAO;
@@ -16,10 +18,12 @@ import info.tregmine.database.DAOException;
 public class DBPlayerReportDAO implements IPlayerReportDAO
 {
     private Connection conn;
+    private Tregmine tregmine;
 
-    public DBPlayerReportDAO(Connection conn)
+    public DBPlayerReportDAO(Connection conn, Tregmine tregmine)
     {
         this.conn = conn;
+        this.tregmine = tregmine;
     }
 
     @Override
@@ -60,6 +64,8 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
             throw new DAOException(sql, e);
         }
 
+        player.rebuildActionCount(reports.stream().map(report -> report.getAction()).collect(Collectors.toList()));
+
         return reports;
     }
 
@@ -83,6 +89,9 @@ public class DBPlayerReportDAO implements IPlayerReportDAO
             stmt.setLong(6, validUntil != null ? validUntil.getTime() / 1000l
                     : 0);
             stmt.execute();
+
+            TregminePlayer player = this.tregmine.getPlayer(report.getSubjectId());
+            player.incrementAction(report.getAction());
 
             try (ResultSet rs = stmt.getResultSet()) {
                 if (rs.next()) {

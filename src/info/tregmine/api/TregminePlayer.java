@@ -1,7 +1,13 @@
 package info.tregmine.api;
 
 import java.util.*;
+import java.util.stream.Stream;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -43,7 +49,6 @@ public class TregminePlayer extends PlayerDelegate
     private int id = 0;
     private UUID storedUuid = null;
     private String name = null;
-    private String realName = null;
     private String password = null;
     private String keyword = null;
     private Rank rank = Rank.UNVERIFIED;
@@ -93,12 +98,13 @@ public class TregminePlayer extends PlayerDelegate
 
     private Tregmine plugin;
 
+    private Map<PlayerReport.Action, Integer> actionCounts;
+
     public TregminePlayer(Player player, Tregmine instance)
     {
         super(player);
 
         this.name = player.getName();
-        this.realName = player.getName();
         this.loginTime = new Date();
 
         this.flags = EnumSet.noneOf(Flags.class);
@@ -111,7 +117,6 @@ public class TregminePlayer extends PlayerDelegate
         super(null);
 
         this.name = name;
-        this.realName = name;
         this.flags = EnumSet.noneOf(Flags.class);
         this.badges = new EnumMap<Badge, Integer>(Badge.class);
         this.plugin = instance;
@@ -130,9 +135,41 @@ public class TregminePlayer extends PlayerDelegate
         return name;
     }
 
+    public BaseComponent getChatNameTextComponent(boolean statistics) {
+        TextComponent rootComponent = new TextComponent();
+        rootComponent.setText(this.getChatName());
+
+        String roleText = this.getRank().getColor() + StringUtils.capitalize(this.getRank().name().replace('_', ' ').toLowerCase());
+
+        String statisticsText = "";
+
+        if (statistics) {
+            for (PlayerReport.Action action : PlayerReport.Action.values()) {
+                if (!this.actionCounts.containsKey(action)) {
+                    continue;
+                }
+                String actionName = action.name();
+                actionName = actionName.toLowerCase();
+                actionName = StringUtils.capitalize(actionName);
+
+                String statistic = actionName + "s: " + this.actionCounts.get(action);
+                statisticsText += "\n" + ChatColor.GRAY + statistic;
+            }
+        }
+
+        String hoverText = roleText;
+
+        if (statisticsText.length() > 0) {
+            hoverText += statisticsText;
+        }
+
+        rootComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()));
+        return rootComponent;
+    }
+
     public String getRealName()
     {
-        return realName;
+        return getName();
     }
 
     public void setTemporaryChatName(String name)
@@ -142,8 +179,7 @@ public class TregminePlayer extends PlayerDelegate
         if (getDelegate() != null) {
             if (getChatName().length() > 16) {
                 setPlayerListName(name.substring(0, 15));
-            }
-            else {
+            } else {
                 setPlayerListName(name);
             }
         }
@@ -170,6 +206,27 @@ public class TregminePlayer extends PlayerDelegate
 
     public void setBadges(Map<Badge, Integer> v) { this.badges = v; }
     public Map<Badge, Integer> getBadges() { return badges; }
+
+    public void setActionCount(PlayerReport.Action action, Integer count) {
+        this.actionCounts.put(action, count);
+    }
+
+    public Integer getActionCount(PlayerReport.Action action) {
+        return this.actionCounts.get(action) == null ? this.actionCounts.get(action) : 0;
+    }
+
+    public void incrementAction(PlayerReport.Action action, int increment) {
+        this.setActionCount(action, this.getActionCount(action) + increment);
+    }
+
+    public void incrementAction(PlayerReport.Action action) {
+        this.incrementAction(action, 1);
+    }
+
+    public void rebuildActionCount(Iterable<PlayerReport.Action> actions) {
+        this.actionCounts = new HashMap<>();
+        actions.forEach(this::incrementAction);
+    }
 
     public int getBadgeLevel(Badge badge)
     {
