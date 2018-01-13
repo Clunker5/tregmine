@@ -11,6 +11,7 @@ import java.util.EnumMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -20,6 +21,7 @@ import info.tregmine.api.TregminePlayer;
 import info.tregmine.api.Badge;
 import info.tregmine.database.DAOException;
 import info.tregmine.database.IPlayerDAO;
+import org.json.JSONObject;
 
 public class DBPlayerDAO implements IPlayerDAO
 {
@@ -234,7 +236,17 @@ public class DBPlayerDAO implements IPlayerDAO
 
         String insert = "INSERT INTO player_property (player_id, property_key, property_value) VALUES (?, ?, ?)";
 
+        String delete = "DELETE FROM player_property WHERE property_key = ? AND player_id = ?";
+
         if (value == null) {
+            try {
+                PreparedStatement stmt = conn.prepareStatement(delete);
+                stmt.setString(1, key);
+                stmt.setInt(2, player.getId());
+                stmt.execute();
+            } catch (SQLException e) {
+                throw new DAOException(delete, e);
+            }
             return;
         }
 
