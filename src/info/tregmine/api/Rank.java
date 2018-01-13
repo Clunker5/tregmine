@@ -639,6 +639,17 @@ public enum Rank
         return color;
     }
 
+    public String getProperName(boolean color) {
+        String properName = this.name().toLowerCase().replace('_', ' ');
+        if (color) {
+            properName = this.color + properName;
+        }
+        return properName;
+    }
+
+    public String getProperName() {
+        return this.getProperName(false);
+    }
 
     public boolean canViewStatistics() {
         return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
