@@ -69,7 +69,7 @@ public class DBContext implements IContext
     @Override
     public IPlayerReportDAO getPlayerReportDAO()
     {
-        return new DBPlayerReportDAO(conn);
+        return new DBPlayerReportDAO(conn, plugin);
     }
 
     @Override
