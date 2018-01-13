@@ -1,8 +1,8 @@
 name: tregmine
 main: info.tregmine.Tregmine
-version: 2.0.0
+version: 2.0.1
 website: http://tregmine.info
-author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro
+author: Ein Andersson, Emil Hernvall, Josh Morgan, James Sherlock, Rob Catron, Joe Notaro, Eric Rabil
 description: Tregmine
 loadbefore: [BlockLog,GameMagic]
 
