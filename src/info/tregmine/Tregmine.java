@@ -296,6 +296,7 @@ public class Tregmine extends JavaPlugin
         getCommand("sell").setExecutor(new SellCommand(this));
         getCommand("sendto").setExecutor(new SendToCommand(this));
         getCommand("setbiome").setExecutor(new SetBiomeCommand(this));
+        getCommand("setrank").setExecutor(new SetRankCommand(this));
         getCommand("setspawner").setExecutor(new SetSpawnerCommand(this));
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("summon").setExecutor(new SummonCommand(this));

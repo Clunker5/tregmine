@@ -158,7 +158,10 @@ commands:
     usage: /sendto player world
   setbiome:
     description: Set the selected area's biome
-    usage: /setbiome biome 
+    usage: /setbiome biome
+  setrank:
+    description: Set the selected user's rank
+    usage: /setrank player rank ?broadcast
   setspawner:
     description: Change a mob spawners type (admins only)
     usage: /setspawner
