@@ -639,6 +639,11 @@ public enum Rank
         return color;
     }
 
+
+    public boolean canViewStatistics() {
+        return this == GUARDIAN || this == JUNIOR_ADMIN || this == SENIOR_ADMIN;
+    }
+
     public static Rank fromString(String value)
     {
         for (Rank rank : Rank.values())  {
