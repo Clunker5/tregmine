@@ -2,6 +2,7 @@ package info.tregmine.commands;
 
 import java.util.logging.Logger;
 
+import info.tregmine.api.Rank;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.Command;
@@ -19,10 +20,18 @@ public abstract class AbstractCommand implements CommandExecutor
     protected Tregmine tregmine;
     protected String command;
 
+    private Rank lowestRank = null;
+
     protected AbstractCommand(Tregmine tregmine, String command)
     {
         this.tregmine = tregmine;
         this.command = command;
+    }
+
+    protected AbstractCommand(Tregmine tregmine, String command, Rank lowestRank)
+    {
+        this(tregmine, command);
+        this.lowestRank = lowestRank;
     }
 
     public String getName()
@@ -50,6 +59,13 @@ public abstract class AbstractCommand implements CommandExecutor
                 player.sendMessage(ChatColor.RED + "Please complete setup before " +
                         "continuing.");
                 return true;
+            }
+
+            if (this.lowestRank != null) {
+                if (player.getRank().compareTo(this.lowestRank) < 0) {
+                    player.sendError("You do not have access to that command.");
+                    return true;
+                }
             }
 
             return handlePlayer(player, args);
